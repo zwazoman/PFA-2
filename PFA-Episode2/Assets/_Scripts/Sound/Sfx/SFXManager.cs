@@ -41,7 +41,7 @@ public class SFXManager : MonoBehaviour
     Queue<AudioSource> _audioPool = new Queue<AudioSource>();
     List<Clip> _clips = new List<Clip>();
 
-    string _soundsEnumFilePath = "Assets/SecourismeGame/POC_0_1/Scripts/Sound/Sfx/SoundsEnum.cs";
+    string _soundsEnumFilePath = "Assets/_Scripts/Sound/Sfx/SoundsEnum.cs";
 
     AudioMixerManager _audioMixerManager;
 

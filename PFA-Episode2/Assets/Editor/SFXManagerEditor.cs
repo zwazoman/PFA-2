@@ -1,7 +1,5 @@
 using UnityEditor;
 using UnityEngine;
-using AYellowpaper.SerializedCollections;
-using static Michsky.MUIP.ButtonManager;
 
 [CustomEditor(typeof(SFXManager))]
 public class SFXManagerEditor : Editor

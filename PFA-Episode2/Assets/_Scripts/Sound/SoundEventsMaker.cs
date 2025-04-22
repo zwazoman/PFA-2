@@ -6,7 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using Cinemachine;
 using System.Linq;
 using System;
 
