@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Spell : MonoBehaviour
+public class SpellData : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

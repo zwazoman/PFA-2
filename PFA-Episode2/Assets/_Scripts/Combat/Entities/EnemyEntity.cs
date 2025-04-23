@@ -12,17 +12,17 @@ public class EnemyEntity : Entity
         CombatManager.Instance.EnemyEntities.Add(this);
     }
 
-    protected Spell ChooseSpell(int spellIndex)
+    protected SpellData ChooseSpell(int spellIndex)
     {
         return Data.Spells[spellIndex];
     }
 
-    protected Spell ChooseRandomSpell()
+    protected SpellData ChooseRandomSpell()
     {
         return Data.Spells.PickRandom();
     }
 
-    protected Spell ChooseSpellWithRange(WayPoint targetPoint)
+    protected SpellData ChooseSpellWithRange(WayPoint targetPoint)
     {
         return default;
     }

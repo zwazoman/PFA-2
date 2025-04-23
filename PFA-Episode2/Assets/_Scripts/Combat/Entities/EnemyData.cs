@@ -12,5 +12,5 @@ public class EnemyData : ScriptableObject
     [field : SerializeField]
     public int MaxMovePoints { get; private set; }
 
-    public Spell[] Spells;
+    public SpellData[] Spells;
 }
