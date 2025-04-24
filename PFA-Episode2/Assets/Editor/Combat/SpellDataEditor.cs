@@ -15,7 +15,7 @@ public class SpellDataEditor : Editor
     public override void OnInspectorGUI()
     {
         AreaOfEffect Target = (AreaOfEffect)target;
-
+        
         base.OnInspectorGUI();
 
         GUILayout.Space(5);
