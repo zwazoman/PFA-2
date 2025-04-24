@@ -13,6 +13,8 @@ public class SpellData
     /// </summary>
     public string Name;
 
+    List<String> IngredientNames = new List<String>();
+
     public short SpriteReference;
 
     public bool IsOccludedByWalls = true;
@@ -49,6 +51,7 @@ public class SpellData
 
     [Header("Zone")]
     public AreaOfEffect AreaOfEffect;
+    
     
 }
 
