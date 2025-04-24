@@ -8,6 +8,7 @@ using UnityEngine.Assertions;
 public class SpellData
 {
 
+    [Header("Visuals")]
     /// <summary>
     /// le nom du spell
     /// </summary>
@@ -17,19 +18,23 @@ public class SpellData
 
     public short SpriteReference;
 
+    [Header("Casting")]
+
     public bool IsOccludedByWalls = true;
+    public byte Range;
 
-    [Header("Stats")]
+    [Header("Flat Stats")]
 
-    /// <summary>
-    /// le cout en mana du spell
-    /// </summary>
-    public float ManaCost = 0;
 
     /// <summary>
     /// Les dégats du spell
     /// </summary>
     public float Damage = 0;
+
+    /// <summary>
+    /// Les dégats du spell
+    /// </summary>
+    public float Heal = 0;
 
     /// <summary>
     /// Le nombre de cases de recul du spell
@@ -46,12 +51,27 @@ public class SpellData
     /// </summary>
     public int CoolDown = 1;
 
-    public StatusEffect StatusEffect = StatusEffect.None;
 
+
+    [Header("Context Dependant Stats")] //y'a un struct SpellCastingContext
+
+    /// <summary>
+    /// degat = degat + DamageIncreaseForEachHitEnnemy * SpellCastingContext.numberOfHitEnnemies
+    /// </summary>
+    public float DamageIncreaseForEachHitEnnemy = 0;
+
+    [Tooltip("Pourcentage de degats bonus par case")]
+    /// <summary>
+    /// en pourcentage : +n% par case
+    /// degat = degat * (1+SpellCastingContext.DistanceToPlayer * DamageIncreaseByDistanceToCaster / 100f)
+    /// </summary>
+    public float DamageIncreasePercentageByDistanceToCaster = 0;
+
+    [Header("Effect")]
+    public StatusEffect StatusEffect = StatusEffect.None;
 
     [Header("Zone")]
     public AreaOfEffect AreaOfEffect;
-    
     
 }
 

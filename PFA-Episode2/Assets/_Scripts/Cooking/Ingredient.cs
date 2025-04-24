@@ -1,10 +1,42 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class Ingredient : ScriptableObject
-{
-    public void ApplyEffectToSpell(SpellData Spell)
-    {
 
+[CreateAssetMenu(fileName = "newIngredient", menuName = "Cooking/Ingredient")]
+public class Ingredient : IngredientBase
+{
+    [Header("Stats flat")]
+
+    public float DamageIncrease = 0;
+    public float HealIncrease = 0;
+    public byte RecoilIncrease = 0;
+    public float ShieldAmountIncrease = 0;
+    public byte CoolDownIncrease = 1;
+
+    [Header("Multipliers")]
+
+    public float DamageMultiplier;
+    public float HealMultiplier,
+        RecoilMultiplier,
+        ShieldAmountMultiplier,
+        CoolDownMultiplier = 1;
+
+    public override void ModifySpellEffect(SpellData Spell)
+    {
+        Spell.Damage += DamageIncrease;
+        Spell.Heal += HealIncrease;
+        Spell.Recoil += RecoilIncrease;
+        Spell.ShieldAmount += ShieldAmountIncrease;
+        Spell.CoolDown += CoolDownIncrease;
+    }
+
+    public override void OnAfterModifySpellEffect(SpellData Spell)
+    {
+        Spell.Damage *= DamageMultiplier;
+        Spell.Heal *= HealMultiplier;
+        Spell.Recoil = Mathf.CeilToInt(Spell.Recoil * RecoilMultiplier);
+        Spell.ShieldAmount *= ShieldAmountMultiplier;
+        Spell.CoolDown *= Mathf.CeilToInt(Spell.CoolDown * CoolDownMultiplier); ;
+
+        base.OnAfterModifySpellEffect(Spell);
     }
 }

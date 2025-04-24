@@ -10,16 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
-  m_Name: new spell
+  m_Name: PremadeSpell
   m_EditorClassIdentifier: Assembly-CSharp::PremadeSpell
   SpellData:
     Name: 
     SpriteReference: 0
     IsOccludedByWalls: 1
-    ManaCost: 0
     Damage: 0
+    Heal: 0
     Recoil: 0
     ShieldAmount: 0
     CoolDown: 1
     StatusEffect: 0
-    AreaOfEffect: {fileID: 11400000, guid: 62613b5f3115a8740a50eed75cfbf221, type: 2}
+    DamageIncreaseForEachHitEnnemy: 0
+    DamageIncreasePercentageByDistanceToCaster: 0
+    AreaOfEffect: {fileID: 0}
