@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 public class CombatManager : MonoBehaviour
 {
@@ -46,6 +47,8 @@ public class CombatManager : MonoBehaviour
             {
                 await enemy.PlayTurn();
             }
+
+            await UniTask.Yield();
         }
     }
 }
