@@ -7,11 +7,6 @@ public class WayPoint : MonoBehaviour
     public event Action OnSteppedOn;
     public event Action OnSteppedOff;
 
-    public event Action<WayPoint, bool> OnHovered;
-    public event Action OnNotHovered;
-
-    public event Action<WayPoint> OnClicked;
-
     public List<WayPoint> Neighbours = new List<WayPoint>();
 
     public GameObject Content;
@@ -19,6 +14,13 @@ public class WayPoint : MonoBehaviour
     public bool IsActive;
 
     [SerializeField] LayerMask _mask;
+
+    [Header("Materials")]
+
+    [SerializeField] public Material _walkableMaterial;
+    [SerializeField] public Material _rangeMaterial;
+    [SerializeField] public Material _zoneMaterial;
+    [SerializeField] public Material _dangerMaterial;
 
     MeshRenderer _mR;
 
@@ -72,6 +74,13 @@ public class WayPoint : MonoBehaviour
         {
             health.ApplyDamage(damages);
         }
+    }
+
+    public void ChangeTileColor(Material material)
+    {
+        if(_mR.material == material) return;
+
+        _mR.material = material;
     }
 
     #region Astar

@@ -4,11 +4,13 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 
 [RequireComponent(typeof(Health))]
+[RequireComponent(typeof(SpellCaster))]
 public class Entity : MonoBehaviour
 {
     [HideInInspector] public WayPoint CurrentPoint;
+    [HideInInspector] public Health EntityHealth;
+    [HideInInspector] public SpellCaster EntitySpellCaster;
 
-    [SerializeField] public Health EntityHealth;
     [SerializeField] public int MovePoints;
 
     protected Dictionary<WayPoint,int> WaypointDistance = new Dictionary<WayPoint,int>();
@@ -17,6 +19,7 @@ public class Entity : MonoBehaviour
     protected virtual void Awake()
     {
         TryGetComponent(out EntityHealth);
+        TryGetComponent(out EntitySpellCaster);
     }
 
     protected virtual void Start()
