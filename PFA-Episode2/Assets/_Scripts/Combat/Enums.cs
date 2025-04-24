@@ -17,11 +17,8 @@ public enum IngredientFamily
 {
     Meat,
     Vegetables,
-    Fruits,
     Starchys,//feculent
     Dairys,
-    Cereals,
-    Sweets
 }
 
 public enum CookingItem

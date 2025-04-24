@@ -14,10 +14,10 @@ public class Ingredient : IngredientBase
 
     [Header("Multipliers")]
 
-    public float DamageMultiplier;
-    public float HealMultiplier,
-        RecoilMultiplier,
-        ShieldAmountMultiplier,
+    public float DamageMultiplier = 1;
+    public float HealMultiplier = 1,
+        RecoilMultiplier = 1,
+        ShieldAmountMultiplier = 1,
         CoolDownMultiplier = 1;
 
     public override void ModifySpellEffect(SpellData Spell)

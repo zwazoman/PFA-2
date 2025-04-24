@@ -4,7 +4,8 @@ using UnityEngine;
 public class Inventory : ISavable<Inventory>
 {
     public List<SpellData> Spells;
-    public List<IngredientBase> Ingredients;
+    public List<Ingredient> Ingredients;
+    public List<Sauce> Sauces;
 
     //@save
     public Inventory Load(byte SaveFileID)

@@ -51,8 +51,6 @@ public class SpellData
     /// </summary>
     public int CoolDown = 1;
 
-
-
     [Header("Context Dependant Stats")] //y'a un struct SpellCastingContext
 
     /// <summary>
