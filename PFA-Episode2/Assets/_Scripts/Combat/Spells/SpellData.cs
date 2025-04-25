@@ -13,9 +13,7 @@ public class SpellData
     /// </summary>
     public string Name;
 
-    List<String> IngredientNames = new List<String>();
-
-    public short SpriteReference;
+    public string IngredientsCombination;
 
     [Header("Casting")]
 

@@ -2,16 +2,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
-public class Kitchen : MonoBehaviour
+public class Crafting : MonoBehaviour
 {
-
-    HashSet<string> combinations = new();
-
-   
-
-    void ComputeFamiliesCombinationTable()
+    #region combinations
+    public static void ComputeAllFamilyCombination(out HashSet<string> combinations)
     {
-        combinations.Clear();
+        combinations = new();
         List<IngredientsInfo.Family> combination = new();
         for (int i = 0; i < IngredientsInfo.FamilyCount; i++) 
         {
@@ -25,7 +21,7 @@ public class Kitchen : MonoBehaviour
         }
     }
 
-    public string ComputeFamilyCombinaison(
+    public static string ComputeFamilyCombinaison(
         Ingredient i1,
         Ingredient i2,
         Ingredient i3)
@@ -33,7 +29,7 @@ public class Kitchen : MonoBehaviour
         return ComputeFamilyCombinaison(i1.family, i2.family, i3.family);
     }
 
-    public string ComputeFamilyCombinaison(
+    public static string ComputeFamilyCombinaison(
         IngredientsInfo.Family firstFamily,
         IngredientsInfo.Family secondFamily,
         IngredientsInfo.Family thirdFamily)
@@ -41,7 +37,7 @@ public class Kitchen : MonoBehaviour
         List<IngredientsInfo.Family> workerlist = new();
         return ComputeFamilyCombinaison(firstFamily, secondFamily, thirdFamily,ref workerlist);
     }
-    public string ComputeFamilyCombinaison(
+    public static string ComputeFamilyCombinaison(
         IngredientsInfo.Family firstFamily,
         IngredientsInfo.Family secondFamily,
         IngredientsInfo.Family thirdFamily,
@@ -58,8 +54,9 @@ public class Kitchen : MonoBehaviour
         return s;
     }
 
+    #endregion
 
-    public void CraftNewSpell(Ingredient[] ingredients, Sauce sauce)
+    public static void CraftNewSpell(Ingredient[] ingredients, Sauce sauce)
     {
         SpellData spell = new SpellData();
         foreach(Ingredient i in ingredients)
@@ -75,4 +72,6 @@ public class Kitchen : MonoBehaviour
         sauce.ModifySpellEffect(spell);
 
     }
+
+    
 }
