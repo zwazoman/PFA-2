@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks;
 
 public class SpellCaster : MonoBehaviour
 {
-    [SerializeField] Entity _entity;
+    [SerializeField] public Entity entity;
 
     [SerializeField] LayerMask _obstacleMask;
 
@@ -14,9 +14,11 @@ public class SpellCaster : MonoBehaviour
     List<WayPoint> _rangePoints = new();
     List<WayPoint> _zonePoints = new();
 
-    private void Awake()
+    private async void Start()
     {
-        _entityWaypoint = _entity.CurrentPoint;
+        await UniTask.Yield();
+
+        _entityWaypoint = entity.CurrentPoint;
     }
 
     public void PreviewSpellRange(SpellData spell,WayPoint center = null)
@@ -34,6 +36,10 @@ public class SpellCaster : MonoBehaviour
             {
                 reachablePoints.Remove(point);
             }
+            else
+            {
+                point.ChangeTileColor(point._rangeMaterial);
+            }
         }
         _rangePoints.AddRange(reachablePoints.Keys);
     }
@@ -50,6 +56,8 @@ public class SpellCaster : MonoBehaviour
 
             WayPoint choosenWaypoint = GraphMaker.Instance.PointDict[targetedPointPos + newPos];
 
+            choosenWaypoint.ChangeTileColor(choosenWaypoint._zoneMaterial);
+
             _zonePoints.Add(choosenWaypoint);
         }
 
@@ -57,24 +65,50 @@ public class SpellCaster : MonoBehaviour
 
     public void StopSpellRangePreview()
     {
-        //repasser les points dans la couleur de base
+        foreach(WayPoint point in _rangePoints)
+        {
+            point.ChangeTileColor(point._normalMaterial);
+        }
+
         _rangePoints.Clear();
+
+        StopSpellZonePreview();
     }
 
     public void StopSpellZonePreview()
     {
-        //repasser les points dans la couleur de base sauf ceux qui sont des rangePoints
+        if(_zonePoints.Count == 0) return;
 
-        _rangePoints.Clear();
+        foreach(WayPoint point in _zonePoints)
+        {
+            if (_rangePoints.Contains(point))
+            {
+                point.ChangeTileColor(point._rangeMaterial);
+            }
+            else
+            {
+                point.ChangeTileColor(point._normalMaterial);
+            }
+        }
+
+        _zonePoints.Clear();
     }
 
     public async UniTask TryCastSpell(SpellData spell, WayPoint target)
     {
-        //check si on peut cast le spell, sinon : stop les previews
+        if (_zonePoints.Count == 0)
+        {
+            StopSpellRangePreview();
+            return;
+        }
 
         foreach(WayPoint point in _zonePoints)
         {
-            //Appliquer le sort sur les cases
+            //await visual
+
+            point.TryApplySpell(spell);
         }
+
+        StopSpellRangePreview();
     }
 }

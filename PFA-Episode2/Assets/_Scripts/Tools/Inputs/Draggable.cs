@@ -6,21 +6,30 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 {
     protected bool isDragging;
 
-    public void OnBeginDrag(PointerEventData eventData)
+    Vector3 originalPos;
+
+    protected virtual void Awake()
+    {
+        originalPos = transform.position;
+    }
+
+    public virtual void OnBeginDrag(PointerEventData eventData)
     {
         isDragging = true;
-        print("start drag");
     }
 
-    public void OnDrag(PointerEventData eventData)
+    public virtual void OnDrag(PointerEventData eventData)
     {
         transform.position = Input.mousePosition;
-        print("Drag");
     }
 
-    public void OnEndDrag(PointerEventData eventData)
+    public virtual void OnEndDrag(PointerEventData eventData)
     {
         isDragging = false;
-        print("EndDrag");
+    }
+
+    public virtual void ResetDrag()
+    {
+        transform.position = originalPos;
     }
 }
