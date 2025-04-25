@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks;
 
 public class SpellCaster : MonoBehaviour
 {
-    [SerializeField] Entity _entity;
+    [SerializeField] public Entity entity;
 
     [SerializeField] LayerMask _obstacleMask;
 
@@ -18,8 +18,7 @@ public class SpellCaster : MonoBehaviour
     {
         await UniTask.Yield();
 
-        _entityWaypoint = _entity.CurrentPoint;
-        print(_entityWaypoint);
+        _entityWaypoint = entity.CurrentPoint;
     }
 
     public void PreviewSpellRange(SpellData spell,WayPoint center = null)

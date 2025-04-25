@@ -21,6 +21,12 @@ public class DraggableSpell : Draggable
         print(_spell);
     }
 
+    private void Start()
+    {
+        if (_spell == null) return;
+        _spellCaster.entity.CurrentPoint.ChangeTileColor(_spellCaster.entity.CurrentPoint._walkableMaterial);
+    }
+
     public override void OnBeginDrag(PointerEventData eventData)
     {
         base.OnBeginDrag(eventData);
