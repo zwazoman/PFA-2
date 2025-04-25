@@ -13,10 +13,10 @@ public class DraggableSpell : Draggable
 
     public async UniTask DragAndDrop()
     {
+        WayPoint _currentPoint = null;
+
         while (isDragging)
         {
-            WayPoint _currentPoint = null;
-
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -25,13 +25,13 @@ public class DraggableSpell : Draggable
             if (hit.collider.gameObject.TryGetComponent<WayPoint>(out WayPoint point) && point != _currentPoint)
             {
                 _currentPoint = point;
-                _spellCaster.StopSpellCastPreview();
-                _spellCaster.PreviewSpellCast(_spelldata, point);
+                _spellCaster.StopSpellZonePreview();
+                _spellCaster.PreviewSpellZone(_spelldata, point);
             }
 
             await UniTask.Yield();
-
-            await _spellCaster.CastSpell(_spelldata, _currentPoint);
         }
+
+        await _spellCaster.TryCastSpell(_spelldata, _currentPoint);
     }
 }

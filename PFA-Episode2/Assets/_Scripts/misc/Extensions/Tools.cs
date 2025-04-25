@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public static class Tools
@@ -15,6 +17,7 @@ public static class Tools
     {
         return list[Random.Range(0, list.Count)];
     }
+
     public static T PickRandom<T>(this T[] array)
     {
         return array[Random.Range(0, array.Length)];
@@ -73,7 +76,7 @@ public static class Tools
 
     }
 
-    public static T FindClosest<T>(this List<T> elements, Vector3 origin) where T : Component
+    public static T FindClosest<T>(this List<T> elements, Vector3 origin) where T : UnityEngine.Component
     {
         if (elements.Count == 0)
         {
@@ -114,30 +117,6 @@ public static class Tools
         return default;
     }
 
-    //public static WayPoint FindClosest(this List<WayPoint> points, WayPoint origin)
-    //{
-    //    if (points.Count == 0)
-    //        Debug.LogError("List Is Empty");
-
-    //    Dictionary<WayPoint,int> waypointDistance = new Dictionary<WayPoint,int>();
-
-    //    foreach (WayPoint point in points)
-    //    {
-    //        Stack<WayPoint> path = FindBestPath(origin, point);
-    //        waypointDistance.Add(point, path.Count);
-    //    }
-
-    //    WayPoint closest = waypointDistance.
-
-    //    foreach(WayPoint point in waypointDistance.Keys)
-    //    {
-    //        if()
-    //    }
-
-        
-       
-    //}
-
     public static Stack<WayPoint> FindBestPath(WayPoint startPoint, WayPoint endPoint)
     {
         List<WayPoint> openWayPoints = new List<WayPoint>();
@@ -152,4 +131,33 @@ public static class Tools
         return shorterPath;
     }
 
+    /// <summary>
+    /// Retourne les tuiles accessibles dans un certain rayon en utilisant une recherche en largeur (BFS).
+    /// </summary>
+    public static Dictionary<WayPoint,int> GetReachablePoints(WayPoint startNode, int range) //On part d'un node de départ avec une range donné pour regardé les voisins
+    {
+        //List<WayPoint> result = new();
+        Dictionary<WayPoint, int> PointDistanceDict = new();
+        Queue<(WayPoint, int)> queue = new();
+        HashSet<WayPoint> visited = new() { startNode };
+
+        queue.Enqueue((startNode, 0));
+
+        while (queue.Count > 0)
+        {
+            var (node, distance) = queue.Dequeue();
+            //result.Add(node);
+            PointDistanceDict.Add(node,distance);
+
+            if (distance < range)
+                foreach (var neighbor in node.Neighbours)
+                    if (neighbor is WayPoint point && !visited.Contains(point) && point.IsActive)
+                    {
+                queue.Enqueue((point, distance + 1));
+                visited.Add(point);
+            }
+        }
+        //return result
+        return PointDistanceDict;
+    }
 }
