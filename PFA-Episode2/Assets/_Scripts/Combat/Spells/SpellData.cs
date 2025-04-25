@@ -7,7 +7,6 @@ using UnityEngine.Assertions;
 [Serializable]
 public class SpellData
 {
-
     [Header("Visuals")]
     /// <summary>
     /// le nom du spell
@@ -50,6 +49,8 @@ public class SpellData
     /// Le nombre de tour avant de pouvoir réutiliser le sort
     /// </summary>
     public int CoolDown = 1;
+
+
 
     [Header("Context Dependant Stats")] //y'a un struct SpellCastingContext
 

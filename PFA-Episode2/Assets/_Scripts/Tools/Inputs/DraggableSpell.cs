@@ -38,24 +38,32 @@ public class DraggableSpell : Draggable
     {
         base.OnDrag(eventData);
 
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        print("drag");
+    }
 
-        Physics.Raycast(ray, out hit,Mathf.Infinity);
-
-        if (hit.collider != null && hit.collider.gameObject.TryGetComponent<WayPoint>(out WayPoint point) && (_currentPoint == null || point != _currentPoint))
+    private void Update()
+    {
+        if (isDragging)
         {
-            print("change de current point");
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            _currentPoint = point;
+            Physics.Raycast(ray, out hit, Mathf.Infinity/*, LayerMask.GetMask("Waypoint")*/);
 
-            _spellCaster.StopSpellZonePreview();
-            _spellCaster.PreviewSpellZone(_spell.SpellData, point);
-        }
-        else
-        {
-            _spellCaster.StopSpellZonePreview();
-            _currentPoint = null;
+            if (hit.collider != null && hit.collider.gameObject.TryGetComponent<WayPoint>(out WayPoint point) && (_currentPoint == null || point != _currentPoint))
+            {
+                print("change de current point");
+
+                _currentPoint = point;
+
+                _spellCaster.StopSpellZonePreview();
+                _spellCaster.PreviewSpellZone(_spell.SpellData, point);
+            }
+            else if(!hit.collider.gameObject.TryGetComponent<WayPoint>(out WayPoint nopoint))
+            {
+                _spellCaster.StopSpellZonePreview();
+                _currentPoint = null;
+            }
         }
     }
 

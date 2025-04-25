@@ -11279,7 +11279,7 @@ MonoBehaviour:
   entity: {fileID: 434245161}
   _obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
 --- !u!114 &434245160
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46779,8 +46779,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc4d58ca574d8b7488b1ade4b2221722, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spell: {fileID: 11400000, guid: 068074a43e843724d8629019b8a0025a, type: 2}
+  _spell: {fileID: 11400000, guid: ebc3ce0f2326f0340822f46c609b391c, type: 2}
   _spellCaster: {fileID: 434245159}
+  _tileMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &1768626773
 GameObject:
   m_ObjectHideFlags: 0

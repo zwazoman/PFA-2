@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Entity", menuName = "Entities")]
+[CreateAssetMenu(fileName = "EnemyData", menuName = "Combat/EnemyData")]
 public class EnemyData : ScriptableObject
 {
     [field:SerializeField] 
@@ -12,5 +12,5 @@ public class EnemyData : ScriptableObject
     [field : SerializeField]
     public int MaxMovePoints { get; private set; }
 
-    public SpellData[] Spells;
+    public PremadeSpell[] Spells;
 }
