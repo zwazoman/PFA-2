@@ -43,29 +43,26 @@ public class SpellEditionWindow : EditorWindow
             {
                 Vector2Int c = ((Vector2)Unity.Mathematics.math.remap(_canvas.min, _canvas.max, (Vector2)Area.Bounds.min, (Vector2)Area.Bounds.max, Event.current.mousePosition)).Floor();
                 //c.y *= -1;
-                if (c != Vector2Int.zero)
+                
+                if (Event.current.button == 0)
                 {
-                    if (Event.current.button == 0)
+                    if (!Area.AffectedTiles.Contains(new Vector2Int(c.x, c.y)))
                     {
-                        if (!Area.AffectedTiles.Contains(new Vector2Int(c.x, c.y)))
-                        {
-
-
-                            Area.AffectedTiles.Add(new Vector2Int(c.x, c.y));
-                            EditorUtility.SetDirty(Area);
-                            Event.current.Use();
-                        }
-                    }
-                    else if (Event.current.button == 1)
-                    {
-                        if (Area.AffectedTiles.Contains(new Vector2Int(c.x, c.y)))
-                        {  
-                            Area.AffectedTiles.Remove(new Vector2Int(c.x, c.y));
-                            EditorUtility.SetDirty(Area);
-                            Event.current.Use();
-                        }
+                        Area.AffectedTiles.Add(new Vector2Int(c.x, c.y));
+                        EditorUtility.SetDirty(Area);
+                        Event.current.Use();
                     }
                 }
+                else if (Event.current.button == 1)
+                {
+                    if (Area.AffectedTiles.Contains(new Vector2Int(c.x, c.y)))
+                    {  
+                        Area.AffectedTiles.Remove(new Vector2Int(c.x, c.y));
+                        EditorUtility.SetDirty(Area);
+                        Event.current.Use();
+                    }
+                }
+                
             }
         }
     }
@@ -126,7 +123,7 @@ public class SpellEditionWindow : EditorWindow
 
             float  x = -Area.Bounds.xMin;
             float  y = -Area.Bounds.yMin;
-            EditorGUI.DrawRect(new Rect(_canvas.position.x + x * _tileSize + 1, _canvas.position.y + y * _tileSize + 1, _tileSize - 2, _tileSize - 2),Color.white);
+            //EditorGUI.DrawRect(new Rect(_canvas.position.x + x * _tileSize + 1, _canvas.position.y + y * _tileSize + 1, _tileSize - 2, _tileSize - 2),Color.white);
         }
 
     }

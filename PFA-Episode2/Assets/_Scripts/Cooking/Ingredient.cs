@@ -4,6 +4,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "newIngredient", menuName = "Cooking/Ingredient")]
 public class Ingredient : IngredientBase
 {
+    public IngredientsInfo.Family family;
+
     [Header("Stats flat")]
 
     public float DamageIncrease = 0;

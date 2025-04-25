@@ -5,35 +5,59 @@ using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 public class Kitchen : MonoBehaviour
 {
 
-    HashSet<List<IngredientFamily>> combinations;
+    HashSet<string> combinations = new();
 
-    IngredientFamily[] families = new IngredientFamily[]
+   
+
+    void ComputeFamiliesCombinationTable()
     {
-        IngredientFamily.Meat,
-        IngredientFamily.Vegetables,
-        IngredientFamily.Starchys,
-        IngredientFamily.Dairys
-    };
-
-    void boule()
-    {
-        List<IngredientFamily> combination = new();
-
-        for(int i = 0; i < 4; i++) 
+        combinations.Clear();
+        List<IngredientsInfo.Family> combination = new();
+        for (int i = 0; i < IngredientsInfo.FamilyCount; i++) 
         {
-            for (int j = 0; j < 4; j++)
+            for (int j = 0; j < IngredientsInfo.FamilyCount; j++)
             {
-                for (int k = 0; k < 4; k++)
+                for (int k = 0; k < IngredientsInfo.FamilyCount; k++)
                 {
-                    combination.Add(families[i]);
-                    combination.Add(families[j]);
-                    combination.Add(families[k]);
-                    combination.Sort();
-                    combinations.Add(combination);
+                    combinations.Add(ComputeFamilyCombinaison(IngredientsInfo.families[i], IngredientsInfo.families[j], IngredientsInfo.families[k], ref combination));
                 }
             }
         }
     }
+
+    public string ComputeFamilyCombinaison(
+        Ingredient i1,
+        Ingredient i2,
+        Ingredient i3)
+    {
+        return ComputeFamilyCombinaison(i1.family, i2.family, i3.family);
+    }
+
+    public string ComputeFamilyCombinaison(
+        IngredientsInfo.Family firstFamily,
+        IngredientsInfo.Family secondFamily,
+        IngredientsInfo.Family thirdFamily)
+    {
+        List<IngredientsInfo.Family> workerlist = new();
+        return ComputeFamilyCombinaison(firstFamily, secondFamily, thirdFamily,ref workerlist);
+    }
+    public string ComputeFamilyCombinaison(
+        IngredientsInfo.Family firstFamily,
+        IngredientsInfo.Family secondFamily,
+        IngredientsInfo.Family thirdFamily,
+        ref List<IngredientsInfo.Family> workerlist)
+    {
+        workerlist.Clear();
+        workerlist.Add(firstFamily);
+        workerlist.Add(secondFamily);
+        workerlist.Add(thirdFamily);
+        workerlist.Sort();
+
+        string s = "";
+        foreach (var c in workerlist) s += c.ToString();
+        return s;
+    }
+
 
     public void CraftNewSpell(Ingredient[] ingredients, Sauce sauce)
     {

@@ -58,7 +58,6 @@ public class SpellCaster : MonoBehaviour
     public void StopSpellRangePreview()
     {
         //repasser les points dans la couleur de base
-
         _rangePoints.Clear();
     }
 
