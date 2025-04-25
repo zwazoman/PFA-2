@@ -1,37 +1,65 @@
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Triggers;
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 public class DraggableSpell : Draggable
 {
-    SpellData _spelldata;
+    [SerializeField] PremadeSpell _spell;
 
-    SpellCaster _spellCaster;
+    [SerializeField] SpellCaster _spellCaster;
 
-    public async UniTask DragAndDrop()
+    WayPoint _currentPoint = null;
+
+    protected override void Awake()
     {
-        WayPoint _currentPoint = null;
+        base.Awake();
+        print(_spell);
+    }
 
-        while (isDragging)
+    public override void OnBeginDrag(PointerEventData eventData)
+    {
+        base.OnBeginDrag(eventData);
+
+        _spellCaster.PreviewSpellRange(_spell.SpellData);
+    }
+
+    public override void OnDrag(PointerEventData eventData)
+    {
+        base.OnDrag(eventData);
+
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        Physics.Raycast(ray, out hit,Mathf.Infinity);
+
+        if (hit.collider != null && hit.collider.gameObject.TryGetComponent<WayPoint>(out WayPoint point) && (_currentPoint == null || point != _currentPoint))
         {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            print("change de current point");
 
-            Physics.Raycast(ray, out hit);
+            _currentPoint = point;
 
-            if (hit.collider.gameObject.TryGetComponent<WayPoint>(out WayPoint point) && point != _currentPoint)
-            {
-                _currentPoint = point;
-                _spellCaster.StopSpellZonePreview();
-                _spellCaster.PreviewSpellZone(_spelldata, point);
-            }
-
-            await UniTask.Yield();
+            _spellCaster.StopSpellZonePreview();
+            _spellCaster.PreviewSpellZone(_spell.SpellData, point);
         }
+        else
+        {
+            _spellCaster.StopSpellZonePreview();
+            _currentPoint = null;
+        }
+    }
 
-        await _spellCaster.TryCastSpell(_spelldata, _currentPoint);
+    public override async void OnEndDrag(PointerEventData eventData)
+    {
+        base.OnEndDrag(eventData);
+
+        WayPoint point = _currentPoint;
+        ResetDrag();
+
+        await _spellCaster.TryCastSpell(_spell.SpellData, point);
     }
 }

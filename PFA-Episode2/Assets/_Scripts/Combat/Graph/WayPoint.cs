@@ -20,7 +20,7 @@ public class WayPoint : MonoBehaviour
     [SerializeField] public Material _walkableMaterial;
     [SerializeField] public Material _rangeMaterial;
     [SerializeField] public Material _zoneMaterial;
-    [SerializeField] public Material _dangerMaterial;
+    [SerializeField] public Material _normalMaterial;
 
     MeshRenderer _mR;
 
@@ -65,15 +65,15 @@ public class WayPoint : MonoBehaviour
         Activate();
     }
 
-    public void TryApplyDamage(int damages)
+    public void TryApplySpell(SpellData spell)
     {
         if (Content == null)
             return;
 
-        if(Content.TryGetComponent(out Health health))
-        {
-            health.ApplyDamage(damages);
-        }
+        //if(Content.TryGetComponent(out Health health))
+        //{
+        //    health.ApplyDamage(damages);
+        //}
     }
 
     public void ChangeTileColor(Material material)

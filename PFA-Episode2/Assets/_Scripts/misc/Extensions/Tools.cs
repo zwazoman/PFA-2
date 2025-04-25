@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Unity.VisualScripting;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public static class Tools
@@ -147,6 +148,7 @@ public static class Tools
         {
             var (node, distance) = queue.Dequeue();
             //result.Add(node);
+            Debug.Log(node);
             PointDistanceDict.Add(node,distance);
 
             if (distance < range)
