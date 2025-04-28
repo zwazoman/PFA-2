@@ -29,7 +29,7 @@ public class Entity : MonoBehaviour
         transform.position += Vector3.up * 1.3f;
 
         CurrentPoint = GraphMaker.Instance.PointDict[roundedPos];
-        CurrentPoint.StepOn(gameObject);
+        CurrentPoint.StepOn(this);
     }
 
     public virtual async UniTask PlayTurn()
@@ -42,10 +42,11 @@ public class Entity : MonoBehaviour
         ClearWalkables();
     }
 
-        async void MoveTo(WayPoint targetPoint)
+    public async UniTask ApplySpell(SpellData spell)
     {
-        print("move to");
-        await TryMoveTo(targetPoint);
+        EntityHealth.ApplyShield(spell.ShieldAmount);
+        EntityHealth.ApplyHealth(-spell.Damage);
+        EntityHealth.ApplyHealth(spell.Heal);
     }
 
     public virtual async UniTask TryMoveTo(WayPoint targetPoint)
@@ -61,6 +62,11 @@ public class Entity : MonoBehaviour
             return;
         }
 
+        foreach(WayPoint p in path)
+        {
+            p.ChangeTileColor(p._walkedMaterial);
+        }
+
         for (int i = 0; i < pathlength; i++)
         {
             CurrentPoint.StepOff();
@@ -70,12 +76,13 @@ public class Entity : MonoBehaviour
             await StartMoving(steppedOnPoint.transform.position);
 
             CurrentPoint = steppedOnPoint;
-            steppedOnPoint.StepOn(gameObject);
+            steppedOnPoint.StepOn(this);
+
+            steppedOnPoint.ChangeTileColor(steppedOnPoint._normalMaterial);
 
             MovePoints--;
         }
         ApplyWalkables();
-        // remettre les controles
     }
 
     protected void Flood(WayPoint targetPoint, int maxIndex = 0)
@@ -104,7 +111,7 @@ public class Entity : MonoBehaviour
         }
     }
 
-    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 10)
+    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 2)
     {
         targetPos.y = 1f;
         Vector3 offset = targetPos - (Vector3)transform.position;
@@ -123,6 +130,8 @@ public class Entity : MonoBehaviour
     {
         Walkables.AddRange(Tools.GetReachablePoints(CurrentPoint, MovePoints).Keys);
 
+        print(Walkables.Count);
+
         foreach (WayPoint point in Walkables)
         {
             point.ChangeTileColor(point._walkableMaterial);
@@ -137,4 +146,6 @@ public class Entity : MonoBehaviour
         }
         Walkables.Clear();
     }
+
+
 }

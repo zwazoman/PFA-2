@@ -11,7 +11,7 @@ public class PlayerEntity : Entity
 
     [SerializeField] Button _endTurnButton;
 
-    List<DraggableSpell> spellsUI = new();
+    [SerializeField] List<DraggableSpell> spellsUI = new();
 
     SpellCaster _spellCaster;
 
@@ -36,12 +36,12 @@ public class PlayerEntity : Entity
 
     public async UniTask CheckPlayerInput()
     {
-        print("check player inpu");
         while (true /*bouton endTurn cliqué*/)
         {
             foreach (DraggableSpell draggable in spellsUI)
             {
-                await draggable.DragAndDrop();
+                print("drag");
+                await draggable.BeginDrag();
             }
 
             if (Input.GetMouseButtonDown(0) && Tools.CheckMouseRay(out WayPoint point))

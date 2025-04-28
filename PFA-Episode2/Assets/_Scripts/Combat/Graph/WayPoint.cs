@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +11,7 @@ public class WayPoint : MonoBehaviour
 
     public List<WayPoint> Neighbours = new List<WayPoint>();
 
-    public GameObject Content;
+    public Entity Content;
 
     public bool IsActive;
 
@@ -22,6 +23,7 @@ public class WayPoint : MonoBehaviour
     [SerializeField] public Material _rangeMaterial;
     [SerializeField] public Material _zoneMaterial;
     [SerializeField] public Material _normalMaterial;
+    [SerializeField] public Material _walkedMaterial;
 
     MeshRenderer _mR;
 
@@ -48,11 +50,11 @@ public class WayPoint : MonoBehaviour
         RaycastHit hit;
         if(Physics.Raycast(transform.position, Vector3.up, out hit, 1, _mask))
         {
-            StepOn(hit.collider.gameObject);
+            IsActive = false;
         }
     }
 
-    public void StepOn(GameObject entity)
+    public void StepOn(Entity entity)
     {
         Deactivate();
         Content = entity;
@@ -66,15 +68,12 @@ public class WayPoint : MonoBehaviour
         Activate();
     }
 
-    public void TryApplySpell(SpellData spell)
+    public async UniTask TryApplySpell(SpellData spell)
     {
         if (Content == null)
             return;
 
-        //if(Content.TryGetComponent(out Health health))
-        //{
-        //    health.ApplyDamage(damages);
-        //}
+        await Content.ApplySpell(spell);
     }
 
     public void ChangeTileColor(Material material)

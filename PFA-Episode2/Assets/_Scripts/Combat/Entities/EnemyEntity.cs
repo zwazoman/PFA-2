@@ -12,6 +12,16 @@ public class EnemyEntity : Entity
         CombatManager.Instance.EnemyEntities.Add(this);
     }
 
+    public override async UniTask PlayTurn()
+    {
+        await base.PlayTurn();
+    }
+
+    public override async UniTask EndTurn()
+    {
+        await base.EndTurn();
+    }
+
     protected PremadeSpell ChooseSpell(int spellIndex)
     {
         return Data.Spells[spellIndex];

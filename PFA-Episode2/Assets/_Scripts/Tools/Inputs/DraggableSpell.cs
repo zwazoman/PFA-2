@@ -16,48 +16,34 @@ public class DraggableSpell : Draggable
 
     WayPoint _currentPoint = null;
 
-    protected override void Awake()
-    {
-        base.Awake();
-    }
-
     private void Start()
     {
         if (_spell == null) return;
         spellCaster.entity.CurrentPoint.ChangeTileColor(spellCaster.entity.CurrentPoint._walkableMaterial);
     }
 
-    public override void OnBeginDrag(PointerEventData eventData)
+    public async UniTask BeginDrag()
     {
-        base.OnBeginDrag(eventData);
-
-        spellCaster.entity.ClearWalkables();
-        spellCaster.PreviewSpellRange(_spell.SpellData);
-    }
-
-    public override void OnDrag(PointerEventData eventData)
-    {
-        base.OnDrag(eventData);
-        print("drag");
+        if (isDragging)
+        {
+            spellCaster.entity.ClearWalkables();
+            spellCaster.PreviewSpellRange(_spell.SpellData);
+            await DragAndDrop();
+        }
     }
 
     public async UniTask DragAndDrop()
     {
         while (isDragging)
         {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            Physics.Raycast(ray, out hit, Mathf.Infinity/*, LayerMask.GetMask("Waypoint")*/);
-
-            if (hit.collider != null && Tools.CheckMouseRay(out WayPoint point) && (_currentPoint == null || point != _currentPoint))
+            if (Tools.CheckMouseRay(out WayPoint point) && point != null && (_currentPoint == null || point != _currentPoint))
             {
                 _currentPoint = point;
 
                 spellCaster.StopSpellZonePreview();
                 spellCaster.PreviewSpellZone(_spell.SpellData, point);
             }
-            else if(!hit.collider.gameObject.TryGetComponent<WayPoint>(out WayPoint nopoint))
+            else if (point == null)
             {
                 spellCaster.StopSpellZonePreview();
                 _currentPoint = null;
@@ -72,10 +58,5 @@ public class DraggableSpell : Draggable
 
         spellCaster.entity.ApplyWalkables();
 
-    }
-
-    public override async void OnEndDrag(PointerEventData eventData)
-    {
-        base.OnEndDrag(eventData);
     }
 }

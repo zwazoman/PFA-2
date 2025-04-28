@@ -3,34 +3,34 @@ using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    public event Action<int> OnTakeDamage;
-    public event Action<int> OnTakeHeal;
+    public event Action<float> OnTakeDamage;
+    public event Action<float> OnTakeHeal;
+    public event Action<float> OnTakeShield;
 
     public event Action OnDie;
 
-    [HideInInspector] public int MaxHealth;
+    [HideInInspector] public float MaxHealth;
+    [HideInInspector] public float ShieldAmount;
 
     float _currentHealth;
 
-    public void ApplyDamage(int damage)
-    {
-        OnTakeDamage?.Invoke(damage);
-
-        _currentHealth -= damage;
-        if (_currentHealth <= 0)
-        {
-            OnDie?.Invoke();
-        }
-    }
-
-    public void AppyHeal(int heal)
+    public void ApplyHealth(float heal)
     {
         OnTakeHeal?.Invoke(heal);
 
         _currentHealth += heal;
-        if(_currentHealth >= MaxHealth)
-        {
+
+        if (_currentHealth >= MaxHealth)
             _currentHealth = MaxHealth;
-        }
+        else if (_currentHealth <= 0)
+            //OnDie?.Invoke();
+            print(gameObject.name + " is dead");
+    }
+
+    public void ApplyShield(float shield)
+    {
+        OnTakeShield?.Invoke(shield);
+
+        ShieldAmount += shield;
     }
 }

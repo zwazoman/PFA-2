@@ -9,21 +9,15 @@ public class SpellCaster : MonoBehaviour
 
     [SerializeField] LayerMask _obstacleMask;
 
-    WayPoint _entityWaypoint;
-
     List<WayPoint> _rangePoints = new();
     List<WayPoint> _zonePoints = new();
 
-    private async void Start()
-    {
-        await UniTask.Yield();
-
-        _entityWaypoint = entity.CurrentPoint;
-    }
-
     public void PreviewSpellRange(SpellData spell,WayPoint center = null)
     {
-        if (center == null) center = _entityWaypoint;
+        if (center == null)
+        {
+            center = entity.CurrentPoint;
+        }
 
         Dictionary<WayPoint,int> reachablePoints = Tools.GetReachablePoints(center, spell.Range);
 
@@ -106,7 +100,7 @@ public class SpellCaster : MonoBehaviour
         {
             //await visual
 
-            point.TryApplySpell(spell);
+            await point.TryApplySpell(spell);
         }
 
         StopSpellRangePreview();

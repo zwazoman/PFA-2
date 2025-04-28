@@ -30,8 +30,9 @@ public class CombatManager : MonoBehaviour
     
     public List<EnemyEntity> EnemyEntities = new List<EnemyEntity>();
 
-    private void Start()
+    private async void Start()
     {
+        await UniTask.Yield();
         StartGame();
     }
 
