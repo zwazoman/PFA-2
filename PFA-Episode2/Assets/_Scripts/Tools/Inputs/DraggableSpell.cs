@@ -66,7 +66,7 @@ public class DraggableSpell : Draggable
         }
 
         WayPoint wayPoint = _currentPoint;
-        ResetDrag();
+        Reset();
 
         await spellCaster.TryCastSpell(_spell.SpellData, wayPoint);
 

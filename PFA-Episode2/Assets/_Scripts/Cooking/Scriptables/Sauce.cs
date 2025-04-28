@@ -3,25 +3,29 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "newSauce", menuName = "Cooking/Sauce")]
 public class Sauce : IngredientBase
 {
+    [Header("Sauce Effect")]
     public AreaOfEffect areaOfEffect;
-    public StatusEffect statusEffect;
-
-    [Header("Context Dependant Stats")] //y'a un struct SpellCastingContext
-
-    /// <summary>
-    /// degat = degat + DamageIncreaseForEachHitEnnemy * SpellCastingContext.numberOfHitEnnemies
-    /// </summary>
-    public float DamageIncreaseForEachHitEnnemy = 0;
-
-    [Tooltip("Pourcentage de degats bonus par case")]
-    /// <summary>
-    /// en pourcentage : +n% par case
-    /// degat = degat * (1+SpellCastingContext.DistanceToPlayer * DamageIncreaseByDistanceToCaster / 100f)
-    /// </summary>
-    public float DamageIncreasePercentageByDistanceToCaster = 0;
+    public SauceEffectType effect;
+    public float effectValue;
 
     public override void ModifySpellEffect(SpellData Spell)
     {
-        throw new System.NotImplementedException();
+        switch (effect)
+        {
+            case SauceEffectType.None:
+                break;
+            case SauceEffectType.DisableLineOfSight:
+                Spell.IsOccludedByWalls = false; 
+                break;
+            case SauceEffectType.DamageIncreaseForEachHitEnnemy:
+                Spell.Effects.Add(new(SpellEffectType.DamageIncreaseForEachHitEnnemy,StatType.FlatIncrease,effectValue));
+                break;
+            case SauceEffectType.DamageIncreasePercentageByDistanceToCaster:
+                Spell.Effects.Add(new(SpellEffectType.DamageIncreasePercentageByDistanceToCaster, StatType.PercentageIncrease, effectValue));
+                break;
+            case SauceEffectType.Fire:
+                Spell.Effects.Add(new(SpellEffectType.Fire, StatType.PercentageIncrease, effectValue));
+                break;
+        }
     }
 }

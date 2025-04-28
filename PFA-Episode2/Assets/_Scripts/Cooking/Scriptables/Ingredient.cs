@@ -6,39 +6,35 @@ public class Ingredient : IngredientBase
 {
     public IngredientsInfo.Family family;
 
-    [Header("Stats flat")]
+    [Header("Effect")]
+    public IngredientEffectType effectType;
+    public StatType effectStatType;
+    public float effectValue;
 
-    public float DamageIncrease = 0;
-    public float HealIncrease = 0;
-    public byte RecoilIncrease = 0;
-    public float ShieldAmountIncrease = 0;
-    public byte CoolDownIncrease = 1;
-
-    [Header("Multipliers")]
-
-    public float DamageMultiplier = 1;
-    public float HealMultiplier = 1,
-        RecoilMultiplier = 1,
-        ShieldAmountMultiplier = 1,
-        CoolDownMultiplier = 1;
+    [Header("Stats")]
+    public byte CoolDownIncrease;
 
     public override void ModifySpellEffect(SpellData Spell)
     {
-        Spell.Damage += DamageIncrease;
-        Spell.Heal += HealIncrease;
-        Spell.Recoil += RecoilIncrease;
-        Spell.ShieldAmount += ShieldAmountIncrease;
+        switch (effectType)
+        {
+            case IngredientEffectType.Damage:
+                Spell.Effects.Add(new(SpellEffectType.Damage,effectStatType, effectValue));
+                break;
+            case IngredientEffectType.Recoil:
+                Spell.Effects.Add(new(SpellEffectType.Recoil, effectStatType, effectValue));
+                break;
+            case IngredientEffectType.Range:
+                Spell.Range += (byte)Mathf.RoundToInt(effectValue);
+                break;
+            case IngredientEffectType.Shield:
+                Spell.Effects.Add(new(SpellEffectType.Shield, effectStatType, effectValue));
+                break;
+        }
+
         Spell.CoolDown += CoolDownIncrease;
+
+
     }
 
-    public override void OnAfterModifySpellEffect(SpellData Spell)
-    {
-        Spell.Damage *= DamageMultiplier;
-        Spell.Heal *= HealMultiplier;
-        Spell.Recoil = Mathf.CeilToInt(Spell.Recoil * RecoilMultiplier);
-        Spell.ShieldAmount *= ShieldAmountMultiplier;
-        Spell.CoolDown *= Mathf.CeilToInt(Spell.CoolDown * CoolDownMultiplier); ;
-
-        base.OnAfterModifySpellEffect(Spell);
-    }
 }
