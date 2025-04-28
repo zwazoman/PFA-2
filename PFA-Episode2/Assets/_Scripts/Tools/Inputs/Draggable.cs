@@ -29,7 +29,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         isDragging = false;
     }
 
-    public virtual void ResetDrag()
+    public virtual void Reset()
     {
         transform.position = originalPos;
     }

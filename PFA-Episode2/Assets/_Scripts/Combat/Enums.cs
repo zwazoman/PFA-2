@@ -1,17 +1,54 @@
 using UnityEngine;
 
-public enum StatusEffect
+public enum SauceEffectType
 {
     None,
+    DisableLineOfSight,
+    /// <summary>
+    /// degat = degat + DamageIncreaseForEachHitEnnemy * SpellCastingContext.numberOfHitEnnemies
+    /// </summary>
+    DamageIncreaseForEachHitEnnemy,
+
+    /// <summary>
+    /// en pourcentage : +n% par case
+    /// degat = degat * (1+SpellCastingContext.DistanceToPlayer * DamageIncreaseByDistanceToCaster / 100f)
+    /// </summary>
+    DamageIncreasePercentageByDistanceToCaster,
     Fire
 }
 
-public enum SauceEffect
+public enum IngredientEffectType
 {
-    None,
-    DisableLineOfSight
+    Damage,
+    Recoil,
+    Range,
+    Shield,
 }
 
+public enum SpellEffectType
+{
+    Damage,
+    Recoil,
+    Shield,
+    /// <summary>
+    /// degat = degat + DamageIncreaseForEachHitEnnemy * SpellCastingContext.numberOfHitEnnemies
+    /// </summary>
+    DamageIncreaseForEachHitEnnemy,
+
+    /// <summary>
+    /// en pourcentage : +n% par case
+    /// degat = degat * (1+SpellCastingContext.DistanceToPlayer * DamageIncreaseByDistanceToCaster / 100f)
+    /// </summary>
+    DamageIncreasePercentageByDistanceToCaster,
+    Fire
+}
+
+public enum StatType
+{
+    FlatIncrease,
+    Multiplier,
+    PercentageIncrease
+}
 
 public static class IngredientsInfo
 {

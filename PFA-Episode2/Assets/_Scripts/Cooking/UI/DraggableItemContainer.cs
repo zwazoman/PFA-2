@@ -1,30 +1,29 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
-using UnityEngine.Jobs;
 
-[RequireComponent(typeof(Rigidbody2D))]
-public class DraggableIngredient : Draggable
+public class DraggableItemContainer : Draggable
 {
+    [field: SerializeField]
+    public Object item {get; private set;}
+
     Transform originalParent;
     int siblingIndex;
 
-    Rigidbody2D rb;
-
-    const string deathZone = "DeathZone";
+    CanvasGroup canvasGroup;
 
     protected override void Awake()
     {
         base.Awake();
-        Assert.IsTrue( TryGetComponent(out rb),"Y'a pas de rigid body là gros fdp de mort");
-        rb.simulated = false;
+        TryGetComponent(out canvasGroup);
     }
 
     public override void OnBeginDrag(PointerEventData eventData)
     {
         originalParent = transform.parent;
-        siblingIndex = transform.GetSiblingIndex(); 
+        siblingIndex = transform.GetSiblingIndex();
+
+        canvasGroup.blocksRaycasts = false;
 
         transform.parent = transform.root;
         base.OnBeginDrag(eventData);
@@ -41,15 +40,22 @@ public class DraggableIngredient : Draggable
 
         List<RaycastResult> a = new();
         EventSystem.current.RaycastAll(eventData, a);
-        Debug.Log(a[0].gameObject, this);
-
-        ResetDrag();
+        if (a[0].gameObject.TryGetComponent(out CookingPot pot) && pot.TryAddIngredient(this))
+        {
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            Reset();
+        }
     }
 
-    public override void ResetDrag()
+    public override void Reset()
     {
+        gameObject.SetActive(true);
+        canvasGroup.blocksRaycasts = true;
         transform.parent = originalParent;
         transform.SetSiblingIndex(siblingIndex);
-        base.ResetDrag();
+        base.Reset();
     }
 }
