@@ -148,7 +148,6 @@ public static class Tools
         {
             var (node, distance) = queue.Dequeue();
             //result.Add(node);
-            Debug.Log(node);
             PointDistanceDict.Add(node,distance);
 
             if (distance < range)
@@ -162,4 +161,22 @@ public static class Tools
         //return result
         return PointDistanceDict;
     }
+
+    public static bool CheckMouseRay(out WayPoint point)
+    {
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        Physics.Raycast(ray, out hit, Mathf.Infinity/*, LayerMask.GetMask("Waypoint")*/);
+
+        point = null;
+
+        if (hit.collider.gameObject.TryGetComponent<WayPoint>(out WayPoint wayPoint))
+        {
+            point = wayPoint;
+            return true;
+        }
+        return false;
+    }
+
 }

@@ -32,13 +32,26 @@ public class Entity : MonoBehaviour
         CurrentPoint.StepOn(gameObject);
     }
 
-    public async UniTask PlayTurn()
+    public virtual async UniTask PlayTurn()
     {
-        //attend la fin du tour
+        ApplyWalkables();
+    }
+
+    public virtual async UniTask EndTurn()
+    {
+        ClearWalkables();
+    }
+
+        async void MoveTo(WayPoint targetPoint)
+    {
+        print("move to");
+        await TryMoveTo(targetPoint);
     }
 
     public virtual async UniTask TryMoveTo(WayPoint targetPoint)
     {
+        ClearWalkables();
+
         Stack<WayPoint> path = Tools.FindBestPath(CurrentPoint, targetPoint);
         int pathlength = path.Count;
 
@@ -61,6 +74,7 @@ public class Entity : MonoBehaviour
 
             MovePoints--;
         }
+        ApplyWalkables();
         // remettre les controles
     }
 
@@ -105,4 +119,22 @@ public class Entity : MonoBehaviour
         }
     }
 
+    public void ApplyWalkables()
+    {
+        Walkables.AddRange(Tools.GetReachablePoints(CurrentPoint, MovePoints).Keys);
+
+        foreach (WayPoint point in Walkables)
+        {
+            point.ChangeTileColor(point._walkableMaterial);
+        }
+    }
+
+    public void ClearWalkables()
+    {
+        foreach (WayPoint point in Walkables)
+        {
+            point.ChangeTileColor(point._normalMaterial);
+        }
+        Walkables.Clear();
+    }
 }

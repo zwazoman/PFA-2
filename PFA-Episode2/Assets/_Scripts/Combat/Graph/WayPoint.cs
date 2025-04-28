@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class WayPoint : MonoBehaviour
 {
@@ -173,4 +174,6 @@ public class WayPoint : MonoBehaviour
             Gizmos.DrawLine(transform.position, point.transform.position);
         }
     }
+
+
 }
