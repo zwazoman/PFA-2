@@ -19,6 +19,12 @@ public class PlayerEntity : Entity
     {
         base.Awake();
         TryGetComponent(out _spellCaster);
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+
         CombatManager.Instance.PlayerEntities.Add(this);
     }
 
@@ -37,8 +43,6 @@ public class PlayerEntity : Entity
     {
         while (!_endTurnButton.Pressed)
         {
-            print("chien");
-
             foreach (DraggableSpell draggable in spellsUI)
             {
                 await draggable.BeginDrag();

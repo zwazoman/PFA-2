@@ -26,28 +26,24 @@ public class CombatManager : MonoBehaviour
     }
     #endregion
 
-    public List<PlayerEntity> PlayerEntities = new List<PlayerEntity>();
-    
-    public List<EnemyEntity> EnemyEntities = new List<EnemyEntity>();
+    public List<PlayerEntity> PlayerEntities = new();
+    public List<EnemyEntity> EnemyEntities = new();
 
     private async void Start()
     {
         await UniTask.Yield();
-        StartGame();
+        await StartGame();
     }
 
-    public async void StartGame()
+    public async UniTask StartGame()
     {
-        while (true)
+        for(; ; )
         {
-            foreach (PlayerEntity playerEntity in PlayerEntities)
-            {
-                await playerEntity.PlayTurn();
-            }
-            foreach (EnemyEntity enemy in EnemyEntities)
-            {
+            foreach(PlayerEntity player in PlayerEntities)
+                await player.PlayTurn();
+
+            foreach(EnemyEntity enemy in EnemyEntities)
                 await enemy.PlayTurn();
-            }
 
             await UniTask.Yield();
         }

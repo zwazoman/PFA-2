@@ -34,6 +34,7 @@ public class Entity : MonoBehaviour
 
     public virtual async UniTask PlayTurn()
     {
+        print(gameObject.name);
         Tools.Flood(CurrentPoint);
     }
 
@@ -49,7 +50,7 @@ public class Entity : MonoBehaviour
         //EntityHealth.ApplyHealth(spell.Heal);
     }
 
-    public virtual async UniTask TryMoveTo(WayPoint targetPoint)
+    public virtual async UniTask TryMoveTo(WayPoint targetPoint, bool showTiles = true)
     {
         ClearWalkables();
 
@@ -83,7 +84,7 @@ public class Entity : MonoBehaviour
             MovePoints--;
         }
         Tools.Flood(CurrentPoint);
-        ApplyWalkables();
+        ApplyWalkables(showTiles);
     }
 
     async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 2)
@@ -101,7 +102,7 @@ public class Entity : MonoBehaviour
         }
     }
 
-    public void ApplyWalkables()
+    public void ApplyWalkables(bool showTiles = true)
     {
         if(Walkables.Count == 0) 
             Walkables.AddRange(Tools.GetWaypointsInRange(MovePoints));

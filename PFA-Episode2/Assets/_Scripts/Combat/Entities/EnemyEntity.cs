@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public class EnemyEntity : Entity
 {
@@ -9,14 +10,17 @@ public class EnemyEntity : Entity
     protected override void Start()
     {
         base.Start();
+
         CombatManager.Instance.EnemyEntities.Add(this);
     }
 
     public override async UniTask PlayTurn()
     {
-        print("énorme connard");
-
         await base.PlayTurn();
+
+        await TryAttack(ChooseSpell(0).SpellData);
+
+        await EndTurn();
     }
 
     public override async UniTask EndTurn()
@@ -48,7 +52,7 @@ public class EnemyEntity : Entity
             points.Add(player.CurrentPoint);
         }
 
-        return points.FindClosest(transform.position);
+        return points.FindClosestFloodPoint();
     }
 
     /// <summary>
@@ -56,46 +60,63 @@ public class EnemyEntity : Entity
     /// </summary>
     /// <param name="choosenSpell"></param>
     /// <returns></returns>
-    //protected async UniTask<bool> TryUseSpell(Spell choosenSpell)
-    //{
-    //    WayPoint targetPlayerPoint;
-    //    targetPlayerPoint = FindClosestPlayerPoint();
+    protected async UniTask<bool> TryAttack(SpellData choosenSpell)
+    {
+        WayPoint targetPlayerPoint = FindClosestPlayerPoint();
 
-    //    Dictionary<WayPoint, WayPoint> targetPointsDict = new Dictionary<WayPoint, WayPoint>();
-    //    targetPointsDict = choosenSpell.ComputeTargetableWaypoints(targetPlayerPoint);
+        targetPlayerPoint.ChangeTileColor(targetPlayerPoint._zoneMaterial); // c'est pété
 
-    //    List<WayPoint> allTargetPoints = new List<WayPoint>();
-    //    foreach (WayPoint targetpoint in targetPointsDict.Keys)
-    //    {
-    //        allTargetPoints.Add(targetpoint);
-    //    }
+        await UniTask.Delay(2000);
 
-    //    WayPoint choosenTargetPoint = allTargetPoints.FindClosest(transform.position);
-    //    print(choosenTargetPoint.transform.position);
+        Dictionary<WayPoint, WayPoint> targetPointsDict = new Dictionary<WayPoint, WayPoint>();
 
-    //    bool targetReached = await MoveToward(choosenTargetPoint); // le point le plus proche de lancé de sort
+        //créé le dict zonePoint,targetPoint
+        EntitySpellCaster.PreviewSpellRange(choosenSpell, targetPlayerPoint);
+        foreach(WayPoint rangePoint in EntitySpellCaster.RangePoints)
+        {
+            EntitySpellCaster.PreviewSpellZone(choosenSpell, rangePoint);
+            foreach (WayPoint zonePoint in EntitySpellCaster.ZonePoints)
+            {
+                if(!targetPointsDict.ContainsKey(zonePoint))
+                    targetPointsDict.Add(zonePoint, rangePoint);
+            }
+            await UniTask.Delay(500);
+            EntitySpellCaster.StopSpellZonePreview();
+        }
+        await UniTask.Delay(500);
+        EntitySpellCaster.StopSpellRangePreview();
 
-    //    if (targetReached)
-    //    {
-    //        print("attack !");
+        List<WayPoint> allTargetPoints = new List<WayPoint>();
+        allTargetPoints.AddRange(targetPointsDict.Keys);
 
-    //        WayPoint selected = targetPointsDict[choosenTargetPoint];
+        WayPoint choosenTargetPoint = allTargetPoints.FindClosestFloodPoint();
 
-    //        Vector3Int selfPointPos = graphMaker.PointDict.GetKeyFromValue(CurrentPoint);
-    //        Vector3Int targetPointPos = graphMaker.PointDict.GetKeyFromValue(targetPlayerPoint);
-    //        Vector3Int selectedpointPos = graphMaker.PointDict.GetKeyFromValue(selected);
+        bool targetReached = await MoveToward(choosenTargetPoint); // le point le plus proche de lancé de sort
 
-    //        WayPoint pointToSelect = graphMaker.PointDict[selfPointPos + (targetPointPos - selectedpointPos)];
+        if (targetReached)
+        {
+            print("attack !");
 
-    //        print(pointToSelect.transform.position);
+            WayPoint selected = targetPointsDict[choosenTargetPoint];
 
-    //        choosenSpell.StartSpellPreview(pointToSelect, true);
-    //        await choosenSpell.Execute(pointToSelect);
+            Vector3Int selfPointPos = GraphMaker.Instance.PointDict.GetKeyFromValue(CurrentPoint);
+            Vector3Int zonePointPos = GraphMaker.Instance.PointDict.GetKeyFromValue(targetPlayerPoint);
+            Vector3Int rangepointPos = GraphMaker.Instance.PointDict.GetKeyFromValue(selected);
 
-    //        return true;
-    //    }
-    //    return false;
-    //}
+            WayPoint pointToSelect = GraphMaker.Instance.PointDict[selfPointPos + (zonePointPos - rangepointPos)];
+
+            print(pointToSelect.transform.position);
+
+            EntitySpellCaster.PreviewSpellRange(choosenSpell);
+            await UniTask.Delay(2000);
+            EntitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect);
+            await UniTask.Delay(2000);
+            await EntitySpellCaster.TryCastSpell(choosenSpell, pointToSelect);
+
+            return true;
+        }
+        return false;
+    }
 
     /// <summary>
     /// déplace l'entité vers la case la plus proche de la target
@@ -106,14 +127,15 @@ public class EnemyEntity : Entity
     {
         print("move toward");
 
-        if (WaypointDistance.ContainsKey(targetPoint))
+        if (Walkables.Contains(targetPoint))
         {
             print("target in range !");
             await TryMoveTo(targetPoint);
             return true;
         }
         print("target not in range yet ! getting closer...");
-        await TryMoveTo(Walkables.FindClosest(targetPoint.transform.position));
+
+        await TryMoveTo(Tools.FindClosestFloodPoint(Walkables, Tools.SmallFlood(targetPoint, Tools.FloodDict[targetPoint])));
         return false;
     }
 
