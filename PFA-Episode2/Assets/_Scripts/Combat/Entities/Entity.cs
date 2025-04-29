@@ -34,19 +34,19 @@ public class Entity : MonoBehaviour
 
     public virtual async UniTask PlayTurn()
     {
-        ApplyWalkables();
+        Tools.Flood(CurrentPoint);
     }
 
     public virtual async UniTask EndTurn()
     {
-        ClearWalkables();
+        Tools.ClearFlood();
     }
 
     public async UniTask ApplySpell(SpellData spell)
     {
-        EntityHealth.ApplyShield(spell.ShieldAmount);
-        EntityHealth.ApplyHealth(-spell.Damage);
-        EntityHealth.ApplyHealth(spell.Heal);
+        //EntityHealth.ApplyShield(spell.Damage);
+        //EntityHealth.ApplyHealth(-spell.Damage);
+        //EntityHealth.ApplyHealth(spell.Heal);
     }
 
     public virtual async UniTask TryMoveTo(WayPoint targetPoint)
@@ -82,33 +82,8 @@ public class Entity : MonoBehaviour
 
             MovePoints--;
         }
+        Tools.Flood(CurrentPoint);
         ApplyWalkables();
-    }
-
-    protected void Flood(WayPoint targetPoint, int maxIndex = 0)
-    {
-        WaypointDistance.Clear();
-        Queue<WayPoint> tmp = new Queue<WayPoint>();
-
-        WaypointDistance.Add(targetPoint, 0);
-        tmp.Enqueue(targetPoint);
-
-        int index = 0;
-
-        while(tmp.Count > 0 /*&& index != maxIndex*/)
-        {
-            index++;
-            WayPoint currentPoint = tmp.Dequeue();
-           
-            foreach (WayPoint neighbour in currentPoint.Neighbours)
-            {
-                if (!WaypointDistance.ContainsKey(neighbour))
-                {
-                    tmp.Enqueue(neighbour);
-                    WaypointDistance.Add(neighbour, index);
-                }
-            }
-        }
     }
 
     async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 2)
@@ -128,9 +103,8 @@ public class Entity : MonoBehaviour
 
     public void ApplyWalkables()
     {
-        Walkables.AddRange(Tools.GetReachablePoints(CurrentPoint, MovePoints).Keys);
-
-        print(Walkables.Count);
+        if(Walkables.Count == 0) 
+            Walkables.AddRange(Tools.GetWaypointsInRange(MovePoints));
 
         foreach (WayPoint point in Walkables)
         {

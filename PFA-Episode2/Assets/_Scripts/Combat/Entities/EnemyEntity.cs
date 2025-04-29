@@ -14,6 +14,8 @@ public class EnemyEntity : Entity
 
     public override async UniTask PlayTurn()
     {
+        print("énorme connard");
+
         await base.PlayTurn();
     }
 

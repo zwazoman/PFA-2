@@ -9,9 +9,9 @@ public class PlayerEntity : Entity
 {
     [HideInInspector] public List<WayPoint> walkables = new();
 
-    [SerializeField] Button _endTurnButton;
-
     [SerializeField] List<DraggableSpell> spellsUI = new();
+
+    [SerializeField] EndButton _endTurnButton;
 
     SpellCaster _spellCaster;
 
@@ -22,31 +22,30 @@ public class PlayerEntity : Entity
         CombatManager.Instance.PlayerEntities.Add(this);
     }
 
-    protected override void Start()
-    {
-        base.Start();
-    }
-
     public override async UniTask PlayTurn()
     {
         await base.PlayTurn();
 
+        ApplyWalkables();
+
         await CheckPlayerInput();
+        
+        await EndTurn();
     }
 
     public async UniTask CheckPlayerInput()
     {
-        while (true /*bouton endTurn cliqué*/)
+        while (!_endTurnButton.Pressed)
         {
+            print("chien");
+
             foreach (DraggableSpell draggable in spellsUI)
             {
-                print("drag");
                 await draggable.BeginDrag();
             }
 
             if (Input.GetMouseButtonDown(0) && Tools.CheckMouseRay(out WayPoint point))
             {
-                print("point");
                 await TryMoveTo(point);
             }
 

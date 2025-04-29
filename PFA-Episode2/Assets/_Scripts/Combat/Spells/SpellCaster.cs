@@ -19,23 +19,23 @@ public class SpellCaster : MonoBehaviour
             center = entity.CurrentPoint;
         }
 
-        Dictionary<WayPoint,int> reachablePoints = Tools.GetReachablePoints(center, spell.Range);
+        List<WayPoint> rangePoints = Tools.GetWaypointsInRange(spell.Range);
 
-        foreach (WayPoint point in reachablePoints.Keys)
+        foreach (WayPoint point in rangePoints)
         {
             Vector3 pointPos = new Vector3(point.transform.position.x, transform.position.y, point.transform.position.z);
             Vector3 pointToEntity = transform.position - pointPos;
 
-            if((spell.Range > 3 && reachablePoints[point] < spell.Range - 3) || Physics.Raycast(pointPos, pointToEntity, pointToEntity.magnitude, _obstacleMask))
+            if((spell.Range > 3 && Tools.FloodDict[point] < spell.Range - 3) || Physics.Raycast(pointPos, pointToEntity, pointToEntity.magnitude, _obstacleMask))
             {
-                reachablePoints.Remove(point);
+                rangePoints.Remove(point);
             }
             else
             {
                 point.ChangeTileColor(point._rangeMaterial);
             }
         }
-        _rangePoints.AddRange(reachablePoints.Keys);
+        _rangePoints.AddRange(rangePoints);
     }
 
     public void PreviewSpellZone(SpellData spell, WayPoint targetedPoint)

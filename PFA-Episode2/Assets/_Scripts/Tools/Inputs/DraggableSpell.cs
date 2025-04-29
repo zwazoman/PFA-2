@@ -16,12 +16,6 @@ public class DraggableSpell : Draggable
 
     WayPoint _currentPoint = null;
 
-    private void Start()
-    {
-        if (_spell == null) return;
-        spellCaster.entity.CurrentPoint.ChangeTileColor(spellCaster.entity.CurrentPoint._walkableMaterial);
-    }
-
     public async UniTask BeginDrag()
     {
         if (isDragging)
@@ -58,5 +52,6 @@ public class DraggableSpell : Draggable
 
         spellCaster.entity.ApplyWalkables();
 
+        print(spellCaster.gameObject.name);
     }
 }
