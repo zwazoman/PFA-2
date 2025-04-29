@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 
 [CreateAssetMenu(fileName = "newIngredient", menuName = "Cooking/Ingredient")]
@@ -34,7 +35,7 @@ public class Ingredient : IngredientBase
 
         Spell.CoolDown += CoolDownIncrease;
 
-
     }
+
 
 }

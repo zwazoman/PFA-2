@@ -44,9 +44,9 @@ public class Entity : MonoBehaviour
 
     public async UniTask ApplySpell(SpellData spell)
     {
-        EntityHealth.ApplyShield(spell.ShieldAmount);
-        EntityHealth.ApplyHealth(-spell.Damage);
-        EntityHealth.ApplyHealth(spell.Heal);
+        //EntityHealth.ApplyShield(spell.ShieldAmount);
+        //EntityHealth.ApplyHealth(-spell.Damage);
+        //EntityHealth.ApplyHealth(spell.Heal);
     }
 
     public virtual async UniTask TryMoveTo(WayPoint targetPoint)

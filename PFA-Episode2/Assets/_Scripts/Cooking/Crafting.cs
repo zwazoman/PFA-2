@@ -1,15 +1,37 @@
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class Crafting : MonoBehaviour
 {
+    public static void CraftNewSpell(Ingredient[] ingredients, Sauce sauce)
+    {
+        SpellData spell = new SpellData();
+        foreach(Ingredient i in ingredients)
+        {
+            i.ModifySpellEffect(spell);
+        }
+
+        foreach (Ingredient i in ingredients)
+        {
+            i.OnAfterModifySpellEffect(spell);
+        }
+
+        sauce.ModifySpellEffect(spell);
+
+        SpellEffect[] effects = spell.Effects.ToArray();
+        SpellEffect.CollapseSpellEffects(ref effects);
+        spell.Effects = effects.ToList();
+    }
+
     #region combinations
     public static void ComputeAllFamilyCombination(out HashSet<string> combinations)
     {
         combinations = new();
         List<IngredientsInfo.Family> combination = new();
-        for (int i = 0; i < IngredientsInfo.FamilyCount; i++) 
+        for (int i = 0; i < IngredientsInfo.FamilyCount; i++)
         {
             for (int j = 0; j < IngredientsInfo.FamilyCount; j++)
             {
@@ -35,7 +57,7 @@ public class Crafting : MonoBehaviour
         IngredientsInfo.Family thirdFamily)
     {
         List<IngredientsInfo.Family> workerlist = new();
-        return ComputeFamilyCombinaison(firstFamily, secondFamily, thirdFamily,ref workerlist);
+        return ComputeFamilyCombinaison(firstFamily, secondFamily, thirdFamily, ref workerlist);
     }
     public static string ComputeFamilyCombinaison(
         IngredientsInfo.Family firstFamily,
@@ -55,23 +77,4 @@ public class Crafting : MonoBehaviour
     }
 
     #endregion
-
-    public static void CraftNewSpell(Ingredient[] ingredients, Sauce sauce)
-    {
-        SpellData spell = new SpellData();
-        foreach(Ingredient i in ingredients)
-        {
-            i.ModifySpellEffect(spell);
-        }
-
-        foreach (Ingredient i in ingredients)
-        {
-            i.OnAfterModifySpellEffect(spell);
-        }
-
-        sauce.ModifySpellEffect(spell);
-
-    }
-
-    
 }
