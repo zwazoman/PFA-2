@@ -9,9 +9,12 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     Vector3 originalPos;
 
+    RectTransform rectTransform ;
+    RectTransform RectTransform { get { if (rectTransform == null) TryGetComponent(out rectTransform); return rectTransform; } set => rectTransform = value; }
+
     protected virtual void Awake()
     {
-        originalPos = transform.position;
+        originalPos = RectTransform.anchoredPosition;
     }
 
     public virtual void OnBeginDrag(PointerEventData eventData)
@@ -31,6 +34,6 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     public virtual void Reset()
     {
-        transform.position = originalPos;
+        RectTransform.anchoredPosition = originalPos;
     }
 }

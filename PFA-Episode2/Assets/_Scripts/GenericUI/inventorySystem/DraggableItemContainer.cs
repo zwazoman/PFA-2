@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class DraggableItemContainer : Draggable
 {
@@ -20,13 +21,14 @@ public class DraggableItemContainer : Draggable
 
     public override void OnBeginDrag(PointerEventData eventData)
     {
+        base.OnBeginDrag(eventData);
         originalParent = transform.parent;
         siblingIndex = transform.GetSiblingIndex();
 
         canvasGroup.blocksRaycasts = false;
 
         transform.parent = transform.root;
-        base.OnBeginDrag(eventData);
+        
     }
 
     public override void OnDrag(PointerEventData eventData)
@@ -37,21 +39,11 @@ public class DraggableItemContainer : Draggable
     public override void OnEndDrag(PointerEventData eventData)
     {
         base.OnEndDrag(eventData);
-
-        List<RaycastResult> a = new();
-        EventSystem.current.RaycastAll(eventData, a);
-        if (a[0].gameObject.TryGetComponent(out CookingPot pot) && pot.TryAddIngredient(this))
-        {
-            gameObject.SetActive(false);
-        }
-        else
-        {
-            Reset();
-        }
     }
 
     public override void Reset()
     {
+        base.Reset();
         gameObject.SetActive(true);
         canvasGroup.blocksRaycasts = true;
         transform.parent = originalParent;
