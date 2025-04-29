@@ -13,7 +13,7 @@ public class MapMaker2 : MonoBehaviour
     public static MapMaker2 Instance;
 
     [Header("Map Adjusting")]
-    [SerializeField][Range(4, 15)][Tooltip("Le nombre de node minimum entre le Node de départ et le boss")] public int _mapRange;
+    [SerializeField][Range(4, 15)][Tooltip("Le nombre de node minimum entre le Node de départ et le boss")] public int MapRange;
     [SerializeField][Tooltip("Distance à laquelle le node va spawn sur l'axe X")] private int _distanceSpawnX = 200;
     [SerializeField][Tooltip("Distance à laquelle le node va spawn sur l'axe Y")] private int _distanceSpawnY = 0;
     [SerializeField][Tooltip("Position en X à laquelle le 1er Node spawn (Le mieux : -1045)")] private int _firstNodePosition = -1045;
@@ -29,13 +29,13 @@ public class MapMaker2 : MonoBehaviour
     [Header("Other ne pas toucher sauf code")]
     [field: SerializeField] public Node _nodePrefab { get; private set; }
     [SerializeField] private Node _parentNode;
-    public Node _currentNode { get; private set; }
+    public Node CurrentNode { get; private set; }
 
     /// <summary>
     /// Queue de node crée au début du jeu (environ 40)
     /// </summary>
     private Queue<Node> _nodeList = new();
-    public List<Node> _intersection { get; private set; } = new();  //Liste des nodes qui vont devoir continuer à crée un chemin à partir d'eux
+    public List<Node> Intersection { get; private set; } = new();  //Liste des nodes qui vont devoir continuer à crée un chemin à partir d'eux
     public Dictionary<Vector3Int, Node> _dicoNode { get; set; } = new(); //ToDo :Faire en sorte qu'il soit privé sauf pour la save.
     private int _currentHeight = 3;
     private Node _existingValue;
@@ -65,12 +65,12 @@ public class MapMaker2 : MonoBehaviour
         _parentNode.transform.localPosition = startPos;
         _dicoNode.Add(startPos, _parentNode);
 
-        for (int i = StartPosition; i <= _mapRange; i++)
+        for (int i = StartPosition; i <= MapRange; i++)
         {
             _currentHeight = _parentNode.Hauteur;
-            _currentNode = _nodeList.Dequeue();
+            CurrentNode = _nodeList.Dequeue();
             #region BossVerif
-            if (_parentNode.Position >= _mapRange - 2) //zone faut revenir au Boss
+            if (_parentNode.Position >= MapRange - 2) //zone faut revenir au Boss
             {
                 if (_currentHeight != 3)
                 {
@@ -91,8 +91,8 @@ public class MapMaker2 : MonoBehaviour
             }
             else { ToutDroit(i, _parentNode); }
             #endregion
-            MapBuildingTools.Instance.AttributeEvent(_mapRange);
-            _parentNode = _currentNode;
+            MapBuildingTools.Instance.AttributeEvent(MapRange);
+            _parentNode = CurrentNode;
         }
     }
 
@@ -103,39 +103,39 @@ public class MapMaker2 : MonoBehaviour
             if (Random.Range(1, 110) <= _probaToutDroitCroisement) //Proba de faire un tout droit
             {
                 _probaToutDroitCroisement = 0;
-                _currentNode = _nodeList.Dequeue();
-                _currentNode.OnYReviendra = true;
-                _intersection.Add(_currentNode);
+                CurrentNode = _nodeList.Dequeue();
+                CurrentNode.OnYReviendra = true;
+                Intersection.Add(CurrentNode);
                 ToutDroit(tourboucle, _parentNode);
-                _currentNode.Hauteur = _currentHeight;
+                CurrentNode.Hauteur = _currentHeight;
             }
 
-            _currentNode = _nodeList.Dequeue();
+            CurrentNode = _nodeList.Dequeue();
             _distanceSpawnYModifiable = _distanceSpawnY;
-            _currentNode.OnYReviendra = true;
-            _intersection.Add(_currentNode);
+            CurrentNode.OnYReviendra = true;
+            Intersection.Add(CurrentNode);
             ToutDroit(tourboucle, _parentNode);
-            _currentNode.Hauteur = _currentHeight + 1;
-            print(_currentNode.Hauteur);
+            CurrentNode.Hauteur = _currentHeight + 1;
+            print(CurrentNode.Hauteur);
 
-            _currentNode = _nodeList.Dequeue();
+            CurrentNode = _nodeList.Dequeue();
             _distanceSpawnYModifiable = -_distanceSpawnY;
             ToutDroit(tourboucle, _parentNode);
-            _currentNode.Hauteur = _currentHeight - 1;
+            CurrentNode.Hauteur = _currentHeight - 1;
         }
         else if (_currentHeight + 1 <= 4) //Si on peut monter
         {
             _distanceSpawnYModifiable = _distanceSpawnY;
-            _currentNode.OnYReviendra = true;
-            _intersection.Add(_currentNode);
+            CurrentNode.OnYReviendra = true;
+            Intersection.Add(CurrentNode);
             ToutDroit(tourboucle, _parentNode);
-            _currentNode.Hauteur = _currentHeight + 1;
+            CurrentNode.Hauteur = _currentHeight + 1;
         }
         else if (_currentHeight - 1 >= 2) //Si on peut descendre
         {
             _distanceSpawnYModifiable = -_distanceSpawnY;
             ToutDroit(tourboucle, _parentNode);
-            _currentNode.Hauteur = _currentHeight - 1;
+            CurrentNode.Hauteur = _currentHeight - 1;
         }
         _probaIntersection = 0;
         _distanceSpawnYModifiable = 0;
@@ -145,22 +145,22 @@ public class MapMaker2 : MonoBehaviour
         int maxToutDroit = Random.Range(1, 3); // en bas
         if (_toutdroit >= maxToutDroit) { _probaIntersection = _probaIntersectionModifiable; }
         //On le place et on arrondit pour le dicooo
-        Vector3Int newPosition = new Vector3Int((_distanceSpawnX * tourboucle) + Mathf.RoundToInt(_currentNode.transform.localPosition.x), Mathf.RoundToInt(NodeForY.transform.localPosition.y) + _distanceSpawnYModifiable, Mathf.RoundToInt(_currentNode.transform.localPosition.z));
+        Vector3Int newPosition = new Vector3Int((_distanceSpawnX * tourboucle) + Mathf.RoundToInt(CurrentNode.transform.localPosition.x), Mathf.RoundToInt(NodeForY.transform.localPosition.y) + _distanceSpawnYModifiable, Mathf.RoundToInt(CurrentNode.transform.localPosition.z));
         if (_dicoNode.ContainsKey(newPosition))
         {
             _existingValue = _dicoNode[newPosition];
             print("Un node est déja présent ici" + _existingValue);
-            _nodeList.Enqueue(_currentNode);
+            _nodeList.Enqueue(CurrentNode);
         }
         else
         {
-            _currentNode.transform.localPosition = newPosition;
-            _currentNode.gameObject.SetActive(true);
-            _currentNode.Hauteur = _currentHeight;
-            _dicoNode.Add(newPosition, _currentNode);
-            MapBuildingTools.Instance.TraceTonTrait(_parentNode, _currentNode);
-            _currentNode.Creator = _parentNode;
-            _currentNode.Position = tourboucle;
+            CurrentNode.transform.localPosition = newPosition;
+            CurrentNode.gameObject.SetActive(true);
+            CurrentNode.Hauteur = _currentHeight;
+            _dicoNode.Add(newPosition, CurrentNode);
+            MapBuildingTools.Instance.TraceTonTrait(_parentNode, CurrentNode);
+            CurrentNode.Creator = _parentNode;
+            CurrentNode.Position = tourboucle;
         }
         _toutdroit++;
     }
@@ -171,13 +171,13 @@ public class MapMaker2 : MonoBehaviour
         {
             _distanceSpawnYModifiable = _distanceSpawnY;
             ToutDroit(tourboucle, _parentNode);
-            _currentNode.Hauteur = _currentHeight + 1;
+            CurrentNode.Hauteur = _currentHeight + 1;
         }
         else //Si on peut descendre
         {
             _distanceSpawnYModifiable = -_distanceSpawnY;
             ToutDroit(tourboucle, _parentNode);
-            _currentNode.Hauteur = _currentHeight - 1;
+            CurrentNode.Hauteur = _currentHeight - 1;
         }
         _distanceSpawnYModifiable = 0;
     }
@@ -186,17 +186,17 @@ public class MapMaker2 : MonoBehaviour
     {
         _toutdroit = 0;
         int maxToutDroit = Random.Range(1, 5); //en haut
-        foreach (Node node in _intersection)
+        foreach (Node node in Intersection)
         {
             _parentNode = node;
             while (true)
             {
                 _currentHeight = _parentNode.Hauteur;
-                _currentNode = _nodeList.Dequeue();
+                CurrentNode = _nodeList.Dequeue();
                 int tour = _parentNode.Position + 1;
 
                 // Calcul de la position potentielle
-                Vector3Int nextPosition = new Vector3Int((_distanceSpawnX * tour) + Mathf.RoundToInt(_currentNode.transform.localPosition.x), Mathf.RoundToInt(_parentNode.transform.localPosition.y), Mathf.RoundToInt(_currentNode.transform.localPosition.z));
+                Vector3Int nextPosition = new Vector3Int((_distanceSpawnX * tour) + Mathf.RoundToInt(CurrentNode.transform.localPosition.x), Mathf.RoundToInt(_parentNode.transform.localPosition.y), Mathf.RoundToInt(CurrentNode.transform.localPosition.z));
 
                 if (_dicoNode.ContainsKey(nextPosition))
                 {
@@ -205,10 +205,10 @@ public class MapMaker2 : MonoBehaviour
                     MapBuildingTools.Instance.TraceTonTrait(_parentNode, nodeExistant);// Trace une ligne entre le parent actuel et le node déjà existant
                     nodeExistant.Creator = _parentNode;
 
-                    _nodeList.Enqueue(_currentNode);
+                    _nodeList.Enqueue(CurrentNode);
                     break;
                 }
-                if (_parentNode.Position >= _mapRange - 2) //Zone du boss
+                if (_parentNode.Position >= MapRange - 2) //Zone du boss
                 {
                     if (_currentHeight != 3)
                     {
@@ -241,10 +241,10 @@ public class MapMaker2 : MonoBehaviour
                 {
                     ToutDroit(tour, _parentNode);
                 }
-                MapBuildingTools.Instance.AttributeEvent(_mapRange);
-                _parentNode = _currentNode;
+                MapBuildingTools.Instance.AttributeEvent(MapRange);
+                _parentNode = CurrentNode;
             }
         }
-        MapBuildingTools.Instance.AttributeEvent(_mapRange);
+        MapBuildingTools.Instance.AttributeEvent(MapRange);
     }
 }
