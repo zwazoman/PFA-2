@@ -5,6 +5,7 @@ using static UnityEngine.Rendering.DebugUI;
 [CreateAssetMenu(fileName = "newIngredient", menuName = "Cooking/Ingredient")]
 public class Ingredient : IngredientBase
 {
+    [Header("Ingredient")]
     public IngredientsInfo.Family family;
 
     [Header("Effect")]
