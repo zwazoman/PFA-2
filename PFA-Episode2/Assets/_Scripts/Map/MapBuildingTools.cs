@@ -96,4 +96,14 @@ public class MapBuildingTools : MonoBehaviour
                 break;
         }
     }
+
+    public Vector3Int GetKeyFromNode(Node node)
+    {
+        foreach (var kvp in MapMaker2.Instance._dicoNode)
+        {
+            if (kvp.Value == node)
+                return kvp.Key;
+        }
+        return Vector3Int.zero; // par d?faut si pas trouv?
+    }
 }
