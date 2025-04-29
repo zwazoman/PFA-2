@@ -28,7 +28,7 @@ public class MapAttributeEvent : MonoBehaviour
     public void MapMakingEvent()
     {
         _dico = MapMaker2.Instance._dicoNode;
-        for (int i = 4; i <= MapMaker2.Instance._mapRange - 2; i++)
+        for (int i = 4; i <= MapMaker2.Instance.MapRange - 2; i++)
         {
             _nombreNodeAttribue = 0;
             foreach (KeyValuePair<Vector3Int, Node> KeyAndValues in _dico)
@@ -131,9 +131,9 @@ public class MapAttributeEvent : MonoBehaviour
     /// </summary>
     public void MapMakingEventBeforeBoss()
     {
-        if (MapMaker2.Instance._currentNode.Creator.EventName == NodesEventTypes.Cuisine) //Dans le cas ou une cuisine était juste avant
+        if (MapMaker2.Instance.CurrentNode.Creator.EventName == NodesEventTypes.Cuisine) //Dans le cas ou une cuisine était juste avant
         {
-            MapMaker2.Instance._currentNode.EventName = NodesEventTypes.Combat;
+            MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Combat;
             return;
         }
 
@@ -141,12 +141,12 @@ public class MapAttributeEvent : MonoBehaviour
 
         if (result <= _probaCuisine)
         {
-            MapMaker2.Instance._currentNode.EventName = NodesEventTypes.Cuisine;
+            MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Cuisine;
             return;
         }
         else
         {
-            MapMaker2.Instance._currentNode.EventName = NodesEventTypes.Heal;
+            MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Heal;
             return;
         }
     }
