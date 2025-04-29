@@ -20,13 +20,14 @@ public class DraggableItemContainer : Draggable
 
     public override void OnBeginDrag(PointerEventData eventData)
     {
+        base.OnBeginDrag(eventData);
         originalParent = transform.parent;
         siblingIndex = transform.GetSiblingIndex();
 
         canvasGroup.blocksRaycasts = false;
 
         transform.parent = transform.root;
-        base.OnBeginDrag(eventData);
+        
     }
 
     public override void OnDrag(PointerEventData eventData)
@@ -52,6 +53,7 @@ public class DraggableItemContainer : Draggable
 
     public override void Reset()
     {
+        base.Reset();
         gameObject.SetActive(true);
         canvasGroup.blocksRaycasts = true;
         transform.parent = originalParent;
