@@ -18,6 +18,8 @@ public class EnemyEntity : Entity
     {
         await base.PlayTurn();
 
+        ApplyWalkables(true);
+
         await TryAttack(ChooseSpell(0).SpellData);
 
         await EndTurn();
@@ -66,12 +68,12 @@ public class EnemyEntity : Entity
     {
         WayPoint targetPlayerPoint = FindClosestPlayerPoint();
 
-        targetPlayerPoint.ChangeTileColor(targetPlayerPoint._zoneMaterial); // c'est pété
+        targetPlayerPoint.ChangeTileColor(targetPlayerPoint._zoneMaterial);
 
-        Dictionary<WayPoint, WayPoint> targetPointsDict = new Dictionary<WayPoint, WayPoint>();
+        Dictionary<WayPoint, WayPoint> targetPointsDict = new();
 
         //créé le dict zonePoint,targetPoint
-        EntitySpellCaster.PreviewSpellRange(choosenSpell, targetPlayerPoint);
+        EntitySpellCaster.PreviewSpellRange(choosenSpell, targetPlayerPoint, true, choosenSpell.Range);
         foreach(WayPoint rangePoint in EntitySpellCaster.RangePoints)
         {
             EntitySpellCaster.PreviewSpellZone(choosenSpell, rangePoint);
@@ -89,9 +91,20 @@ public class EnemyEntity : Entity
         List<WayPoint> allTargetPoints = new List<WayPoint>();
         allTargetPoints.AddRange(targetPointsDict.Keys);
 
+        foreach(WayPoint point in allTargetPoints)
+        {
+            point.ChangeTileColor(point._zoneMaterial);
+        }
+
         WayPoint choosenTargetPoint = allTargetPoints.FindClosestFloodPoint();
 
         print(choosenTargetPoint);
+
+        await UniTask.Delay(1000);
+
+        choosenTargetPoint.ChangeTileColor(choosenTargetPoint._rangeMaterial);
+
+        await UniTask.Delay(1000);
 
         bool targetReached = await MoveToward(choosenTargetPoint); // le point le plus proche de lancé de sort
 
@@ -125,7 +138,7 @@ public class EnemyEntity : Entity
     /// <returns></returns>
     protected async UniTask<bool> MoveToward(WayPoint targetPoint)
     {
-        print("move toward");
+        await UniTask.Delay(1000);
 
         if (Walkables.Contains(targetPoint))
         {
