@@ -10,6 +10,7 @@ public class SpellData
     /// le nom du spell
     /// </summary>
     public string Name;
+    public Sprite Sprite;
 
     public string IngredientsCombination;
 

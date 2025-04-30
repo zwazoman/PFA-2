@@ -1,5 +1,8 @@
+using DG.Tweening;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public static class Tools
 {
@@ -212,7 +215,7 @@ public static class Tools
         FloodDict.Clear();
     }
 
-    public static List<WayPoint> GetWaypointsInRange(int range, Dictionary<WayPoint,int> floodDict = null)
+    public static List<WayPoint> GetWaypointsInRange(int range, Dictionary<WayPoint, int> floodDict = null)
     {
         if (floodDict == null)
             floodDict = FloodDict;
@@ -243,6 +246,20 @@ public static class Tools
             return true;
         }
         return false;
+    }
+
+    //images
+
+    public static void Hide(this CanvasGroup group)
+    {
+        group.DOComplete();
+        group.DOFade(0, 1);
+    }
+
+    public static void Show(this CanvasGroup group)
+    {
+        group.DOComplete();
+        group.DOFade(1, 1);
     }
 
 }
