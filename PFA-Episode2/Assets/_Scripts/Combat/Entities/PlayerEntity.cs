@@ -39,6 +39,13 @@ public class PlayerEntity : Entity
         await EndTurn();
     }
 
+    public override async UniTask EndTurn()
+    {
+        await base.EndTurn();
+
+        _endTurnButton.Pressed = false;
+    }
+
     public async UniTask CheckPlayerInput()
     {
         while (!_endTurnButton.Pressed)
@@ -55,11 +62,5 @@ public class PlayerEntity : Entity
 
             await UniTask.Yield();
         }
-    }
-
-
-    public override async UniTask EndTurn()
-    {
-        await base.EndTurn();
     }
 }

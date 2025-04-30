@@ -210,7 +210,6 @@ public static class Tools
                         visited.Add(point);
                     }
         }
-        FloodDict = PointDistanceDict;
         return PointDistanceDict;
     }
     public static void ClearFlood()
@@ -218,13 +217,16 @@ public static class Tools
         FloodDict.Clear();
     }
 
-    public static List<WayPoint> GetWaypointsInRange(int range)
+    public static List<WayPoint> GetWaypointsInRange(int range, Dictionary<WayPoint,int> floodDict = null)
     {
+        if (floodDict == null)
+            floodDict = FloodDict;
+
         List<WayPoint> wayPoints = new();
 
-        foreach (WayPoint point in FloodDict.Keys)
+        foreach (WayPoint point in floodDict.Keys)
         {
-            if (FloodDict[point] <= range)
+            if (floodDict[point] <= range)
                 wayPoints.Add(point);
         }
 
