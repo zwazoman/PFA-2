@@ -120,7 +120,10 @@ public static class Tools
         foreach (WayPoint point in wayPoints)
         {
             if (!floodDict.ContainsKey(point))
+            {
+                Debug.Log("point not in flood");
                 continue;
+            }
 
             int pointDistance = floodDict[point];
             if (pointDistance < closestDistance)
@@ -163,6 +166,7 @@ public static class Tools
     /// </summary>
     public static Dictionary<WayPoint, int> Flood(WayPoint startNode) //On part d'un node de départ avec une range donné pour regardé les voisins
     {
+        FloodDict.Clear();
         Dictionary<WayPoint, int> PointDistanceDict = new();
         Queue<(WayPoint, int)> queue = new();
         HashSet<WayPoint> visited = new() { startNode };
@@ -175,7 +179,7 @@ public static class Tools
             PointDistanceDict.Add(node, distance);
 
             foreach (var neighbor in node.Neighbours)
-                if (neighbor is WayPoint point && !visited.Contains(point) && point.IsActive)
+                if (neighbor is WayPoint point && !visited.Contains(point) && point.State != WaypointState.Obstructed)
                 {
                     queue.Enqueue((point, distance + 1));
                     visited.Add(point);
@@ -200,7 +204,7 @@ public static class Tools
 
             if (distance < range)
                 foreach (var neighbor in node.Neighbours)
-                    if (neighbor is WayPoint point && !visited.Contains(point) && point.IsActive)
+                    if (neighbor is WayPoint point && !visited.Contains(point) && point.State != WaypointState.Obstructed)
                     {
                         queue.Enqueue((point, distance + 1));
                         visited.Add(point);

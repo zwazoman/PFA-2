@@ -52,7 +52,9 @@ public class EnemyEntity : Entity
             points.Add(player.CurrentPoint);
         }
 
-        return points.FindClosestFloodPoint();
+        WayPoint result = points.FindClosestFloodPoint();
+
+        return result;
     }
 
     /// <summary>
@@ -66,8 +68,6 @@ public class EnemyEntity : Entity
 
         targetPlayerPoint.ChangeTileColor(targetPlayerPoint._zoneMaterial); // c'est pété
 
-        await UniTask.Delay(2000);
-
         Dictionary<WayPoint, WayPoint> targetPointsDict = new Dictionary<WayPoint, WayPoint>();
 
         //créé le dict zonePoint,targetPoint
@@ -80,7 +80,7 @@ public class EnemyEntity : Entity
                 if(!targetPointsDict.ContainsKey(zonePoint))
                     targetPointsDict.Add(zonePoint, rangePoint);
             }
-            await UniTask.Delay(500);
+            await UniTask.Delay(100);
             EntitySpellCaster.StopSpellZonePreview();
         }
         await UniTask.Delay(500);
@@ -90,6 +90,8 @@ public class EnemyEntity : Entity
         allTargetPoints.AddRange(targetPointsDict.Keys);
 
         WayPoint choosenTargetPoint = allTargetPoints.FindClosestFloodPoint();
+
+        print(choosenTargetPoint);
 
         bool targetReached = await MoveToward(choosenTargetPoint); // le point le plus proche de lancé de sort
 
@@ -104,8 +106,6 @@ public class EnemyEntity : Entity
             Vector3Int rangepointPos = GraphMaker.Instance.PointDict.GetKeyFromValue(selected);
 
             WayPoint pointToSelect = GraphMaker.Instance.PointDict[selfPointPos + (zonePointPos - rangepointPos)];
-
-            print(pointToSelect.transform.position);
 
             EntitySpellCaster.PreviewSpellRange(choosenSpell);
             await UniTask.Delay(2000);
@@ -134,6 +134,7 @@ public class EnemyEntity : Entity
             return true;
         }
         print("target not in range yet ! getting closer...");
+        print(Tools.FindClosestFloodPoint(Walkables, Tools.SmallFlood(targetPoint, Tools.FloodDict[targetPoint])));
 
         await TryMoveTo(Tools.FindClosestFloodPoint(Walkables, Tools.SmallFlood(targetPoint, Tools.FloodDict[targetPoint])));
         return false;
