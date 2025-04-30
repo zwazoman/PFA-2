@@ -1,5 +1,3 @@
-using UnityEngine;
-
 /// <summary>
 /// utilisé pour appliquer des effets en plus
 /// au moment de lancer un sort.

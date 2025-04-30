@@ -1,6 +1,3 @@
-using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
-
 public static class Serializer
 {
     //spell effect

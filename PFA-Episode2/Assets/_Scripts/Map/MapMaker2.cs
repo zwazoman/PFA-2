@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static NodeTypes;
 
 /// <summary>
 /// Script qui construit la carte du jeu

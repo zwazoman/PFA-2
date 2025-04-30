@@ -1,8 +1,6 @@
-using System.Threading.Tasks;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
-using UnityEngine.UI;
 
 [RequireComponent(typeof(SpellCaster))]
 public class PlayerEntity : Entity
