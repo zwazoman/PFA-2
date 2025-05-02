@@ -239,7 +239,7 @@ public static class Tools
 
         point = null;
 
-        if (hit.collider.gameObject.TryGetComponent<WayPoint>(out WayPoint wayPoint))
+        if (hit.collider != null && hit.collider.gameObject.TryGetComponent<WayPoint>(out WayPoint wayPoint))
         {
             point = wayPoint;
             return true;

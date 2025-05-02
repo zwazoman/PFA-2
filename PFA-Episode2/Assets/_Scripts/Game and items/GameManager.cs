@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -19,12 +20,18 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    public Inventory playerInventory = new();
+
+    [SerializeField] List<PremadeSpell> premadeSpells = new();
+
     private void Awake()
     {
         instance = this;
         DontDestroyOnLoad(this);
+
+        foreach(PremadeSpell premadeSpell in premadeSpells)
+        {
+            playerInventory.Spells.Add(premadeSpell.SpellData);
+        }
     }
-
-    public Inventory playerInventory = new();
-
 }

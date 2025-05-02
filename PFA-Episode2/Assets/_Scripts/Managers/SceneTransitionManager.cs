@@ -77,7 +77,7 @@ public class SceneTransitionManager : MonoBehaviour
 
     private void Start()
     {
-        _CanvasGroup.alpha = 1;
-        FadeIn();
+        //_CanvasGroup.alpha = 1;
+        //FadeIn();
     }
 }

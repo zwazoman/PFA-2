@@ -15,10 +15,6 @@ public class PlayerEntity : Entity
     protected override void Awake()
     {
         base.Awake();
-
-        foreach (DraggableSpell spell in spellsUI)
-            spell.spellCaster = EntitySpellCaster;
-
     }
 
     protected override void Start()
