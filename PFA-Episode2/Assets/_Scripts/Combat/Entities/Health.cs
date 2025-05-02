@@ -14,6 +14,19 @@ public class Health : MonoBehaviour
 
     float _currentHealth;
 
+    public void ApplyDamage(float damage)
+    {
+        if(ShieldAmount > 0)
+        {
+            float damageRemain = Mathf.Abs(ShieldAmount - damage);
+            ApplyShield(damage);
+            damage = damageRemain;
+        }
+
+        ApplyHealth(damage);
+            
+    }
+
     public void ApplyHealth(float heal)
     {
         OnTakeHeal?.Invoke(heal);
@@ -23,7 +36,7 @@ public class Health : MonoBehaviour
         if (_currentHealth >= MaxHealth)
             _currentHealth = MaxHealth;
         else if (_currentHealth <= 0)
-            //OnDie?.Invoke();
+            OnDie?.Invoke();
             print(gameObject.name + " is dead");
     }
 
@@ -32,5 +45,8 @@ public class Health : MonoBehaviour
         OnTakeShield?.Invoke(shield);
 
         ShieldAmount += shield;
+
+        if(ShieldAmount < 0)
+            ShieldAmount = 0;
     }
 }
