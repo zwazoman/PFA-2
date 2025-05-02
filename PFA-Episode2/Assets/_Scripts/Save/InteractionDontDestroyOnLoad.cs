@@ -8,7 +8,7 @@ public class InteractDontDestroyOnLoad : MonoBehaviour
     // Fonction changer le numéro de la sauvegarde
     public void ChangeSaveID(int id)
     {
-        SaveManager.Instance.SaveID = (byte)id;
+        SaveMapGeneration.Instance.SaveID = (byte)id;
     }
 
     // Fonction pour lancer les fonction du SaveManager
@@ -17,13 +17,13 @@ public class InteractDontDestroyOnLoad : MonoBehaviour
         switch (function)
         {
             case 0:
-                SaveManager.Instance.SaveMap();
+                SaveMapGeneration.Instance.SaveMap();
                 break;
             case 1:
-                SaveManager.Instance.LoadMap();
+                SaveMapGeneration.Instance.LoadMap();
                 break;
             case 2:
-                SaveManager.Instance.DeleteMap();
+                SaveMapGeneration.Instance.DeleteMap();
                 break;
         }
     }
