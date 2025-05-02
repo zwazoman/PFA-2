@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class ChooseIngredient : MonoBehaviour
 {
     [SerializeField] private List<Ingredient> _listScriptableIngredient = new();
+    [SerializeField] private List<IngredientUI> _listIngredientUI = new();
 
     private void Start()
     {
