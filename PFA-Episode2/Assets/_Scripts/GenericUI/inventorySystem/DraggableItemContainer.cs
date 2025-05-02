@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 public class DraggableItemContainer : Draggable
 {
     [field: SerializeField]
-    public Object item {get; private set;}
+    public Object item {get; protected set;}
 
     Transform originalParent;
     int siblingIndex;
