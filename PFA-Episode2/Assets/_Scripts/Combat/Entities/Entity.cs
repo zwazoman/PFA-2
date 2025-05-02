@@ -11,7 +11,8 @@ public class Entity : MonoBehaviour
     [HideInInspector] public Health EntityHealth;
     [HideInInspector] public SpellCaster EntitySpellCaster;
 
-    [SerializeField] public int MovePoints;
+    [SerializeField] public int MaxMovePoints;
+    int currentMovePoints;
 
     protected Dictionary<WayPoint,int> WaypointDistance = new Dictionary<WayPoint,int>();
     protected List<WayPoint> Walkables = new List<WayPoint>();
@@ -29,36 +30,43 @@ public class Entity : MonoBehaviour
         transform.position += Vector3.up * 1.3f;
 
         CurrentPoint = GraphMaker.Instance.PointDict[roundedPos];
-        CurrentPoint.StepOn(gameObject);
+        CurrentPoint.StepOn(this);
     }
 
     public virtual async UniTask PlayTurn()
     {
-        ApplyWalkables();
+        print(gameObject.name);
+        Tools.Flood(CurrentPoint);
+        currentMovePoints = MaxMovePoints;
     }
 
     public virtual async UniTask EndTurn()
     {
+        Tools.ClearFlood();
         ClearWalkables();
     }
 
-        async void MoveTo(WayPoint targetPoint)
+    public async UniTask ApplySpell(SpellData spell)
     {
-        print("move to");
-        await TryMoveTo(targetPoint);
+        //EntityHealth.ApplyShield(spell.Damage);
+        //EntityHealth.ApplyHealth(-spell.Damage);
+        //EntityHealth.ApplyHealth(spell.Heal);
     }
 
-    public virtual async UniTask TryMoveTo(WayPoint targetPoint)
+    public virtual async UniTask TryMoveTo(WayPoint targetPoint, bool showTiles = true)
     {
-        ClearWalkables();
-
         Stack<WayPoint> path = Tools.FindBestPath(CurrentPoint, targetPoint);
         int pathlength = path.Count;
 
-        if(pathlength > MovePoints)
+        if(pathlength > currentMovePoints)
         {
             print("plus de pm !");
             return;
+        }
+
+        foreach(WayPoint p in path)
+        {
+            p.ChangeTileColor(p._walkedMaterial);
         }
 
         for (int i = 0; i < pathlength; i++)
@@ -70,41 +78,18 @@ public class Entity : MonoBehaviour
             await StartMoving(steppedOnPoint.transform.position);
 
             CurrentPoint = steppedOnPoint;
-            steppedOnPoint.StepOn(gameObject);
+            steppedOnPoint.StepOn(this);
 
-            MovePoints--;
+            steppedOnPoint.ChangeTileColor(steppedOnPoint._normalMaterial);
+
+            currentMovePoints--;
         }
-        ApplyWalkables();
-        // remettre les controles
+        Tools.Flood(CurrentPoint);
+        ClearWalkables();
+        ApplyWalkables(showTiles);
     }
 
-    protected void Flood(WayPoint targetPoint, int maxIndex = 0)
-    {
-        WaypointDistance.Clear();
-        Queue<WayPoint> tmp = new Queue<WayPoint>();
-
-        WaypointDistance.Add(targetPoint, 0);
-        tmp.Enqueue(targetPoint);
-
-        int index = 0;
-
-        while(tmp.Count > 0 /*&& index != maxIndex*/)
-        {
-            index++;
-            WayPoint currentPoint = tmp.Dequeue();
-           
-            foreach (WayPoint neighbour in currentPoint.Neighbours)
-            {
-                if (!WaypointDistance.ContainsKey(neighbour))
-                {
-                    tmp.Enqueue(neighbour);
-                    WaypointDistance.Add(neighbour, index);
-                }
-            }
-        }
-    }
-
-    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 10)
+    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 8)
     {
         targetPos.y = 1f;
         Vector3 offset = targetPos - (Vector3)transform.position;
@@ -119,13 +104,17 @@ public class Entity : MonoBehaviour
         }
     }
 
-    public void ApplyWalkables()
+    public void ApplyWalkables(bool showTiles = true)
     {
-        Walkables.AddRange(Tools.GetReachablePoints(CurrentPoint, MovePoints).Keys);
+        if(Walkables.Count == 0)
+            Walkables.AddRange(Tools.GetWaypointsInRange(currentMovePoints));
 
         foreach (WayPoint point in Walkables)
         {
-            point.ChangeTileColor(point._walkableMaterial);
+            if(point.State == WaypointState.Free)
+            {
+                point.ChangeTileColor(point._walkableMaterial);
+            }
         }
     }
 
@@ -137,4 +126,6 @@ public class Entity : MonoBehaviour
         }
         Walkables.Clear();
     }
+
+
 }

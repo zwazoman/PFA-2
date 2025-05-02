@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
@@ -8,45 +7,59 @@ using UnityEngine.UI;
 public class PlayerEntity : Entity
 {
     [HideInInspector] public List<WayPoint> walkables = new();
+    
+    [SerializeField] public List<DraggableSpell> spellsUI = new();
 
-    [SerializeField] Button _endTurnButton;
-
-    List<DraggableSpell> spellsUI = new();
-
-    SpellCaster _spellCaster;
+    [HideInInspector] public EndButton endTurnButton;
 
     protected override void Awake()
     {
         base.Awake();
-        TryGetComponent(out _spellCaster);
-        CombatManager.Instance.PlayerEntities.Add(this);
+
+        foreach (DraggableSpell spell in spellsUI)
+            spell.spellCaster = EntitySpellCaster;
+
     }
 
     protected override void Start()
     {
         base.Start();
+
+        CombatManager.Instance.PlayerEntities.Add(this);
+        
     }
 
     public override async UniTask PlayTurn()
     {
         await base.PlayTurn();
 
+        ApplyWalkables();
+        ShowSpellsUI();
+
         await CheckPlayerInput();
+        
+        await EndTurn();
+    }
+
+    public override async UniTask EndTurn()
+    {
+        await base.EndTurn();
+
+        endTurnButton.Pressed = false;
+        HideSpellsUI();
     }
 
     public async UniTask CheckPlayerInput()
     {
-        print("check player inpu");
-        while (true /*bouton endTurn cliqué*/)
+        while (!endTurnButton.Pressed)
         {
             foreach (DraggableSpell draggable in spellsUI)
             {
-                await draggable.DragAndDrop();
+                await draggable.BeginDrag();
             }
 
             if (Input.GetMouseButtonDown(0) && Tools.CheckMouseRay(out WayPoint point))
             {
-                print("point");
                 await TryMoveTo(point);
             }
 
@@ -54,9 +67,14 @@ public class PlayerEntity : Entity
         }
     }
 
-
-    public override async UniTask EndTurn()
+    void ShowSpellsUI()
     {
-        await base.EndTurn();
+        CombatUiManager.Instance.playerSpellGroup.Show();
     }
+
+    void HideSpellsUI()
+    {
+        CombatUiManager.Instance.playerSpellGroup.Hide();
+    }
+
 }

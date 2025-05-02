@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.Rendering;
 using Cysharp.Threading.Tasks;
 
 public class SpellCaster : MonoBehaviour
@@ -9,79 +8,83 @@ public class SpellCaster : MonoBehaviour
 
     [SerializeField] LayerMask _obstacleMask;
 
-    WayPoint _entityWaypoint;
+    public List<WayPoint> RangePoints = new();
+    public List<WayPoint> ZonePoints = new();
 
-    List<WayPoint> _rangePoints = new();
-    List<WayPoint> _zonePoints = new();
+    public const byte RangeRingThickness = 3;
 
-    private async void Start()
+    public void PreviewSpellRange(SpellData spell, WayPoint center = null, bool showZone = true, int spellRange = 0)
     {
-        await UniTask.Yield();
+        Dictionary<WayPoint, int> floodDict = new();
 
-        _entityWaypoint = entity.CurrentPoint;
-    }
-
-    public void PreviewSpellRange(SpellData spell,WayPoint center = null)
-    {
-        if (center == null) center = _entityWaypoint;
-
-        Dictionary<WayPoint,int> reachablePoints = Tools.GetReachablePoints(center, spell.Range);
-
-        foreach (WayPoint point in reachablePoints.Keys)
+        if (center == null)
         {
+            center = entity.CurrentPoint;
+            floodDict = Tools.FloodDict;
+        }
+        else
+        {
+            floodDict = Tools.SmallFlood(center, spellRange);
+        }
+
+        List<WayPoint> rangePoints = Tools.GetWaypointsInRange(spell.Range, floodDict);
+
+        for (byte i = 0; i < rangePoints.Count; i++)
+        {
+            WayPoint point = rangePoints[i];
             Vector3 pointPos = new Vector3(point.transform.position.x, transform.position.y, point.transform.position.z);
             Vector3 pointToEntity = transform.position - pointPos;
 
-            if((spell.Range > 3 && reachablePoints[point] < spell.Range - 3) || Physics.Raycast(pointPos, pointToEntity, pointToEntity.magnitude, _obstacleMask))
-            {
-                reachablePoints.Remove(point);
-            }
-            else
-            {
+            if (spell.IsOccludedByWalls && Physics.Raycast(pointPos, pointToEntity, pointToEntity.magnitude, _obstacleMask))
+                rangePoints.RemoveAt(i);
+            else if (showZone)
                 point.ChangeTileColor(point._rangeMaterial);
-            }
         }
-        _rangePoints.AddRange(reachablePoints.Keys);
+        RangePoints.AddRange(rangePoints);
     }
 
-    public void PreviewSpellZone(SpellData spell, WayPoint targetedPoint)
+    public void PreviewSpellZone(SpellData spell, WayPoint targetedPoint, bool showZone = true)
     {
-        if (!_rangePoints.Contains(targetedPoint)) return;
+        if (!RangePoints.Contains(targetedPoint)) return;
 
         Vector3Int targetedPointPos = GraphMaker.Instance.PointDict.GetKeyFromValue(targetedPoint);
 
         foreach (Vector2Int pos in spell.AreaOfEffect.AffectedTiles)
         {
-            Vector3Int newPos = new Vector3Int(pos.x,0,pos.y);
+            Vector3Int posOffset = new Vector3Int(pos.x, 0, pos.y);
+            Vector3Int newPos = targetedPointPos + posOffset;
 
-            WayPoint choosenWaypoint = GraphMaker.Instance.PointDict[targetedPointPos + newPos];
+            if (GraphMaker.Instance.PointDict.ContainsKey(newPos))
+            {
+                WayPoint choosenWaypoint = GraphMaker.Instance.PointDict[newPos];
 
-            choosenWaypoint.ChangeTileColor(choosenWaypoint._zoneMaterial);
+                if (showZone)
+                    choosenWaypoint.ChangeTileColor(choosenWaypoint._zoneMaterial);
 
-            _zonePoints.Add(choosenWaypoint);
+                ZonePoints.Add(choosenWaypoint);
+            }
         }
-
     }
 
     public void StopSpellRangePreview()
     {
-        foreach(WayPoint point in _rangePoints)
+        foreach (WayPoint point in RangePoints)
         {
             point.ChangeTileColor(point._normalMaterial);
         }
 
-        _rangePoints.Clear();
+        RangePoints.Clear();
 
         StopSpellZonePreview();
     }
 
     public void StopSpellZonePreview()
     {
-        if(_zonePoints.Count == 0) return;
+        if (ZonePoints.Count == 0) return;
 
-        foreach(WayPoint point in _zonePoints)
+        foreach (WayPoint point in ZonePoints)
         {
-            if (_rangePoints.Contains(point))
+            if (RangePoints.Count != 0 && RangePoints.Contains(point))
             {
                 point.ChangeTileColor(point._rangeMaterial);
             }
@@ -91,22 +94,22 @@ public class SpellCaster : MonoBehaviour
             }
         }
 
-        _zonePoints.Clear();
+        ZonePoints.Clear();
     }
 
     public async UniTask TryCastSpell(SpellData spell, WayPoint target)
     {
-        if (_zonePoints.Count == 0)
+        if (ZonePoints.Count == 0)
         {
             StopSpellRangePreview();
             return;
         }
 
-        foreach(WayPoint point in _zonePoints)
+        foreach (WayPoint point in ZonePoints)
         {
             //await visual
 
-            point.TryApplySpell(spell);
+            await point.TryApplySpell(spell);
         }
 
         StopSpellRangePreview();

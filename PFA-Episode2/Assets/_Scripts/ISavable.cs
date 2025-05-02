@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public interface ISavable<T> where T : ISavable<T>
 {
     /// <summary>

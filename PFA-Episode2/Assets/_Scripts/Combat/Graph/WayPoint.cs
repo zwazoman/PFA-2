@@ -1,7 +1,14 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
+
+public enum WaypointState
+{
+    Free,
+    Obstructed,
+    HasEntity
+}
 
 public class WayPoint : MonoBehaviour
 {
@@ -10,11 +17,9 @@ public class WayPoint : MonoBehaviour
 
     public List<WayPoint> Neighbours = new List<WayPoint>();
 
-    public GameObject Content;
+    public Entity Content;
 
-    public bool IsActive;
-
-    [SerializeField] LayerMask _mask;
+    public WaypointState State;
 
     [Header("Materials")]
 
@@ -22,6 +27,7 @@ public class WayPoint : MonoBehaviour
     [SerializeField] public Material _rangeMaterial;
     [SerializeField] public Material _zoneMaterial;
     [SerializeField] public Material _normalMaterial;
+    [SerializeField] public Material _walkedMaterial;
 
     MeshRenderer _mR;
 
@@ -38,7 +44,7 @@ public class WayPoint : MonoBehaviour
 
     private void Awake()
     {
-        IsActive = true;
+        State = WaypointState.Free;
 
         TryGetComponent(out _mR);
     }
@@ -46,15 +52,22 @@ public class WayPoint : MonoBehaviour
     private void Start()
     {
         RaycastHit hit;
-        if(Physics.Raycast(transform.position, Vector3.up, out hit, 1, _mask))
+        if(Physics.Raycast(transform.position, Vector3.up, out hit, 1))
         {
-            StepOn(hit.collider.gameObject);
+            if(hit.collider.TryGetComponent(out Entity entity))
+            {
+                State = WaypointState.HasEntity;
+            }
+            else
+            {
+                State = WaypointState.Obstructed;
+            }
         }
     }
 
-    public void StepOn(GameObject entity)
+    public void StepOn(Entity entity)
     {
-        Deactivate();
+        State = WaypointState.HasEntity;
         Content = entity;
         OnSteppedOn?.Invoke();
     }
@@ -63,18 +76,15 @@ public class WayPoint : MonoBehaviour
     {
         Content = null;
         OnSteppedOff?.Invoke();
-        Activate();
+        State = WaypointState.Free;
     }
 
-    public void TryApplySpell(SpellData spell)
+    public async UniTask TryApplySpell(SpellData spell)
     {
         if (Content == null)
             return;
 
-        //if(Content.TryGetComponent(out Health health))
-        //{
-        //    health.ApplyDamage(damages);
-        //}
+        await Content.ApplySpell(spell);
     }
 
     public void ChangeTileColor(Material material)
@@ -103,7 +113,7 @@ public class WayPoint : MonoBehaviour
 
         foreach(WayPoint point in Neighbours)
         {
-            if (point.IsClosed || point.IsOpen || !point.IsActive) continue;
+            if (point.IsClosed || point.IsOpen || point.State != WaypointState.Free) continue;
 
             point.Open(this, endPoint,  ref openPoints);
         }
@@ -151,18 +161,6 @@ public class WayPoint : MonoBehaviour
         H = 0;
         IsClosed = false;
         IsOpen = false;
-    }
-
-    public void Activate()
-    {
-        IsActive = true;
-        //gameObject.SetActive(true); // visuels pour l'instant
-    }
-
-    public void Deactivate()
-    {
-        IsActive = false;
-        //gameObject.SetActive(false); // visuels pour l'instant
     }
     #endregion Astar
 

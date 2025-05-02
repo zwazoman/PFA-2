@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 [Serializable]
 public class SpellData
@@ -12,6 +10,7 @@ public class SpellData
     /// le nom du spell
     /// </summary>
     public string Name;
+    public Sprite Sprite;
 
     public string IngredientsCombination;
 
@@ -19,56 +18,76 @@ public class SpellData
 
     public bool IsOccludedByWalls = true;
     public byte Range;
+    public byte CoolDown;
 
-    [Header("Flat Stats")]
-
-
-    /// <summary>
-    /// Les dégats du spell
-    /// </summary>
-    public float Damage = 0;
-
-    /// <summary>
-    /// Les dégats du spell
-    /// </summary>
-    public float Heal = 0;
-
-    /// <summary>
-    /// Le nombre de cases de recul du spell
-    /// </summary>
-    public int Recoil = 0;
-
-    /// <summary>
-    /// Baissera au fur à mesur du temps après avoir été appliqué.
-    /// </summary>
-    public float ShieldAmount = 0;
-
-    /// <summary>
-    /// Le nombre de tour avant de pouvoir réutiliser le sort
-    /// </summary>
-    public int CoolDown = 1;
-
-
-
-    [Header("Context Dependant Stats")] //y'a un struct SpellCastingContext
-
-    /// <summary>
-    /// degat = degat + DamageIncreaseForEachHitEnnemy * SpellCastingContext.numberOfHitEnnemies
-    /// </summary>
-    public float DamageIncreaseForEachHitEnnemy = 0;
-
-    [Tooltip("Pourcentage de degats bonus par case")]
-    /// <summary>
-    /// en pourcentage : +n% par case
-    /// degat = degat * (1+SpellCastingContext.DistanceToPlayer * DamageIncreaseByDistanceToCaster / 100f)
-    /// </summary>
-    public float DamageIncreasePercentageByDistanceToCaster = 0;
-
-    [Header("Effect")]
-    public StatusEffect StatusEffect = StatusEffect.None;
+    [Header("Effects")]
+    public List<SpellEffect> Effects = new ();
 
     [Header("Zone")]
     public AreaOfEffect AreaOfEffect;
     
+}
+
+[Serializable]
+public struct SpellEffect
+{
+    public SpellEffectType effectType;
+    public StatType statType;
+    public float value;
+    
+    public SpellEffect(SpellEffectType effectType, StatType statType, float value)
+    {
+        this.effectType = effectType;
+        this.statType = statType;
+        this.value = value;
+    }
+
+    #region spellCollapse
+    public static void CollapseSpellEffects(ref SpellEffect[] Effects)
+    {
+        bool collapsedBontoA = TryCollapseBontoA(ref Effects[0], Effects[1]); 
+        bool collapsedContoA = TryCollapseBontoA(ref Effects[0], Effects[2]);
+
+        if (collapsedBontoA && collapsedContoA) Effects = new SpellEffect[] { Effects[0]};
+        else if (collapsedBontoA && !collapsedContoA)
+        {
+            Effects = new SpellEffect[] { Effects[0], Effects[2] };
+        }
+        else if (!collapsedBontoA && collapsedContoA)
+        {
+            Effects = new SpellEffect[] { Effects[0], Effects[1] };
+        }
+        else if (!(collapsedBontoA || collapsedContoA))
+        {
+            bool collapsedCOntoB = TryCollapseBontoA(ref Effects[1], Effects[2]);
+            if (collapsedCOntoB) Effects = new SpellEffect[] { Effects[0], Effects[2] };
+            else return;
+        }
+    }
+
+    static bool TryCollapseBontoA(ref SpellEffect a, SpellEffect b)
+    {
+        if( a.effectType == b.effectType && a.statType == b.statType) 
+        {
+            switch (a.statType)
+            {
+                case StatType.FlatIncrease:
+                    a.value += b.value;
+                    break;
+                case StatType.Multiplier:
+                    a.value *= b.value;
+                    break;
+                case StatType.PercentageIncrease:
+                    float m1 = a.value * .01f + 1;
+                    float m2 = b.value * .01f + 1;
+                    a.value = (m1 * m2 - 1f) * 100f;
+                    break;
+            }
+            return true;
+        }
+        return (false);
+    }
+
+    #endregion
 }
 

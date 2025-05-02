@@ -1,0 +1,24 @@
+#ifndef NATHAN
+#define NATHAN
+
+#include HLSLSupport.cginc
+#include UnityShadowLibrary.cginc
+
+
+inline fixed unitySampleShadow (unityShadowCoord4 shadowCoord)
+{
+    #if defined(SHADOWS_NATIVE)
+        fixed shadow = UNITY_SAMPLE_SHADOW(_ShadowMapTexture, shadowCoord.xyz);
+        shadow = _LightShadowData.r + shadow  (1-_LightShadowData.r);
+        return shadow;
+    #else
+        unityShadowCoord dist = SAMPLE_DEPTH_TEXTURE(_ShadowMapTexture, shadowCoord.xy);
+         tegra is confused if we use _LightShadowData.x directly
+         with ambiguous overloaded function reference max(mediump float, float)
+        unityShadowCoord lightShadowDataX = _LightShadowData.x;
+        unityShadowCoord threshold = shadowCoord.z;
+        return max(dist  threshold, lightShadowDataX);
+    #endif
+    
+}
+
