@@ -1,0 +1,32 @@
+using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
+
+public class CombatUiManager : MonoBehaviour
+{
+    #region Singleton
+    private static CombatUiManager instance;
+
+    public static CombatUiManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                GameObject go = new GameObject("Combat Ui Manager");
+                instance = go.AddComponent<CombatUiManager>();
+            }
+            return instance;
+        }
+    }
+
+    private void Awake()
+    {
+        instance = this;
+    }
+    #endregion
+
+    [SerializeField] public CanvasGroup playerSpellGroup;
+
+    [SerializeField] public EndButton endButton;
+}

@@ -14,6 +14,7 @@ public class Ingredient : IngredientBase
 
     [Header("Stats")]
     public byte CoolDownIncrease;
+    public byte RangeIncrease;
 
     public override void ModifySpellEffect(SpellData Spell)
     {
@@ -25,15 +26,13 @@ public class Ingredient : IngredientBase
             case IngredientEffectType.Recoil:
                 Spell.Effects.Add(new(SpellEffectType.Recoil, effectStatType, effectValue));
                 break;
-            case IngredientEffectType.Range:
-                Spell.Range += (byte)Mathf.RoundToInt(effectValue);
-                break;
             case IngredientEffectType.Shield:
                 Spell.Effects.Add(new(SpellEffectType.Shield, effectStatType, effectValue));
                 break;
         }
 
         Spell.CoolDown += CoolDownIncrease;
+        Spell.Range += RangeIncrease;
 
     }
 

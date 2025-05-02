@@ -26,7 +26,7 @@ public class MapAttributeEvent : MonoBehaviour
 
     public void MapMakingEvent()
     {
-        _dico = MapMaker2.Instance._dicoNode;
+        _dico = MapMaker2.Instance.DicoNode;
         for (int i = 4; i <= MapMaker2.Instance.MapRange - 2; i++)
         {
             _nombreNodeAttribue = 0;
