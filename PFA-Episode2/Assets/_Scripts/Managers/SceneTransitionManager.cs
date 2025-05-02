@@ -56,8 +56,8 @@ public class SceneTransitionManager : MonoBehaviour
 
     async UniTask FadeIn(float? duration = null, Color? c = null)
     {
-        if (c.HasValue) _image.color = c.Value;
-        else _image.color = Color.black;
+        //if (c.HasValue) _image.color = c.Value;
+        //else _image.color = Color.black;
 
         if (!duration.HasValue) duration = _fadingDuration;
 
@@ -67,8 +67,8 @@ public class SceneTransitionManager : MonoBehaviour
 
     async UniTask FadeOut(float? duration = null, Color? c = null)
     {
-        if (c.HasValue) _image.color = c.Value;
-        else _image.color = Color.black;
+        //if (c.HasValue) _image.color = c.Value;
+        //else _image.color = Color.black;
 
         if (!duration.HasValue) duration = _fadingDuration;
 
@@ -76,9 +76,9 @@ public class SceneTransitionManager : MonoBehaviour
         await UniTask.Delay(Mathf.CeilToInt(duration.Value * 1000));
     }
 
-    private void Start()
+    private async void Start()
     {
-        //_CanvasGroup.alpha = 1;
-        //FadeIn();
+        _CanvasGroup.alpha = 1;
+        await FadeIn();
     }
 }
