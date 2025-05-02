@@ -11,7 +11,8 @@ public class Entity : MonoBehaviour
     [HideInInspector] public Health EntityHealth;
     [HideInInspector] public SpellCaster EntitySpellCaster;
 
-    [SerializeField] public int MovePoints;
+    [SerializeField] public int MaxMovePoints;
+    int currentMovePoints;
 
     protected Dictionary<WayPoint,int> WaypointDistance = new Dictionary<WayPoint,int>();
     protected List<WayPoint> Walkables = new List<WayPoint>();
@@ -34,12 +35,15 @@ public class Entity : MonoBehaviour
 
     public virtual async UniTask PlayTurn()
     {
+        print(gameObject.name);
         Tools.Flood(CurrentPoint);
+        currentMovePoints = MaxMovePoints;
     }
 
     public virtual async UniTask EndTurn()
     {
         Tools.ClearFlood();
+        ClearWalkables();
     }
 
     public async UniTask ApplySpell(SpellData spell)
@@ -49,14 +53,12 @@ public class Entity : MonoBehaviour
         //EntityHealth.ApplyHealth(spell.Heal);
     }
 
-    public virtual async UniTask TryMoveTo(WayPoint targetPoint)
+    public virtual async UniTask TryMoveTo(WayPoint targetPoint, bool showTiles = true)
     {
-        ClearWalkables();
-
         Stack<WayPoint> path = Tools.FindBestPath(CurrentPoint, targetPoint);
         int pathlength = path.Count;
 
-        if(pathlength > MovePoints)
+        if(pathlength > currentMovePoints)
         {
             print("plus de pm !");
             return;
@@ -80,10 +82,11 @@ public class Entity : MonoBehaviour
 
             steppedOnPoint.ChangeTileColor(steppedOnPoint._normalMaterial);
 
-            MovePoints--;
+            currentMovePoints--;
         }
         Tools.Flood(CurrentPoint);
-        ApplyWalkables();
+        ClearWalkables();
+        ApplyWalkables(showTiles);
     }
 
     async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 2)
@@ -101,14 +104,17 @@ public class Entity : MonoBehaviour
         }
     }
 
-    public void ApplyWalkables()
+    public void ApplyWalkables(bool showTiles = true)
     {
-        if(Walkables.Count == 0) 
-            Walkables.AddRange(Tools.GetWaypointsInRange(MovePoints));
+        if(Walkables.Count == 0)
+            Walkables.AddRange(Tools.GetWaypointsInRange(currentMovePoints));
 
         foreach (WayPoint point in Walkables)
         {
-            point.ChangeTileColor(point._walkableMaterial);
+            if(point.State == WaypointState.Free)
+            {
+                point.ChangeTileColor(point._walkableMaterial);
+            }
         }
     }
 

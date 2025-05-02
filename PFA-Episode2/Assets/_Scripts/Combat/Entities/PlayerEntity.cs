@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
@@ -8,17 +7,20 @@ using UnityEngine.UI;
 public class PlayerEntity : Entity
 {
     [HideInInspector] public List<WayPoint> walkables = new();
+    
+    [HideInInspector] public List<DraggableSpell> spellsUI = new();
 
-    [SerializeField] List<DraggableSpell> spellsUI = new();
-
-    [SerializeField] EndButton _endTurnButton;
-
-    SpellCaster _spellCaster;
+    [HideInInspector] public EndButton endTurnButton;
 
     protected override void Awake()
     {
         base.Awake();
-        TryGetComponent(out _spellCaster);
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+
         CombatManager.Instance.PlayerEntities.Add(this);
     }
 
@@ -27,18 +29,24 @@ public class PlayerEntity : Entity
         await base.PlayTurn();
 
         ApplyWalkables();
+        ShowSpellsUI();
 
         await CheckPlayerInput();
         
         await EndTurn();
     }
 
+    public override async UniTask EndTurn()
+    {
+        await base.EndTurn();
+
+        endTurnButton.Pressed = false;
+    }
+
     public async UniTask CheckPlayerInput()
     {
-        while (!_endTurnButton.Pressed)
+        while (!endTurnButton.Pressed)
         {
-            print("chien");
-
             foreach (DraggableSpell draggable in spellsUI)
             {
                 await draggable.BeginDrag();
@@ -53,9 +61,14 @@ public class PlayerEntity : Entity
         }
     }
 
-
-    public override async UniTask EndTurn()
+    void ShowSpellsUI()
     {
-        await base.EndTurn();
+        CombatUiManager.Instance.playerSpellGroup.Show();
     }
+
+    void HideSpellsUI()
+    {
+        CombatUiManager.Instance.playerSpellGroup.Hide();
+    }
+
 }

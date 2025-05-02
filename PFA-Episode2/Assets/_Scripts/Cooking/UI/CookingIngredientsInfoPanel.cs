@@ -1,21 +1,24 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CookingIngredientsInfoPanel : MonoBehaviour
 {
-    //[Header("Scene References")]
-    [SerializeField]
+    [Header("Scene References")]
+    [SerializeField] TMP_Text text;
+    [SerializeField] Image image;
 
-    //[SerializeField] Text
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void UpdateVisual(Ingredient ingredient)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (ingredient == null)
+        {
+            text.text = "";
+            image.sprite = null;
+        }
+        else
+        {
+            text.text = Serializer.GetIngredientEffectString(ingredient);
+            image.sprite = ingredient.sprite;
+        }
     }
 }

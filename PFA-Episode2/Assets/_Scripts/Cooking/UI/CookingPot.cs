@@ -6,25 +6,55 @@ public class CookingPot : MonoBehaviour
     public bool isFull = false;
 
     DraggableItemContainer[] items = new DraggableItemContainer[4];
-    Ingredient[] ingredients = new Ingredient[3];
-    byte ingredientCount = 0;
 
+    //ingredients
+    List<Ingredient> ingredients = new ();
     Sauce sauce;
 
-    public bool TryAddIngredient(DraggableItemContainer container)
+    [Header("sceneReferences")]
+    [SerializeField] CookingIngredientsInfoPanel ingredientInfo0;
+    [SerializeField] CookingIngredientsInfoPanel ingredientInfo1;
+    [SerializeField] CookingIngredientsInfoPanel ingredientInfo2;
+
+    void UpdateIngredientsStats()
+    {
+        ingredientInfo0.UpdateVisual(ingredients.Count >= 1 ? ingredients[0] : null);
+        ingredientInfo1.UpdateVisual(ingredients.Count >= 2 ? ingredients[1] : null);
+        ingredientInfo2.UpdateVisual(ingredients.Count >= 3 ? ingredients[2] : null);
+    }
+
+    public void RemoveIngredient(DraggableIngredientContainer container)
     {
         //ingredient
-        if(container.item is Ingredient && ingredientCount < 3)
+        if (container.item is Ingredient && ingredients.Contains((Ingredient)container.item))
         {
-            items[ingredientCount] = container;
-            ingredients[ingredientCount] = ((Ingredient)container.item);
+            items[ingredients.IndexOf((Ingredient)container.item)] = null;
+            ingredients.Remove ((Ingredient)container.item);
+            container.Reset();
+            UpdateIngredientsStats();
+        }
+        //sauce
+        else if (container.item is Sauce && sauce == null)
+        {
+            items[3] = container;
+            sauce = (Sauce)container.item;
+            container.Reset();
+        }
+    }
 
-            ingredientCount++;
-
+    public bool TryAddIngredient(DraggableIngredientContainer container)
+    {
+        Debug.Log("Tried adding new ingredient : " + ((IngredientBase)(container.item)).name);
+        //ingredient
+        if (container.item is Ingredient && ingredients.Count < 3)
+        {
+            items[ingredients.Count] = container;
+            ingredients.Add((Ingredient)container.item);
+            UpdateIngredientsStats();
             return true;
         }
         //sauce
-        else if(container.item is Sauce && sauce == null)
+        else if (container.item is Sauce && sauce == null)
         {
             items[3] = container;
             sauce = (Sauce)container.item;
@@ -33,4 +63,5 @@ public class CookingPot : MonoBehaviour
 
         return false;
     }
+
 }

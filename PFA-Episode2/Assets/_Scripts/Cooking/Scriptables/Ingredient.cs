@@ -4,6 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "newIngredient", menuName = "Cooking/Ingredient")]
 public class Ingredient : IngredientBase
 {
+    [Header("Ingredient")]
     public IngredientsInfo.Family family;
 
     [Header("Effect")]
@@ -13,6 +14,7 @@ public class Ingredient : IngredientBase
 
     [Header("Stats")]
     public byte CoolDownIncrease;
+    public byte RangeIncrease;
 
     public override void ModifySpellEffect(SpellData Spell)
     {
@@ -33,8 +35,9 @@ public class Ingredient : IngredientBase
         }
 
         Spell.CoolDown += CoolDownIncrease;
-
+        Spell.Range += RangeIncrease;
 
     }
+
 
 }
