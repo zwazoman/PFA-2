@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Crafting : MonoBehaviour
 {
-    public static void CraftNewSpell(Ingredient[] ingredients, Sauce sauce)
+    public static SpellData CraftNewSpell(Ingredient[] ingredients, Sauce sauce)
     {
         SpellData spell = new SpellData();
         foreach(Ingredient i in ingredients)
@@ -22,6 +22,8 @@ public class Crafting : MonoBehaviour
         SpellEffect[] effects = spell.Effects.ToArray();
         SpellEffect.CollapseSpellEffects(ref effects);
         spell.Effects = effects.ToList();
+
+        return spell;
     }
 
     #region combinations
