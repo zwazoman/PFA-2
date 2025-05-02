@@ -6,22 +6,27 @@ public class Crafting : MonoBehaviour
 {
     public static SpellData CraftNewSpell(Ingredient[] ingredients, Sauce sauce)
     {
+        //apply ingredients effects
         SpellData spell = new SpellData();
         foreach(Ingredient i in ingredients)
         {
             i.ModifySpellEffect(spell);
         }
 
-        foreach (Ingredient i in ingredients)
-        {
-            i.OnAfterModifySpellEffect(spell);
-        }
-
         sauce.ModifySpellEffect(spell);
 
+        //collapse similar effects
         SpellEffect[] effects = spell.Effects.ToArray();
-        SpellEffect.CollapseSpellEffects(ref effects);
+        SpellEffect.CollapseSimilarSpellEffects(ref effects);
         spell.Effects = effects.ToList();
+
+        //compute family combination
+        spell.IngredientsCombination = ComputeFamilyCombinaison(ingredients[0], ingredients[1], ingredients[2]);
+
+        //fetch visual data
+        DishCombinationData.spellVisualData data = GameManager.Instance.dishCombinationData.Visuals[spell.IngredientsCombination];
+        spell.Name = data.name;
+        spell.Sprite = data.sprite;
 
         return spell;
     }
