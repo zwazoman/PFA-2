@@ -7,17 +7,13 @@ public class Inventory : ISavable<Inventory>
     public List<Ingredient> Ingredients;
     public List<Sauce> Sauces;
 
-    //@save
-    public Inventory Load(byte SaveFileID)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    //@save
     public void Save(byte SaveFileID)
     {
-        throw new System.NotImplementedException();
+        SaveManager.Save(this, SaveFileID);
     }
 
-
+    public Inventory Load(byte SaveFileID)
+    {
+        return SaveManager.Load<Inventory>(SaveFileID);
+    }
 }

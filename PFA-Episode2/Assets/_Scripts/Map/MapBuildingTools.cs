@@ -99,7 +99,7 @@ public class MapBuildingTools : MonoBehaviour
 
     public Vector3Int GetKeyFromNode(Node node)
     {
-        foreach (var kvp in MapMaker2.Instance._dicoNode)
+        foreach (var kvp in MapMaker2.Instance.DicoNode)
         {
             if (kvp.Value == node)
                 return kvp.Key;

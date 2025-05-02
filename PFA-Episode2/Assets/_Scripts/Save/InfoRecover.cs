@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using TMPro;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 /// <summary>
@@ -26,9 +25,9 @@ public class InfoRecover : MonoBehaviour
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
-            if (SaveManager.Instance.Encrypt)
+            if (SaveMapGeneration.Instance.Encrypt)
             {
-                json = SaveManager.Instance.EncryptDecrypt(json);
+                json = SaveMapGeneration.Instance.EncryptDecrypt(json);
             }
 
             MapWrapper wrapper = JsonUtility.FromJson<MapWrapper>(json);
