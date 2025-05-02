@@ -89,7 +89,7 @@ public class Entity : MonoBehaviour
         ApplyWalkables(showTiles);
     }
 
-    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 2)
+    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 8)
     {
         targetPos.y = 1f;
         Vector3 offset = targetPos - (Vector3)transform.position;
