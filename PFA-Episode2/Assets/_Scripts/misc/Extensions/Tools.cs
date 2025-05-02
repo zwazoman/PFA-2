@@ -223,7 +223,7 @@ public static class Tools
 
         foreach (WayPoint point in floodDict.Keys)
         {
-            if (floodDict[point] <= range)
+            if (floodDict[point] <= range && floodDict[point] >= range - SpellCaster.RangeRingThickness)
                 wayPoints.Add(point);
         }
 
