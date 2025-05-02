@@ -73,7 +73,8 @@ public class EnemyEntity : Entity
 
         //créé le dict zonePoint,targetPoint
         EntitySpellCaster.PreviewSpellRange(choosenSpell, targetPlayerPoint, true, choosenSpell.Range);
-        foreach(WayPoint rangePoint in EntitySpellCaster.RangePoints)
+        await UniTask.Delay(300);
+        foreach (WayPoint rangePoint in EntitySpellCaster.RangePoints)
         {
             EntitySpellCaster.PreviewSpellZone(choosenSpell, rangePoint);
             foreach (WayPoint zonePoint in EntitySpellCaster.ZonePoints)
@@ -81,8 +82,10 @@ public class EnemyEntity : Entity
                 if(!targetPointsDict.ContainsKey(zonePoint))
                     targetPointsDict.Add(zonePoint, rangePoint);
             }
+            await UniTask.Delay(100);
             EntitySpellCaster.StopSpellZonePreview();
         }
+        await UniTask.Delay(300);
         EntitySpellCaster.StopSpellRangePreview();
 
         List<WayPoint> allTargetPoints = new List<WayPoint>();

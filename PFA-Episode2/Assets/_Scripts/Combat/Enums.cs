@@ -78,9 +78,8 @@ public enum CookingItem
 
 public enum Rarity
 {
-    Common,
-    Rare,
-    Epic,
-    Legendary
+    Ordinaire,
+    Savoureux,
+    Divin
 }
 

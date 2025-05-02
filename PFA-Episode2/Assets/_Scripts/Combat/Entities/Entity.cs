@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using System;
 
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(SpellCaster))]
@@ -48,11 +49,29 @@ public class Entity : MonoBehaviour
 
     public async UniTask ApplySpell(SpellData spell)
     {
-        //EntityHealth.ApplyShield(spell.Damage);
-        //EntityHealth.ApplyHealth(-spell.Damage);
-        //EntityHealth.ApplyHealth(spell.Heal);
+        foreach (SpellEffect effect in spell.Effects)
+        {
+            {
+                switch (effect.effectType)
+                {
+                    case SpellEffectType.Damage:
+                        EntityHealth.ApplyHealth(-effect.value);
+                        break;
+                    case SpellEffectType.Recoil:
+                        throw new NotImplementedException();
+                    case SpellEffectType.Shield:
+                        EntityHealth.ApplyShield(effect.value);
+                        break;
+                    case SpellEffectType.DamageIncreaseForEachHitEnnemy:
+                        throw new NotImplementedException();
+                    case SpellEffectType.DamageIncreasePercentageByDistanceToCaster:
+                        throw new NotImplementedException();
+                    case SpellEffectType.Fire:
+                        throw new NotImplementedException();
+                }
+            }
+        }
     }
-
     public virtual async UniTask TryMoveTo(WayPoint targetPoint, bool showTiles = true)
     {
         Stack<WayPoint> path = Tools.FindBestPath(CurrentPoint, targetPoint);

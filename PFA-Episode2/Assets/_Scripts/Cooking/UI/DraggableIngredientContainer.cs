@@ -22,6 +22,12 @@ public class DraggableIngredientContainer : DraggableItemContainer
         image.sprite = i.sprite;
         backGroundImage.sprite = i.sprite;
     }
+
+    public void SetUp(Item i)
+    {
+        item = i;
+        SetUp();
+    }
     public override void OnEndDrag(PointerEventData eventData)
     {
         base.OnEndDrag(eventData);

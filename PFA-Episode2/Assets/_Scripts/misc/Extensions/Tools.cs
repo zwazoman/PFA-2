@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public static class Tools
@@ -15,10 +16,6 @@ public static class Tools
         return new Vector3Int(Mathf.RoundToInt(initialPos.x), 0, Mathf.RoundToInt(initialPos.z));
     }
 
-    public static T PickRandom<T>(this List<T> list)
-    {
-        return list[Random.Range(0, list.Count)];
-    }
 
     public static T PickRandom<T>(this T[] array)
     {
@@ -230,16 +227,21 @@ public static class Tools
         return wayPoints;
     }
 
-    public static bool CheckMouseRay(out WayPoint point)
+    public static bool CheckMouseRay(out WayPoint point, bool blockedByUi = false)
     {
+        point = null;
+
+        if (blockedByUi && EventSystem.current.IsPointerOverGameObject(0))
+        {
+            return false;
+        }
+
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         Physics.Raycast(ray, out hit, Mathf.Infinity/*, LayerMask.GetMask("Waypoint")*/);
 
-        point = null;
-
-        if (hit.collider.gameObject.TryGetComponent<WayPoint>(out WayPoint wayPoint))
+        if (hit.collider != null && hit.collider.gameObject.TryGetComponent<WayPoint>(out WayPoint wayPoint))
         {
             point = wayPoint;
             return true;
