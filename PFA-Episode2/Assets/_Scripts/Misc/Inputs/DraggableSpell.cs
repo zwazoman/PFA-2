@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class DraggableSpell : Draggable
 {
-    [SerializeField] PremadeSpell _spell;
+    [HideInInspector] public SpellData spell;
 
-    [SerializeField] public SpellCaster spellCaster;
+    [HideInInspector] public SpellCaster spellCaster;
 
     WayPoint _currentPoint = null;
 
@@ -14,7 +14,7 @@ public class DraggableSpell : Draggable
         if (isDragging)
         {
             spellCaster.entity.ClearWalkables();
-            spellCaster.PreviewSpellRange(_spell.SpellData);
+            spellCaster.PreviewSpellRange(spell);
             await DragAndDrop();
         }
     }
@@ -28,7 +28,7 @@ public class DraggableSpell : Draggable
                 _currentPoint = point;
 
                 spellCaster.StopSpellZonePreview();
-                spellCaster.PreviewSpellZone(_spell.SpellData, point);
+                spellCaster.PreviewSpellZone(spell, point);
             }
             else if (point == null)
             {
@@ -41,7 +41,7 @@ public class DraggableSpell : Draggable
         WayPoint wayPoint = _currentPoint;
         Reset();
 
-        await spellCaster.TryCastSpell(_spell.SpellData, wayPoint);
+        await spellCaster.TryCastSpell(spell, wayPoint);
 
         spellCaster.entity.ApplyWalkables();
 

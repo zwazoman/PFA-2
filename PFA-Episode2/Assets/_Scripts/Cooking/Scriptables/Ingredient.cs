@@ -14,6 +14,7 @@ public class Ingredient : IngredientBase
 
     [Header("Stats")]
     public byte CoolDownIncrease;
+    public byte RangeIncrease;
 
     public override void ModifySpellEffect(SpellData Spell)
     {
@@ -34,6 +35,7 @@ public class Ingredient : IngredientBase
         }
 
         Spell.CoolDown += CoolDownIncrease;
+        Spell.Range += RangeIncrease;
 
     }
 

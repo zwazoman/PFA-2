@@ -3,14 +3,9 @@ using UnityEngine.UI;
 
 public class EndButton : MonoBehaviour
 {
-    [HideInInspector]
-    public PlayerEntity currentEntity;
-
     [HideInInspector] public bool Pressed;
 
     [SerializeField] Button _endButton;
-
-    
 
     private void Awake()
     {

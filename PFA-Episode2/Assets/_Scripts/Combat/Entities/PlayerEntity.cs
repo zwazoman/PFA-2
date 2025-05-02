@@ -1,22 +1,20 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(SpellCaster))]
 public class PlayerEntity : Entity
 {
     [HideInInspector] public List<WayPoint> walkables = new();
+    
+    [HideInInspector] public List<DraggableSpell> spellsUI = new();
 
-    [SerializeField] List<DraggableSpell> spellsUI = new();
-
-    [SerializeField] EndButton _endTurnButton;
-
-    SpellCaster _spellCaster;
+    [HideInInspector] public EndButton endTurnButton;
 
     protected override void Awake()
     {
         base.Awake();
-        TryGetComponent(out _spellCaster);
     }
 
     protected override void Start()
@@ -31,6 +29,7 @@ public class PlayerEntity : Entity
         await base.PlayTurn();
 
         ApplyWalkables();
+        ShowSpellsUI();
 
         await CheckPlayerInput();
         
@@ -41,12 +40,12 @@ public class PlayerEntity : Entity
     {
         await base.EndTurn();
 
-        _endTurnButton.Pressed = false;
+        endTurnButton.Pressed = false;
     }
 
     public async UniTask CheckPlayerInput()
     {
-        while (!_endTurnButton.Pressed)
+        while (!endTurnButton.Pressed)
         {
             foreach (DraggableSpell draggable in spellsUI)
             {
@@ -61,4 +60,15 @@ public class PlayerEntity : Entity
             await UniTask.Yield();
         }
     }
+
+    void ShowSpellsUI()
+    {
+        CombatUiManager.Instance.playerSpellGroup.Show();
+    }
+
+    void HideSpellsUI()
+    {
+        CombatUiManager.Instance.playerSpellGroup.Hide();
+    }
+
 }
