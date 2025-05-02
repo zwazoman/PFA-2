@@ -16,12 +16,15 @@ public class CookingPot : MonoBehaviour
     [SerializeField] InfoHeader ingredientInfo0;
     [SerializeField] InfoHeader ingredientInfo1;
     [SerializeField] InfoHeader ingredientInfo2;
+
+
     [SerializeField] TMP_Text txt_sauceName;
     [SerializeField] TMP_Text txt_sauceEffect;
     [SerializeField] TMP_Text _txt_cooldown, _txt_range;
 
     private void UpdateCooldownAndRange()
     {
+        Debug.Log("fzqesgrhzfegrht");
         byte cd = 0, range = 0;
         foreach(Ingredient ing in ingredients)
         {
@@ -29,7 +32,9 @@ public class CookingPot : MonoBehaviour
             range += ing.RangeIncrease;
         }
         _txt_cooldown.text = Serializer.GetCoolDownString(cd);
-        _txt_range.text = Serializer.GetRangeString(range); 
+        _txt_range.text = Serializer.GetRangeString(range);
+
+        Debug.Log("RDCYFGTVUYIHUIJPKO¨POJHYGULDKYTCIHJUIOKPµPIHGUPYFKCGT");
     }
 
     void UpdateIngredientsStats()
@@ -55,6 +60,9 @@ public class CookingPot : MonoBehaviour
             items[3] = container;
             sauce = (Sauce)container.item;
             container.Reset();
+
+            txt_sauceName.text = "";
+            txt_sauceEffect.text = "";
         }
 
         UpdateCooldownAndRange();
@@ -69,6 +77,9 @@ public class CookingPot : MonoBehaviour
             items[ingredients.Count] = container;
             ingredients.Add((Ingredient)container.item);
             UpdateIngredientsStats();
+
+            UpdateCooldownAndRange();
+
             return true;
         }
         //sauce
@@ -78,10 +89,13 @@ public class CookingPot : MonoBehaviour
             sauce = (Sauce)container.item;
             txt_sauceName.text = sauce.name;
             txt_sauceEffect.text = Serializer.GetSauceEffectString(sauce);
+
+            UpdateCooldownAndRange();
+
             return true;
         }
 
-        UpdateCooldownAndRange();
+        
 
         return false;
     }
