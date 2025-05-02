@@ -39,11 +39,9 @@ public class PlayerMap : MonoBehaviour
             position = new Vector3Int(positionX, y, Mathf.RoundToInt(gameObject.transform.localPosition.z));
             foreach(KeyValuePair<Vector3Int, Node> KeyAndValues in MapMaker2.Instance.DicoNode)
             {
-                //print(KeyAndValues.Key);
-                //print(position + "1");
                 if (KeyAndValues.Key == position)
                 {
-                    print(KeyAndValues.Value.EventName);
+                    LoadScene.Instance.SceneLoadingOn(KeyAndValues.Value.EventName.ToString());
                 }
             }
         }
