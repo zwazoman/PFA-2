@@ -2,6 +2,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(SpellCaster))]
 public class PlayerEntity : Entity
@@ -54,7 +55,7 @@ public class PlayerEntity : Entity
                 await draggable.BeginDrag();
             }
 
-            if (Input.GetMouseButtonDown(0) && Tools.CheckMouseRay(out WayPoint point))
+            if (Input.GetMouseButtonUp(0) && Tools.CheckMouseRay(out WayPoint point) && !EventSystem.current.IsPointerOverGameObject(0))
             {
                 await TryMoveTo(point);
             }

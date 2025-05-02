@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public static class Tools
@@ -230,14 +231,19 @@ public static class Tools
         return wayPoints;
     }
 
-    public static bool CheckMouseRay(out WayPoint point)
+    public static bool CheckMouseRay(out WayPoint point, bool blockedByUi = false)
     {
+        point = null;
+
+        if (blockedByUi && EventSystem.current.IsPointerOverGameObject(0))
+        {
+            return false;
+        }
+
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         Physics.Raycast(ray, out hit, Mathf.Infinity/*, LayerMask.GetMask("Waypoint")*/);
-
-        point = null;
 
         if (hit.collider != null && hit.collider.gameObject.TryGetComponent<WayPoint>(out WayPoint wayPoint))
         {
