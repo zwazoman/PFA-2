@@ -19,7 +19,6 @@ public enum IngredientEffectType
 {
     Damage,
     Recoil,
-    Range,
     Shield,
 }
 

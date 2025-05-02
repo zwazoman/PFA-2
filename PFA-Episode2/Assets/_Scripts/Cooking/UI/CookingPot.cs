@@ -12,9 +12,9 @@ public class CookingPot : MonoBehaviour
     Sauce sauce;
 
     [Header("sceneReferences")]
-    [SerializeField] CookingIngredientsInfoPanel ingredientInfo0;
-    [SerializeField] CookingIngredientsInfoPanel ingredientInfo1;
-    [SerializeField] CookingIngredientsInfoPanel ingredientInfo2;
+    [SerializeField] InfoHeader ingredientInfo0;
+    [SerializeField] InfoHeader ingredientInfo1;
+    [SerializeField] InfoHeader ingredientInfo2;
 
     void UpdateIngredientsStats()
     {

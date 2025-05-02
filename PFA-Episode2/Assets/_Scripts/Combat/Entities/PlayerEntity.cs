@@ -8,13 +8,17 @@ public class PlayerEntity : Entity
 {
     [HideInInspector] public List<WayPoint> walkables = new();
     
-    [HideInInspector] public List<DraggableSpell> spellsUI = new();
+    [SerializeField] public List<DraggableSpell> spellsUI = new();
 
     [HideInInspector] public EndButton endTurnButton;
 
     protected override void Awake()
     {
         base.Awake();
+
+        foreach (DraggableSpell spell in spellsUI)
+            spell.spellCaster = EntitySpellCaster;
+
     }
 
     protected override void Start()
@@ -22,6 +26,7 @@ public class PlayerEntity : Entity
         base.Start();
 
         CombatManager.Instance.PlayerEntities.Add(this);
+        
     }
 
     public override async UniTask PlayTurn()
@@ -41,6 +46,7 @@ public class PlayerEntity : Entity
         await base.EndTurn();
 
         endTurnButton.Pressed = false;
+        HideSpellsUI();
     }
 
     public async UniTask CheckPlayerInput()

@@ -7,7 +7,15 @@ public class DraggableSpell : Draggable
 
     [HideInInspector] public SpellCaster spellCaster;
 
+    [SerializeField] PremadeSpell _premadeSpell;
+
     WayPoint _currentPoint = null;
+
+    private void Awake()
+    {
+        if (_premadeSpell != null)
+            spell = _premadeSpell.SpellData;
+    }
 
     public async UniTask BeginDrag()
     {
