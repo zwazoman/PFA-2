@@ -81,10 +81,8 @@ public class EnemyEntity : Entity
                 if(!targetPointsDict.ContainsKey(zonePoint))
                     targetPointsDict.Add(zonePoint, rangePoint);
             }
-            await UniTask.Delay(100);
             EntitySpellCaster.StopSpellZonePreview();
         }
-        await UniTask.Delay(500);
         EntitySpellCaster.StopSpellRangePreview();
 
         List<WayPoint> allTargetPoints = new List<WayPoint>();
@@ -106,6 +104,11 @@ public class EnemyEntity : Entity
         await UniTask.Delay(1000);
 
         bool targetReached = await MoveToward(choosenTargetPoint); // le point le plus proche de lancé de sort
+
+        foreach (WayPoint point in allTargetPoints)
+        {
+            point.ChangeTileColor(point._normalMaterial);
+        }
 
         if (targetReached)
         {

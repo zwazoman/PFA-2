@@ -119,7 +119,6 @@ public static class Tools
         {
             if (!floodDict.ContainsKey(point))
             {
-                Debug.Log("point not in flood");
                 continue;
             }
 
