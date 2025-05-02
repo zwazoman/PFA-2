@@ -57,11 +57,11 @@ Shader "Unlit/shdr_PostProcess"
                 float d3 = Linear01Depth (tex2D(_CameraDepthTexture, i.uv + float2(0,ry)));
                 float d4 = Linear01Depth (tex2D(_CameraDepthTexture, i.uv - float2(0,ry)));
                 float outline = max(abs(d1-d2),abs(d3-d4));
-                outline = saturate(saturate(outline)*1000 - _outlineTresholdOffset)*1000;
+                outline = saturate(saturate(outline)*1000 - _outlineTresholdOffset)*100000;
 
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
-                return lerp(col,col*col, saturate(outline));
+                return lerp(col,col*col*.2, saturate(outline));
             }
             ENDCG
         }
