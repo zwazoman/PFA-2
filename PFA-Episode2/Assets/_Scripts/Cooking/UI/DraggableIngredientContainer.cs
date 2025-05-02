@@ -10,6 +10,7 @@ public class DraggableIngredientContainer : DraggableItemContainer
     [SerializeField] Button CancelButton;
     [SerializeField] Image image;
     [SerializeField] Image backGroundImage;
+    [SerializeField] GameObject DeleteIcon;
 
     private void Start()
     {
@@ -21,6 +22,7 @@ public class DraggableIngredientContainer : DraggableItemContainer
         IngredientBase i = (IngredientBase)item;
         image.sprite = i.sprite;
         backGroundImage.sprite = i.sprite;
+        DeleteIcon.SetActive(false);
     }
 
     public void SetUp(Item i)
@@ -28,6 +30,9 @@ public class DraggableIngredientContainer : DraggableItemContainer
         item = i;
         SetUp();
     }
+
+
+
     public override void OnEndDrag(PointerEventData eventData)
     {
         base.OnEndDrag(eventData);
@@ -36,6 +41,7 @@ public class DraggableIngredientContainer : DraggableItemContainer
         EventSystem.current.RaycastAll(eventData, a);
         if (a[0].gameObject.TryGetComponent(out CookingPot pot) && pot.TryAddIngredient(this))
         {
+            DeleteIcon.SetActive(true);
             CancelButton.onClick.AddListener( () => pot.RemoveIngredient(this));
             gameObject.SetActive(false);
         }
@@ -48,6 +54,7 @@ public class DraggableIngredientContainer : DraggableItemContainer
     public override void Reset()
     {
         CancelButton.onClick.RemoveAllListeners();
+        DeleteIcon.SetActive(false);
         base.Reset();
     }
 }
