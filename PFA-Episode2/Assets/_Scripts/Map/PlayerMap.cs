@@ -22,7 +22,7 @@ public class PlayerMap : MonoBehaviour
     }
 
 
-    private void Update()
+    private async void Update()
     {
         if (Vector3.Distance(transform.position, _target) > 0.1f)
         {
@@ -39,11 +39,10 @@ public class PlayerMap : MonoBehaviour
             position = new Vector3Int(positionX, y, Mathf.RoundToInt(gameObject.transform.localPosition.z));
             foreach(KeyValuePair<Vector3Int, Node> KeyAndValues in MapMaker2.Instance.DicoNode)
             {
-                //print(KeyAndValues.Key);
-                //print(position + "1");
                 if (KeyAndValues.Key == position)
                 {
-                    print(KeyAndValues.Value.EventName);
+                    if (KeyAndValues.Value.EventName.ToString() == "Start") { break; }
+                    await SceneTransitionManager.Instance.GoToScene(KeyAndValues.Value.EventName.ToString());
                 }
             }
         }
