@@ -33,5 +33,4 @@ public class UImanager : MonoBehaviour
     {
         OptionPanel.SetActive(false);
     }
-
 }

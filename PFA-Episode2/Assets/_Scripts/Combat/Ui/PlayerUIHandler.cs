@@ -8,8 +8,6 @@ public class PlayerUIHandler : MonoBehaviour
 
     [SerializeField] GameObject _uiSpellPrefab;
 
-    Inventory inventory;
-
     private void Awake()
     {
         if(_player == null)
@@ -20,8 +18,8 @@ public class PlayerUIHandler : MonoBehaviour
     {
         AssignEndTurnButton();
 
-        if (inventory != null)
-            foreach (SpellData spell in inventory.Spells)
+        if (GameManager.Instance.playerInventory != null)
+            foreach (SpellData spell in GameManager.Instance.playerInventory.Spells)
             {
                 CreateSpellUI(spell);
             }

@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -39,13 +40,13 @@ public class SceneTransitionManager : MonoBehaviour
         SceneManager.LoadScene(sceneName);
     }
 
-    public async Task GoToScene(int buildIndex)
+    public async UniTask GoToScene(string sceneName)
     {
         if (_canChangeScene)
         {
             _canChangeScene = false;
 
-            AsyncOperation o = SceneManager.LoadSceneAsync(buildIndex, LoadSceneMode.Single);
+            AsyncOperation o = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
             o.allowSceneActivation = false;
             await FadeOut();
             o.allowSceneActivation = true;
@@ -53,7 +54,7 @@ public class SceneTransitionManager : MonoBehaviour
         
     }
 
-    public async Task FadeIn(float? duration = null, Color? c = null)
+    async UniTask FadeIn(float? duration = null, Color? c = null)
     {
         if (c.HasValue) _image.color = c.Value;
         else _image.color = Color.black;
@@ -61,10 +62,10 @@ public class SceneTransitionManager : MonoBehaviour
         if (!duration.HasValue) duration = _fadingDuration;
 
             _CanvasGroup.DOFade(0, duration.Value);
-        await Task.Delay(Mathf.CeilToInt(duration.Value * 1000));
+        await UniTask.Delay(Mathf.CeilToInt(duration.Value * 1000));
     }
 
-    public async Task FadeOut(float? duration = null, Color? c = null)
+    async UniTask FadeOut(float? duration = null, Color? c = null)
     {
         if (c.HasValue) _image.color = c.Value;
         else _image.color = Color.black;
@@ -72,12 +73,12 @@ public class SceneTransitionManager : MonoBehaviour
         if (!duration.HasValue) duration = _fadingDuration;
 
         _CanvasGroup.DOFade(1, duration.Value);
-        await Task.Delay(Mathf.CeilToInt(duration.Value * 1000));
+        await UniTask.Delay(Mathf.CeilToInt(duration.Value * 1000));
     }
 
     private void Start()
     {
-        _CanvasGroup.alpha = 1;
-        FadeIn();
+        //_CanvasGroup.alpha = 1;
+        //FadeIn();
     }
 }
