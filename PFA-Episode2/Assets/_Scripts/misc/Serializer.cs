@@ -27,9 +27,9 @@ public static class Serializer
     public static string GetIngredientEffectString(Ingredient e)
     {
         string s =
-            IngredientEffectTypeToString[(int)e.effectType] + " "
-            + statTypeToString[(int)e.effectStatType]
-            + " " + e.effectValue;
+            IngredientEffectTypeToString[(int)e.EffectType] + " "
+            + statTypeToString[(int)e.EffectStatType]
+            + " " + e.EffectValue;
         return s;
     }
 }

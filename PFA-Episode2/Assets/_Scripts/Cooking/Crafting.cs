@@ -46,7 +46,7 @@ public class Crafting : MonoBehaviour
         Ingredient i2,
         Ingredient i3)
     {
-        return ComputeFamilyCombinaison(i1.family, i2.family, i3.family);
+        return ComputeFamilyCombinaison(i1.Family, i2.Family, i3.Family);
     }
 
     public static string ComputeFamilyCombinaison(

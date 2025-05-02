@@ -5,12 +5,13 @@ using UnityEngine;
 public class Ingredient : IngredientBase
 {
     [Header("Ingredient")]
-    public IngredientsInfo.Family family;
+    public IngredientsInfo.Family Family;
+    public Rarity Rarity;
 
     [Header("Effect")]
-    public IngredientEffectType effectType;
-    public StatType effectStatType;
-    public float effectValue;
+    public IngredientEffectType EffectType;
+    public StatType EffectStatType;
+    public float EffectValue;
 
     [Header("Stats")]
     public byte CoolDownIncrease;
@@ -18,16 +19,16 @@ public class Ingredient : IngredientBase
 
     public override void ModifySpellEffect(SpellData Spell)
     {
-        switch (effectType)
+        switch (EffectType)
         {
             case IngredientEffectType.Damage:
-                Spell.Effects.Add(new(SpellEffectType.Damage,effectStatType, effectValue));
+                Spell.Effects.Add(new(SpellEffectType.Damage,EffectStatType, EffectValue));
                 break;
             case IngredientEffectType.Recoil:
-                Spell.Effects.Add(new(SpellEffectType.Recoil, effectStatType, effectValue));
+                Spell.Effects.Add(new(SpellEffectType.Recoil, EffectStatType, EffectValue));
                 break;
             case IngredientEffectType.Shield:
-                Spell.Effects.Add(new(SpellEffectType.Shield, effectStatType, effectValue));
+                Spell.Effects.Add(new(SpellEffectType.Shield, EffectStatType, EffectValue));
                 break;
         }
 
