@@ -22,7 +22,7 @@ public class PlayerMap : MonoBehaviour
     }
 
 
-    private void Update()
+    private async void Update()
     {
         if (Vector3.Distance(transform.position, _target) > 0.1f)
         {
@@ -41,7 +41,8 @@ public class PlayerMap : MonoBehaviour
             {
                 if (KeyAndValues.Key == position)
                 {
-                    LoadScene.Instance.SceneLoadingOn(KeyAndValues.Value.EventName.ToString());
+                    if (KeyAndValues.Value.EventName.ToString() == "Start") { break; }
+                    await SceneTransitionManager.Instance.GoToScene(KeyAndValues.Value.EventName.ToString());
                 }
             }
         }
