@@ -19,24 +19,38 @@ public class GraphMaker : MonoBehaviour
         }
     }
 
-    [HideInInspector] public List<WayPoint> SelectedPoints = new List<WayPoint>();
-    [HideInInspector] public List<WayPoint> TargetPoints = new List<WayPoint>();
+    [SerializeField] bool _generatesGraph = true;
 
+    [Header("Graph Builder")]
 
     [SerializeField] public Vector3Int StartPos; // get set
     [SerializeField] public Vector3Int EndPos; // get set
 
     [SerializeField] GameObject _waypointPrefab;
 
-    public Dictionary<Vector3Int, WayPoint> PointDict = new Dictionary<Vector3Int, WayPoint>();
+    [Header("Graph Composer")]
 
-    public Entity Test;
+    [SerializeField] WayPoint _bottomLeftPoint;
+
+    [SerializeField] List<WayPoint> _allWaypoints;
+
+    public Dictionary<Vector3Int, WayPoint> PointDict = new Dictionary<Vector3Int, WayPoint>();
 
 
     private void Awake()
     {
         instance = this;
 
+        if (_generatesGraph)
+            GenerateGraph();
+        else
+            ComposeGraph();
+
+
+    }
+
+    void GenerateGraph()
+    {
         int xPos = StartPos.x;
         int zPos = StartPos.z;
 
@@ -66,4 +80,16 @@ public class GraphMaker : MonoBehaviour
             }
         }
     }
+
+    void ComposeGraph()
+    {
+        Vector3 posOffset = _bottomLeftPoint.transform.position;
+
+        foreach(WayPoint point in _allWaypoints)
+        {
+            Vector3Int pointPos = (point.transform.position - posOffset).SnapOnGrid();
+            PointDict.Add(pointPos, point);
+        }
+    }
+    
 }
