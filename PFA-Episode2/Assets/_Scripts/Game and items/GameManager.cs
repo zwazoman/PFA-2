@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
         {
             if (instance == null)
             {
+                Debug.LogWarning("no gamemanager instance found. Creating new game manager.");
                 GameObject go = new GameObject("Game Manager");
                 instance = go.AddComponent<GameManager>();
             }
@@ -22,16 +23,31 @@ public class GameManager : MonoBehaviour
 
     public Inventory playerInventory = new();
 
+    [Header("Data")]
+    public DishCombinationData dishCombinationData;
+
+    [Header("Tests")]
     [SerializeField] List<PremadeSpell> premadeSpells = new();
 
     private void Awake()
     {
-        instance = this;
-        DontDestroyOnLoad(this);
-
-        foreach(PremadeSpell premadeSpell in premadeSpells)
+        if(instance == this || instance == null)
         {
-            playerInventory.Spells.Add(premadeSpell.SpellData);
+            Debug.Log("Initializing game manager");
+            instance = this;
+            DontDestroyOnLoad(this);
+            dishCombinationData = Resources.Load<DishCombinationData>("DishCombinationData");
+            //test
+            foreach (PremadeSpell premadeSpell in premadeSpells)
+            {
+                playerInventory.Spells.Add(premadeSpell.SpellData);
+            }
         }
+        else
+        {
+            Destroy(this);
+            throw new System.Exception("Y'avait déjà un singleton gamemanager dans la scene");
+        }
+        
     }
 }

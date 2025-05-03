@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DishInfoPanel : MonoBehaviour
+public class DishInfoPanel : AnimatedPanel
 {
     [Header("Scene References")]
     [SerializeField] private TMP_Text txt_cooldown;
@@ -12,7 +12,7 @@ public class DishInfoPanel : MonoBehaviour
 
     [SerializeField] private List<InfoHeader> spellEffects;
 
-    const string cd = " turns", r = " tiles",t = " - ";
+    
     public void Setup(SpellData spell)
     {
         //effects
@@ -29,8 +29,8 @@ public class DishInfoPanel : MonoBehaviour
         //mes couilles
 
         //turns and range
-        txt_cooldown.text = spell.CoolDown.ToString() + cd;
-        txt_range.text = Mathf.Max(0, spell.Range-SpellCaster.RangeRingThickness).ToString() + t + spell.Range.ToString() + r;
+        txt_cooldown.text = Serializer.GetCoolDownString(spell.CoolDown);
+        txt_range.text = Serializer.GetRangeString(spell.Range);
     }
 
     /*[SerializeField] PremadeSpell test;

@@ -1,20 +1,31 @@
+using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
+using UnityEngine;
+
 public static class Serializer
 {
     //spell effect
-    static readonly string[] SpellTypeToString =
+    static readonly string[] SpellEffectTypeToString =
     {
         "Damage","Recoil","Shield","Damage per hit ennemy","damage increase per distance","Fire"
     };
+
     static readonly char[] statTypeToString =
     {
         '+','x'
     };
+
+    static readonly string[] SauceEffectTypeToString =
+    {
+        "No Special effect","Cast through walls","Damage+ for each hit ennemy","damage+ with range","Fire"
+    };
+
     public static string GetSpellEffectString(SpellEffect e)
     {
         string s =
-            SpellTypeToString[(int)e.effectType] + " "
+            SpellEffectTypeToString[(int)e.effectType] + " "
             + statTypeToString[(int)e.statType]
-            + " " + e.value;
+            + (e.value != -1 ? " " + e.value : "");
         return s;
     }
 
@@ -32,4 +43,14 @@ public static class Serializer
             + " " + e.EffectValue;
         return s;
     }
+
+    public static string GetSauceEffectString(Sauce e)
+    {
+        return SauceEffectTypeToString[(int)e.effect];
+    }
+
+    const string s = "s", cd = " turn", r = " tile", t = " - ",e = "";
+    public  static string GetCoolDownString(byte cooldown) => cooldown.ToString() + cd + (cooldown> 1 ? s : e);
+    public static string GetRangeString(byte Range)
+        => Mathf.Max(0, Range - SpellCaster.RangeRingThickness).ToString() + t + Range.ToString() + r + (Range > 1 ? s : e);
 }

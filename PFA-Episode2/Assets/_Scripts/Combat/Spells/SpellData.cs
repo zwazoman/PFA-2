@@ -43,7 +43,7 @@ public struct SpellEffect
     }
 
     #region spellCollapse
-    public static void CollapseSpellEffects(ref SpellEffect[] Effects)
+    public static void CollapseSimilarSpellEffects(ref SpellEffect[] Effects)
     {
         bool collapsedBontoA = TryCollapseBontoA(ref Effects[0], Effects[1]); 
         bool collapsedContoA = TryCollapseBontoA(ref Effects[0], Effects[2]);

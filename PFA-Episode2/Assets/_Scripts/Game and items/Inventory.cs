@@ -6,6 +6,7 @@ public class Inventory : ISavable<Inventory>
     public List<Ingredient> Ingredients = new();
     public List<Sauce> Sauces = new();
 
+
     public void Save(byte SaveFileID)
     {
         SaveManager.Save(this, SaveFileID);
