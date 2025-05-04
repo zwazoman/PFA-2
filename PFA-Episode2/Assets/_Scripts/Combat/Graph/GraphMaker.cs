@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class GraphMaker : MonoBehaviour
@@ -81,15 +83,57 @@ public class GraphMaker : MonoBehaviour
         }
     }
 
-    void ComposeGraph()
+    public void ComposeGraph()
     {
-        Vector3 posOffset = _bottomLeftPoint.transform.position;
 
         foreach(WayPoint point in _allWaypoints)
         {
-            Vector3Int pointPos = (point.transform.position - posOffset).SnapOnGrid();
+            //add points to dictionary
+            Vector3Int pointPos = point.transform.position.SnapOnGrid();
             PointDict.Add(pointPos, point);
+
+            //set neighbours
+            foreach(Vector3 flatDirection in Tools.AllFlatDirections)
+            {
+                RaycastHit hit;
+
+                if (Physics.Raycast(point.transform.position, flatDirection, out hit, 1, LayerMask.GetMask("Waypoint")))
+                    if (hit.collider.TryGetComponent(out WayPoint wayPoint) && !point.Neighbours.Contains(wayPoint))
+                        point.Neighbours.Add(wayPoint);
+            }
+
         }
     }
-    
+
+    public void ResetGraph()
+    {
+        PointDict.Clear();
+
+        foreach (WayPoint point in _allWaypoints)
+            point.Neighbours.Clear();
+    }
 }
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(GraphMaker))]
+public class GraphMakerEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+
+        GraphMaker graphMaker = (GraphMaker)target;
+
+        GUILayout.Space(20);
+
+        if(GUILayout.Button("Générer le Graph"))
+            graphMaker.ComposeGraph();
+
+        GUILayout.Space(20);
+
+        if(GUILayout.Button("Reset le Graph"))
+            graphMaker.ResetGraph();
+
+    }
+}
+#endif

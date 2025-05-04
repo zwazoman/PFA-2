@@ -145,12 +145,16 @@ public class EnemyEntity : Entity
     {
         await UniTask.Delay(1000);
 
+        if (targetPoint == CurrentPoint)
+            return true;
+
         if (Walkables.Contains(targetPoint))
         {
             print("target in range !");
             await TryMoveTo(targetPoint);
             return true;
         }
+
         print("target not in range yet ! getting closer...");
         print(Tools.FindClosestFloodPoint(Walkables, Tools.SmallFlood(targetPoint, Tools.FloodDict[targetPoint])));
 
