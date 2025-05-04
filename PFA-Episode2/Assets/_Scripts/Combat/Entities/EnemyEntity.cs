@@ -119,11 +119,11 @@ public class EnemyEntity : Entity
 
             WayPoint selected = targetPointsDict[choosenTargetPoint];
 
-            Vector3Int selfPointPos = GraphMaker.Instance.PointDict.GetKeyFromValue(CurrentPoint);
-            Vector3Int zonePointPos = GraphMaker.Instance.PointDict.GetKeyFromValue(targetPlayerPoint);
-            Vector3Int rangepointPos = GraphMaker.Instance.PointDict.GetKeyFromValue(selected);
+            Vector3Int selfPointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(CurrentPoint);
+            Vector3Int zonePointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(targetPlayerPoint);
+            Vector3Int rangepointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(selected);
 
-            WayPoint pointToSelect = GraphMaker.Instance.PointDict[selfPointPos + (zonePointPos - rangepointPos)];
+            WayPoint pointToSelect = GraphMaker.Instance.serializedPointDict[selfPointPos + (zonePointPos - rangepointPos)];
 
             EntitySpellCaster.PreviewSpellRange(choosenSpell);
             await UniTask.Delay(2000);

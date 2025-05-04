@@ -15,7 +15,7 @@ public class WayPoint : MonoBehaviour
     public event Action OnSteppedOn;
     public event Action OnSteppedOff;
 
-    public List<WayPoint> Neighbours = new List<WayPoint>();
+    public List<WayPoint> Neighbours;
 
     public Entity Content;
 

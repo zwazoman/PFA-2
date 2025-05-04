@@ -1,3 +1,4 @@
+using AYellowpaper.SerializedCollections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -36,7 +37,7 @@ public class GraphMaker : MonoBehaviour
 
     [SerializeField] List<WayPoint> _allWaypoints;
 
-    public Dictionary<Vector3Int, WayPoint> PointDict = new Dictionary<Vector3Int, WayPoint>();
+    public SerializedDictionary<Vector3Int, WayPoint> serializedPointDict = new();
 
 
     private void Awake()
@@ -46,9 +47,11 @@ public class GraphMaker : MonoBehaviour
         if (_generatesGraph)
             GenerateGraph();
         else
-            ComposeGraph();
+            print("singe");
+            //ComposeGraph();
 
-
+        print(_allWaypoints[10].Neighbours.Count);
+        print(serializedPointDict[new Vector3Int(3, 0, 1)].gameObject.name);
     }
 
     void GenerateGraph()
@@ -64,20 +67,20 @@ public class GraphMaker : MonoBehaviour
                 WayPoint point = Instantiate(_waypointPrefab, (Vector3)spawnPos, Quaternion.identity).GetComponent<WayPoint>();
                 point.transform.parent = this.transform;
                 point.gameObject.layer = 3;
-                PointDict.Add(spawnPos, point);
+                serializedPointDict.Add(spawnPos, point);
 
                 Vector3Int down = new Vector3Int(spawnPos.x, 0, spawnPos.z - 1);
                 Vector3Int left = new Vector3Int(spawnPos.x - 1, 0, spawnPos.z);
 
-                if (PointDict.ContainsKey(down))
+                if (serializedPointDict.ContainsKey(down))
                 {
-                    point.Neighbours.Add(PointDict[down]);
-                    PointDict[down].Neighbours.Add(point);
+                    point.Neighbours.Add(serializedPointDict[down]);
+                    serializedPointDict[down].Neighbours.Add(point);
                 }
-                if (PointDict.ContainsKey(left))
+                if (serializedPointDict.ContainsKey(left))
                 {
-                    point.Neighbours.Add(PointDict[left]);
-                    PointDict[left].Neighbours.Add(point);
+                    point.Neighbours.Add(serializedPointDict[left]);
+                    serializedPointDict[left].Neighbours.Add(point);
                 }
             }
         }
@@ -85,12 +88,13 @@ public class GraphMaker : MonoBehaviour
 
     public void ComposeGraph()
     {
+        ResetGraph();
 
         foreach(WayPoint point in _allWaypoints)
         {
             //add points to dictionary
             Vector3Int pointPos = point.transform.position.SnapOnGrid();
-            PointDict.Add(pointPos, point);
+            serializedPointDict.Add(pointPos, point);
 
             //set neighbours
             foreach(Vector3 flatDirection in Tools.AllFlatDirections)
@@ -107,7 +111,7 @@ public class GraphMaker : MonoBehaviour
 
     public void ResetGraph()
     {
-        PointDict.Clear();
+        serializedPointDict.Clear();
 
         foreach (WayPoint point in _allWaypoints)
             point.Neighbours.Clear();

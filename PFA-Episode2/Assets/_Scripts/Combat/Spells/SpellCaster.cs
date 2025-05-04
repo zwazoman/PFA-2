@@ -47,16 +47,16 @@ public class SpellCaster : MonoBehaviour
     {
         if (!RangePoints.Contains(targetedPoint)) return;
 
-        Vector3Int targetedPointPos = GraphMaker.Instance.PointDict.GetKeyFromValue(targetedPoint);
+        Vector3Int targetedPointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(targetedPoint);
 
         foreach (Vector2Int pos in spell.AreaOfEffect.AffectedTiles)
         {
             Vector3Int posOffset = new Vector3Int(pos.x, 0, pos.y);
             Vector3Int newPos = targetedPointPos + posOffset;
 
-            if (GraphMaker.Instance.PointDict.ContainsKey(newPos))
+            if (GraphMaker.Instance.serializedPointDict.ContainsKey(newPos))
             {
-                WayPoint choosenWaypoint = GraphMaker.Instance.PointDict[newPos];
+                WayPoint choosenWaypoint = GraphMaker.Instance.serializedPointDict[newPos];
 
                 if (showZone)
                     choosenWaypoint.ChangeTileColor(choosenWaypoint._zoneMaterial);

@@ -30,7 +30,7 @@ public class Entity : MonoBehaviour
         transform.position = roundedPos;
         transform.position += Vector3.up * 1.3f;
 
-        CurrentPoint = GraphMaker.Instance.PointDict[roundedPos];
+        CurrentPoint = GraphMaker.Instance.serializedPointDict[roundedPos];
         CurrentPoint.StepOn(this);
     }
 
