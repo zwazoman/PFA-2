@@ -2365,36 +2365,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1089822476 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 279633862603933050, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
-  m_PrefabInstance: {fileID: 766453629115748618}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1089822480 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2919549843284504080, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
-  m_PrefabInstance: {fileID: 766453629115748618}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1089822476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c46d2a05c61d7e74eaacf940d895caa2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1089822482
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1089822476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3e96b6bec39ba34ea5294cf4fc2600e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _player: {fileID: 1089822480}
-  _uiSpellPrefab: {fileID: 6912596932924953965, guid: 8885174301c950045bb1393534db6b84, type: 3}
 --- !u!1001 &1441911128
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3020,22 +2990,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Playerguez (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 2919549843284504080, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
-      propertyPath: MaxMovePoints
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 2919549843284504080, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
-      propertyPath: _endTurnButton
-      value: 
-      objectReference: {fileID: 185133316}
-    - target: {fileID: 2919549843284504080, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
-      propertyPath: spellsUI.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2919549843284504080, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
-      propertyPath: 'spellsUI.Array.data[0]'
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 3061929779469775917, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.9488335
@@ -3079,10 +3033,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 279633862603933050, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
-      insertIndex: 4
-      addedObject: {fileID: 1089822482}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
 --- !u!65 &4193691378755275303
 BoxCollider:

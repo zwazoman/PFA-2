@@ -27,8 +27,8 @@ public class Entity : MonoBehaviour
     protected virtual void Start()
     {
         Vector3Int roundedPos = transform.position.SnapOnGrid();
-        transform.position = roundedPos;
-        transform.position += Vector3.up * 1.3f;
+        //transform.position = roundedPos;
+        //transform.position += Vector3.up * 1.3f;
 
         CurrentPoint = GraphMaker.Instance.serializedPointDict[roundedPos];
         CurrentPoint.StepOn(this);
@@ -110,7 +110,7 @@ public class Entity : MonoBehaviour
 
     async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 8)
     {
-        targetPos.y = 1f;
+        targetPos.y = transform.position.y;
         Vector3 offset = targetPos - (Vector3)transform.position;
         Quaternion targetRotation = Quaternion.Euler(0, Mathf.Atan2(offset.z, offset.x) * Mathf.Rad2Deg, 0);
         transform.rotation = targetRotation;
