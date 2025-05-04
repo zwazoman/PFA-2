@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -48,8 +49,8 @@ public static class Serializer
         return SauceEffectTypeToString[(int)e.effect];
     }
 
-    const string cd = " turns", r = " tiles", t = " - ";
-    public  static string GetCoolDownString(byte cooldown) => cooldown.ToString() + cd;
+    const string s = "s", cd = " turn", r = " tile", t = " - ",e = "";
+    public  static string GetCoolDownString(byte cooldown) => cooldown.ToString() + cd + (cooldown> 1 ? s : e);
     public static string GetRangeString(byte Range)
-        => Mathf.Max(0, Range - SpellCaster.RangeRingThickness).ToString() + t + Range.ToString() + r;
+        => Mathf.Max(0, Range - SpellCaster.RangeRingThickness).ToString() + t + Range.ToString() + r + (Range > 1 ? s : e);
 }

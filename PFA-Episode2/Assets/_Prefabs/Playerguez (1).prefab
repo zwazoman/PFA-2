@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2919549843284504080}
   - component: {fileID: 7531955018465291535}
   - component: {fileID: 5207839571026480074}
+  - component: {fileID: 2814213667352254204}
   - component: {fileID: 113046000969153493}
   - component: {fileID: 5519872474480069447}
   m_Layer: 0
@@ -51,11 +52,10 @@ MonoBehaviour:
   CurrentPoint: {fileID: 0}
   EntityHealth: {fileID: 0}
   EntitySpellCaster: {fileID: 0}
-  MovePoints: 4
+  MaxMovePoints: 4
   walkables: []
-  _endTurnButton: {fileID: 0}
-  spellsUI:
-  - {fileID: 0}
+  spellsUI: []
+  endTurnButton: {fileID: 0}
 --- !u!114 &7531955018465291535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,6 +69,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHealth: 0
+  ShieldAmount: 0
 --- !u!114 &5207839571026480074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,6 +86,22 @@ MonoBehaviour:
   _obstacleMask:
     serializedVersion: 2
     m_Bits: 64
+  RangePoints: []
+  ZonePoints: []
+--- !u!114 &2814213667352254204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 279633862603933050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3e96b6bec39ba34ea5294cf4fc2600e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _player: {fileID: 2919549843284504080}
+  _uiSpellPrefab: {fileID: 6912596932924953965, guid: 8885174301c950045bb1393534db6b84, type: 3}
 --- !u!23 &113046000969153493
 MeshRenderer:
   m_ObjectHideFlags: 0
