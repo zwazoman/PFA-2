@@ -103,7 +103,7 @@ public class SaveMapGeneration : MonoBehaviour
                 //Place le joueur sur le bon node
                 if (Vector3Int.Distance(item.key, item.playerPosition) <= 1f)
                 {
-                    PlayerMap.Instance.SetupTarget(node.transform.position);
+                    //PlayerMap.Instance.SetupTarget(node.transform.position);
                     PlayerMap.Instance.transform.localPosition = item.playerPosition;
                 }
             }
