@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerMap : MonoBehaviour
 {
     private Vector3 _target;
-    public float speed = 5f;
+    public float speed;
     public static PlayerMap Instance;
     private bool hasArrived = false;
     private Vector3Int position;
@@ -39,7 +39,7 @@ public class PlayerMap : MonoBehaviour
     private async void LoadNextScene()
     {
         _target = await SetupTarget(); //Attendre que _target soit def
-        await MoveTo(_target, speed); //Attends qu'il soit arrivé
+        await MoveTo(_target); //Attends qu'il soit arrivé
 
         //---------------- Charge une nouvelle scène -------------------------
 
@@ -65,11 +65,11 @@ public class PlayerMap : MonoBehaviour
         }
     }
 
-    async UniTask MoveTo(Vector3 targetPos, float moveSpeed = 8) //Faut pas qu'il se lance au start
+    async UniTask MoveTo(Vector3 targetPos) //Faut pas qu'il se lance au start
     {
         while (Vector3.Distance(transform.position, targetPos) > 0.1f)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed);
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, speed);
             await UniTask.Yield();
         }
     }
