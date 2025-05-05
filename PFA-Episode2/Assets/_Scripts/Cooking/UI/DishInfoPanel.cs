@@ -26,7 +26,7 @@ public class DishInfoPanel : AnimatedPanel
         txt_DishName.text = spell.Name;
 
         //area of effect
-        //mes couilles
+        //...
 
         //turns and range
         txt_cooldown.text = Serializer.GetCoolDownString(spell.CoolDown);
