@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CookingPot : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class CookingPot : MonoBehaviour
 
     [SerializeField] TMP_Text txt_sauceName;
     [SerializeField] TMP_Text txt_sauceEffect;
+    [SerializeField] Image _sauceAreaImage;
     [SerializeField] TMP_Text _txt_cooldown, _txt_range;
 
     #region Display
@@ -52,11 +54,13 @@ public class CookingPot : MonoBehaviour
         {
             txt_sauceName.text = "";
             txt_sauceEffect.text = "";
+            _sauceAreaImage.sprite = null;
         }
         else
         {
             txt_sauceName.text = sauce.name;
             txt_sauceEffect.text = Serializer.GetSauceEffectString(sauce);
+            _sauceAreaImage.sprite = sauce.areaOfEffect.sprite;
         }
         
     }

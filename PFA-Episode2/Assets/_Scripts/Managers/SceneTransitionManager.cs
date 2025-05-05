@@ -3,6 +3,7 @@ using DG.Tweening;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Scripting;
 using UnityEngine.UI;
 
 public class SceneTransitionManager : MonoBehaviour
@@ -24,6 +25,21 @@ public class SceneTransitionManager : MonoBehaviour
     }
     #endregion
 
+    /// <summary>
+    /// structure à respecter dans les build settings
+    /// </summary>
+    public enum Scene
+    {
+        TitleScreen,
+        WorldMap,
+        //HealingStation,
+        Kitchen,
+        IngredientChest,
+        Fight0,
+        //Fight1,
+        //Fight2
+    }
+
     [SerializeField] CanvasGroup _CanvasGroup;
     [SerializeField] Image _image;
     [SerializeField] float _fadingDuration;
@@ -40,6 +56,25 @@ public class SceneTransitionManager : MonoBehaviour
         SceneManager.LoadScene(sceneName);
     }
 
+    public void GoToSceneByID(int scene) => TGoToSceneByID(scene);
+
+    public async UniTask TGoToSceneByID(int scene)
+    {
+        if (_canChangeScene)
+        {
+            _canChangeScene = false;
+
+            AsyncOperation o = SceneManager.LoadSceneAsync((int)scene, LoadSceneMode.Single);
+            o.allowSceneActivation = false;
+            await FadeOut();
+
+            Debug.Log("Incremental Garbage collector enabled : " + GarbageCollector.isIncremental);
+            Debug.Log("Collected garbage for 100ms. some garbage still remains : " +GarbageCollector.CollectIncremental(100).ToString());
+
+            o.allowSceneActivation = true;
+        }
+    }
+
     public async UniTask GoToScene(string sceneName)
     {
         if (_canChangeScene)
@@ -51,7 +86,6 @@ public class SceneTransitionManager : MonoBehaviour
             await FadeOut();
             o.allowSceneActivation = true;
         }
-        
     }
 
     async UniTask FadeIn(float? duration = null, Color? c = null)
