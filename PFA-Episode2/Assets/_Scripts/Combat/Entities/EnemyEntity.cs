@@ -2,9 +2,17 @@ using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum AIBehaviour
+{
+    Intrepid,
+    Coward
+}
+
 public class EnemyEntity : Entity
 {
     [SerializeField] EnemyData Data;
+
+    WayPoint targetPlayerPoint;
 
     protected override void Start()
     {
@@ -19,7 +27,24 @@ public class EnemyEntity : Entity
 
         ApplyWalkables(true);
 
-        await TryAttack(ChooseSpell(0).SpellData);
+        targetPlayerPoint = FindClosestPlayerPoint();
+
+        bool attacked = await TryAttack(ChooseSpell(0).SpellData);
+
+        targetPlayerPoint = FindClosestPlayerPoint();
+
+        if (attacked && currentMovePoints > 0)
+        {
+            switch (Data.aiBehaviour)
+            {
+                case AIBehaviour.Intrepid:
+                    await MoveToward(targetPlayerPoint);
+                    break;
+                case AIBehaviour.Coward:
+                    await MoveAwayFrom(targetPlayerPoint);
+                    break;
+            }
+        }
 
         await EndTurn();
     }
@@ -65,8 +90,6 @@ public class EnemyEntity : Entity
     /// <returns></returns>
     protected async UniTask<bool> TryAttack(SpellData choosenSpell)
     {
-        WayPoint targetPlayerPoint = FindClosestPlayerPoint();
-
         targetPlayerPoint.ChangeTileColor(targetPlayerPoint._zoneMaterial);
 
         Dictionary<WayPoint, WayPoint> targetPointsDict = new();
@@ -135,31 +158,4 @@ public class EnemyEntity : Entity
         }
         return false;
     }
-
-    /// <summary>
-    /// déplace l'entité vers la case la plus proche de la target
-    /// </summary>
-    /// <param name="targetPoint"></param>
-    /// <returns></returns>
-    protected async UniTask<bool> MoveToward(WayPoint targetPoint)
-    {
-        await UniTask.Delay(1000);
-
-        if (targetPoint == CurrentPoint)
-            return true;
-
-        if (Walkables.Contains(targetPoint))
-        {
-            print("target in range !");
-            await TryMoveTo(targetPoint);
-            return true;
-        }
-
-        print("target not in range yet ! getting closer...");
-        print(Tools.FindClosestFloodPoint(Walkables, Tools.SmallFlood(targetPoint, Tools.FloodDict[targetPoint])));
-
-        await TryMoveTo(Tools.FindClosestFloodPoint(Walkables, Tools.SmallFlood(targetPoint, Tools.FloodDict[targetPoint])));
-        return false;
-    }
-
 }
