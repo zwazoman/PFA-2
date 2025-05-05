@@ -16,9 +16,9 @@ public class ChooseIngredient : MonoBehaviour
 
     private void ChooseRandomIngredient()
     {
+        List<IngredientBase> listIngredient = _listScriptableIngredient;
         for(int i = 0; i <= 2; i++)
         {
-            List<IngredientBase> listIngredient = _listScriptableIngredient;
             int choice = UnityEngine.Random.Range(0, listIngredient.Count - i);
             listIngredient.RemoveAt(choice);
             print(choice);
@@ -34,7 +34,7 @@ public class ChooseIngredient : MonoBehaviour
         if(_listScriptableIngredient[choice] is Sauce) //Sauce
         {
             _listIngredientUI[index].familly.text = "Sauce";
-            //_listIngredientUI[index].rarityFrame 
+            _listIngredientUI[index].rarityFrame.sprite = _listScriptableIngredient[choice].frame;
             SetupColor(index, 4);
         }
         else //Ingrédient
@@ -45,19 +45,19 @@ public class ChooseIngredient : MonoBehaviour
             {
                 case IngredientsInfo.Family.Starchys:
                     SetupColor(index, 2);
-                    print("lait");
+                    _listIngredientUI[index].rarityFrame.sprite = _listScriptableIngredient[choice].frame;
                     break;
                 case IngredientsInfo.Family.Vegetables:
                     SetupColor(index, 0);
-                    print("Légume");
+                    _listIngredientUI[index].rarityFrame.sprite = _listScriptableIngredient[choice].frame;
                     break;
                 case IngredientsInfo.Family.Dairys:
                     SetupColor(index, 3);
-                    print("Féculent");
+                    _listIngredientUI[index].rarityFrame.sprite = _listScriptableIngredient[choice].frame;
                     break;
                 case IngredientsInfo.Family.Meat:
                     SetupColor(index, 1);
-                    print("viande");
+                    _listIngredientUI[index].rarityFrame.sprite = _listScriptableIngredient[choice].frame;
                     break;
             }
         }
