@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 535367472549682895}
   - component: {fileID: 3897448239482696315}
-  - component: {fileID: 4881932823204354968}
   - component: {fileID: 205702852374962733}
   m_Layer: 0
   m_Name: EnemyGuez
@@ -47,25 +46,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae3a4480272969c41bafb12d3cecf0d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentPoint: {fileID: 0}
-  EntityHealth: {fileID: 0}
-  EntitySpellCaster: {fileID: 0}
-  MaxMovePoints: 4
+  currentPoint: {fileID: 0}
+  entitySpellCaster: {fileID: 0}
   Data: {fileID: 11400000, guid: eab97717669c59f4a824ac6d8a2d0365, type: 2}
---- !u!114 &4881932823204354968
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8439555630331746829}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 471ba0d4444ccf545ba6762e8fb7c88a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MaxHealth: 0
-  ShieldAmount: 0
 --- !u!114 &205702852374962733
 MonoBehaviour:
   m_ObjectHideFlags: 0

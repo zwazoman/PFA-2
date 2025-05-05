@@ -14,6 +14,14 @@ public class EnemyEntity : Entity
 
     WayPoint targetPlayerPoint;
 
+    protected override void Awake()
+    {
+        base.Awake();
+
+        entityStats.maxHealth = Data.MaxHealth;
+        entityStats.maxMovePoints = Data.MaxMovePoints;
+    }
+
     protected override void Start()
     {
         base.Start();
@@ -33,7 +41,7 @@ public class EnemyEntity : Entity
 
         targetPlayerPoint = FindClosestPlayerPoint();
 
-        if (attacked && currentMovePoints > 0)
+        if (attacked && entityStats.currentMovePoints > 0)
         {
             switch (Data.aiBehaviour)
             {
@@ -64,16 +72,24 @@ public class EnemyEntity : Entity
         return Data.Spells.PickRandom();
     }
 
-    protected PremadeSpell ChooseSpellWithRange(WayPoint targetPoint)
+    protected PremadeSpell ChooseSpellWithRange()
     {
         int targetDistance = Tools.FloodDict[targetPlayerPoint];
 
+        int offset = int.MaxValue;
+        PremadeSpell choosenSpell = null;
+
         foreach (PremadeSpell spell in Data.Spells)
         {
-            int spellMaxRange = spell.SpellData.Range + Mathf.FloorToInt(spell.SpellData.AreaOfEffect.Bounds.width /2);
+            int spellMaxReach = entityStats.currentMovePoints + spell.SpellData.Range + Mathf.FloorToInt(spell.SpellData.AreaOfEffect.Bounds.width / 2);
+            int targetToMaxReachOffset = Mathf.Abs(spellMaxReach - targetDistance);
+            if(targetToMaxReachOffset < offset)
+            {
+                offset = targetToMaxReachOffset;
+                choosenSpell = spell;
+            }
         }
-
-        return default;
+        return choosenSpell;
     }
 
     protected WayPoint FindClosestPlayerPoint()
@@ -82,7 +98,7 @@ public class EnemyEntity : Entity
 
         foreach (PlayerEntity player in CombatManager.Instance.PlayerEntities)
         {
-            points.Add(player.CurrentPoint);
+            points.Add(player.currentPoint);
         }
 
         WayPoint result = points.FindClosestFloodPoint();
@@ -102,21 +118,21 @@ public class EnemyEntity : Entity
         Dictionary<WayPoint, WayPoint> targetPointsDict = new();
 
         //créé le dict zonePoint,targetPoint
-        EntitySpellCaster.PreviewSpellRange(choosenSpell, targetPlayerPoint, true, choosenSpell.Range);
+        entitySpellCaster.PreviewSpellRange(choosenSpell, targetPlayerPoint, true, choosenSpell.Range);
         await UniTask.Delay(300);
-        foreach (WayPoint rangePoint in EntitySpellCaster.RangePoints)
+        foreach (WayPoint rangePoint in entitySpellCaster.RangePoints)
         {
-            EntitySpellCaster.PreviewSpellZone(choosenSpell, rangePoint);
-            foreach (WayPoint zonePoint in EntitySpellCaster.ZonePoints)
+            entitySpellCaster.PreviewSpellZone(choosenSpell, rangePoint);
+            foreach (WayPoint zonePoint in entitySpellCaster.ZonePoints)
             {
                 if(!targetPointsDict.ContainsKey(zonePoint))
                     targetPointsDict.Add(zonePoint, rangePoint);
             }
             await UniTask.Delay(100);
-            EntitySpellCaster.StopSpellZonePreview();
+            entitySpellCaster.StopSpellZonePreview();
         }
         await UniTask.Delay(300);
-        EntitySpellCaster.StopSpellRangePreview();
+        entitySpellCaster.StopSpellRangePreview();
 
         List<WayPoint> allTargetPoints = new List<WayPoint>();
         allTargetPoints.AddRange(targetPointsDict.Keys);
@@ -149,17 +165,17 @@ public class EnemyEntity : Entity
 
             WayPoint selected = targetPointsDict[choosenTargetPoint];
 
-            Vector3Int selfPointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(CurrentPoint);
+            Vector3Int selfPointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(currentPoint);
             Vector3Int zonePointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(targetPlayerPoint);
             Vector3Int rangepointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(selected);
 
             WayPoint pointToSelect = GraphMaker.Instance.serializedPointDict[selfPointPos + (zonePointPos - rangepointPos)];
 
-            EntitySpellCaster.PreviewSpellRange(choosenSpell);
+            entitySpellCaster.PreviewSpellRange(choosenSpell);
             await UniTask.Delay(2000);
-            EntitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect);
+            entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect);
             await UniTask.Delay(2000);
-            await EntitySpellCaster.TryCastSpell(choosenSpell, pointToSelect);
+            await entitySpellCaster.TryCastSpell(choosenSpell, pointToSelect);
 
             return true;
         }

@@ -316,11 +316,6 @@ public class SFXManager : MonoBehaviour
     {
         public override string Message => "No Sounds where found in the list.";
     }
-
-    public void aohfonvoi(AudioClip clip)
-    {
-
-    }
 }
 
 public enum RandomType

@@ -4,24 +4,20 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
 
-[RequireComponent(typeof(Health))]
 [RequireComponent(typeof(SpellCaster))]
 public class Entity : MonoBehaviour
 {
-    [HideInInspector] public WayPoint CurrentPoint;
-    [HideInInspector] public Health EntityHealth;
-    [HideInInspector] public SpellCaster EntitySpellCaster;
+    public EntityStats entityStats = new();
 
-    [SerializeField] public int MaxMovePoints;
-    protected int currentMovePoints;
+    [HideInInspector] public WayPoint currentPoint;
+    [HideInInspector] public SpellCaster entitySpellCaster;
 
     protected Dictionary<WayPoint,int> WaypointDistance = new Dictionary<WayPoint,int>();
     protected List<WayPoint> Walkables = new List<WayPoint>();
 
     protected virtual void Awake()
     {
-        TryGetComponent(out EntityHealth);
-        TryGetComponent(out EntitySpellCaster);
+        TryGetComponent(out entitySpellCaster);
     }
 
     protected virtual void Start()
@@ -30,15 +26,15 @@ public class Entity : MonoBehaviour
         //transform.position = roundedPos;
         //transform.position += Vector3.up * 1.3f;
 
-        CurrentPoint = GraphMaker.Instance.serializedPointDict[roundedPos];
-        CurrentPoint.StepOn(this);
+        currentPoint = GraphMaker.Instance.serializedPointDict[roundedPos];
+        currentPoint.StepOn(this);
     }
 
     public virtual async UniTask PlayTurn()
     {
         print(gameObject.name);
-        Tools.Flood(CurrentPoint);
-        currentMovePoints = MaxMovePoints;
+        Tools.Flood(currentPoint);
+        entityStats.currentMovePoints = entityStats.maxMovePoints;
     }
 
     public virtual async UniTask EndTurn()
@@ -55,12 +51,12 @@ public class Entity : MonoBehaviour
                 switch (effect.effectType)
                 {
                     case SpellEffectType.Damage:
-                        EntityHealth.ApplyHealth(-effect.value);
+                        entityStats.ApplyHealth(-effect.value);
                         break;
                     case SpellEffectType.Recoil:
                         throw new NotImplementedException();
                     case SpellEffectType.Shield:
-                        EntityHealth.ApplyShield(effect.value);
+                        entityStats.ApplyShield(effect.value);
                         break;
                     case SpellEffectType.DamageIncreaseForEachHitEnnemy:
                         throw new NotImplementedException();
@@ -74,10 +70,10 @@ public class Entity : MonoBehaviour
     }
     public virtual async UniTask TryMoveTo(WayPoint targetPoint, bool showTiles = true)
     {
-        Stack<WayPoint> path = Tools.FindBestPath(CurrentPoint, targetPoint);
+        Stack<WayPoint> path = Tools.FindBestPath(currentPoint, targetPoint);
         int pathlength = path.Count;
 
-        if(pathlength > currentMovePoints)
+        if(pathlength > entityStats.currentMovePoints)
         {
             print("plus de pm !");
             return;
@@ -90,20 +86,20 @@ public class Entity : MonoBehaviour
 
         for (int i = 0; i < pathlength; i++)
         {
-            CurrentPoint.StepOff();
+            currentPoint.StepOff();
 
             WayPoint steppedOnPoint = path.Pop();
 
             await StartMoving(steppedOnPoint.transform.position);
 
-            CurrentPoint = steppedOnPoint;
+            currentPoint = steppedOnPoint;
             steppedOnPoint.StepOn(this);
 
             steppedOnPoint.ChangeTileColor(steppedOnPoint._normalMaterial);
 
-            currentMovePoints--;
+            entityStats.currentMovePoints--;
         }
-        Tools.Flood(CurrentPoint);
+        Tools.Flood(currentPoint);
         ClearWalkables();
         ApplyWalkables(showTiles);
     }
@@ -125,8 +121,10 @@ public class Entity : MonoBehaviour
 
     public void ApplyWalkables(bool showTiles = true)
     {
+        print(entityStats.currentMovePoints);
+
         if(Walkables.Count == 0)
-            Walkables.AddRange(Tools.GetWaypointsInRange(currentMovePoints));
+            Walkables.AddRange(Tools.GetWaypointsInRange(entityStats.currentMovePoints));
 
         foreach (WayPoint point in Walkables)
         {
@@ -155,7 +153,7 @@ public class Entity : MonoBehaviour
     {
         await UniTask.Delay(1000);
 
-        if (targetPoint == CurrentPoint)
+        if (targetPoint == currentPoint)
             return true;
 
         if (Walkables.Contains(targetPoint))
