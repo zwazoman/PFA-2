@@ -8,26 +8,26 @@ public class PlayerUIHandler : MonoBehaviour
 
     [SerializeField] GameObject _uiSpellPrefab;
 
-    CombatUiManager _uiManager;
-    Inventory inventory;
-
     private void Awake()
     {
         if(_player == null)
             TryGetComponent(out _player);
-
-        _uiManager = CombatUiManager.Instance;
     }
 
     private void Start()
     {
-        foreach (SpellData spell in inventory.Spells)
-            CreateSpellUI(spell);
+        AssignEndTurnButton();
+
+        if (GameManager.Instance.playerInventory != null)
+            foreach (SpellData spell in GameManager.Instance.playerInventory.Spells)
+            {
+                CreateSpellUI(spell);
+            }
     }
 
     void CreateSpellUI(SpellData spellData)
     {
-        GameObject uiSpell = Instantiate(_uiSpellPrefab, _uiManager.playerSpellGroup.transform);
+        GameObject uiSpell = Instantiate(_uiSpellPrefab, CombatUiManager.Instance.playerSpellGroup.transform);
 
         Image spellImage;
         DraggableSpell draggableSpell;
@@ -44,7 +44,7 @@ public class PlayerUIHandler : MonoBehaviour
 
     void AssignEndTurnButton()
     {
-        _player.endTurnButton = _uiManager.endButton;
+        _player.endTurnButton = CombatUiManager.Instance.endButton;
     }
 
 }

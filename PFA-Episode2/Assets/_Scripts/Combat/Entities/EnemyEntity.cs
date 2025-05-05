@@ -73,7 +73,8 @@ public class EnemyEntity : Entity
 
         //créé le dict zonePoint,targetPoint
         EntitySpellCaster.PreviewSpellRange(choosenSpell, targetPlayerPoint, true, choosenSpell.Range);
-        foreach(WayPoint rangePoint in EntitySpellCaster.RangePoints)
+        await UniTask.Delay(300);
+        foreach (WayPoint rangePoint in EntitySpellCaster.RangePoints)
         {
             EntitySpellCaster.PreviewSpellZone(choosenSpell, rangePoint);
             foreach (WayPoint zonePoint in EntitySpellCaster.ZonePoints)
@@ -84,7 +85,7 @@ public class EnemyEntity : Entity
             await UniTask.Delay(100);
             EntitySpellCaster.StopSpellZonePreview();
         }
-        await UniTask.Delay(500);
+        await UniTask.Delay(300);
         EntitySpellCaster.StopSpellRangePreview();
 
         List<WayPoint> allTargetPoints = new List<WayPoint>();
@@ -107,17 +108,22 @@ public class EnemyEntity : Entity
 
         bool targetReached = await MoveToward(choosenTargetPoint); // le point le plus proche de lancé de sort
 
+        foreach (WayPoint point in allTargetPoints)
+        {
+            point.ChangeTileColor(point._normalMaterial);
+        }
+
         if (targetReached)
         {
             print("attack !");
 
             WayPoint selected = targetPointsDict[choosenTargetPoint];
 
-            Vector3Int selfPointPos = GraphMaker.Instance.PointDict.GetKeyFromValue(CurrentPoint);
-            Vector3Int zonePointPos = GraphMaker.Instance.PointDict.GetKeyFromValue(targetPlayerPoint);
-            Vector3Int rangepointPos = GraphMaker.Instance.PointDict.GetKeyFromValue(selected);
+            Vector3Int selfPointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(CurrentPoint);
+            Vector3Int zonePointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(targetPlayerPoint);
+            Vector3Int rangepointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(selected);
 
-            WayPoint pointToSelect = GraphMaker.Instance.PointDict[selfPointPos + (zonePointPos - rangepointPos)];
+            WayPoint pointToSelect = GraphMaker.Instance.serializedPointDict[selfPointPos + (zonePointPos - rangepointPos)];
 
             EntitySpellCaster.PreviewSpellRange(choosenSpell);
             await UniTask.Delay(2000);
@@ -139,12 +145,16 @@ public class EnemyEntity : Entity
     {
         await UniTask.Delay(1000);
 
+        if (targetPoint == CurrentPoint)
+            return true;
+
         if (Walkables.Contains(targetPoint))
         {
             print("target in range !");
             await TryMoveTo(targetPoint);
             return true;
         }
+
         print("target not in range yet ! getting closer...");
         print(Tools.FindClosestFloodPoint(Walkables, Tools.SmallFlood(targetPoint, Tools.FloodDict[targetPoint])));
 

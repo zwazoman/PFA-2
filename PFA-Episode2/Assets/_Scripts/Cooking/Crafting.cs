@@ -4,24 +4,31 @@ using UnityEngine;
 
 public class Crafting : MonoBehaviour
 {
-    public static void CraftNewSpell(Ingredient[] ingredients, Sauce sauce)
+    public static SpellData CraftNewSpell(Ingredient[] ingredients, Sauce sauce)
     {
+        //apply ingredients effects
         SpellData spell = new SpellData();
         foreach(Ingredient i in ingredients)
         {
             i.ModifySpellEffect(spell);
         }
 
-        foreach (Ingredient i in ingredients)
-        {
-            i.OnAfterModifySpellEffect(spell);
-        }
-
         sauce.ModifySpellEffect(spell);
 
+        //collapse similar effects
         SpellEffect[] effects = spell.Effects.ToArray();
-        SpellEffect.CollapseSpellEffects(ref effects);
+        SpellEffect.CollapseSimilarSpellEffects(ref effects);
         spell.Effects = effects.ToList();
+
+        //compute family combination
+        spell.IngredientsCombination = ComputeFamilyCombinaison(ingredients[0], ingredients[1], ingredients[2]);
+
+        //fetch visual data
+        DishCombinationData.spellVisualData data = GameManager.Instance.dishCombinationData.Visuals[spell.IngredientsCombination];
+        spell.Name = data.name;
+        spell.Sprite = data.sprite;
+
+        return spell;
     }
 
     #region combinations
@@ -46,7 +53,7 @@ public class Crafting : MonoBehaviour
         Ingredient i2,
         Ingredient i3)
     {
-        return ComputeFamilyCombinaison(i1.family, i2.family, i3.family);
+        return ComputeFamilyCombinaison(i1.Family, i2.Family, i3.Family);
     }
 
     public static string ComputeFamilyCombinaison(

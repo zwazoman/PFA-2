@@ -15,7 +15,7 @@ public class WayPoint : MonoBehaviour
     public event Action OnSteppedOn;
     public event Action OnSteppedOff;
 
-    public List<WayPoint> Neighbours = new List<WayPoint>();
+    public List<WayPoint> Neighbours;
 
     public Entity Content;
 
@@ -47,6 +47,9 @@ public class WayPoint : MonoBehaviour
         State = WaypointState.Free;
 
         TryGetComponent(out _mR);
+
+        if(_normalMaterial == null)
+            _normalMaterial = _mR.material;
     }
 
     private void Start()
@@ -171,6 +174,9 @@ public class WayPoint : MonoBehaviour
         {
             Gizmos.DrawLine(transform.position, point.transform.position);
         }
+
+        //foreach(Vector3 flatDirection in Tools.AllFlatDirections)
+        //    Debug.DrawLine(transform.position, transform.position + flatDirection);
     }
 
 

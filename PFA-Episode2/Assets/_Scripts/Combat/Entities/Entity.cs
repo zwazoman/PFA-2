@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using System;
 
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(SpellCaster))]
@@ -26,10 +27,10 @@ public class Entity : MonoBehaviour
     protected virtual void Start()
     {
         Vector3Int roundedPos = transform.position.SnapOnGrid();
-        transform.position = roundedPos;
-        transform.position += Vector3.up * 1.3f;
+        //transform.position = roundedPos;
+        //transform.position += Vector3.up * 1.3f;
 
-        CurrentPoint = GraphMaker.Instance.PointDict[roundedPos];
+        CurrentPoint = GraphMaker.Instance.serializedPointDict[roundedPos];
         CurrentPoint.StepOn(this);
     }
 
@@ -48,11 +49,29 @@ public class Entity : MonoBehaviour
 
     public async UniTask ApplySpell(SpellData spell)
     {
-        //EntityHealth.ApplyShield(spell.Damage);
-        //EntityHealth.ApplyHealth(-spell.Damage);
-        //EntityHealth.ApplyHealth(spell.Heal);
+        foreach (SpellEffect effect in spell.Effects)
+        {
+            {
+                switch (effect.effectType)
+                {
+                    case SpellEffectType.Damage:
+                        EntityHealth.ApplyHealth(-effect.value);
+                        break;
+                    case SpellEffectType.Recoil:
+                        throw new NotImplementedException();
+                    case SpellEffectType.Shield:
+                        EntityHealth.ApplyShield(effect.value);
+                        break;
+                    case SpellEffectType.DamageIncreaseForEachHitEnnemy:
+                        throw new NotImplementedException();
+                    case SpellEffectType.DamageIncreasePercentageByDistanceToCaster:
+                        throw new NotImplementedException();
+                    case SpellEffectType.Fire:
+                        throw new NotImplementedException();
+                }
+            }
+        }
     }
-
     public virtual async UniTask TryMoveTo(WayPoint targetPoint, bool showTiles = true)
     {
         Stack<WayPoint> path = Tools.FindBestPath(CurrentPoint, targetPoint);
@@ -89,9 +108,9 @@ public class Entity : MonoBehaviour
         ApplyWalkables(showTiles);
     }
 
-    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 2)
+    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 8)
     {
-        targetPos.y = 1f;
+        targetPos.y = transform.position.y;
         Vector3 offset = targetPos - (Vector3)transform.position;
         Quaternion targetRotation = Quaternion.Euler(0, Mathf.Atan2(offset.z, offset.x) * Mathf.Rad2Deg, 0);
         transform.rotation = targetRotation;

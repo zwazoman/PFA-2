@@ -2,13 +2,14 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(SpellCaster))]
 public class PlayerEntity : Entity
 {
     [HideInInspector] public List<WayPoint> walkables = new();
     
-    [HideInInspector] public List<DraggableSpell> spellsUI = new();
+    [SerializeField] public List<DraggableSpell> spellsUI = new();
 
     [HideInInspector] public EndButton endTurnButton;
 
@@ -22,6 +23,7 @@ public class PlayerEntity : Entity
         base.Start();
 
         CombatManager.Instance.PlayerEntities.Add(this);
+        
     }
 
     public override async UniTask PlayTurn()
@@ -41,6 +43,7 @@ public class PlayerEntity : Entity
         await base.EndTurn();
 
         endTurnButton.Pressed = false;
+        HideSpellsUI();
     }
 
     public async UniTask CheckPlayerInput()
@@ -52,7 +55,7 @@ public class PlayerEntity : Entity
                 await draggable.BeginDrag();
             }
 
-            if (Input.GetMouseButtonDown(0) && Tools.CheckMouseRay(out WayPoint point))
+            if (Input.GetMouseButtonUp(0) && Tools.CheckMouseRay(out WayPoint point) && !EventSystem.current.IsPointerOverGameObject(0))
             {
                 await TryMoveTo(point);
             }

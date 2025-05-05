@@ -1,4 +1,6 @@
+using DG.Tweening;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class CookingPot : MonoBehaviour
@@ -12,56 +14,123 @@ public class CookingPot : MonoBehaviour
     Sauce sauce;
 
     [Header("sceneReferences")]
-    [SerializeField] CookingIngredientsInfoPanel ingredientInfo0;
-    [SerializeField] CookingIngredientsInfoPanel ingredientInfo1;
-    [SerializeField] CookingIngredientsInfoPanel ingredientInfo2;
+    [SerializeField] InfoHeader ingredientInfo0;
+    [SerializeField] InfoHeader ingredientInfo1;
+    [SerializeField] InfoHeader ingredientInfo2;
 
-    void UpdateIngredientsStats()
+
+    [SerializeField] TMP_Text txt_sauceName;
+    [SerializeField] TMP_Text txt_sauceEffect;
+    [SerializeField] TMP_Text _txt_cooldown, _txt_range;
+
+    #region Display
+    private void UpdateCooldownAndRangeDisplay()
+    {
+        Debug.Log("fzqesgrhzfegrht");
+        byte cd = 0, range = 0;
+        foreach(Ingredient ing in ingredients)
+        {
+            cd += ing.CoolDownIncrease;
+            range += ing.RangeIncrease;
+        }
+        _txt_cooldown.text = Serializer.GetCoolDownString(cd);
+        _txt_range.text = Serializer.GetRangeString(range);
+
+        Debug.Log("RDCYFGTVUYIHUIJPKO¨POJHYGULDKYTCIHJUIOKPµPIHGUPYFKCGT");
+    }
+
+    void UpdateIngredientsStatsDisplay()
     {
         ingredientInfo0.UpdateVisual(ingredients.Count >= 1 ? ingredients[0] : null);
         ingredientInfo1.UpdateVisual(ingredients.Count >= 2 ? ingredients[1] : null);
         ingredientInfo2.UpdateVisual(ingredients.Count >= 3 ? ingredients[2] : null);
     }
 
+    void UpdateSauceDisplay() //@revoir image zone
+    {
+        if(sauce == null)
+        {
+            txt_sauceName.text = "";
+            txt_sauceEffect.text = "";
+        }
+        else
+        {
+            txt_sauceName.text = sauce.name;
+            txt_sauceEffect.text = Serializer.GetSauceEffectString(sauce);
+        }
+        
+    }
+
+    #endregion
+
+    #region logic
     public void RemoveIngredient(DraggableIngredientContainer container)
     {
+        bool removed = false;
         //ingredient
-        if (container.item is Ingredient && ingredients.Contains((Ingredient)container.item))
+        if (removed |= (container.item is Ingredient && ingredients.Contains((Ingredient)container.item)))
         {
             items[ingredients.IndexOf((Ingredient)container.item)] = null;
             ingredients.Remove ((Ingredient)container.item);
             container.Reset();
-            UpdateIngredientsStats();
+
+            UpdateIngredientsStatsDisplay();
+            UpdateCooldownAndRangeDisplay();
+            
         }
         //sauce
-        else if (container.item is Sauce && sauce == null)
+        else if (removed |=  (container.item is Sauce && sauce != null))
         {
-            items[3] = container;
-            sauce = (Sauce)container.item;
+            sauce = null;
             container.Reset();
+
+            UpdateSauceDisplay();
         }
+
+        if (removed) transform.DOShakeRotation(.2f,Vector3.forward*90,randomnessMode : ShakeRandomnessMode.Harmonic);
+        
     }
 
     public bool TryAddIngredient(DraggableIngredientContainer container)
     {
         Debug.Log("Tried adding new ingredient : " + ((IngredientBase)(container.item)).name);
+
+        bool successful = false;
+
         //ingredient
-        if (container.item is Ingredient && ingredients.Count < 3)
+        if (successful|=(container.item is Ingredient && ingredients.Count < 3))
         {
             items[ingredients.Count] = container;
             ingredients.Add((Ingredient)container.item);
-            UpdateIngredientsStats();
-            return true;
+
+            UpdateIngredientsStatsDisplay();
+            UpdateCooldownAndRangeDisplay();
         }
         //sauce
-        else if (container.item is Sauce && sauce == null)
+        else if (successful |= (container.item is Sauce && sauce == null))
         {
             items[3] = container;
             sauce = (Sauce)container.item;
-            return true;
+
+            UpdateSauceDisplay();
         }
 
-        return false;
+        if (successful) transform.DOPunchScale(Vector3.one * .25f, .25f,9,1.2f); else transform.DOShakePosition(.3f,50,20);
+
+        return successful;
     }
+
+    public bool TryCookSpell(out SpellData spell)
+    {
+        spell = null;
+        if (ingredients.Count != 3) return false;
+        if (sauce == null) return false;
+
+        spell = Crafting.CraftNewSpell(ingredients.ToArray(),sauce);
+
+        return true;
+    }
+
+    #endregion
 
 }
