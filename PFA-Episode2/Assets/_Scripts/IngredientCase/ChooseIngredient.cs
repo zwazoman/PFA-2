@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Net.NetworkInformation;
+using TMPro;
 
 public class ChooseIngredient : MonoBehaviour
 {
@@ -31,8 +32,11 @@ public class ChooseIngredient : MonoBehaviour
         _listIngredientUI[index].title.text = _listScriptableIngredient[choice].name; //Name
         _listIngredientUI[index].imageLogoRef.sprite = _listScriptableIngredient[choice].sprite; //Sprite
 
-        if(_listScriptableIngredient[choice] is Sauce) //Sauce
+        if (_listScriptableIngredient[choice] is Sauce) //Sauce
         {
+            Sauce ing = (Sauce)_listScriptableIngredient[choice];
+            _listIngredientUI[index].effectDescription.text = Serializer.GetSauceEffectString(ing);
+
             _listIngredientUI[index].familly.text = "Sauce";
             _listIngredientUI[index].rarityFrame.sprite = _listScriptableIngredient[choice].frame;
             SetupColor(index, 4);
@@ -40,6 +44,7 @@ public class ChooseIngredient : MonoBehaviour
         else //Ingrédient
         {
             Ingredient ing = (Ingredient)_listScriptableIngredient[choice];
+            _listIngredientUI[index].effectDescription.text = Serializer.GetIngredientEffectString(ing);
             _listIngredientUI[index].familly.text = ing.Family.ToString();
             switch (ing.Family)
             {
