@@ -75,5 +75,9 @@ public class ChooseIngredient : MonoBehaviour
         _listIngredientUI[index].famillyPanelColorDark.color = _listColor[colorIndex].ColorMid;
         _listIngredientUI[index].famillyButtonColor.color = _listColor[colorIndex].ColorDark;
     }
-    public async void Next() { await SceneTransitionManager.Instance.GoToScene("WorldMap"); }
+    public async void Next()
+    {
+        //ing
+        await SceneTransitionManager.Instance.GoToScene("WorldMap");
+    }
 }
