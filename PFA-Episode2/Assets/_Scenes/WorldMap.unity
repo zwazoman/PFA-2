@@ -623,7 +623,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6581223f177f153498a7553979b45039, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 25
+  speed: 7
+  clickedNode: {fileID: 0}
 --- !u!1 &456538114
 GameObject:
   m_ObjectHideFlags: 0
@@ -2746,6 +2747,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: d3fb66c7eebbac740a13d4de22b247d9, type: 3}
   - {fileID: 21300000, guid: 7b25893c2632a4549a602dbd7a6812db, type: 3}
   - {fileID: 21300000, guid: d2fd11320543d1c4b8a8464830c8104a, type: 3}
+  Visited: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
