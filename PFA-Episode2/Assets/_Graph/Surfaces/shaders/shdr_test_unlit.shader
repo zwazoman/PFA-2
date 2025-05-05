@@ -3,7 +3,7 @@ Shader "Unlit/shdr_test_unlit"
     Properties
     {
         _Palette ("Texture", 2D) = "grey" {}
-        _GradientID ("GradientID", Float) = 0
+        //_GradientID ("GradientID", Float) = 0
         [KeywordEnum(MAP0,MAP1,MAP2)] _SECONDUV ("use second uv map", Float) = 0
     }
     SubShader
@@ -69,7 +69,8 @@ Shader "Unlit/shdr_test_unlit"
             };
 
             sampler2D _Palette;
-            float _GradientID;
+            sampler2D _lightGradientMap;
+            float _enviroID;
 
 
 
@@ -103,13 +104,13 @@ Shader "Unlit/shdr_test_unlit"
 
 
                 //lightning
-                fixed lambert = dot(_WorldSpaceLightPos0,i.normal);
+                fixed lambert = dot(_WorldSpaceLightPos0,i.normal)*.5+.5;
                 fixed castShadow = SHADOW_ATTENUATION(i);
 
                 float shadow = saturate(/*sign*/(lambert) * castShadow )*.8+.1;
                 shadow = shadow - shadow % (.2);
 
-                float4 coloredShadow = (saturate(shadow)*.2+.8)* lerp(shadow, tex2D(_Palette,float2(shadow,_GradientID)),1);                
+                float4 coloredShadow = (saturate(shadow)*.2+.8)* lerp(shadow, tex2D(_lightGradientMap,float2(shadow,_enviroID)),1);                
                 
                 col *= coloredShadow;
                 
