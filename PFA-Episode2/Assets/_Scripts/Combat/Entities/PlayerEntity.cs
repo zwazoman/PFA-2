@@ -38,6 +38,7 @@ public class PlayerEntity : Entity
     {
         await base.PlayTurn();
 
+        endTurnButton.Pressed = false;
         ApplyWalkables();
         ShowSpellsUI();
 
