@@ -25,7 +25,7 @@ public class AnimatedPanel : MonoBehaviour
         _canvasGroup.blocksRaycasts = true;
         _canvasGroup.interactable = true;
 
-        SendMessage(MethodNameOnShown);
+        SendMessage(MethodNameOnShown,SendMessageOptions.DontRequireReceiver);
     }
 
     public void Hide()
@@ -34,7 +34,7 @@ public class AnimatedPanel : MonoBehaviour
         _canvasGroup.blocksRaycasts = false;
         _canvasGroup.interactable = false;
 
-        SendMessage(MethodNameOnHidden);
+        SendMessage(MethodNameOnHidden, SendMessageOptions.DontRequireReceiver);
     }
 
 }

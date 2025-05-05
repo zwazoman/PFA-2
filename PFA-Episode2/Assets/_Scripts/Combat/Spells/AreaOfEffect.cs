@@ -23,6 +23,8 @@ public class AreaOfEffect : ScriptableObject
 
         texture.Apply();
 
+
+
         sprite = Sprite.Create(
             texture,
             new Rect(0, 0, texture.width, texture.height),
@@ -30,8 +32,9 @@ public class AreaOfEffect : ScriptableObject
             Vector4.zero,
             false);
 
+        AssetDatabase.CreateAsset(texture, "Assets/_Data/AreasOfEffect/Sprites/txtr_" + name + ".asset");
         AssetDatabase.CreateAsset(sprite, "Assets/_Data/AreasOfEffect/Sprites/sprt_" + name+".asset");
-        AssetDatabase.SaveAssetIfDirty(sprite);
+        AssetDatabase.SaveAssetIfDirty(this);
     }
 #endif
 
