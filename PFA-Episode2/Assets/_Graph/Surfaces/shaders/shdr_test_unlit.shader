@@ -110,9 +110,18 @@ Shader "Unlit/shdr_test_unlit"
                 float shadow = saturate(/*sign*/(lambert) * castShadow )*.8+.1;
                 shadow = shadow - shadow % (.2);
 
-                float4 coloredShadow = (saturate(shadow)*.2+.8)* lerp(shadow, tex2D(_lightGradientMap,float2(shadow,_enviroID)),1);                
+
                 
-                col *= coloredShadow;
+
+                
+                float4 coloredShadow =  tex2D(_lightGradientMap,float2(shadow,_enviroID));
+                //float4 coloredShadow = (saturate(shadow)*.2+.8)* lerp(shadow, tex2D(_lightGradientMap,float2(shadow,_enviroID)),1);                
+                
+                
+                //col *= coloredShadow;
+                col = (col > 0.5) * (1 - (1-2*(col-0.5)) * (1-coloredShadow)) + (col <= 0.5) * ((2*col) * coloredShadow); // overlay
+                //col =  lerp(col, (coloredShadow > 0.5) * (1 - (1-col) * (1-(coloredShadow-0.5))) + (coloredShadow <= 0.5) * (col * (coloredShadow+0.5)),1); //softlight
+                
                 
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
