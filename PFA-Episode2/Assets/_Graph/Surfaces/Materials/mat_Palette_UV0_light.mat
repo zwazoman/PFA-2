@@ -20,12 +20,12 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: mat_Palette_UV1
+  m_Name: mat_Palette_UV0_light
   m_Shader: {fileID: 4800000, guid: ebcd4d50671f097498d355b94bb0028b, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _SECONDUV_MAP1
+  - _SECONDUV_MAP0
   m_InvalidKeywords:
   - _MAP__MAP_UV_0
   - _SECONDUV_ONA
@@ -134,7 +134,7 @@ Material:
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _SECONDUV: 1
+    - _SECONDUV: 0
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -145,6 +145,7 @@ Material:
     - _UVmap: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
+    - _lightness: 1.1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}

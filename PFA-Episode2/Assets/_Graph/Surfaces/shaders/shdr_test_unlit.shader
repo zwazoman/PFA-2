@@ -3,7 +3,7 @@ Shader "Unlit/shdr_test_unlit"
     Properties
     {
         _Palette ("Texture", 2D) = "grey" {}
-        //_GradientID ("GradientID", Float) = 0
+        _lightness ("Lighness", Float) = 1
         [KeywordEnum(MAP0,MAP1,MAP2)] _SECONDUV ("use second uv map", Float) = 0
     }
     SubShader
@@ -13,14 +13,12 @@ Shader "Unlit/shdr_test_unlit"
             Name "MainPass"
             Tags { "RenderType"="Opaque"  "LightMode"="ForwardBase" "PassFlags" = "OnlyDirectional"}
             LOD 100
+            //Cull Off
 
             CGPROGRAM
 
             #pragma vertex vert
             #pragma fragment frag
-            // make fog work
-            #pragma multi_compile_fog
-
 
             //for shadow casting
             #pragma multi_compile_fwdbase
@@ -59,8 +57,6 @@ Shader "Unlit/shdr_test_unlit"
             {
                 float2 uv : TEXCOORD0;
 
-
-                UNITY_FOG_COORDS(1)
                 float3 normal : NORMAL;
                 float4 pos : POSITION;
 
@@ -68,11 +64,19 @@ Shader "Unlit/shdr_test_unlit"
 
             };
 
+            //color
             sampler2D _Palette;
+            float _lightness;
+
+            //lightning
             sampler2D _lightGradientMap;
             float _enviroID;
+            
+            //stippling
+            sampler2D _stippling;
+            float _stipplingTiling;
 
-
+            
 
             //vertex shader
             v2f vert (appdata v)
@@ -83,13 +87,9 @@ Shader "Unlit/shdr_test_unlit"
                 o.normal = UnityObjectToWorldNormal( v.normal);
                 o.uv = v.uv;
 
-
-                //compute fog data
-                UNITY_TRANSFER_FOG(o,o.pos);
-                
                 // compute shadows data
                 TRANSFER_SHADOW(o);
-
+                
                 return o;
             }
 
@@ -99,33 +99,35 @@ Shader "Unlit/shdr_test_unlit"
                 fixed4 col = float4(1,1,1,0);
 
                 // sample the texture
+                col = tex2D(_Palette, i.uv) ;
+                float4 stippling = tex2D( _stippling, i.pos/_ScreenParams.x * _stipplingTiling);
 
-                col = tex2D(_Palette, i.uv);
 
-
-                //lightning
+                //lightning base
                 fixed lambert = dot(_WorldSpaceLightPos0,i.normal)*.5+.5;
                 fixed castShadow = SHADOW_ATTENUATION(i);
 
+                //toon shadow
                 float shadow = saturate(/*sign*/(lambert) * castShadow )*.8+.1;
-                shadow = shadow - shadow % (.2);
+                shadow = shadow - shadow % (.2); //quatization
+                float4 coloredShadow =  tex2D(_lightGradientMap,float2(shadow,_enviroID)); //gradient mapping
 
+                //stippling
+                coloredShadow = lerp(coloredShadow,coloredShadow*.5  ,(1 -stippling.x * (1-shadow))*.5); //tiling : 0.218 //petits triangles clairs
+                coloredShadow = lerp(coloredShadow,coloredShadow*.8  ,stippling.y * (1-shadow)*(1-shadow)*(1-shadow)); //tiling : 0.218 //petits triangles clairs
 
-                
-
-                
-                float4 coloredShadow =  tex2D(_lightGradientMap,float2(shadow,_enviroID));
-                //float4 coloredShadow = (saturate(shadow)*.2+.8)* lerp(shadow, tex2D(_lightGradientMap,float2(shadow,_enviroID)),1);                
-                
-                
+                //light blending 
                 //col *= coloredShadow;
                 col = (col > 0.5) * (1 - (1-2*(col-0.5)) * (1-coloredShadow)) + (col <= 0.5) * ((2*col) * coloredShadow); // overlay
                 //col =  lerp(col, (coloredShadow > 0.5) * (1 - (1-col) * (1-(coloredShadow-0.5))) + (coloredShadow <= 0.5) * (col * (coloredShadow+0.5)),1); //softlight
                 
-                
-                // apply fog
-                UNITY_APPLY_FOG(i.fogCoord, col);
-                
+                //color adjustment
+                col *= _lightness;
+
+                //vignette (mettre dans post process plutot si y en a)
+                float vignette =  1-saturate((distance(float2(0.5,0.5),i.pos.xy/_ScreenParams.xy)-.4)*3);
+                col *= vignette;
+ 
                 return col;
             }
             ENDCG
