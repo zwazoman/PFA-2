@@ -14,4 +14,6 @@ public class AreaOfEffect : ScriptableObject
     /// </summary>
     public List<Vector2Int> AffectedTiles = new ();
 
+
+
 }

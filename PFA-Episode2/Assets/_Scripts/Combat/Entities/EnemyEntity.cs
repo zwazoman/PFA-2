@@ -66,6 +66,13 @@ public class EnemyEntity : Entity
 
     protected PremadeSpell ChooseSpellWithRange(WayPoint targetPoint)
     {
+        int targetDistance = Tools.FloodDict[targetPlayerPoint];
+
+        foreach (PremadeSpell spell in Data.Spells)
+        {
+            int spellMaxRange = spell.SpellData.Range + Mathf.FloorToInt(spell.SpellData.AreaOfEffect.Bounds.width /2);
+        }
+
         return default;
     }
 
