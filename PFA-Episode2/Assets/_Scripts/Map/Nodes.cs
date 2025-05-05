@@ -14,6 +14,7 @@ public class Node : MonoBehaviour
     public bool OnYReviendra;
     [SerializeField] private Image _componentImageRef;
     [SerializeField] private List<Sprite> _listOfSprite = new();
+    public bool Visited;
 
     public static void TriggerMapCompleted()
     {
@@ -22,7 +23,8 @@ public class Node : MonoBehaviour
 
     public void InteractPlayer()
     {
-        PlayerMap.Instance.SetupTarget(gameObject.transform.position);
+        Visited = true;
+        PlayerMap.Instance.clickedNode = this;
     }
 
     private void OnEnable()

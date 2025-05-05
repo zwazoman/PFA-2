@@ -4,6 +4,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
+using UnityEngine.Scripting;
 using UnityEngine.UI;
 
 public class CookingPanel : AnimatedPanel
@@ -14,8 +15,6 @@ public class CookingPanel : AnimatedPanel
     [SerializeField] Transform _ustencilsParent;
     [SerializeField] CookingPot _pot;
     [SerializeField] DishInfoPanel _dishInfoPanel;
-
-
     
     [Header("test")]
     [SerializeField] List<Ingredient> tests = new();
@@ -23,6 +22,9 @@ public class CookingPanel : AnimatedPanel
 
     private void Start()
     {
+        LoadPlayerInventory();
+        return;
+
         //@temp --
         Inventory inv = new();
         for(int i = 0; i < 12; i++)
@@ -37,6 +39,19 @@ public class CookingPanel : AnimatedPanel
 
         LoadInventory(inv);
         //--
+    }
+
+    void OnShown()
+    {
+        Debug.Log(GarbageCollector.isIncremental);
+        GarbageCollector.CollectIncremental(100);
+        LoadPlayerInventory();//pas dingue
+        
+    }
+
+    public void LoadPlayerInventory()
+    {
+        LoadInventory(GameManager.Instance.playerInventory);
     }
 
     public void LoadInventory(Inventory inv)
@@ -93,6 +108,7 @@ public class CookingPanel : AnimatedPanel
 
                 //@revoir
                 //inventory.Add(spell)
+                GameManager.Instance.playerInventory.Spells.Add(spell);
 
                 break;
             case false:

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -27,6 +28,21 @@ public class Crafting : MonoBehaviour
         DishCombinationData.spellVisualData data = GameManager.Instance.dishCombinationData.Visuals[spell.IngredientsCombination];
         spell.Name = data.name;
         spell.Sprite = data.sprite;
+
+        //remove ingredients from player inventory
+        try
+        {
+            foreach (Ingredient i in ingredients)
+            {
+                GameManager.Instance.playerInventory.Ingredients.Remove(i);
+            }
+            GameManager.Instance.playerInventory.Sauces.Remove(sauce);
+        }
+        catch(Exception e)
+        {
+            Debug.LogException(new Exception("Couldnt remove ingredients from player inventory.",e));
+        }
+
 
         return spell;
     }
