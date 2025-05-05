@@ -13,7 +13,7 @@ public class Entity : MonoBehaviour
     [HideInInspector] public SpellCaster EntitySpellCaster;
 
     [SerializeField] public int MaxMovePoints;
-    int currentMovePoints;
+    protected int currentMovePoints;
 
     protected Dictionary<WayPoint,int> WaypointDistance = new Dictionary<WayPoint,int>();
     protected List<WayPoint> Walkables = new List<WayPoint>();
@@ -146,5 +146,53 @@ public class Entity : MonoBehaviour
         Walkables.Clear();
     }
 
+    /// <summary>
+    /// fait se déplacer l'entité vers la case la plus proche de la target
+    /// </summary>
+    /// <param name="targetPoint"></param>
+    /// <returns></returns>
+    protected async UniTask<bool> MoveToward(WayPoint targetPoint)
+    {
+        await UniTask.Delay(1000);
 
+        if (targetPoint == CurrentPoint)
+            return true;
+
+        if (Walkables.Contains(targetPoint))
+        {
+            print("target in range !");
+            await TryMoveTo(targetPoint);
+            return true;
+        }
+
+        print("target not in range yet ! getting closer...");
+        print(Tools.FindClosestFloodPoint(Walkables, Tools.SmallFlood(targetPoint, Tools.FloodDict[targetPoint])));
+
+        await TryMoveTo(Tools.FindClosestFloodPoint(Walkables, Tools.SmallFlood(targetPoint, Tools.FloodDict[targetPoint])));
+        return false;
+    }
+
+    /// <summary>
+    /// fait se déplcaer l'entité le plus loin possible de l'entité ciblée
+    /// </summary>
+    /// <param name="targetPoint"></param>
+    /// <returns></returns>
+    protected async UniTask MoveAwayFrom(WayPoint targetPoint)
+    {
+        float distanceToFurthestPoint = 0;
+        WayPoint furthestPoint = null;
+
+        foreach (WayPoint point in Walkables)
+        {
+            float pointDistanceToTarget = Tools.FloodDict[point] + Tools.FloodDict[targetPoint];
+
+            if (pointDistanceToTarget > distanceToFurthestPoint)
+            {
+                distanceToFurthestPoint = pointDistanceToTarget;
+                furthestPoint = point;
+            }
+        }
+
+        await TryMoveTo(furthestPoint);
+    }
 }

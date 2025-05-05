@@ -4,7 +4,10 @@ using UnityEngine;
 public class EnemyData : ScriptableObject
 {
     [field:SerializeField] 
-    public string EntityName;
+    public string EntityName { get; private set; }
+
+    [field : SerializeField]
+    public AIBehaviour aiBehaviour { get; private set; }
 
     [field : SerializeField]
     public int MaxHealth { get; private set; }
