@@ -14,7 +14,7 @@ public class IngredientUI : MonoBehaviour
     public Image famillyPanelColorDark; //Panel 2
     public Image famillyButtonColor; //Panel3
 
-    public List<TextMeshProUGUI> effectDescription;
+    public TextMeshProUGUI effectDescription;
 
     public TextMeshProUGUI familly;
 }
