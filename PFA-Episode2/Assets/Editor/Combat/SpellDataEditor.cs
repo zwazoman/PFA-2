@@ -28,7 +28,12 @@ public class SpellDataEditor : Editor
             window.SetUp(Target);
             window.Show();
         }
-        
+
+        if (GUILayout.Button("Save Preview"))
+        {
+            ((AreaOfEffect)target).SavePreviewImage();
+        }
+
     }
 
 

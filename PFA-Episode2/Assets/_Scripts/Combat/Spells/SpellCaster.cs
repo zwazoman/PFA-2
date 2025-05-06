@@ -13,21 +13,19 @@ public class SpellCaster : MonoBehaviour
 
     public const byte RangeRingThickness = 3;
 
-    public void PreviewSpellRange(SpellData spell, WayPoint center = null, bool showZone = true, int spellRange = 0)
+    public void PreviewSpellRange(SpellData spell, WayPoint center = null, bool showZone = true)
     {
-        Dictionary<WayPoint, int> floodDict = new();
-
         if (center == null)
         {
-            center = entity.CurrentPoint;
-            floodDict = Tools.FloodDict;
-        }
-        else
-        {
-            floodDict = Tools.SmallFlood(center, spellRange);
+            center = entity.currentPoint;
         }
 
-        List<WayPoint> rangePoints = Tools.GetWaypointsInRange(spell.Range, floodDict);
+        Dictionary<WayPoint, int> floodDict = Tools.SmallFlood(center,spell.Range);
+
+        List<WayPoint> rangePoints = new();
+        rangePoints.AddRange(floodDict.Keys);
+
+        print(rangePoints.Count);
 
         for (byte i = 0; i < rangePoints.Count; i++)
         {
@@ -35,7 +33,7 @@ public class SpellCaster : MonoBehaviour
             Vector3 pointPos = new Vector3(point.transform.position.x, transform.position.y, point.transform.position.z);
             Vector3 pointToEntity = transform.position - pointPos;
 
-            if (spell.IsOccludedByWalls && Physics.Raycast(pointPos, pointToEntity, pointToEntity.magnitude, _obstacleMask))
+            if (spell.IsOccludedByWalls && Physics.Raycast(pointPos, pointToEntity, pointToEntity.magnitude, _obstacleMask) || point.State == WaypointState.Obstructed)
                 rangePoints.RemoveAt(i);
             else if (showZone)
                 point.ChangeTileColor(point._rangeMaterial);

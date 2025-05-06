@@ -1,14 +1,15 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class PlayerMap : MonoBehaviour
 {
     private Vector3 _target;
-    public float speed = 5f;
+    public float speed;
     public static PlayerMap Instance;
-    private bool hasArrived = false;
-    private Vector3Int position;
-    private int positionX = -2550;
+    public int PositionMap { get; private set; } = 0;
+
+    [HideInInspector] public Node clickedNode;
 
     private void Awake()
     {
@@ -16,36 +17,59 @@ public class PlayerMap : MonoBehaviour
         _target = transform.position;
     }
 
-    public void SetupTarget(Vector3 target)
+    private void Start()
     {
-        _target = target;
+        LoadNextScene();
     }
 
-
-    private async void Update()
-    {
-        if (Vector3.Distance(transform.position, _target) > 0.1f)
+    public async UniTask<Vector3> SetupTarget() 
+    { 
+        while(clickedNode == null)
         {
-            transform.position = Vector3.MoveTowards(transform.position, _target, speed * Time.deltaTime);
-            hasArrived = false;
+            await UniTask.Yield();
         }
-        else if (!hasArrived)
+        Node tmp = clickedNode;
+        PositionMap = clickedNode.Position;
+        clickedNode = null;
+        return tmp.transform.position;
+        
+    }
+
+    private async void LoadNextScene()
+    {
+        _target = await SetupTarget(); //Attendre que _target soit def
+        await MoveTo(_target); //Attends qu'il soit arrivé
+
+        //---------------- Charge une nouvelle scène -------------------------
+
+        int positionX = Mathf.RoundToInt(gameObject.transform.localPosition.x) / 10;
+        positionX = positionX * 10;
+
+        int Y = Mathf.RoundToInt(gameObject.transform.localPosition.y) / 10;
+        int y = Y * 10;
+
+        Vector3Int position = new Vector3Int(positionX, y, Mathf.RoundToInt(gameObject.transform.localPosition.z));
+
+        foreach (KeyValuePair<Vector3Int, Node> KeyAndValues in MapMaker2.Instance.DicoNode)
         {
-            print("Arrivé");
-            hasArrived = true;
-            positionX = positionX + 300;
-            int Y = Mathf.RoundToInt(gameObject.transform.localPosition.y) / 10;
-            int y = Y * 10;
-            position = new Vector3Int(positionX, y, Mathf.RoundToInt(gameObject.transform.localPosition.z));
-            foreach(KeyValuePair<Vector3Int, Node> KeyAndValues in MapMaker2.Instance.DicoNode)
+            print(positionX);
+            if (KeyAndValues.Key == position)
             {
-                if (KeyAndValues.Key == position)
-                {
-                    if (KeyAndValues.Value.EventName.ToString() == "Start") { break; }
-                    await SceneTransitionManager.Instance.GoToScene(KeyAndValues.Value.EventName.ToString());
-                }
+                SaveMapGeneration.Instance.SaveMap();
+
+                if (KeyAndValues.Value.EventName.ToString() == "Start") { break; }
+
+                await SceneTransitionManager.Instance.GoToScene(KeyAndValues.Value.EventName.ToString());
             }
         }
     }
 
+    async UniTask MoveTo(Vector3 targetPos) //Faut pas qu'il se lance au start
+    {
+        while (Vector3.Distance(transform.position, targetPos) > 0.1f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, speed);
+            await UniTask.Yield();
+        }
+    }
 }

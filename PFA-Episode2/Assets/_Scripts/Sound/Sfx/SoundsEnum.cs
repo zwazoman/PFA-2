@@ -1,1 +1,1 @@
-public enum Sounds{WalkConcrete,WalkGrass,RunConcrete,RunGrass,MaleScream,FemaleScream,MalePain,FemalePain,MaleChoke,ClothMovement,FemaleChoke,MaleCough,FemaleCough,MaleRelief,FemaleRelief,BackHit,}
+public enum Sounds{}

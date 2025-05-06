@@ -44,11 +44,9 @@ public class WayPoint : MonoBehaviour
 
     private void Awake()
     {
-        State = WaypointState.Free;
-
         TryGetComponent(out _mR);
 
-        if(_normalMaterial == null)
+        if(_normalMaterial == null && _mR != null)
             _normalMaterial = _mR.material;
     }
 
@@ -92,7 +90,7 @@ public class WayPoint : MonoBehaviour
 
     public void ChangeTileColor(Material material)
     {
-        if(_mR.material == material) return;
+        if(_mR == null || _mR.material == material) return;
 
         _mR.material = material;
     }

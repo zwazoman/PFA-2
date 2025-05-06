@@ -9,6 +9,7 @@ public class DishInfoPanel : AnimatedPanel
     [SerializeField] private TMP_Text txt_cooldown;
     [SerializeField] private TMP_Text txt_range, txt_DishName;
     [SerializeField] private Image image_dishIcon;
+    [SerializeField] private Image image_AOE;
 
     [SerializeField] private List<InfoHeader> spellEffects;
 
@@ -18,7 +19,13 @@ public class DishInfoPanel : AnimatedPanel
         //effects
         for(byte i = 0; i < 4; i++)
         {
-            spellEffects[i].UpdateVisual(i < spell.Effects.Count ? spell.Effects[i] : null,null); //@Revoir sprite
+            if(i < spell.Effects.Count)
+            {
+                spellEffects[i].gameObject.SetActive(true);
+                spellEffects[i].UpdateVisual(spell.Effects[i], null); //@Revoir sprite
+            }
+            else
+            spellEffects[i].gameObject.SetActive(false);
         }
 
         //dish icon
@@ -26,7 +33,7 @@ public class DishInfoPanel : AnimatedPanel
         txt_DishName.text = spell.Name;
 
         //area of effect
-        //mes couilles
+        image_AOE.sprite = spell.AreaOfEffect.sprite;
 
         //turns and range
         txt_cooldown.text = Serializer.GetCoolDownString(spell.CoolDown);

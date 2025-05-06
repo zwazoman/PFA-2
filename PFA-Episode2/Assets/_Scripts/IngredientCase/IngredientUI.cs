@@ -5,12 +5,16 @@ using UnityEngine.UI;
 
 public class IngredientUI : MonoBehaviour
 {
-    public TextMeshProUGUI title;
-    public Image imageLogoRef;
-    public Image rarityFrame;
-    public Image famillyPanelColorLight;
-    public Image famillyPanelColorDark;
-    public Image famillyButtonColor;
-    public List<TextMeshProUGUI> effectDescription;
+    public TextMeshProUGUI title; //Titre
+    public Image imageLogoRef; //Sprite
+
+    public Image rarityFrame; //Cadre
+
+    public Image famillyPanelColorLight; //Panel 1
+    public Image famillyPanelColorDark; //Panel 2
+    public Image famillyButtonColor; //Panel3
+
+    public TextMeshProUGUI effectDescription;
+
     public TextMeshProUGUI familly;
 }

@@ -139,5 +139,6 @@ public class SpellEditionWindow : EditorWindow
     private void OnDisable()
     {
         AssetDatabase.SaveAssetIfDirty(Area);
+        Area.SavePreviewImage();
     }
 }

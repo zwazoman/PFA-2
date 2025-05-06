@@ -100,8 +100,7 @@ public class GraphMaker : MonoBehaviour
             foreach(Vector3 flatDirection in Tools.AllFlatDirections)
             {
                 RaycastHit hit;
-
-                if (Physics.Raycast(point.transform.position + Vector3.up * 0.5f, flatDirection, out hit, 1, LayerMask.GetMask("Waypoint")))
+                if (Physics.Raycast(point.transform.position /*+ Vector3.up * 0.5f*/, flatDirection, out hit, 1, LayerMask.GetMask("Waypoint")))
                     if (hit.collider.TryGetComponent(out WayPoint wayPoint) && !point.Neighbours.Contains(wayPoint))
                         point.Neighbours.Add(wayPoint);
             }

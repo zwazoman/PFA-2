@@ -37,7 +37,7 @@ public class PlayerUIHandler : MonoBehaviour
 
         spellImage.sprite = spellData.Sprite;
         draggableSpell.spell = spellData;
-        draggableSpell.spellCaster = _player.EntitySpellCaster;
+        draggableSpell.spellCaster = _player.entitySpellCaster;
 
         _player.spellsUI.Add(draggableSpell);
     }
