@@ -19,7 +19,7 @@ public class SpellCaster : MonoBehaviour
 
         if (center == null)
         {
-            center = entity.CurrentPoint;
+            center = entity.currentPoint;
             floodDict = Tools.FloodDict;
         }
         else

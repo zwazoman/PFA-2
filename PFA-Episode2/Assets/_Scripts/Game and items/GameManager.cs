@@ -36,8 +36,10 @@ public class GameManager : MonoBehaviour
             Debug.Log("Initializing game manager");
             instance = this;
             DontDestroyOnLoad(this);
+            
             dishCombinationData = Resources.Load<DishCombinationData>("DishCombinationData");
-            //test
+            
+            //@temp
             foreach (PremadeSpell premadeSpell in premadeSpells)
             {
                 playerInventory.Spells.Add(premadeSpell.SpellData);
@@ -49,5 +51,10 @@ public class GameManager : MonoBehaviour
             throw new System.Exception("Y'avait déjà un singleton gamemanager dans la scene");
         }
         
+    }
+
+    void LoadOrCreateSave()
+    {
+        playerInventory = SaveManager.Load<Inventory>(0);
     }
 }

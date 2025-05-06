@@ -11,11 +11,20 @@ public class PlayerEntity : Entity
     
     [SerializeField] public List<DraggableSpell> spellsUI = new();
 
+    [SerializeField] int maxHealth;
+    [SerializeField] int maxMovePoints;
+
     [HideInInspector] public EndButton endTurnButton;
 
     protected override void Awake()
     {
         base.Awake();
+
+        //edit les valeurs du entityspell avec celles de l'inventaire
+
+        entityStats.maxHealth = maxHealth;
+        entityStats.maxMovePoints = maxMovePoints;
+
     }
 
     protected override void Start()
@@ -23,13 +32,13 @@ public class PlayerEntity : Entity
         base.Start();
 
         CombatManager.Instance.PlayerEntities.Add(this);
-        
     }
 
     public override async UniTask PlayTurn()
     {
         await base.PlayTurn();
 
+        endTurnButton.Pressed = false;
         ApplyWalkables();
         ShowSpellsUI();
 
