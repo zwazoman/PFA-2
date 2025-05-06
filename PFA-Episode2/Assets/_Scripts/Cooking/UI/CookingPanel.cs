@@ -22,8 +22,8 @@ public class CookingPanel : AnimatedPanel
 
     private void Start()
     {
-        LoadPlayerInventory();
-        return;
+        //LoadPlayerInventory();
+        //return;
 
         //@temp --
         Inventory inv = new();
