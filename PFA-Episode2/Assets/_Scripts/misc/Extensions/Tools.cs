@@ -198,7 +198,7 @@ public static class Tools
 
             if (distance < range)
                 foreach (var neighbor in node.Neighbours)
-                    if (neighbor is WayPoint point && !visited.Contains(point) && point.State != WaypointState.Obstructed)
+                    if (neighbor is WayPoint point && !visited.Contains(point) /*&& point.State != WaypointState.Obstructed*/)
                     {
                         queue.Enqueue((point, distance + 1));
                         visited.Add(point);
