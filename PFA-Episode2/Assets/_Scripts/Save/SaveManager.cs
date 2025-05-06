@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -6,14 +5,12 @@ public static class SaveManager
 {
     public static int Number = 0;
 
-    public static List<Sprite> sprites;
-
     // Sauvegarde un objet ISavable
-    public static void Save<T>(T savableObject, byte saveFileID) where T : ISavable<T>
+    public static void Save<T>(byte saveFileID) where T : ISavable<T>
     {
         InventoryWrapper inventoryWrapper = new();
 
-        foreach (SpellData spd in Inventory.Instance.Spells)
+        foreach (SpellData spd in GameManager.Instance.playerInventory.Spells)
         {
             SpellData spell = spd;
 
@@ -34,7 +31,7 @@ public static class SaveManager
         }
 
 
-        foreach (Ingredient ing in Inventory.Instance.Ingredients)
+        foreach (Ingredient ing in GameManager.Instance.playerInventory.Ingredients)
         {
             Ingredient ingredient = ing;
 
@@ -47,7 +44,7 @@ public static class SaveManager
             inventoryWrapper.items.Add(sdata);
         }
 
-        foreach (Sauce sc in Inventory.Instance.Sauces)
+        foreach (Sauce sc in GameManager.Instance.playerInventory.Sauces)
         {
             Sauce sauce = sc;
 
@@ -66,8 +63,10 @@ public static class SaveManager
     }
 
     // Charge un objet ISavable
-    public static T Load<T>(T savebleObject, byte saveFileID) where T : ISavable<T>, new()
+    public static T Load<T>(byte saveFileID) where T : ISavable<T>, new()
     {
+        Inventory inventory = new();
+
         string path = Application.persistentDataPath + $"/save_{saveFileID}.json";
 
         if (!File.Exists(path))
@@ -79,9 +78,7 @@ public static class SaveManager
         string json = File.ReadAllText(path);
         InventoryWrapper inventoryWrapper = JsonUtility.FromJson<InventoryWrapper>(json);
 
-        ClearAll();
-
-        foreach (var item in inventoryWrapper.items)
+        foreach (InventoryData item in inventoryWrapper.items)
         {
             switch (item.type)
             {
@@ -89,25 +86,25 @@ public static class SaveManager
                     SpellData spell = new()
                     {
                         Name = item.name,
-                        //Sprite = sprites.ToArr(item.sprite),
+                        Sprite = SaveReference.Instance.GetSprite(item.sprite),
                         IngredientsCombination = item.ingredientsCombination,
                         IsOccludedByWalls = item.isOccludedByWalls,
                         Range = item.range,
                         CoolDown = item.coolDown,
                         Effects = item.effects,
-                        //AreaOfEffect = item.areaOfEffect,
+                        AreaOfEffect = SaveReference.Instance.GetAreaOfEffect(item.areaOfEffect),
                     };
-                    Inventory.Instance.Spells.Add(spell);
+                    inventory.Spells.Add(spell);
                     break;
 
                 case "Ingredient":
-                    Ingredient ingredient = new() { name = item.name };
-                    Inventory.Instance.Ingredients.Add(ingredient);
+                    Ingredient ingredient = SaveReference.Instance.GetIngredient(item.name);
+                    inventory.Ingredients.Add(ingredient);
                     break;
 
                 case "Sauce":
-                    Sauce sauce = new() { name = item.name };
-                    Inventory.Instance.Sauces.Add(sauce);
+                    Sauce sauce = SaveReference.Instance.GetSauce(item.name);
+                    inventory.Sauces.Add(sauce);
                     break;
 
                 default:
@@ -117,14 +114,6 @@ public static class SaveManager
         }
 
         Debug.Log($"Inventaire chargé depuis {path} avec {inventoryWrapper.items.Count} objets !");
-
         return new T();
-    }
-
-    static void ClearAll()
-    {
-        Inventory.Instance.Spells.Clear();
-        Inventory.Instance.Ingredients.Clear();
-        Inventory.Instance.Sauces.Clear();
     }
 }
