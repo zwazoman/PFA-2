@@ -28,4 +28,8 @@ public class Inventory : MonoBehaviour, ISavable<Inventory>
         SaveManager.Save(this, SaveFileID);
     }
 
+    public void Load(byte LoadFileID)
+    {
+        SaveManager.Load(this, LoadFileID);
+    }
 }

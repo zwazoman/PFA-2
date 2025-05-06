@@ -1,9 +1,12 @@
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
 public static class SaveManager
 {
     public static int Number = 0;
+
+    public static List<Sprite> sprites;
 
     // Sauvegarde un objet ISavable
     public static void Save<T>(T savableObject, byte saveFileID) where T : ISavable<T>
@@ -63,7 +66,7 @@ public static class SaveManager
     }
 
     // Charge un objet ISavable
-    public static T Load<T>(byte saveFileID) where T : ISavable<T>, new()
+    public static T Load<T>(T savebleObject, byte saveFileID) where T : ISavable<T>, new()
     {
         string path = Application.persistentDataPath + $"/save_{saveFileID}.json";
 
@@ -86,13 +89,13 @@ public static class SaveManager
                     SpellData spell = new()
                     {
                         Name = item.name,
-                        Sprite = Resources.Load<Sprite>($"Sprites/{item.sprite}"),
+                        //Sprite = sprites.ToArr(item.sprite),
                         IngredientsCombination = item.ingredientsCombination,
                         IsOccludedByWalls = item.isOccludedByWalls,
                         Range = item.range,
                         CoolDown = item.coolDown,
                         Effects = item.effects,
-                        AreaOfEffect = item.areaOfEffect,
+                        //AreaOfEffect = item.areaOfEffect,
                     };
                     Inventory.Instance.Spells.Add(spell);
                     break;
