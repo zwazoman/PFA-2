@@ -55,6 +55,6 @@ public class GameManager : MonoBehaviour
 
     void LoadOrCreateSave()
     {
-        //playerInventory = SaveManager.Load<Inventory>(0);
+        playerInventory = SaveManager.Load<Inventory>(0);
     }
 }
