@@ -34,7 +34,7 @@ public class InfoRecover : MonoBehaviour
 
             Dictionary<Vector3Int, Node> tempDico = new();
 
-            foreach (var item in wrapper.items)
+            foreach (var item in wrapper.nodes)
             {
                 if (Vector3Int.Distance(item.key, item.playerPosition) <= 1f)
                 {
