@@ -301,38 +301,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_RenderShadows: 1
-  m_RequiresDepthTextureOption: 2
-  m_RequiresOpaqueTextureOption: 2
-  m_CameraType: 0
-  m_Cameras: []
-  m_RendererIndex: -1
-  m_VolumeLayerMask:
-    serializedVersion: 2
-    m_Bits: 1
-  m_VolumeTrigger: {fileID: 0}
-  m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
-  m_Antialiasing: 0
-  m_AntialiasingQuality: 2
-  m_StopNaN: 0
-  m_Dithering: 0
-  m_ClearDepth: 1
-  m_AllowXRRendering: 1
-  m_AllowHDROutput: 1
-  m_UseScreenCoordOverride: 0
-  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
-  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
-  m_RequiresDepthTexture: 0
-  m_RequiresColorTexture: 0
-  m_Version: 2
-  m_TaaSettings:
-    m_Quality: 3
-    m_FrameInfluence: 0.1
-    m_JitterScale: 1
-    m_MipBias: 0
-    m_VarianceClampScale: 0.9
-    m_ContrastAdaptiveSharpening: 0
 --- !u!1 &560642806
 GameObject:
   m_ObjectHideFlags: 0
@@ -814,17 +782,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Version: 3
-  m_UsePipelineSettings: 1
-  m_AdditionalLightsShadowResolutionTier: 2
-  m_LightLayerMask: 1
-  m_RenderingLayers: 1
-  m_CustomShadowLayers: 0
-  m_ShadowLayerMask: 1
-  m_ShadowRenderingLayers: 1
-  m_LightCookieSize: {x: 1, y: 1}
-  m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 0
 --- !u!1 &1044502712
 GameObject:
   m_ObjectHideFlags: 0
@@ -910,12 +867,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1134821999}
         m_TargetAssemblyTypeName: InteractDontDestroyOnLoad, Assembly-CSharp
-        m_MethodName: SaveFunction
+        m_MethodName: SaveInventoryFunction
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 2
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -1043,23 +1000,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1134821999}
         m_TargetAssemblyTypeName: InteractDontDestroyOnLoad, Assembly-CSharp
-        m_MethodName: ChangeScene
-        m_Mode: 5
+        m_MethodName: SaveInventoryFunction
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: SceneMap
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InteractDontDestroyOnLoad, Assembly-CSharp
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1113,6 +1058,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1134822000}
   - component: {fileID: 1134821999}
+  - component: {fileID: 1134822001}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1147,6 +1093,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1134822001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1134821998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfd01f0e17334074cad8a270115ca691, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Spells:
+  - Name: Test01
+    Sprite: {fileID: 21300000, guid: 40c04d803440588439add5aa2c5f6f20, type: 3}
+    IngredientsCombination: Test01
+    IsOccludedByWalls: 0
+    Range: 5
+    CoolDown: 255
+    Effects:
+    - effectType: 0
+      statType: 0
+      value: 5
+    AreaOfEffect: {fileID: 11400000, guid: 62613b5f3115a8740a50eed75cfbf221, type: 2}
+  Ingredients:
+  - {fileID: 11400000, guid: dd4f9ba9d59613d47acf0dc75e7f3b36, type: 2}
+  - {fileID: 11400000, guid: 8a8f526e43683064896caeeea2530b94, type: 2}
+  Sauces:
+  - {fileID: 11400000, guid: 17c6d25584476654894446b06ce935d9, type: 2}
+  - {fileID: 11400000, guid: 7cbc210b84798d9448a0430bbc46bd6e, type: 2}
+  - {fileID: 11400000, guid: ce0cd459453ccc245a90eb31855f99c3, type: 2}
 --- !u!1 &1460676320
 GameObject:
   m_ObjectHideFlags: 0
