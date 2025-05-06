@@ -14,6 +14,7 @@ public class Node : MonoBehaviour
     public bool OnYReviendra;
     [SerializeField] private Image _componentImageRef;
     [SerializeField] private List<Sprite> _listOfSprite = new();
+    [SerializeField] private Button _button;
     public bool Visited;
 
     public static void TriggerMapCompleted()
@@ -63,5 +64,7 @@ public class Node : MonoBehaviour
                 _componentImageRef.sprite = _listOfSprite[5];
                 break;
         }
+        if(PlayerMap.Instance.PositionMap == Position - 1) { _button.interactable = true; }
+        else { _button.interactable = false; }
     }
 }

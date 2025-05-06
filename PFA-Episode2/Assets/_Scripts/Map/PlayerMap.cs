@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -8,8 +7,7 @@ public class PlayerMap : MonoBehaviour
     private Vector3 _target;
     public float speed;
     public static PlayerMap Instance;
-    private bool hasArrived = false;
-    private Vector3Int position;
+    public int PositionMap { get; private set; } = 0;
 
     [HideInInspector] public Node clickedNode;
 
@@ -31,6 +29,7 @@ public class PlayerMap : MonoBehaviour
             await UniTask.Yield();
         }
         Node tmp = clickedNode;
+        PositionMap = clickedNode.Position;
         clickedNode = null;
         return tmp.transform.position;
         
@@ -49,7 +48,7 @@ public class PlayerMap : MonoBehaviour
         int Y = Mathf.RoundToInt(gameObject.transform.localPosition.y) / 10;
         int y = Y * 10;
 
-        position = new Vector3Int(positionX, y, Mathf.RoundToInt(gameObject.transform.localPosition.z));
+        Vector3Int position = new Vector3Int(positionX, y, Mathf.RoundToInt(gameObject.transform.localPosition.z));
 
         foreach (KeyValuePair<Vector3Int, Node> KeyAndValues in MapMaker2.Instance.DicoNode)
         {

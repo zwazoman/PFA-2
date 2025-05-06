@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Inventory : MonoBehaviour, ISavable<Inventory>
+public class Inventory : ISavable<Inventory>
 {
     #region Singleton
     public static Inventory Instance;
