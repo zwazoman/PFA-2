@@ -46,7 +46,7 @@ public class WayPoint : MonoBehaviour
     {
         TryGetComponent(out _mR);
 
-        if(_normalMaterial == null)
+        if(_normalMaterial == null && _mR != null)
             _normalMaterial = _mR.material;
     }
 

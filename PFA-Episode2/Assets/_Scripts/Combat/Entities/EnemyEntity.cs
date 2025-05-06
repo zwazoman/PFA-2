@@ -99,9 +99,12 @@ public class EnemyEntity : Entity
         foreach (PlayerEntity player in CombatManager.Instance.PlayerEntities)
         {
             points.Add(player.currentPoint);
+            print(Tools.FloodDict[player.currentPoint]);
         }
 
         WayPoint result = points.FindClosestFloodPoint();
+
+        print(result);
 
         return result;
     }
@@ -118,7 +121,7 @@ public class EnemyEntity : Entity
         Dictionary<WayPoint, WayPoint> targetPointsDict = new();
 
         //créé le dict zonePoint,targetPoint
-        entitySpellCaster.PreviewSpellRange(choosenSpell, targetPlayerPoint, true, choosenSpell.Range);
+        entitySpellCaster.PreviewSpellRange(choosenSpell, targetPlayerPoint, true);
         await UniTask.Delay(300);
         foreach (WayPoint rangePoint in entitySpellCaster.RangePoints)
         {

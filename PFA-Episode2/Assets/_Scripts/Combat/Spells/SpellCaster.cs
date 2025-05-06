@@ -13,7 +13,7 @@ public class SpellCaster : MonoBehaviour
 
     public const byte RangeRingThickness = 3;
 
-    public void PreviewSpellRange(SpellData spell, WayPoint center = null, bool showZone = true, int spellRange = 0)
+    public void PreviewSpellRange(SpellData spell, WayPoint center = null, bool showZone = true)
     {
         Dictionary<WayPoint, int> floodDict = new();
 
@@ -24,7 +24,7 @@ public class SpellCaster : MonoBehaviour
         }
         else
         {
-            floodDict = Tools.SmallFlood(center, spellRange);
+            floodDict = Tools.SmallFlood(center, spell.Range);
         }
 
         List<WayPoint> rangePoints = Tools.GetWaypointsInRange(spell.Range, floodDict);
