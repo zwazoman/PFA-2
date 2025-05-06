@@ -12,7 +12,7 @@ public class InteractDontDestroyOnLoad : MonoBehaviour
     }
 
     // Fonction pour lancer les fonction du SaveManager
-    public void SaveFunction(int function)
+    public void SaveMapFunction(int function)
     {
         switch (function)
         {
@@ -28,9 +28,22 @@ public class InteractDontDestroyOnLoad : MonoBehaviour
         }
     }
 
-    // Fonction pour appeler un changement de scene
-    public void ChangeScene(string sceneName)
+    public void SaveInventoryFunction(int function)
     {
-        StartCoroutine(LoadScene.Instance.SceneLoadingOn(sceneName));
+        switch (function)
+        {
+            case 0:
+                Inventory.Instance.Save(0);
+                break;
+            case 1:
+                Inventory.Instance.Load(0);
+                break;
+        }
+    }
+
+    // Fonction pour appeler un changement de scene
+    public async void ChangeScene(string sceneName)
+    {
+        await SceneTransitionManager.Instance.GoToScene(sceneName);
     }
 }

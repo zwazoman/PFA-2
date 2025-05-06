@@ -32,7 +32,7 @@ public class SaveMapGeneration : MonoBehaviour
     {
         MapWrapper wrapper = new();
 
-        foreach (var kvp in MapMaker2.Instance.DicoNode)
+        foreach (KeyValuePair<Vector3Int, Node> kvp in MapMaker2.Instance.DicoNode)
         {
             Node node = kvp.Value;
 
@@ -52,7 +52,7 @@ public class SaveMapGeneration : MonoBehaviour
                     creatorKey = node.Creator != null ? MapBuildingTools.Instance.GetKeyFromNode(node.Creator) : Vector3Int.zero
                 };
 
-                wrapper.items.Add(snode);
+                wrapper.nodes.Add(snode);
             }
         }
 
@@ -88,7 +88,7 @@ public class SaveMapGeneration : MonoBehaviour
 
             Dictionary<Vector3Int, Node> tempDico = new();
 
-            foreach (var item in wrapper.items)
+            foreach (SerializableNode item in wrapper.nodes)
             {
                 Node node = MapMaker2.Instance.NodeList.Dequeue();
                 node.transform.localPosition = item.key;
@@ -109,7 +109,7 @@ public class SaveMapGeneration : MonoBehaviour
             }
 
             // Relie les créateurs une fois que tous les nodes sont instanciés
-            foreach (var item in wrapper.items)
+            foreach (SerializableNode item in wrapper.nodes)
             {
                 if (tempDico.ContainsKey(item.key))
                 {
@@ -128,13 +128,14 @@ public class SaveMapGeneration : MonoBehaviour
             }
 
             MapMaker2.Instance.DicoNode = tempDico;
+            AdoptChild(tempDico);
             Node.TriggerMapCompleted(); // Redéclenche l'affichage des sprites
 
             // Redessiner les traits entre les nodes
             if (MapBuildingTools.Instance != null)
             {
                 MapBuildingTools.Instance.FirstTimeDraw = true;
-                foreach (var node in tempDico.Values)
+                foreach (Node node in tempDico.Values)
                 {
                     if (node.Creator != null)
                     {
@@ -170,5 +171,61 @@ public class SaveMapGeneration : MonoBehaviour
         }
 
         return result;
+    }
+
+    private void AdoptChild(Dictionary<Vector3Int, Node> nodeDictionary)
+    {
+        // Trouve tous les créateurs
+        HashSet<Node> allCreators = new();
+
+        foreach (Node node in nodeDictionary.Values)
+        {
+            if (node.Creator != null)
+            {
+                allCreators.Add(node.Creator);
+            }
+        }
+
+        // Liste les node qui ne sont pas créateur
+        List<Node> Adopter = new();
+
+        foreach (Node node in nodeDictionary.Values)
+        {
+            if (!allCreators.Contains(node) && node.Position < byte.MaxValue)
+            {
+                Adopter.Add(node);
+            }
+        }
+
+        // Chaque créateur qui n'as pas d'enfant cherche un enfant
+        foreach (Node potentialParent in Adopter)
+        {
+            Node bestChild = null;
+            float minHauteurDiff = float.MaxValue;
+
+            foreach (Node potentialChild in nodeDictionary.Values)
+            {
+                if (potentialChild == potentialParent) continue;
+
+                if (potentialChild.Position == potentialParent.Position + 1)
+                {
+                    float hauteurDiff = Mathf.Abs(potentialChild.Hauteur - potentialParent.Hauteur);
+                    if (hauteurDiff < minHauteurDiff)
+                    {
+                        minHauteurDiff = hauteurDiff;
+                        bestChild = potentialChild;
+                    }
+                }
+            }
+
+            // Relie
+            if (bestChild != null)
+            {
+                if (MapBuildingTools.Instance != null)
+                {
+                    MapBuildingTools.Instance.TraceTonTrait(potentialParent, bestChild);
+                }
+            }
+        }
     }
 }
