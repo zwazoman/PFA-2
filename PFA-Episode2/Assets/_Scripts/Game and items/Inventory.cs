@@ -10,7 +10,7 @@ public class Inventory : ISavable<Inventory>
     {
         if (Instance != null)
         {
-            Destroy(this.gameObject);
+
             return;
         }
 

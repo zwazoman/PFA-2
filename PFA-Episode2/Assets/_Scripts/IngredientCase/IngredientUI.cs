@@ -11,8 +11,8 @@ public class IngredientUI : MonoBehaviour
     public Image rarityFrame; //Cadre
 
     public Image famillyPanelColorLight; //Panel 1
-    public Image famillyPanelColorDark; //Panel 2
-    public Image famillyButtonColor; //Panel3
+    public Image famillyPanelColorMed; //Panel 2
+    public List<Image> famillyPanelColorDark = new(); //Panel3
 
     public TextMeshProUGUI effectDescription;
 
