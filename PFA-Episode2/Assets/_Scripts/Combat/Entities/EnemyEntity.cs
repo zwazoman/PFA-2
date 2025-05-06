@@ -130,6 +130,7 @@ public class EnemyEntity : Entity
             {
                 if(!targetPointsDict.ContainsKey(zonePoint))
                     targetPointsDict.Add(zonePoint, rangePoint);
+                //faut tirer des raycasts
             }
             await UniTask.Delay(100);
             entitySpellCaster.StopSpellZonePreview();
