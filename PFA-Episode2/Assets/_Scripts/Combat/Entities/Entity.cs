@@ -35,6 +35,7 @@ public class Entity : MonoBehaviour
         print(gameObject.name);
         Tools.Flood(currentPoint);
         entityStats.currentMovePoints = entityStats.maxMovePoints;
+        entityStats.ApplyShield(-1);
     }
 
     public virtual async UniTask EndTurn()
@@ -43,7 +44,7 @@ public class Entity : MonoBehaviour
         ClearWalkables();
     }
 
-    public async UniTask ApplySpell(SpellData spell)
+    public async UniTask ApplySpell(SpellData spell,SpellCastingContext context)
     {
         foreach (SpellEffect effect in spell.Effects)
         {
@@ -51,10 +52,11 @@ public class Entity : MonoBehaviour
                 switch (effect.effectType)
                 {
                     case SpellEffectType.Damage:
-                        entityStats.ApplyHealth(-effect.value);
+                        entityStats.ApplyDamage(effect.value);
                         break;
                     case SpellEffectType.Recoil:
-                        throw new NotImplementedException();
+
+                        break;
                     case SpellEffectType.Shield:
                         entityStats.ApplyShield(effect.value);
                         break;
