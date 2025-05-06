@@ -67,6 +67,7 @@ Shader "Unlit/shdr_test_unlit"
             //color
             sampler2D _Palette;
             float _lightness;
+	    float _bands;
 
             //lightning
             sampler2D _lightGradientMap;
@@ -109,7 +110,7 @@ Shader "Unlit/shdr_test_unlit"
 
                 //toon shadow
                 float shadow = saturate(/*sign*/(lambert) * castShadow )*.8+.1;
-                shadow = shadow - shadow % (.2); //quatization
+                shadow = shadow - shadow % (1/_bands); //quatization
                 float4 coloredShadow =  tex2D(_lightGradientMap,float2(shadow,_enviroID)); //gradient mapping
 
                 //stippling
