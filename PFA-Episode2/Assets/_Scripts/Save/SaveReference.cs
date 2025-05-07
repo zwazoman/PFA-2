@@ -19,9 +19,7 @@ public class SaveReference : MonoBehaviour
     #endregion
 
     public List<Sprite> Sprites;
-    public List<Ingredient> Ingredients;
-    public List<Sauce> Sauces;
-    public List<AreaOfEffect> AreaOfEffects;
+    public List<ScriptableObject> ScriptableObjects; 
 
     public Sprite GetSprite(string name)
     {
@@ -38,48 +36,18 @@ public class SaveReference : MonoBehaviour
         return sprite;
     }
 
-    public Ingredient GetIngredient(string name)
+    public ScriptableObject GetScriptableObject(string name)
     {
-        Ingredient ingredient = null;
+        ScriptableObject scriptableObject = null;
 
-        for (int i = 0; i < Ingredients.Count; i++)
+        for (int i = 0; i < ScriptableObjects.Count; i++)
         {
-            if (Ingredients[i].name == name)
+            if (ScriptableObjects[i].name == name)
             {
-                ingredient = Ingredients[i];
+                scriptableObject = ScriptableObjects[i];
             }
         }
 
-        return ingredient;
-    }
-
-    public Sauce GetSauce(string name)
-    {
-        Sauce sauce = null;
-
-        for (int i = 0; i < Sauces.Count; i++)
-        {
-            if (Sauces[i].name == name)
-            {
-                sauce = Sauces[i];
-            }
-        }
-
-        return sauce;
-    }
-
-    public AreaOfEffect GetAreaOfEffect(string name)
-    {
-        AreaOfEffect areaOfEffect = null;
-
-        for (int i = 0; i < AreaOfEffects.Count; i++)
-        {
-            if (AreaOfEffects[i].name == name)
-            {
-                areaOfEffect = AreaOfEffects[i];
-            }
-        }
-
-        return areaOfEffect;
+        return scriptableObject;
     }
 }
