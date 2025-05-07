@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using System.Drawing;
 
 public class SpellCaster : MonoBehaviour
 {
@@ -103,13 +104,41 @@ public class SpellCaster : MonoBehaviour
             return;
         }
 
+        SpellCastingContext context = new();
+
+        List<Entity> hitEntities = new();
+
         foreach (WayPoint point in ZonePoints)
         {
-            //await visual
-
-            await point.TryApplySpell(spell);
+            if(point.State == WaypointState.HasEntity)
+            {
+                hitEntities.Add(point.Content);
+            }
         }
 
+        context.numberOfHitEnnemies = (byte)hitEntities.Count;
+
+        foreach (Entity entity in hitEntities)
+        {
+            Vector3Int entityTilePos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(entity.currentPoint);
+            Vector3Int targetTilePos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(target);
+            Vector3Int targetToEntity = entityTilePos - targetTilePos;
+            context.distanceToPlayer = (byte)targetToEntity.magnitude;
+            context.PushDirection = new Vector3Int((int)Mathf.Sign(targetToEntity.x), targetToEntity.y, (int)Mathf.Sign(targetToEntity.z));
+
+            await entity.ApplySpell(spell, context);
+        }
         StopSpellRangePreview();
     }
+}
+
+/// <summary>
+/// utilisé pour appliquer des effets en plus
+/// au moment de lancer un sort.
+/// </summary>
+public struct SpellCastingContext
+{
+    public byte numberOfHitEnnemies;
+    public byte distanceToPlayer;
+    public Vector3Int PushDirection;
 }

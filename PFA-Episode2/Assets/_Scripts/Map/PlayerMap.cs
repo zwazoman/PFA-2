@@ -7,7 +7,7 @@ public class PlayerMap : MonoBehaviour
     private Vector3 _target;
     public float speed;
     public static PlayerMap Instance;
-    public int PositionMap { get; private set; } = 0;
+    public int PositionMap = 0;
 
     [HideInInspector] public Node clickedNode;
 

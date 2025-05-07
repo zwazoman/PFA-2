@@ -10,6 +10,7 @@ public class SaveMapGeneration : MonoBehaviour
     [Tooltip("Sauvegarde crypter ou non")] public bool Encrypt;
     [Tooltip("Numéro de fichier de sauvegarde")] public byte SaveID;
     const string ENCRYPT_KEY = "Tr0mp1ne7te";
+    private int _numberLink = 0;
 
     #region Singleton
     public static SaveMapGeneration Instance;
@@ -36,6 +37,12 @@ public class SaveMapGeneration : MonoBehaviour
         {
             Node node = kvp.Value;
 
+            List<Vector3> list = new()
+            {
+                MapBuildingTools.Instance._savePath[_numberLink].transform.localPosition,
+                MapBuildingTools.Instance._savePath[_numberLink].transform.localScale
+            };
+
             // Ne sauvegarde pas le Startnode
             if (node.Position != 0)
             {
@@ -47,6 +54,10 @@ public class SaveMapGeneration : MonoBehaviour
                     eventName = node.EventName,
                     onYReviendra = node.OnYReviendra,
                     playerPosition = Vector3Int.RoundToInt(PlayerMap.Instance.transform.localPosition),
+                    PositionMap = PlayerMap.Instance.PositionMap,
+
+                    transformLink = list,
+                    rotationLink = MapBuildingTools.Instance._savePath[_numberLink].transform.rotation,
 
                     // Sauvegarde la clé du créateur ou Vector3Int.zero si null
                     creatorKey = node.Creator != null ? MapBuildingTools.Instance.GetKeyFromNode(node.Creator) : Vector3Int.zero
@@ -54,6 +65,8 @@ public class SaveMapGeneration : MonoBehaviour
 
                 wrapper.nodes.Add(snode);
             }
+
+            _numberLink++;
         }
 
         string json = JsonUtility.ToJson(wrapper, true);
@@ -68,6 +81,8 @@ public class SaveMapGeneration : MonoBehaviour
         {
             File.WriteAllText(path, json);
         }
+
+        _numberLink = 0;
     }
 
     // Fonction pour lire les information contenu dans le fichier json de sauvegarde
@@ -100,12 +115,21 @@ public class SaveMapGeneration : MonoBehaviour
                 tempDico[item.key] = node;
                 node.gameObject.SetActive(true);
 
+                MapBuildingTools.Instance._trailList[_numberLink].transform.localPosition = item.transformLink[0];
+                MapBuildingTools.Instance._trailList[_numberLink].transform.localRotation = item.rotationLink;
+                MapBuildingTools.Instance._trailList[_numberLink].transform.localScale = item.transformLink[1];
+                MapBuildingTools.Instance._savePath.Add(MapBuildingTools.Instance._trailList[_numberLink]);
+                MapBuildingTools.Instance._savePath[_numberLink].gameObject.SetActive(true);
+
                 //Place le joueur sur le bon node
                 if (Vector3Int.Distance(item.key, item.playerPosition) <= 1f)
                 {
                     //PlayerMap.Instance.SetupTarget(node.transform.position);
                     PlayerMap.Instance.transform.localPosition = item.playerPosition;
+                    PlayerMap.Instance.PositionMap = item.PositionMap;
                 }
+
+                _numberLink++;
             }
 
             // Relie les créateurs une fois que tous les nodes sont instanciés
@@ -128,11 +152,11 @@ public class SaveMapGeneration : MonoBehaviour
             }
 
             MapMaker2.Instance.DicoNode = tempDico;
-            AdoptChild(tempDico);
+            //AdoptChild(tempDico);
             Node.TriggerMapCompleted(); // Redéclenche l'affichage des sprites
 
             // Redessiner les traits entre les nodes
-            if (MapBuildingTools.Instance != null)
+            /*if (MapBuildingTools.Instance != null)
             {
                 MapBuildingTools.Instance.FirstTimeDraw = true;
                 foreach (Node node in tempDico.Values)
@@ -142,7 +166,9 @@ public class SaveMapGeneration : MonoBehaviour
                         MapBuildingTools.Instance.TraceTonTrait(node.Creator, node);
                     }
                 }
-            }
+            }*/
+
+            _numberLink = 0;
         }
         else
         {
@@ -173,7 +199,7 @@ public class SaveMapGeneration : MonoBehaviour
         return result;
     }
 
-    private void AdoptChild(Dictionary<Vector3Int, Node> nodeDictionary)
+    /*private void AdoptChild(Dictionary<Vector3Int, Node> nodeDictionary)
     {
         // Trouve tous les créateurs
         HashSet<Node> allCreators = new();
@@ -227,5 +253,5 @@ public class SaveMapGeneration : MonoBehaviour
                 }
             }
         }
-    }
+    }*/
 }
