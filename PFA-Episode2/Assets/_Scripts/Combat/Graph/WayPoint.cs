@@ -80,14 +80,6 @@ public class WayPoint : MonoBehaviour
         State = WaypointState.Free;
     }
 
-    public async UniTask TryApplySpell(SpellData spell)
-    {
-        if (Content == null)
-            return;
-
-        await Content.ApplySpell(spell);
-    }
-
     public void ChangeTileColor(Material material)
     {
         if(_mR == null || _mR.material == material) return;

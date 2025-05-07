@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
+using UnityEngine.Tilemaps;
 
 [RequireComponent(typeof(SpellCaster))]
 public class Entity : MonoBehaviour
@@ -12,7 +13,7 @@ public class Entity : MonoBehaviour
     [HideInInspector] public WayPoint currentPoint;
     [HideInInspector] public SpellCaster entitySpellCaster;
 
-    protected Dictionary<WayPoint,int> WaypointDistance = new Dictionary<WayPoint,int>();
+    protected Dictionary<WayPoint, int> WaypointDistance = new Dictionary<WayPoint, int>();
     protected List<WayPoint> Walkables = new List<WayPoint>();
 
     protected virtual void Awake()
@@ -35,6 +36,7 @@ public class Entity : MonoBehaviour
         print(gameObject.name);
         Tools.Flood(currentPoint);
         entityStats.currentMovePoints = entityStats.maxMovePoints;
+        entityStats.ApplyShield(-1);
     }
 
     public virtual async UniTask EndTurn()
@@ -43,7 +45,7 @@ public class Entity : MonoBehaviour
         ClearWalkables();
     }
 
-    public async UniTask ApplySpell(SpellData spell)
+    public async UniTask ApplySpell(SpellData spell, SpellCastingContext context)
     {
         foreach (SpellEffect effect in spell.Effects)
         {
@@ -51,10 +53,11 @@ public class Entity : MonoBehaviour
                 switch (effect.effectType)
                 {
                     case SpellEffectType.Damage:
-                        entityStats.ApplyHealth(-effect.value);
+                        entityStats.ApplyDamage(effect.value);
                         break;
                     case SpellEffectType.Recoil:
-                        throw new NotImplementedException();
+                        await Push(context.PushDirection);
+                        break;
                     case SpellEffectType.Shield:
                         entityStats.ApplyShield(effect.value);
                         break;
@@ -68,67 +71,18 @@ public class Entity : MonoBehaviour
             }
         }
     }
-    public virtual async UniTask TryMoveTo(WayPoint targetPoint, bool showTiles = true)
-    {
-        Stack<WayPoint> path = Tools.FindBestPath(currentPoint, targetPoint);
-        int pathlength = path.Count;
 
-        if(pathlength > entityStats.currentMovePoints)
-        {
-            print("plus de pm !");
-            return;
-        }
-
-        foreach(WayPoint p in path)
-        {
-            p.ChangeTileColor(p._walkedMaterial);
-        }
-
-        for (int i = 0; i < pathlength; i++)
-        {
-            currentPoint.StepOff();
-
-            WayPoint steppedOnPoint = path.Pop();
-
-            await StartMoving(steppedOnPoint.transform.position);
-
-            currentPoint = steppedOnPoint;
-            steppedOnPoint.StepOn(this);
-
-            steppedOnPoint.ChangeTileColor(steppedOnPoint._normalMaterial);
-
-            entityStats.currentMovePoints--;
-        }
-        Tools.Flood(currentPoint);
-        ClearWalkables();
-        ApplyWalkables(showTiles);
-    }
-
-    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 8)
-    {
-        targetPos.y = transform.position.y;
-        Vector3 offset = targetPos - (Vector3)transform.position;
-        Quaternion targetRotation = Quaternion.Euler(0, Mathf.Atan2(offset.z, offset.x) * Mathf.Rad2Deg, 0);
-        transform.rotation = targetRotation;
-        while ((Vector3)transform.position != targetPos)
-        {
-            Vector3 offset2 = targetPos - (Vector3)transform.position;
-            offset2 = Vector3.ClampMagnitude(offset2, Time.deltaTime * moveSpeed);
-            transform.Translate(offset2, Space.World);
-            await Task.Yield();
-        }
-    }
 
     public void ApplyWalkables(bool showTiles = true)
     {
         print(entityStats.currentMovePoints);
 
-        if(Walkables.Count == 0)
+        if (Walkables.Count == 0)
             Walkables.AddRange(Tools.GetWaypointsInRange(entityStats.currentMovePoints));
 
         foreach (WayPoint point in Walkables)
         {
-            if(point.State == WaypointState.Free)
+            if (point.State == WaypointState.Free)
             {
                 point.ChangeTileColor(point._walkableMaterial);
             }
@@ -143,6 +97,26 @@ public class Entity : MonoBehaviour
         }
         Walkables.Clear();
     }
+
+    async UniTask Push(Vector3Int pushDirection)
+    {
+        WayPoint choosenPoint = null;
+        float damages = 0;
+
+
+
+
+        if(damages > 0)
+        {
+            entityStats.ApplyDamage(damages);
+        }
+        
+        await StartMoving(choosenPoint.transform.position);
+
+        choosenPoint.StepOn(this);
+        currentPoint = choosenPoint;
+    }
+
 
     /// <summary>
     /// fait se déplacer l'entité vers la case la plus proche de la target
@@ -192,5 +166,55 @@ public class Entity : MonoBehaviour
         }
 
         await TryMoveTo(furthestPoint);
+    }
+    public virtual async UniTask TryMoveTo(WayPoint targetPoint, bool showTiles = true)
+    {
+        Stack<WayPoint> path = Tools.FindBestPath(currentPoint, targetPoint);
+        int pathlength = path.Count;
+
+        if (pathlength > entityStats.currentMovePoints)
+        {
+            print("plus de pm !");
+            return;
+        }
+
+        foreach (WayPoint p in path)
+        {
+            p.ChangeTileColor(p._walkedMaterial);
+        }
+
+        for (int i = 0; i < pathlength; i++)
+        {
+            currentPoint.StepOff();
+
+            WayPoint steppedOnPoint = path.Pop();
+
+            await StartMoving(steppedOnPoint.transform.position);
+
+            currentPoint = steppedOnPoint;
+            steppedOnPoint.StepOn(this);
+
+            steppedOnPoint.ChangeTileColor(steppedOnPoint._normalMaterial);
+
+            entityStats.currentMovePoints--;
+        }
+        Tools.Flood(currentPoint);
+        ClearWalkables();
+        ApplyWalkables(showTiles);
+    }
+
+    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 8)
+    {
+        targetPos.y = transform.position.y;
+        Vector3 offset = targetPos - (Vector3)transform.position;
+        Quaternion targetRotation = Quaternion.Euler(0, Mathf.Atan2(offset.z, offset.x) * Mathf.Rad2Deg, 0);
+        transform.rotation = targetRotation;
+        while ((Vector3)transform.position != targetPos)
+        {
+            Vector3 offset2 = targetPos - (Vector3)transform.position;
+            offset2 = Vector3.ClampMagnitude(offset2, Time.deltaTime * moveSpeed);
+            transform.Translate(offset2, Space.World);
+            await Task.Yield();
+        }
     }
 }
