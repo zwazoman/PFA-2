@@ -40,10 +40,16 @@ public class CombatManager : MonoBehaviour
         for(; ; )
         {
             foreach(PlayerEntity player in PlayerEntities)
+            {
+                if (player == null) continue;
                 await player.PlayTurn();
-
+            }
+                
             foreach(EnemyEntity enemy in EnemyEntities)
+            {
+                if (enemy == null) continue;
                 await enemy.PlayTurn();
+            }
 
             await UniTask.Yield();
         }
