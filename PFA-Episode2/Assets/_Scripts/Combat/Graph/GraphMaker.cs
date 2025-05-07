@@ -43,15 +43,6 @@ public class GraphMaker : MonoBehaviour
     private void Awake()
     {
         instance = this;
-
-        if (_generatesGraph)
-            GenerateGraph();
-        else
-            print("singe");
-            //ComposeGraph();
-
-        print(_allWaypoints[10].Neighbours.Count);
-        print(serializedPointDict[new Vector3Int(3, 0, 1)].gameObject.name);
     }
 
     void GenerateGraph()

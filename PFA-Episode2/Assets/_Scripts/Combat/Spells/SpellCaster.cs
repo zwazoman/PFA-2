@@ -17,29 +17,35 @@ public class SpellCaster : MonoBehaviour
     public void PreviewSpellRange(SpellData spell, WayPoint center = null, bool showZone = true)
     {
         if (center == null)
-        {
             center = entity.currentPoint;
-        }
 
         Dictionary<WayPoint, int> floodDict = Tools.SmallFlood(center,spell.Range);
 
         List<WayPoint> rangePoints = new();
-        rangePoints.AddRange(floodDict.Keys);
 
-        print(rangePoints.Count);
+        int removedCpt = 0;
 
-        for (byte i = 0; i < rangePoints.Count; i++)
+        foreach (WayPoint point in floodDict.Keys)
         {
-            WayPoint point = rangePoints[i];
             Vector3 pointPos = new Vector3(point.transform.position.x, transform.position.y, point.transform.position.z);
             Vector3 pointToEntity = transform.position - pointPos;
 
-            if (spell.IsOccludedByWalls && Physics.Raycast(pointPos, pointToEntity, pointToEntity.magnitude, _obstacleMask) || point.State == WaypointState.Obstructed)
-                rangePoints.RemoveAt(i);
-            else if (showZone)
+            Debug.DrawLine(pointPos, pointToEntity,UnityEngine.Color.red, 10);
+
+            if (spell.IsOccludedByWalls && Physics.Raycast(pointPos, pointToEntity, pointToEntity.magnitude, LayerMask.GetMask("Wall")) || point.State == WaypointState.Obstructed)
+            {
+                removedCpt++;
+                continue;
+            }
+            else if(showZone)
                 point.ChangeTileColor(point._rangeMaterial);
+
+            RangePoints.Add(point);
         }
-        RangePoints.AddRange(rangePoints);
+
+        print(removedCpt);
+        print(RangePoints.Count);
+        print(floodDict.Keys.Count);
     }
 
     public void PreviewSpellZone(SpellData spell, WayPoint targetedPoint, bool showZone = true)

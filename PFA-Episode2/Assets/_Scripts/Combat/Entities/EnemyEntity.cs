@@ -33,6 +33,8 @@ public class EnemyEntity : Entity
     {
         await base.PlayTurn();
 
+        print(entityStats.currentHealth);
+
         ApplyWalkables(true);
 
         targetPlayerPoint = FindClosestPlayerPoint();
@@ -99,12 +101,9 @@ public class EnemyEntity : Entity
         foreach (PlayerEntity player in CombatManager.Instance.PlayerEntities)
         {
             points.Add(player.currentPoint);
-            print(Tools.FloodDict[player.currentPoint]);
         }
 
         WayPoint result = points.FindClosestFloodPoint();
-
-        print(result);
 
         return result;
     }
@@ -120,9 +119,8 @@ public class EnemyEntity : Entity
 
         Dictionary<WayPoint, WayPoint> targetPointsDict = new();
 
-        //créé le dict zonePoint,targetPoint
-        entitySpellCaster.PreviewSpellRange(choosenSpell, targetPlayerPoint, true);
-        await UniTask.Delay(300);
+        entitySpellCaster.PreviewSpellRange(choosenSpell, targetPlayerPoint);
+        await UniTask.Delay(1000);
         foreach (WayPoint rangePoint in entitySpellCaster.RangePoints)
         {
             entitySpellCaster.PreviewSpellZone(choosenSpell, rangePoint);
@@ -148,6 +146,7 @@ public class EnemyEntity : Entity
 
         WayPoint choosenTargetPoint = allTargetPoints.FindClosestFloodPoint();
 
+        print(allTargetPoints.Count);
         print(choosenTargetPoint);
 
         await UniTask.Delay(1000);

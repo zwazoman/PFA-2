@@ -52,7 +52,5 @@ public class DraggableSpell : Draggable
         await spellCaster.TryCastSpell(spell, wayPoint);
 
         spellCaster.entity.ApplyWalkables();
-
-        print(spellCaster.gameObject.name);
     }
 }

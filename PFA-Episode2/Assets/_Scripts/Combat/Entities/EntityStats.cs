@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class EntityStats
@@ -10,10 +11,12 @@ public class EntityStats
     public int maxMovePoints;
 
     public int currentMovePoints;
-    public float _currentHealth;
+    public float currentHealth;
 
     public void ApplyDamage(float damage)
     {
+        Debug.Log("apply damage");
+
         if(shieldAmount > 0)
         {
             float damageRemain = Mathf.Abs(shieldAmount - damage);
@@ -27,11 +30,11 @@ public class EntityStats
 
     public void ApplyHealth(float heal)
     {
-        _currentHealth += heal;
+        currentHealth += heal;
 
-        if (_currentHealth >= maxHealth)
-            _currentHealth = maxHealth;
-        else if (_currentHealth <= 0)
+        if (currentHealth >= maxHealth)
+            currentHealth = maxHealth;
+        else if (currentHealth <= 0)
             OnDie?.Invoke();
     }
 
