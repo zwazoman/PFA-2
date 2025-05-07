@@ -63,20 +63,19 @@ public static class SaveManager
     }
 
     // Charge un objet ISavable
-    public static T Load<T>(byte saveFileID) where T : ISavable<T>, new()
+    public static Inventory Load(byte saveFileID)
     {
-        Inventory inventory = new();
-
         string path = Application.persistentDataPath + $"/save_{saveFileID}.json";
 
         if (!File.Exists(path))
         {
             Debug.LogWarning($"Fichier de sauvegarde introuvable à {path}");
-            return new T();
         }
 
         string json = File.ReadAllText(path);
         InventoryWrapper inventoryWrapper = JsonUtility.FromJson<InventoryWrapper>(json);
+
+        Inventory inventory = new();
 
         foreach (InventoryData item in inventoryWrapper.items)
         {
@@ -114,6 +113,6 @@ public static class SaveManager
         }
 
         Debug.Log($"Inventaire chargé depuis {path} avec {inventoryWrapper.items.Count} objets !");
-        return new T();
+        return inventory;
     }
 }

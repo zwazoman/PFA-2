@@ -12,10 +12,16 @@ public class SerializableNode
     public NodesEventTypes eventName;
     public bool onYReviendra;
 
+    // pour la poc mais vaut mieux changer pour après avec des ref au parent directement
+    public List<Vector3> transformLink;
+    public Quaternion rotationLink;
+
     //référence au créateur
     public Vector3Int creatorKey;
 
+    //information Player
     public Vector3Int playerPosition;
+    public int PositionMap;
 }
 
 [Serializable]
