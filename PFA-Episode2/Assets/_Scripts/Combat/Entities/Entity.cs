@@ -23,6 +23,8 @@ public class Entity : MonoBehaviour
 
     protected virtual void Start()
     {
+        entityStats.OnDie += Die;
+
         Vector3Int roundedPos = transform.position.SnapOnGrid();
         //transform.position = roundedPos;
         //transform.position += Vector3.up * 1.3f;
@@ -216,5 +218,13 @@ public class Entity : MonoBehaviour
             transform.Translate(offset2, Space.World);
             await Task.Yield();
         }
+    }
+
+    void Die()
+    {
+        currentPoint.StepOff();
+        Destroy(gameObject);
+
+        //si il ets entrain de jouer EndTurn
     }
 }
