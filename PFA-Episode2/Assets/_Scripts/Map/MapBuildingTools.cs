@@ -8,9 +8,9 @@ public class MapBuildingTools : MonoBehaviour
 {
     [SerializeField][Tooltip("Image qui sera dupliqué pour faire les chemins entre les nodes")] private Image _origineImage;
     [SerializeField][Tooltip("GameObject parent des chemins, si null alors c'est le porteur du script le parent")] private GameObject _parent;
-    private List<Image> _trailList = new();
+    public List<Image> _trailList = new();
     public bool FirstTimeDraw = true;
-    private List<Image> _savePath = new ();
+    public List<Image> _savePath = new();
 
     #region Singleton
     public static MapBuildingTools Instance;

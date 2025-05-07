@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 /// <summary>
 /// Script qui gère la sauvegarde la map
@@ -10,7 +11,8 @@ public class SaveMapGeneration : MonoBehaviour
     [Tooltip("Sauvegarde crypter ou non")] public bool Encrypt;
     [Tooltip("Numéro de fichier de sauvegarde")] public byte SaveID;
     const string ENCRYPT_KEY = "Tr0mp1ne7te";
-    
+    private int _numberLink = 0;
+
     #region Singleton
     public static SaveMapGeneration Instance;
 
@@ -47,6 +49,7 @@ public class SaveMapGeneration : MonoBehaviour
                     eventName = node.EventName,
                     onYReviendra = node.OnYReviendra,
                     playerPosition = Vector3Int.RoundToInt(PlayerMap.Instance.transform.localPosition),
+                    PositionMap = PlayerMap.Instance.PositionMap,
 
                     // Sauvegarde la clé du créateur ou Vector3Int.zero si null
                     creatorKey = node.Creator != null ? MapBuildingTools.Instance.GetKeyFromNode(node.Creator) : Vector3Int.zero
@@ -54,6 +57,24 @@ public class SaveMapGeneration : MonoBehaviour
 
                 wrapper.nodes.Add(snode);
             }
+        }
+
+        foreach (Image link in MapBuildingTools.Instance._savePath)
+        {
+            //Image link = image;
+            List<Vector3> list = new()
+            {
+                link.transform.localPosition,
+                link.transform.localScale,
+            };
+
+            SerializableLink linkObj = new()
+            {
+                transformLink = list,
+                rotationLink = link.transform.rotation
+            };
+
+            wrapper.links.Add(linkObj);
         }
 
         string json = JsonUtility.ToJson(wrapper, true);
@@ -68,6 +89,8 @@ public class SaveMapGeneration : MonoBehaviour
         {
             File.WriteAllText(path, json);
         }
+
+        _numberLink = 0;
     }
 
     // Fonction pour lire les information contenu dans le fichier json de sauvegarde
@@ -105,8 +128,25 @@ public class SaveMapGeneration : MonoBehaviour
                 {
                     //PlayerMap.Instance.SetupTarget(node.transform.position);
                     PlayerMap.Instance.transform.localPosition = item.playerPosition;
+                    PlayerMap.Instance.PositionMap = item.PositionMap;
                 }
             }
+
+            // Load les link
+            foreach (SerializableLink item in wrapper.links)
+            {
+                Image image = MapBuildingTools.Instance._trailList[_numberLink];
+
+                image.transform.localPosition = item.transformLink[0];
+                image.transform.localRotation = item.rotationLink;
+                image.transform.localScale = item.transformLink[1];
+                image.gameObject.SetActive(true);
+                MapBuildingTools.Instance._savePath.Add(image);
+
+                _numberLink++;
+            }
+
+            _numberLink = 0;
 
             // Relie les créateurs une fois que tous les nodes sont instanciés
             foreach (SerializableNode item in wrapper.nodes)
@@ -128,21 +168,9 @@ public class SaveMapGeneration : MonoBehaviour
             }
 
             MapMaker2.Instance.DicoNode = tempDico;
-            AdoptChild(tempDico);
             Node.TriggerMapCompleted(); // Redéclenche l'affichage des sprites
 
-            // Redessiner les traits entre les nodes
-            if (MapBuildingTools.Instance != null)
-            {
-                MapBuildingTools.Instance.FirstTimeDraw = true;
-                foreach (Node node in tempDico.Values)
-                {
-                    if (node.Creator != null)
-                    {
-                        MapBuildingTools.Instance.TraceTonTrait(node.Creator, node);
-                    }
-                }
-            }
+            _numberLink = 0;
         }
         else
         {
@@ -171,61 +199,5 @@ public class SaveMapGeneration : MonoBehaviour
         }
 
         return result;
-    }
-
-    private void AdoptChild(Dictionary<Vector3Int, Node> nodeDictionary)
-    {
-        // Trouve tous les créateurs
-        HashSet<Node> allCreators = new();
-
-        foreach (Node node in nodeDictionary.Values)
-        {
-            if (node.Creator != null)
-            {
-                allCreators.Add(node.Creator);
-            }
-        }
-
-        // Liste les node qui ne sont pas créateur
-        List<Node> Adopter = new();
-
-        foreach (Node node in nodeDictionary.Values)
-        {
-            if (!allCreators.Contains(node) && node.Position < byte.MaxValue)
-            {
-                Adopter.Add(node);
-            }
-        }
-
-        // Chaque créateur qui n'as pas d'enfant cherche un enfant
-        foreach (Node potentialParent in Adopter)
-        {
-            Node bestChild = null;
-            float minHauteurDiff = float.MaxValue;
-
-            foreach (Node potentialChild in nodeDictionary.Values)
-            {
-                if (potentialChild == potentialParent) continue;
-
-                if (potentialChild.Position == potentialParent.Position + 1)
-                {
-                    float hauteurDiff = Mathf.Abs(potentialChild.Hauteur - potentialParent.Hauteur);
-                    if (hauteurDiff < minHauteurDiff)
-                    {
-                        minHauteurDiff = hauteurDiff;
-                        bestChild = potentialChild;
-                    }
-                }
-            }
-
-            // Relie
-            if (bestChild != null)
-            {
-                if (MapBuildingTools.Instance != null)
-                {
-                    MapBuildingTools.Instance.TraceTonTrait(potentialParent, bestChild);
-                }
-            }
-        }
     }
 }

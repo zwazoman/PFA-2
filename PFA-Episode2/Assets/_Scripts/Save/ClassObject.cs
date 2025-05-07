@@ -15,13 +15,24 @@ public class SerializableNode
     //référence au créateur
     public Vector3Int creatorKey;
 
+    //information Player
     public Vector3Int playerPosition;
+    public int PositionMap;
+}
+
+[Serializable]
+public class SerializableLink
+{
+    // pour la poc mais vaut mieux changer pour après avec des ref au parent directement
+    public List<Vector3> transformLink;
+    public Quaternion rotationLink;
 }
 
 [Serializable]
 public class MapWrapper
 {
     public List<SerializableNode> nodes = new();
+    public List<SerializableLink> links = new();
 }
 
 [Serializable]

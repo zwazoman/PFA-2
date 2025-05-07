@@ -6,6 +6,12 @@ public class EntityStats
 {
     public event Action OnDie;
 
+    /// <summary>
+    /// float : Damage taken
+    /// float : new HP
+    /// </summary>
+    public event Action<float,float> OnDamageTaken;
+
     public float maxHealth;
     public float shieldAmount;
     public int maxMovePoints;
