@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,10 +9,7 @@ public class SetupIngredientUI : MonoBehaviour
 
     public static SetupIngredientUI Instance;
 
-    private void Awake()
-    {
-        Instance = this;
-    }
+    private void Awake() { Instance = this; }
 
     public void SetupInfo(IngredientBase IngredientBase, int index) //Attribue tout l'UI au élément
     {

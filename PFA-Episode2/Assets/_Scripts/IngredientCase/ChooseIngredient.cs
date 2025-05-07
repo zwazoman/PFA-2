@@ -1,8 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
-using UnityEngine.UI;
 using System.Net.NetworkInformation;
+
 
 public class ChooseIngredient : MonoBehaviour
 {
@@ -14,7 +13,7 @@ public class ChooseIngredient : MonoBehaviour
 
     [Header("Ingredient")]
 
-    [SerializeField] private List<Ingredient> _listIngreidentCommon = new();
+    [SerializeField] private List<Ingredient> _listIngredientCommon = new();
     [SerializeField] private List<Ingredient> _listIngredientSavoureux = new();
     [SerializeField] private List<Ingredient> _listIngredientDivin = new();
 
@@ -56,11 +55,9 @@ public class ChooseIngredient : MonoBehaviour
             //_probaDivin = TempoProbaDivin;
             _probaSauce = TempoProbaSauce;
         }
-        int i = 0;
-        foreach (IngredientBase ing in IngredientBaseChoose)
+        for(int i = 0; i != IngredientBaseChoose.Count; i++)
         {
-            SetupIngredientUI.Instance.SetupInfo(ing, i);
-            i++;
+            SetupIngredientUI.Instance.SetupInfo(IngredientBaseChoose[i], i);
         }
 
     }
@@ -75,14 +72,14 @@ public class ChooseIngredient : MonoBehaviour
         int result = Random.Range(1, total + 1);
 
         print(result);
-        if (result <= _probaDivin) //Divin
+        if (result <= _probaDivin && _listSauceDivin.Count != 0) //Divin
         {
             //_probaDivin = 0;
             Ingredient ing = _listIngredientDivin[Random.Range(0, _listIngredientDivin.Count - 1)];
             _listIngredientDivin.Remove(ing);
             return ing;
         }
-        else if (result <= _probaDivin + _probaSavoureux)  //Savoureux
+        else if (result <= _probaDivin + _probaSavoureux && _listIngredientSavoureux.Count != 0) //Savoureux
         {
             //_probaSavoureux = 0;
             Ingredient ing = _listIngredientSavoureux[Random.Range(0, _listIngredientSavoureux.Count - 1)];
@@ -91,9 +88,8 @@ public class ChooseIngredient : MonoBehaviour
         }
         else //Common
         {
-            Ingredient ing = _listIngreidentCommon[Random.Range(0, _listIngreidentCommon.Count - 1)];
+            Ingredient ing = _listIngredientCommon[Random.Range(0, _listIngredientCommon.Count - 1)];
             return ing;
-
         }
     }
 
