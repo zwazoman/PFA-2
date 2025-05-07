@@ -59,7 +59,16 @@ public static class SaveManager
 
         string json = JsonUtility.ToJson(inventoryWrapper, true);
         string path = Application.persistentDataPath + $"/save_{saveFileID}.json";
-        File.WriteAllText(path, json);
+
+        if (SaveMapGeneration.Instance.Encrypt)
+        {
+            string encryptedJson = SaveMapGeneration.Instance.EncryptDecrypt(json);
+            File.WriteAllText(path, encryptedJson);
+        }
+        else
+        {
+            File.WriteAllText(path, json);
+        }
     }
 
     // Charge un objet ISavable
@@ -73,6 +82,12 @@ public static class SaveManager
         }
 
         string json = File.ReadAllText(path);
+
+        if (SaveMapGeneration.Instance.Encrypt)
+        {
+            json = SaveMapGeneration.Instance.EncryptDecrypt(json);
+        }
+
         InventoryWrapper inventoryWrapper = JsonUtility.FromJson<InventoryWrapper>(json);
 
         Inventory inventory = new();
@@ -91,19 +106,19 @@ public static class SaveManager
                         Range = item.range,
                         CoolDown = item.coolDown,
                         Effects = item.effects,
-                        AreaOfEffect = SaveReference.Instance.GetAreaOfEffect(item.areaOfEffect),
+                        AreaOfEffect = (AreaOfEffect)SaveReference.Instance.GetScriptableObject(item.areaOfEffect),
                     };
                     inventory.Spells.Add(spell);
                     break;
 
                 case "Ingredient":
-                    Ingredient ingredient = SaveReference.Instance.GetIngredient(item.name);
-                    inventory.Ingredients.Add(ingredient);
+                    ScriptableObject ingredient = SaveReference.Instance.GetScriptableObject(item.name);
+                    inventory.Ingredients.Add((Ingredient)ingredient);
                     break;
 
                 case "Sauce":
-                    Sauce sauce = SaveReference.Instance.GetSauce(item.name);
-                    inventory.Sauces.Add(sauce);
+                    ScriptableObject sauce = SaveReference.Instance.GetScriptableObject(item.name);
+                    inventory.Sauces.Add((Sauce)sauce);
                     break;
 
                 default:

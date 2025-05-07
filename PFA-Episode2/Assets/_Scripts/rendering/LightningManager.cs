@@ -11,6 +11,14 @@ public class LightningManager : MonoBehaviour
     [SerializeField] Texture2D _stippling;
     [SerializeField] float _stipplingTiling = 1;
 
+
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    public static void onSceneLoad()
+    {
+
+    }
+
     public void UpdateLightningInfo()
     {
         Shader.SetGlobalTexture("_lightGradientMap", _gradientMap);
@@ -24,4 +32,11 @@ public class LightningManager : MonoBehaviour
     {
         UpdateLightningInfo();
     }
+
+    private void Start()
+    {
+        UpdateLightningInfo();
+    }
+
+
 }

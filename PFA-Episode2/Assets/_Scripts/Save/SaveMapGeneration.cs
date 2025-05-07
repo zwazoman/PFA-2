@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 /// <summary>
 /// Script qui gère la sauvegarde la map
@@ -37,12 +38,6 @@ public class SaveMapGeneration : MonoBehaviour
         {
             Node node = kvp.Value;
 
-            List<Vector3> list = new()
-            {
-                MapBuildingTools.Instance._savePath[_numberLink].transform.localPosition,
-                MapBuildingTools.Instance._savePath[_numberLink].transform.localScale
-            };
-
             // Ne sauvegarde pas le Startnode
             if (node.Position != 0)
             {
@@ -56,17 +51,30 @@ public class SaveMapGeneration : MonoBehaviour
                     playerPosition = Vector3Int.RoundToInt(PlayerMap.Instance.transform.localPosition),
                     PositionMap = PlayerMap.Instance.PositionMap,
 
-                    transformLink = list,
-                    rotationLink = MapBuildingTools.Instance._savePath[_numberLink].transform.rotation,
-
                     // Sauvegarde la clé du créateur ou Vector3Int.zero si null
                     creatorKey = node.Creator != null ? MapBuildingTools.Instance.GetKeyFromNode(node.Creator) : Vector3Int.zero
                 };
 
                 wrapper.nodes.Add(snode);
             }
+        }
 
-            _numberLink++;
+        foreach (Image link in MapBuildingTools.Instance._savePath)
+        {
+            //Image link = image;
+            List<Vector3> list = new()
+            {
+                link.transform.localPosition,
+                link.transform.localScale,
+            };
+
+            SerializableLink linkObj = new()
+            {
+                transformLink = list,
+                rotationLink = link.transform.rotation
+            };
+
+            wrapper.links.Add(linkObj);
         }
 
         string json = JsonUtility.ToJson(wrapper, true);
@@ -115,12 +123,6 @@ public class SaveMapGeneration : MonoBehaviour
                 tempDico[item.key] = node;
                 node.gameObject.SetActive(true);
 
-                MapBuildingTools.Instance._trailList[_numberLink].transform.localPosition = item.transformLink[0];
-                MapBuildingTools.Instance._trailList[_numberLink].transform.localRotation = item.rotationLink;
-                MapBuildingTools.Instance._trailList[_numberLink].transform.localScale = item.transformLink[1];
-                MapBuildingTools.Instance._savePath.Add(MapBuildingTools.Instance._trailList[_numberLink]);
-                MapBuildingTools.Instance._savePath[_numberLink].gameObject.SetActive(true);
-
                 //Place le joueur sur le bon node
                 if (Vector3Int.Distance(item.key, item.playerPosition) <= 1f)
                 {
@@ -128,9 +130,23 @@ public class SaveMapGeneration : MonoBehaviour
                     PlayerMap.Instance.transform.localPosition = item.playerPosition;
                     PlayerMap.Instance.PositionMap = item.PositionMap;
                 }
+            }
+
+            // Load les link
+            foreach (SerializableLink item in wrapper.links)
+            {
+                Image image = MapBuildingTools.Instance._trailList[_numberLink];
+
+                image.transform.localPosition = item.transformLink[0];
+                image.transform.localRotation = item.rotationLink;
+                image.transform.localScale = item.transformLink[1];
+                image.gameObject.SetActive(true);
+                MapBuildingTools.Instance._savePath.Add(image);
 
                 _numberLink++;
             }
+
+            _numberLink = 0;
 
             // Relie les créateurs une fois que tous les nodes sont instanciés
             foreach (SerializableNode item in wrapper.nodes)
@@ -152,21 +168,7 @@ public class SaveMapGeneration : MonoBehaviour
             }
 
             MapMaker2.Instance.DicoNode = tempDico;
-            //AdoptChild(tempDico);
             Node.TriggerMapCompleted(); // Redéclenche l'affichage des sprites
-
-            // Redessiner les traits entre les nodes
-            /*if (MapBuildingTools.Instance != null)
-            {
-                MapBuildingTools.Instance.FirstTimeDraw = true;
-                foreach (Node node in tempDico.Values)
-                {
-                    if (node.Creator != null)
-                    {
-                        MapBuildingTools.Instance.TraceTonTrait(node.Creator, node);
-                    }
-                }
-            }*/
 
             _numberLink = 0;
         }
@@ -198,60 +200,4 @@ public class SaveMapGeneration : MonoBehaviour
 
         return result;
     }
-
-    /*private void AdoptChild(Dictionary<Vector3Int, Node> nodeDictionary)
-    {
-        // Trouve tous les créateurs
-        HashSet<Node> allCreators = new();
-
-        foreach (Node node in nodeDictionary.Values)
-        {
-            if (node.Creator != null)
-            {
-                allCreators.Add(node.Creator);
-            }
-        }
-
-        // Liste les node qui ne sont pas créateur
-        List<Node> Adopter = new();
-
-        foreach (Node node in nodeDictionary.Values)
-        {
-            if (!allCreators.Contains(node) && node.Position < byte.MaxValue)
-            {
-                Adopter.Add(node);
-            }
-        }
-
-        // Chaque créateur qui n'as pas d'enfant cherche un enfant
-        foreach (Node potentialParent in Adopter)
-        {
-            Node bestChild = null;
-            float minHauteurDiff = float.MaxValue;
-
-            foreach (Node potentialChild in nodeDictionary.Values)
-            {
-                if (potentialChild == potentialParent) continue;
-
-                if (potentialChild.Position == potentialParent.Position + 1)
-                {
-                    float hauteurDiff = Mathf.Abs(potentialChild.Hauteur - potentialParent.Hauteur);
-                    if (hauteurDiff < minHauteurDiff)
-                    {
-                        minHauteurDiff = hauteurDiff;
-                        bestChild = potentialChild;
-                    }
-                }
-            }
-
-            // Relie
-            if (bestChild != null)
-            {
-                if (MapBuildingTools.Instance != null)
-                {
-                    MapBuildingTools.Instance.TraceTonTrait(potentialParent, bestChild);
-                }
-            }
-        }
-    }*/
 }
