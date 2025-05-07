@@ -38,7 +38,9 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(this);
             
             dishCombinationData = Resources.Load<DishCombinationData>("DishCombinationData");
-            
+
+            LoadOrCreateSave();
+
             //@temp
             foreach (PremadeSpell premadeSpell in premadeSpells)
             {

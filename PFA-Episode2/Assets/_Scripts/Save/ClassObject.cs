@@ -12,10 +12,6 @@ public class SerializableNode
     public NodesEventTypes eventName;
     public bool onYReviendra;
 
-    // pour la poc mais vaut mieux changer pour après avec des ref au parent directement
-    public List<Vector3> transformLink;
-    public Quaternion rotationLink;
-
     //référence au créateur
     public Vector3Int creatorKey;
 
@@ -25,9 +21,18 @@ public class SerializableNode
 }
 
 [Serializable]
+public class SerializableLink
+{
+    // pour la poc mais vaut mieux changer pour après avec des ref au parent directement
+    public List<Vector3> transformLink;
+    public Quaternion rotationLink;
+}
+
+[Serializable]
 public class MapWrapper
 {
     public List<SerializableNode> nodes = new();
+    public List<SerializableLink> links = new();
 }
 
 [Serializable]
