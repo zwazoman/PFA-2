@@ -129,15 +129,12 @@ public class Entity : MonoBehaviour
         if (targetPoint == currentPoint)
             return true;
 
-        if (Walkables.Contains(targetPoint))
+        if (Walkables.Contains(targetPoint) && targetPoint.State == WaypointState.Free)
         {
             print("target in range !");
             await TryMoveTo(targetPoint);
             return true;
         }
-
-        print("target not in range yet ! getting closer...");
-        print(Tools.FindClosestFloodPoint(Walkables, Tools.SmallFlood(targetPoint, Tools.FloodDict[targetPoint])));
 
         await TryMoveTo(Tools.FindClosestFloodPoint(Walkables, Tools.SmallFlood(targetPoint, Tools.FloodDict[targetPoint])));
         return false;

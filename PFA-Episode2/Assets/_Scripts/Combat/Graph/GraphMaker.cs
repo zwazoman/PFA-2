@@ -85,6 +85,7 @@ public class GraphMaker : MonoBehaviour
         {
             //add points to dictionary
             Vector3Int pointPos = point.transform.position.SnapOnGrid();
+            point.graphPos = pointPos;
             serializedPointDict.Add(pointPos, point);
 
             //set neighbours
@@ -104,7 +105,10 @@ public class GraphMaker : MonoBehaviour
         serializedPointDict.Clear();
 
         foreach (WayPoint point in _allWaypoints)
+        {
             point.Neighbours.Clear();
+            point.graphPos = Vector3Int.zero;
+        }
     }
 }
 

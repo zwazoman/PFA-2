@@ -15,6 +15,8 @@ public class WayPoint : MonoBehaviour
     public event Action OnSteppedOn;
     public event Action OnSteppedOff;
 
+    public Vector3Int graphPos;
+
     public List<WayPoint> Neighbours;
 
     public Entity Content;
