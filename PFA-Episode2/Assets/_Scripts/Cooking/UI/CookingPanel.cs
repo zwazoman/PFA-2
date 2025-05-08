@@ -27,7 +27,7 @@ public class CookingPanel : AnimatedPanel
     {
 
 #if UNITY_EDITOR
-        if (useTestInventory)
+        if (!useTestInventory)
         {
             LoadPlayerInventory();
             return;
