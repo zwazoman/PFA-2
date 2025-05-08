@@ -16,6 +16,15 @@ public static class Tools
         return new Vector3Int(Mathf.RoundToInt(initialPos.x), 0, Mathf.RoundToInt(initialPos.z));
     }
 
+    public static bool CheckWallsBetween(WayPoint a, WayPoint b, float heightOffset = 0.7f)
+    {
+        Vector3 aPos = a.transform.position + Vector3.up * heightOffset;
+        Vector3 bPos = b.transform.position + Vector3.up * heightOffset;
+        Vector3 offset = bPos - aPos;
+
+        return Physics.Raycast(aPos, offset, offset.magnitude, LayerMask.GetMask("Wall"));
+    }
+
 
     public static T PickRandom<T>(this T[] array)
     {
@@ -105,6 +114,31 @@ public static class Tools
     }
 
     public static WayPoint FindClosestFloodPoint(this List<WayPoint> wayPoints, Dictionary<WayPoint, int> floodDict = null)
+    {
+        WayPoint closest = null;
+        int closestDistance = int.MaxValue;
+
+        if (floodDict == null)
+            floodDict = FloodDict;
+
+        foreach (WayPoint point in wayPoints)
+        {
+            if (!floodDict.ContainsKey(point))
+            {
+                continue;
+            }
+
+            int pointDistance = floodDict[point];
+            if (pointDistance < closestDistance)
+            {
+                closest = point;
+                closestDistance = pointDistance;
+            }
+        }
+        return closest;
+    }
+
+    public static WayPoint FindClosestFloodPoint(this Dictionary<WayPoint,List<WayPoint>>.KeyCollection wayPoints, Dictionary<WayPoint, int> floodDict = null)
     {
         WayPoint closest = null;
         int closestDistance = int.MaxValue;

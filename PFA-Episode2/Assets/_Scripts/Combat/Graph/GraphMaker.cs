@@ -43,15 +43,6 @@ public class GraphMaker : MonoBehaviour
     private void Awake()
     {
         instance = this;
-
-        if (_generatesGraph)
-            GenerateGraph();
-        else
-            print("singe");
-            //ComposeGraph();
-
-        print(_allWaypoints[10].Neighbours.Count);
-        print(serializedPointDict[new Vector3Int(3, 0, 1)].gameObject.name);
     }
 
     void GenerateGraph()
@@ -94,6 +85,7 @@ public class GraphMaker : MonoBehaviour
         {
             //add points to dictionary
             Vector3Int pointPos = point.transform.position.SnapOnGrid();
+            point.graphPos = pointPos;
             serializedPointDict.Add(pointPos, point);
 
             //set neighbours
@@ -113,7 +105,10 @@ public class GraphMaker : MonoBehaviour
         serializedPointDict.Clear();
 
         foreach (WayPoint point in _allWaypoints)
+        {
             point.Neighbours.Clear();
+            point.graphPos = Vector3Int.zero;
+        }
     }
 }
 
