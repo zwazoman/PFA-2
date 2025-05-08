@@ -4,7 +4,7 @@ public class LightningManager : MonoBehaviour
 {
     [Header("Lightning")]
     [SerializeField] Texture2D _gradientMap;
-    [SerializeField][Range(0,1)] float _enviroID;
+    [SerializeField] [Range(0,1)] float _enviroID;
     [SerializeField] float _bands = 5;
 
     [Header("Stippling")]
