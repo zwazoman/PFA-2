@@ -1,88 +1,134 @@
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.UI;
+using System.Net.NetworkInformation;
+
 
 public class ChooseIngredient : MonoBehaviour
 {
-    [SerializeField] private List<IngredientBase> _listScriptableIngredient = new();
-    [SerializeField] private List<IngredientUI> _listIngredientUI = new();
-    [SerializeField] private List<ColorPanel> _listColor = new();
-    [SerializeField] private List<IngredientBase> _listIngredient = new();
+    [Header("Sauce")]
 
-    private void Start()
-    {
-        ChooseRandomIngredient();
-    }
+    [SerializeField] private List<Sauce> _listSauceCommon = new();
+    [SerializeField] private List<Sauce> _listSauceSavoureux = new();
+    [SerializeField] private List<Sauce> _listSauceDivin = new();
+
+    [Header("Ingredient")]
+
+    [SerializeField] private List<Ingredient> _listIngredientCommon = new();
+    [SerializeField] private List<Ingredient> _listIngredientSavoureux = new();
+    [SerializeField] private List<Ingredient> _listIngredientDivin = new();
+
+    [Header("Probability")]
+
+    [SerializeField] [Range(0, 100)] private int _probaSauce;
+    [SerializeField] [Range(0, 100)] private int _probaCommon;
+    [SerializeField] [Range(0, 100)] private int _probaSavoureux;
+    [SerializeField] [Range(0, 100)] private int _probaDivin;
+
+    public List<IngredientBase> IngredientBaseChoose { get; private set; } = new();
+
+    public static ChooseIngredient Instance;
+
+    private void Awake() { Instance = this; }
+
+    private void Start() { ChooseRandomIngredient(); }
 
     private void ChooseRandomIngredient()
     {
-        _listIngredient = _listScriptableIngredient;
-        for(int i = 0; i <= 2; i++) //Pour les interfaces
+        int TempoProbaSavoureux = _probaSavoureux;
+        int TempoProbaDivin = _probaDivin;
+        int TempoProbaSauce = _probaSauce;
+
+        for (int sacIndex = 0; sacIndex <= 2; sacIndex++)
         {
-            int choice = Random.Range(0, _listIngredient.Count - i);
-            _listIngredient.RemoveAt(choice);
-            SetupInfo(choice, i);
-        }
-    }
-
-    private void SetupInfo(int choice, int index) //Attribue tout l'UI au élément
-    {
-        _listIngredientUI[index].title.text = _listIngredient[choice].name;                   //Name
-        _listIngredientUI[index].imageLogoRef.sprite = _listIngredient[choice].sprite;        //Sprite
-
-        if (_listIngredient[choice] is Sauce)                                                 //Sauce
-        {
-            Sauce ing = (Sauce)_listIngredient[choice];
-            _listIngredientUI[index].effectDescription.text = Serializer.GetSauceEffectString(ing);
-
-            if (_listIngredientUI[index].familly != null) { _listIngredientUI[index].familly.text = "Sauce"; }
-            _listIngredientUI[index].rarityFrame.sprite = _listIngredient[choice].frame;
-            SetupColor(index, 4);
-        }
-        else                                                                                  //Ingrédient
-        {
-            Ingredient ing = (Ingredient)_listIngredient[choice];
-            _listIngredientUI[index].effectDescription.text = Serializer.GetIngredientEffectString(ing);
-            if (_listIngredientUI[index].familly != null) { _listIngredientUI[index].familly.text = ing.Family.ToString(); }
-
-            switch (ing.Family)
+            for (int tagIngredient = 0; tagIngredient <= 2; tagIngredient++)
             {
-                case IngredientsInfo.Family.Starchys:
-
-                    SetupColor(index, 2);
-                    _listIngredientUI[index].rarityFrame.sprite = _listIngredient[choice].frame;
-                    break;
-                case IngredientsInfo.Family.Vegetables:
-
-                    SetupColor(index, 0);
-                    _listIngredientUI[index].rarityFrame.sprite = _listIngredient[choice].frame;
-                    break;
-                case IngredientsInfo.Family.Dairys:
-
-                    SetupColor(index, 3);
-                    _listIngredientUI[index].rarityFrame.sprite = _listIngredient[choice].frame;
-                    break;
-                case IngredientsInfo.Family.Meat:
-
-                    SetupColor(index, 1);
-                    _listIngredientUI[index].rarityFrame.sprite = _listIngredient[choice].frame;
-                    break;
+                if (IsSauce())
+                {
+                    IngredientBaseChoose.Add(ReturnSauceChoose());
+                }
+                else
+                {
+                    IngredientBaseChoose.Add(ReturnIngredientChoose());
+                }
             }
+            //_probaSavoureux = TempoProbaSavoureux;
+            //_probaDivin = TempoProbaDivin;
+            _probaSauce = TempoProbaSauce;
+        }
+        for(int i = 0; i != IngredientBaseChoose.Count; i++)
+        {
+            SetupIngredientUI.Instance.SetupInfo(IngredientBaseChoose[i], i);
+        }
+
+    }
+
+    /// <summary>
+    /// Retourne un ingrédient au hasard selon les proba des ingrédients
+    /// </summary>
+    /// <returns>Ingrédient (scriptable Object)</returns>
+    private Ingredient ReturnIngredientChoose()
+    {
+        int total = _probaCommon + _probaSavoureux + _probaDivin;
+        int result = Random.Range(1, total + 1);
+
+        print(result);
+        if (result <= _probaDivin && _listSauceDivin.Count != 0) //Divin
+        {
+            //_probaDivin = 0;
+            Ingredient ing = _listIngredientDivin[Random.Range(0, _listIngredientDivin.Count - 1)];
+            _listIngredientDivin.Remove(ing);
+            return ing;
+        }
+        else if (result <= _probaDivin + _probaSavoureux && _listIngredientSavoureux.Count != 0) //Savoureux
+        {
+            //_probaSavoureux = 0;
+            Ingredient ing = _listIngredientSavoureux[Random.Range(0, _listIngredientSavoureux.Count - 1)];
+            _listIngredientSavoureux.Remove(ing);
+            return ing;
+        }
+        else //Common
+        {
+            Ingredient ing = _listIngredientCommon[Random.Range(0, _listIngredientCommon.Count - 1)];
+            return ing;
         }
     }
 
-    private void SetupColor(int index, int colorIndex)
+    /// <summary>
+    /// Retourne une sauce au hasard selon les proba des sauces
+    /// </summary>
+    /// <returns>Sauce (scriptable Object)</returns>
+    private Sauce ReturnSauceChoose()
     {
-        _listIngredientUI[index].famillyPanelColorLight.color = _listColor[colorIndex].ColorLight;
-        if (_listIngredientUI[index].famillyPanelColorMed != null) { _listIngredientUI[index].famillyPanelColorMed.color = _listColor[colorIndex].ColorMid; }
-        foreach(Image img in _listIngredientUI[index].famillyPanelColorDark)
+        _probaSauce = 0;
+        int total = _probaCommon + _probaSavoureux + _probaDivin;
+        int result = Random.Range(1, total + 1);
+
+        if (result <= _probaDivin && _listSauceDivin.Count != 0) //Divin
         {
-            img.color = _listColor[colorIndex].ColorDark;
+            //_probaDivin = 0;
+            Sauce sauce = _listSauceDivin[Random.Range(0, _listSauceDivin.Count - 1)];
+            _listSauceDivin.Remove(sauce);
+            return sauce;
+        }
+        else if (result <= _probaDivin + _probaSavoureux && _listSauceSavoureux.Count != 0)  //Savoureux
+        {
+            //_probaSavoureux = 0;
+            Sauce sauce = _listSauceSavoureux[Random.Range(0, _listSauceSavoureux.Count - 1)];
+            _listSauceSavoureux.Remove(sauce);
+            return sauce;
+        }
+        else //Common
+        {
+            Sauce sauce = _listSauceCommon[Random.Range(0, _listSauceCommon.Count - 1)];
+            return sauce;
+
         }
     }
-    public async void Next()
+
+    private bool IsSauce()
     {
-        //ing
-        await SceneTransitionManager.Instance.GoToScene("WorldMap");
+        int numberChoose = Random.Range(0, 101);
+        if (numberChoose > _probaSauce) { return false; }
+        else { return true; } 
     }
 }

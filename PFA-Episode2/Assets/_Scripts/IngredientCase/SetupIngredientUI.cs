@@ -1,0 +1,74 @@
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class SetupIngredientUI : MonoBehaviour
+{
+    [SerializeField] private List<IngredientUI> _listIngredientUI = new();
+    [SerializeField] private List<ColorPanel> _listColor = new();
+
+    public static SetupIngredientUI Instance;
+
+    private void Awake() { Instance = this; }
+
+    public void SetupInfo(IngredientBase IngredientBase, int index) //Attribue tout l'UI au élément
+    {
+        _listIngredientUI[index].title.text = IngredientBase.name;                   //Name
+        _listIngredientUI[index].imageLogoRef.sprite = IngredientBase.sprite;        //Sprite
+
+        if (IngredientBase is Sauce Sauce)                                                 //Sauce
+        {
+            _listIngredientUI[index].effectDescription.text = Serializer.GetSauceEffectString(Sauce);
+            if (_listIngredientUI[index].familly != null) { _listIngredientUI[index].familly.text = "Sauce"; }
+            _listIngredientUI[index].rarityFrame.sprite = IngredientBase.frame;
+            SetupColor(index, 4);
+        }
+        else                                                                                  //Ingrédient
+        {
+            Ingredient Ingredient = (Ingredient)IngredientBase;
+            _listIngredientUI[index].effectDescription.text = Serializer.GetIngredientEffectString(Ingredient);
+            if (_listIngredientUI[index].familly != null) { _listIngredientUI[index].familly.text = Ingredient.Family.ToString(); }
+
+            switch (Ingredient.Family)
+            {
+                case IngredientsInfo.Family.Starchys:
+
+                    SetupColor(index, 2);
+                    break;
+                case IngredientsInfo.Family.Vegetables:
+
+                    SetupColor(index, 0);
+                    break;
+                case IngredientsInfo.Family.Dairys:
+
+                    SetupColor(index, 3);
+                    break;
+                case IngredientsInfo.Family.Meat:
+
+                    SetupColor(index, 1);
+                    break;
+            }
+            _listIngredientUI[index].rarityFrame.sprite = Ingredient.frame;
+        }
+    }
+
+    /// <summary>
+    /// Attribue la couleur selon la famille d'ingredient
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="colorIndex"></param>
+    private void SetupColor(int index, int colorIndex)
+    {
+        _listIngredientUI[index].famillyPanelColorLight.color = _listColor[colorIndex].ColorLight;
+        if (_listIngredientUI[index].famillyPanelColorMed != null) { _listIngredientUI[index].famillyPanelColorMed.color = _listColor[colorIndex].ColorMid; }
+        foreach (Image img in _listIngredientUI[index].famillyPanelColorDark)
+        {
+            img.color = _listColor[colorIndex].ColorDark;
+        }
+    }
+    public async void Next()
+    {
+        //ing
+        await SceneTransitionManager.Instance.GoToScene("WorldMap");
+    }
+}
