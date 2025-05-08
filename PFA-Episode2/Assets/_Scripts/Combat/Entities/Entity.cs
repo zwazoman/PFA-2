@@ -19,18 +19,20 @@ public class Entity : MonoBehaviour
     protected virtual void Awake()
     {
         TryGetComponent(out entitySpellCaster);
+        entityStats.owner = this;
     }
 
     protected virtual void Start()
     {
-        entityStats.OnDie += Die;
-
         Vector3Int roundedPos = transform.position.SnapOnGrid();
         //transform.position = roundedPos;
         //transform.position += Vector3.up * 1.3f;
 
-        currentPoint = GraphMaker.Instance.serializedPointDict[roundedPos];
+        currentPoint = GraphMaker.Instance.serializedPointDict[roundedPos]; 
         currentPoint.StepOn(this);
+
+        entityStats.currentHealth = entityStats.maxHealth;
+        entityStats.currentMovePoints = entityStats.maxMovePoints;
     }
 
     public virtual async UniTask PlayTurn()
@@ -38,7 +40,7 @@ public class Entity : MonoBehaviour
         print(gameObject.name);
         Tools.Flood(currentPoint);
         entityStats.currentMovePoints = entityStats.maxMovePoints;
-        entityStats.ApplyShield(-1);
+        await entityStats.ApplyShield(-1);
     }
 
     public virtual async UniTask EndTurn()
@@ -55,13 +57,13 @@ public class Entity : MonoBehaviour
             switch (effect.effectType)
             {
                 case SpellEffectType.Damage:
-                    entityStats.ApplyDamage(effect.value);
+                    await entityStats.ApplyDamage(effect.value);
                     break;
                 case SpellEffectType.Recoil:
                     await Push(context.PushDirection);
                     break;
                 case SpellEffectType.Shield:
-                    entityStats.ApplyShield(effect.value);
+                    await entityStats.ApplyShield(effect.value);
                     break;
                 case SpellEffectType.DamageIncreaseForEachHitEnnemy:
                     throw new NotImplementedException();
@@ -77,7 +79,7 @@ public class Entity : MonoBehaviour
     public void ApplyWalkables(bool showTiles = true)
     {
         if (Walkables.Count == 0)
-            Walkables.AddRange(Tools.GetWaypointsInRange(entityStats.currentMovePoints));
+            Walkables.AddRange(Tools.SmallFlood(currentPoint, entityStats.currentMovePoints,true,true).Keys);
 
         foreach (WayPoint point in Walkables)
         {
@@ -102,12 +104,16 @@ public class Entity : MonoBehaviour
         WayPoint choosenPoint = null;
         float damages = 0;
 
-
-
+        // si diagonale -> tirer un spherecast dans la direction longueur = force * racine de 2:
+        //si ça touche : pousser le joueur jusqu' au hit
+        //sinon le pousser jusu'a force (condition si hors du terrain/ bloquée mieux que raycast ? tomber dans le vide ?
+        //sinon -> tirer un raycast dans la direction longueur = force
+        //si ça touche pousser de force
+        //sinon -> le pousser jusu'a force (condition si hors du terrain/ bloquée mieux que raycast ? tomber dans le vide ?
 
         if (damages > 0)
         {
-            entityStats.ApplyDamage(damages);
+            await entityStats.ApplyDamage(damages);
         }
 
         await StartMoving(choosenPoint.transform.position);
@@ -124,6 +130,8 @@ public class Entity : MonoBehaviour
     /// <returns></returns>
     protected async UniTask<bool> MoveToward(WayPoint targetPoint)
     {
+        print("move !");
+
         await UniTask.Delay(1000);
 
         if (targetPoint == currentPoint)
@@ -214,11 +222,10 @@ public class Entity : MonoBehaviour
         }
     }
 
-    void Die()
+    public async UniTask Die()
     {
         currentPoint.StepOff();
         Destroy(gameObject);
-
         //si il ets entrain de jouer EndTurn
     }
 }

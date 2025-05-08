@@ -20,21 +20,10 @@ public class SpellCaster : MonoBehaviour
 
         List<WayPoint> rangePoints = new();
 
-        int removedCpt = 0;
-
         foreach (WayPoint point in floodDict.Keys)
         {
-            Vector3 pointWallCheckPos = point.transform.position + Vector3.up * 0.7f;
-            Vector3 wallCheckPos = center.transform.position + Vector3.up * 0.7f;
-            Vector3 pointToEntity = pointWallCheckPos - wallCheckPos;
-
-            Debug.DrawLine(pointWallCheckPos, wallCheckPos, UnityEngine.Color.red, 10);
-
             if (!ignoreTerrain && (spell.IsOccludedByWalls && Tools.CheckWallsBetween(center, point) || point.State == WaypointState.Obstructed))
-            {
-                removedCpt++;
                 continue;
-            }
             else if (showZone)
                 point.ChangeTileColor(point._rangeMaterial);
 

@@ -24,7 +24,6 @@ public class PlayerEntity : Entity
 
         entityStats.maxHealth = maxHealth;
         entityStats.maxMovePoints = maxMovePoints;
-
     }
 
     protected override void Start()

@@ -33,8 +33,6 @@ public class EnemyEntity : Entity
     {
         await base.PlayTurn();
 
-        print(entityStats.currentHealth);
-
         ApplyWalkables(true);
 
         targetPlayerPoint = FindClosestPlayerPoint();
@@ -116,23 +114,19 @@ public class EnemyEntity : Entity
     /// <returns></returns>
     protected async UniTask<bool> TryAttack(SpellData choosenSpell)
     {
-        targetPlayerPoint.ChangeTileColor(targetPlayerPoint._zoneMaterial);
-
         Dictionary<WayPoint, List<WayPoint>> targetPointsDict = new();
 
         List<WayPoint> rangePoints = new();
         List<WayPoint> zonePoints = new();
 
-        List<WayPoint> tmp = new();
-
-        rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, targetPlayerPoint, true, true);
+        rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, targetPlayerPoint, false, true);
         await UniTask.Delay(1000);
         foreach (WayPoint rangePoint in rangePoints)
         {
-            zonePoints = entitySpellCaster.PreviewSpellZone(choosenSpell, rangePoint, rangePoints);
+            zonePoints = entitySpellCaster.PreviewSpellZone(choosenSpell, rangePoint, rangePoints, false);
             foreach (WayPoint zonePoint in zonePoints)
             {
-                if (!targetPointsDict.ContainsKey(zonePoint) /*&& !await CheckInvertShot(zonePoint,rangePoint,choosenSpell)*/)
+                if (!targetPointsDict.ContainsKey(zonePoint))
                     targetPointsDict.Add(zonePoint, new List<WayPoint>());
                 targetPointsDict[zonePoint].Add(rangePoint);
             }
@@ -142,13 +136,6 @@ public class EnemyEntity : Entity
         await UniTask.Delay(500);
         entitySpellCaster.StopSpellRangePreview(ref rangePoints);
 
-        List<WayPoint> allTargetPoints = new List<WayPoint>();
-        allTargetPoints.AddRange(targetPointsDict.Keys);
-
-        foreach (WayPoint point in allTargetPoints)
-        {
-            point.ChangeTileColor(point._zoneMaterial);
-        }
 
         WayPoint choosenTargetPoint = null;
         WayPoint pointToSelect = null;
@@ -161,24 +148,29 @@ public class EnemyEntity : Entity
 
             GetInvertShot(choosenTargetPoint, targetPointsDict[choosenTargetPoint][0], choosenSpell, out pointToSelect);
 
+            print("singe encore encore");
+
             rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint, false);
             zonePoints = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints, false);
-            targetPointsDict[choosenTargetPoint].RemoveAt(0);
+
+            targetPointsDict[choosenTargetPoint].Remove(targetPointsDict[choosenTargetPoint][0]);
+
+            if (targetPointsDict[choosenTargetPoint].Count == 0)
+                targetPointsDict.Remove(choosenTargetPoint);
+
+            await UniTask.Yield();
         }
+
+        // possibilité pour pas qu'elle se tire dessus ? ça serait rigolo n la stock qq part si ça se touche et on réésaie. si pas de solution on utilise celle qui touche
 
         await UniTask.Delay(1000);
 
         bool targetReached = await MoveToward(choosenTargetPoint); // le point le plus proche de lancé de sort
 
-        foreach (WayPoint point in allTargetPoints)
-        {
-            point.ChangeTileColor(point._normalMaterial);
-        }
-
         if (targetReached)
         {
             print("attack !");
-            rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint);
+            rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint, false);
             await UniTask.Delay(2000);
             zonePoints = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints);
             await UniTask.Delay(2000);
@@ -198,23 +190,8 @@ public class EnemyEntity : Entity
 
         pointToSelect = GraphMaker.Instance.serializedPointDict[selfPointPos + (zonePointPos - rangepointPos)];
 
+        print(pointToSelect);
+
         return pointToSelect;
-    }
-
-    async UniTask<bool> CheckInvertShot(WayPoint originalTarget, WayPoint rangeTarget, SpellData choosenSpell, bool cancelPreview = true)
-    {
-        WayPoint pointToSelect;
-        GetInvertShot(originalTarget, rangeTarget, choosenSpell, out pointToSelect);
-
-        List<WayPoint> rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, originalTarget);
-
-        pointToSelect.ChangeTileColor(pointToSelect._walkableMaterial);
-
-        await UniTask.Delay(200);
-
-        if (cancelPreview)
-            entitySpellCaster.StopSpellRangePreview(ref rangePoints);
-
-        return rangePoints.Contains(pointToSelect);
     }
 }

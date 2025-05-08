@@ -138,7 +138,7 @@ public static class Tools
         return closest;
     }
 
-    public static WayPoint FindClosestFloodPoint(this Dictionary<WayPoint,List<WayPoint>>.KeyCollection wayPoints, Dictionary<WayPoint, int> floodDict = null)
+    public static WayPoint FindClosestFloodPoint(this Dictionary<WayPoint, List<WayPoint>>.KeyCollection wayPoints, Dictionary<WayPoint, int> floodDict = null)
     {
         WayPoint closest = null;
         int closestDistance = int.MaxValue;
@@ -217,7 +217,7 @@ public static class Tools
         return PointDistanceDict;
     }
 
-    public static Dictionary<WayPoint, int> SmallFlood(WayPoint startPoint, int range)
+    public static Dictionary<WayPoint, int> SmallFlood(WayPoint startPoint, int range, bool includesEntities = false, bool includesObstructed = false)
     {
         Dictionary<WayPoint, int> PointDistanceDict = new();
         Queue<(WayPoint, int)> queue = new();
@@ -232,7 +232,7 @@ public static class Tools
 
             if (distance < range)
                 foreach (var neighbor in node.Neighbours)
-                    if (neighbor is WayPoint point && !visited.Contains(point) /*&& point.State != WaypointState.Obstructed*/)
+                    if (neighbor is WayPoint point && !visited.Contains(point) && !(includesEntities && point.State == WaypointState.HasEntity) && !(includesObstructed && point.State == WaypointState.Obstructed))
                     {
                         queue.Enqueue((point, distance + 1));
                         visited.Add(point);
@@ -243,22 +243,6 @@ public static class Tools
     public static void ClearFlood()
     {
         FloodDict.Clear();
-    }
-
-    public static List<WayPoint> GetWaypointsInRange(int range, Dictionary<WayPoint, int> floodDict = null)
-    {
-        if (floodDict == null)
-            floodDict = FloodDict;
-
-        List<WayPoint> wayPoints = new();
-
-        foreach (WayPoint point in floodDict.Keys)
-        {
-            if (floodDict[point] <= range && floodDict[point] >= range - SpellCaster.RangeRingThickness)
-                wayPoints.Add(point);
-        }
-
-        return wayPoints;
     }
 
     public static bool CheckMouseRay(out WayPoint point, bool blockedByUi = false)
