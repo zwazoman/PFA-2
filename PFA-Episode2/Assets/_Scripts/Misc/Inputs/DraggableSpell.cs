@@ -1,27 +1,42 @@
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class DraggableSpell : Draggable
 {
     [HideInInspector] public SpellData spell;
-
     [HideInInspector] public SpellCaster spellCaster;
-
     [SerializeField] PremadeSpell _premadeSpell;
 
     WayPoint _currentPoint = null;
-
     List<WayPoint> _rangePoints = new();
+
+    [Header("scene references")]
+    [SerializeField] private Image image;
+
+    public void SetUp(SpellData spell,Entity player)
+    {
+        if(spell.Sprite != null)
+            image.sprite = spell.Sprite;
+
+        this.spell = spell;
+        spellCaster = player.entitySpellCaster;
+    }
+
 
     protected override void Awake()
     {
+        base.Awake();
+
         if (_premadeSpell != null)
             spell = _premadeSpell.SpellData;
     }
 
     public async UniTask BeginDrag()
     {
+        Debug.Log("begin drag");
         if (isDragging)
         {
             spellCaster.entity.ClearWalkables();
@@ -41,6 +56,8 @@ public class DraggableSpell : Draggable
                 _currentPoint = point;
 
                 spellCaster.StopSpellZonePreview(_rangePoints, ref zonePoints);
+                Debug.Log("null spell : " + spell == null);
+                Debug.Log("spell name : " + spell.Name);
                 zonePoints = spellCaster.PreviewSpellZone(spell, point, _rangePoints);
             }
             else if (point == null)
@@ -49,6 +66,7 @@ public class DraggableSpell : Draggable
                 _currentPoint = null;
             }
             await UniTask.Yield();
+            Debug.Log("Dragging");
         }
 
         WayPoint wayPoint = _currentPoint;

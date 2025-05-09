@@ -35,6 +35,9 @@ public class SpellCaster : MonoBehaviour
 
     public List<WayPoint> PreviewSpellZone(SpellData spell, WayPoint targetedPoint, List<WayPoint> rangePoints, bool showZone = true)
     {
+        Debug.Log("null spell : " + spell == null);
+        Debug.Log("spell name : " + spell.Name);
+
         if (!rangePoints.Contains(targetedPoint)) return null;
 
         List<WayPoint> zonePoints = new();

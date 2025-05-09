@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.Collections.Generic;
 
 public class CombatUiManager : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class CombatUiManager : MonoBehaviour
     #endregion
 
     [SerializeField] public AnimatedPanel playerHUD;
-
     [SerializeField] public EndButton endButton;
+
+    [SerializeField] public List<Transform> SpellSlots = new();
 }

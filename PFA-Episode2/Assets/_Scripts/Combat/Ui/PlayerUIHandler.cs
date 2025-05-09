@@ -6,7 +6,7 @@ public class PlayerUIHandler : MonoBehaviour
 {
     [SerializeField] PlayerEntity _player;
 
-    [SerializeField] GameObject _uiSpellPrefab;
+    [SerializeField] DraggableSpell _uiSpellPrefab;
 
     private void Awake()
     {
@@ -17,33 +17,26 @@ public class PlayerUIHandler : MonoBehaviour
     private void Start()
     {
         AssignEndTurnButton();
+
         if (GameManager.Instance.playerInventory != null)
         {
-            Debug.Log("boule 2 ");
-
-            foreach (SpellData spell in GameManager.Instance.playerInventory.Spells)
+            //instantiate draggable spell slots
+            for (
+                int i = 0;
+                i < Mathf.Min(3, GameManager.Instance.playerInventory.Spells.Count);
+                i++)
             {
-                Debug.Log("creation du spell");
-                CreateSpellUI(spell);
+                CreateSpellUI(GameManager.Instance.playerInventory.Spells[i],i);
             }
         }
     }
 
-    void CreateSpellUI(SpellData spellData)
+    void CreateSpellUI(SpellData spellData,int i)
     {
-        GameObject uiSpell = Instantiate(_uiSpellPrefab, CombatUiManager.Instance.playerHUD.transform);
+        DraggableSpell draggableSpellSlot = Instantiate(_uiSpellPrefab, CombatUiManager.Instance.SpellSlots[i]);
+        draggableSpellSlot.SetUp(spellData, _player);
 
-        Image spellImage;
-        DraggableSpell draggableSpell;
-
-        uiSpell.TryGetComponent(out spellImage);
-        uiSpell.TryGetComponent(out draggableSpell);
-
-        spellImage.sprite = spellData.Sprite;
-        draggableSpell.spell = spellData;
-        draggableSpell.spellCaster = _player.entitySpellCaster;
-
-        _player.spellsUI.Add(draggableSpell);
+        _player.spellsUI.Add(draggableSpellSlot);
     }
 
     void AssignEndTurnButton()
