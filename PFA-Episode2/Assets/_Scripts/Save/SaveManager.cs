@@ -11,10 +11,15 @@ public static class SaveManager
     {
         InventoryWrapper inventoryWrapper = new();
 
+        if (GameManager.Instance.playerInventory.Spells.Count > 0 )
+        {
+            Debug.Log(GameManager.Instance.playerInventory.Spells[0].Name);
+        }
+
         foreach (SpellData spd in GameManager.Instance.playerInventory.Spells)
         {
             SpellData spell = spd;
-
+            Debug.Log(spell.Name);
             InventoryData sdata = new()
             {
                 type = "Spell",
@@ -85,7 +90,7 @@ public static class SaveManager
 
         string json = File.ReadAllText(path);
 
-        if (SaveMapGeneration.Instance.Encrypt)
+        if (SaveMapGeneration.Instance.Encrypt && SaveMapGeneration.Instance != null)
         {
             json = SaveMapGeneration.Instance.EncryptDecrypt(json);
         }
