@@ -92,13 +92,13 @@ public class CombatManager : MonoBehaviour
     async UniTask GameOver()
     {
         print("Game Over");
-
+        Application.Quit();
     }
 
     async UniTask Victory()
     {
         print("Victory");
-
+        await SceneTransitionManager.Instance.GoToScene("WorldMap");
     }
 
 }
