@@ -132,6 +132,7 @@ public class CookingPot : MonoBehaviour
         //if (sauce == null) return false;
 
         spell = Crafting.CraftNewSpell(ingredients.ToArray(),sauce == null ? _defaultSauce : sauce);
+        GameManager.Instance.playerInventory.Spells.Add(spell);
 
         return true;
     }
