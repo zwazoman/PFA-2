@@ -29,6 +29,21 @@ public class CombatManager : MonoBehaviour
     public List<PlayerEntity> PlayerEntities = new();
     public List<EnemyEntity> EnemyEntities = new();
 
+    #region entity registration
+
+    public void RegisterEntity(Entity entity)
+    {
+        if(entity is  PlayerEntity)
+        {
+            PlayerEntities.Add((PlayerEntity)entity);
+        }else if (entity is EnemyEntity)
+        {
+            EnemyEntities.Add((EnemyEntity)entity);
+        } 
+    }
+
+    #endregion
+
     private async void Start()
     {
         await UniTask.Yield();

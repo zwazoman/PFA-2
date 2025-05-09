@@ -1,5 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
@@ -8,10 +10,10 @@ public class EntityStats
     public Entity owner;
 
     /// <summary>
-    /// float : Damage taken
+    /// float : health delta
     /// float : new HP
     /// </summary>
-    public event Action<float, float> OnDamageTaken;
+    public List<HealthUpdateFeeback> healthFeedbackTasks = new();
 
     public float maxHealth;
     public int maxMovePoints;
@@ -33,26 +35,38 @@ public class EntityStats
             damage = damageRemain;
         }
 
-        await ApplyHealth(damage);
+        await ApplyHealth(-damage);
 
     }
 
-    public async UniTask ApplyHealth(float heal)
+    public async UniTask ApplyHealth(float delta)
     {
-        currentHealth += heal;
+        currentHealth += delta;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
-        if (currentHealth >= maxHealth)
-            currentHealth = maxHealth;
-        else if (currentHealth <= 0)
-            await owner.Die();
+        //feedbacks
+        UniTask[] tasks = new UniTask[healthFeedbackTasks.Count];
+        for (int i = 0; i < healthFeedbackTasks.Count; i++)
+        {
+            HealthUpdateFeeback task = healthFeedbackTasks[i];
+            tasks[i] = task(delta, currentHealth);
+        }
+        await UniTask.WhenAll(tasks);
+
+        //healthFeedbackTasks?.Invoke(delta, currentHealth);
+
+        if (currentHealth <= 0)
+        await owner.Die();
 
     }
 
-    public async UniTask ApplyShield(float shield)
+    public async UniTask ApplyShield(float delta)
     {
-        shieldAmount += shield;
+        shieldAmount += delta;
 
         if (shieldAmount < 0)
             shieldAmount = 0;
     }
 }
+
+public delegate UniTask HealthUpdateFeeback(float delta, float newHealth);

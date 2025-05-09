@@ -18,15 +18,15 @@ public class EnemyEntity : Entity
     {
         base.Awake();
 
-        entityStats.maxHealth = Data.MaxHealth;
-        entityStats.maxMovePoints = Data.MaxMovePoints;
+        stats.maxHealth = Data.MaxHealth;
+        stats.maxMovePoints = Data.MaxMovePoints;
     }
 
     protected override void Start()
     {
         base.Start();
 
-        CombatManager.Instance.EnemyEntities.Add(this);
+        CombatManager.Instance.RegisterEntity(this);
     }
 
     public override async UniTask PlayTurn()
@@ -41,7 +41,7 @@ public class EnemyEntity : Entity
 
         targetPlayerPoint = FindClosestPlayerPoint();
 
-        if (attacked && entityStats.currentMovePoints > 0)
+        if (attacked && stats.currentMovePoints > 0)
         {
             switch (Data.aiBehaviour)
             {
@@ -82,7 +82,7 @@ public class EnemyEntity : Entity
 
         foreach (PremadeSpell spell in Data.Spells)
         {
-            int spellMaxReach = entityStats.currentMovePoints + spell.SpellData.Range + Mathf.FloorToInt(spell.SpellData.AreaOfEffect.Bounds.width / 2);
+            int spellMaxReach = stats.currentMovePoints + spell.SpellData.Range + Mathf.FloorToInt(spell.SpellData.AreaOfEffect.Bounds.width / 2);
             int targetToMaxReachOffset = Mathf.Abs(spellMaxReach - targetDistance);
             if (targetToMaxReachOffset < offset)
             {
