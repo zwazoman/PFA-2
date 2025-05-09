@@ -22,15 +22,14 @@ public class PlayerEntity : Entity
 
         //edit les valeurs du entityspell avec celles de l'inventaire
 
-        entityStats.maxHealth = maxHealth;
-        entityStats.maxMovePoints = maxMovePoints;
+        stats.maxHealth = maxHealth;
+        stats.maxMovePoints = maxMovePoints;
     }
 
     protected override void Start()
     {
         base.Start();
-
-        CombatManager.Instance.PlayerEntities.Add(this);
+        CombatManager.Instance.RegisterPlayerEntity(this);
     }
 
     public override async UniTask PlayTurn()
