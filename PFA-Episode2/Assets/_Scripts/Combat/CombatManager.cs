@@ -30,21 +30,16 @@ public class CombatManager : MonoBehaviour
     public List<EnemyEntity> EnemyEntities = new();
 
     #region entity registration
-    public void RegisterPlayerEntity(PlayerEntity playerEntity)
-    {
-        PlayerEntities.Add(playerEntity);
-        RegisterEntity(playerEntity);
-    }
 
-    public void RegisterEnnemyEntity(EnemyEntity entity)
+    public void RegisterEntity(Entity entity)
     {
-        EnemyEntities.Add(entity);
-        RegisterEntity(entity);
-    }
-
-    private void RegisterEntity(Entity entity)
-    {
-
+        if(entity is  PlayerEntity)
+        {
+            PlayerEntities.Add((PlayerEntity)entity);
+        }else if (entity is EnemyEntity)
+        {
+            EnemyEntities.Add((EnemyEntity)entity);
+        } 
     }
 
     #endregion

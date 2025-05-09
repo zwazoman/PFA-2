@@ -26,7 +26,7 @@ public class EnemyEntity : Entity
     {
         base.Start();
 
-        CombatManager.Instance.RegisterEnnemyEntity(this);
+        CombatManager.Instance.RegisterEntity(this);
     }
 
     public override async UniTask PlayTurn()

@@ -29,7 +29,8 @@ public class PlayerEntity : Entity
     protected override void Start()
     {
         base.Start();
-        CombatManager.Instance.RegisterPlayerEntity(this);
+        CombatManager.Instance.RegisterEntity(this);
+
     }
 
     public override async UniTask PlayTurn()
