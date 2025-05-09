@@ -16,8 +16,9 @@ public class LightningManager : MonoBehaviour
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     public static void onSceneLoad()
     {
-
+        ((LightningManager)FindAnyObjectByType(typeof(LightningManager))).UpdateLightningInfo();
     }
+
 
     public void UpdateLightningInfo()
     {

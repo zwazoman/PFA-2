@@ -18,15 +18,15 @@ public class EnemyEntity : Entity
     {
         base.Awake();
 
-        entityStats.maxHealth = Data.MaxHealth;
-        entityStats.maxMovePoints = Data.MaxMovePoints;
+        stats.maxHealth = Data.MaxHealth;
+        stats.maxMovePoints = Data.MaxMovePoints;
     }
 
     protected override void Start()
     {
         base.Start();
 
-        CombatManager.Instance.EnemyEntities.Add(this);
+        CombatManager.Instance.RegisterEntity(this);
     }
 
     public override async UniTask PlayTurn()
@@ -39,9 +39,7 @@ public class EnemyEntity : Entity
 
         bool attacked = await TryAttack(ChooseSpell(0).SpellData);
 
-        targetPlayerPoint = FindClosestPlayerPoint();
-
-        if (attacked && entityStats.currentMovePoints > 0)
+        if (attacked && stats.currentMovePoints > 0)
         {
             switch (Data.aiBehaviour)
             {
@@ -82,7 +80,7 @@ public class EnemyEntity : Entity
 
         foreach (PremadeSpell spell in Data.Spells)
         {
-            int spellMaxReach = entityStats.currentMovePoints + spell.SpellData.Range + Mathf.FloorToInt(spell.SpellData.AreaOfEffect.Bounds.width / 2);
+            int spellMaxReach = stats.currentMovePoints + spell.SpellData.Range + Mathf.FloorToInt(spell.SpellData.AreaOfEffect.Bounds.width / 2);
             int targetToMaxReachOffset = Mathf.Abs(spellMaxReach - targetDistance);
             if (targetToMaxReachOffset < offset)
             {
@@ -165,16 +163,21 @@ public class EnemyEntity : Entity
 
         if (targetReached)
         {
-            print("attack !");
-            rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint);
-            await UniTask.Delay(1000);
-            zonePoints = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints);
-            await UniTask.Delay(1000);
-            await entitySpellCaster.TryCastSpell(choosenSpell, pointToSelect, rangePoints, zonePoints);
-
-            return true;
+            return await CastSpell(rangePoints,zonePoints,choosenSpell,choosenTargetPoint,pointToSelect);
         }
         return false;
+    }
+
+    async UniTask<bool> CastSpell(List<WayPoint> rangePoints, List<WayPoint> zonePoints, SpellData choosenSpell, WayPoint choosenTargetPoint, WayPoint pointToSelect)
+    {
+        print("attack !");
+        rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint);
+        await UniTask.Delay(1000);
+        zonePoints = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints);
+        await UniTask.Delay(1000);
+        await entitySpellCaster.TryCastSpell(choosenSpell, pointToSelect, rangePoints, zonePoints);
+
+        return targetPlayerPoint.Content != null;
     }
 
     WayPoint GetInvertShot(WayPoint originalTarget, WayPoint rangeTarget, SpellData choosenSpell, out WayPoint pointToSelect)
