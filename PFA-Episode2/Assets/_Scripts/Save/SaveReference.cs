@@ -40,11 +40,15 @@ public class SaveReference : MonoBehaviour
     {
         ScriptableObject scriptableObject = null;
 
+        Debug.Log("bite");
         for (int i = 0; i < ScriptableObjects.Count; i++)
         {
+            Debug.Log("bite1");
             if (ScriptableObjects[i].name == name)
             {
+                Debug.Log("bite2");
                 scriptableObject = ScriptableObjects[i];
+                Debug.Log(scriptableObject);
             }
         }
 
