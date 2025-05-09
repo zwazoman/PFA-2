@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
-
+#if UNITY_EDITOR
 public class IconRenderer : MonoBehaviour
 {
     [Header("References")]
@@ -181,5 +181,7 @@ public class IconRendererEditor : Editor
         
     }
 }
+
+#endif
 
 #endif
