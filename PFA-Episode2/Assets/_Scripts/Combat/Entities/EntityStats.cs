@@ -1,45 +1,58 @@
+using Cysharp.Threading.Tasks;
 using System;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class EntityStats
 {
-    public event Action OnDie;
+    public Entity owner;
+
+    /// <summary>
+    /// float : Damage taken
+    /// float : new HP
+    /// </summary>
+    public event Action<float, float> OnDamageTaken;
 
     public float maxHealth;
-    public float shieldAmount;
     public int maxMovePoints;
 
+    public float shieldAmount;
     public int currentMovePoints;
-    public float _currentHealth;
+    public float currentHealth;
 
-    public void ApplyDamage(float damage)
+
+
+    public async UniTask ApplyDamage(float damage)
     {
-        if(shieldAmount > 0)
+        Debug.Log("apply damage");
+
+        if (shieldAmount > 0)
         {
             float damageRemain = Mathf.Abs(shieldAmount - damage);
-            ApplyShield(damage);
+            await ApplyShield(damage);
             damage = damageRemain;
         }
 
-        ApplyHealth(damage);
-            
+        await ApplyHealth(damage);
+
     }
 
-    public void ApplyHealth(float heal)
+    public async UniTask ApplyHealth(float heal)
     {
-        _currentHealth += heal;
+        currentHealth += heal;
 
-        if (_currentHealth >= maxHealth)
-            _currentHealth = maxHealth;
-        else if (_currentHealth <= 0)
-            OnDie?.Invoke();
+        if (currentHealth >= maxHealth)
+            currentHealth = maxHealth;
+        else if (currentHealth <= 0)
+            await owner.Die();
+
     }
 
-    public void ApplyShield(float shield)
+    public async UniTask ApplyShield(float shield)
     {
         shieldAmount += shield;
 
-        if(shieldAmount < 0)
+        if (shieldAmount < 0)
             shieldAmount = 0;
     }
 }

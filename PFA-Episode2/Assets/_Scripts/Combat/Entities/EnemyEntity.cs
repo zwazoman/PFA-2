@@ -46,6 +46,7 @@ public class EnemyEntity : Entity
             switch (Data.aiBehaviour)
             {
                 case AIBehaviour.Intrepid:
+                    //check si les walkables contiennent le joueur (si oui le retirer)
                     await MoveToward(targetPlayerPoint);
                     break;
                 case AIBehaviour.Coward:
@@ -83,7 +84,7 @@ public class EnemyEntity : Entity
         {
             int spellMaxReach = entityStats.currentMovePoints + spell.SpellData.Range + Mathf.FloorToInt(spell.SpellData.AreaOfEffect.Bounds.width / 2);
             int targetToMaxReachOffset = Mathf.Abs(spellMaxReach - targetDistance);
-            if(targetToMaxReachOffset < offset)
+            if (targetToMaxReachOffset < offset)
             {
                 offset = targetToMaxReachOffset;
                 choosenSpell = spell;
@@ -99,12 +100,9 @@ public class EnemyEntity : Entity
         foreach (PlayerEntity player in CombatManager.Instance.PlayerEntities)
         {
             points.Add(player.currentPoint);
-            print(Tools.FloodDict[player.currentPoint]);
         }
 
         WayPoint result = points.FindClosestFloodPoint();
-
-        print(result);
 
         return result;
     }
@@ -116,73 +114,80 @@ public class EnemyEntity : Entity
     /// <returns></returns>
     protected async UniTask<bool> TryAttack(SpellData choosenSpell)
     {
-        targetPlayerPoint.ChangeTileColor(targetPlayerPoint._zoneMaterial);
+        Dictionary<WayPoint, List<WayPoint>> targetPointsDict = new();
 
-        Dictionary<WayPoint, WayPoint> targetPointsDict = new();
+        List<WayPoint> rangePoints;
+        List<WayPoint> zonePoints;
 
-        //créé le dict zonePoint,targetPoint
-        entitySpellCaster.PreviewSpellRange(choosenSpell, targetPlayerPoint, true);
-        await UniTask.Delay(300);
-        foreach (WayPoint rangePoint in entitySpellCaster.RangePoints)
+        rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, targetPlayerPoint, false, true);
+
+        foreach (WayPoint rangePoint in rangePoints)
         {
-            entitySpellCaster.PreviewSpellZone(choosenSpell, rangePoint);
-            foreach (WayPoint zonePoint in entitySpellCaster.ZonePoints)
+            zonePoints = entitySpellCaster.PreviewSpellZone(choosenSpell, rangePoint, rangePoints, false);
+            foreach (WayPoint zonePoint in zonePoints)
             {
-                if(!targetPointsDict.ContainsKey(zonePoint))
-                    targetPointsDict.Add(zonePoint, rangePoint);
-                //faut tirer des raycasts
+                if (!targetPointsDict.ContainsKey(zonePoint))
+                    targetPointsDict.Add(zonePoint, new List<WayPoint>());
+                targetPointsDict[zonePoint].Add(rangePoint);
             }
-            await UniTask.Delay(100);
-            entitySpellCaster.StopSpellZonePreview();
         }
-        await UniTask.Delay(300);
-        entitySpellCaster.StopSpellRangePreview();
 
-        List<WayPoint> allTargetPoints = new List<WayPoint>();
-        allTargetPoints.AddRange(targetPointsDict.Keys);
 
-        foreach(WayPoint point in allTargetPoints)
+        WayPoint choosenTargetPoint = null;
+        WayPoint pointToSelect = null;
+
+        zonePoints = null;
+
+        while (zonePoints == null)
         {
-            point.ChangeTileColor(point._zoneMaterial);
+            choosenTargetPoint = targetPointsDict.Keys.FindClosestFloodPoint();
+
+            GetInvertShot(choosenTargetPoint, targetPointsDict[choosenTargetPoint][0], choosenSpell, out pointToSelect);
+
+            print("singe encore encore");
+
+            rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint, false );
+            zonePoints = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints, false);
+
+            targetPointsDict[choosenTargetPoint].Remove(targetPointsDict[choosenTargetPoint][0]);
+
+            if (targetPointsDict[choosenTargetPoint].Count == 0)
+                targetPointsDict.Remove(choosenTargetPoint);
+
+            await UniTask.Yield();
         }
 
-        WayPoint choosenTargetPoint = allTargetPoints.FindClosestFloodPoint();
-
-        print(choosenTargetPoint);
-
-        await UniTask.Delay(1000);
-
-        choosenTargetPoint.ChangeTileColor(choosenTargetPoint._rangeMaterial);
+        // possibilité pour pas qu'elle se tire dessus ? ça serait rigolo n la stock qq part si ça se touche et on réésaie. si pas de solution on utilise celle qui touche
 
         await UniTask.Delay(1000);
 
         bool targetReached = await MoveToward(choosenTargetPoint); // le point le plus proche de lancé de sort
 
-        foreach (WayPoint point in allTargetPoints)
-        {
-            point.ChangeTileColor(point._normalMaterial);
-        }
-
         if (targetReached)
         {
             print("attack !");
-
-            WayPoint selected = targetPointsDict[choosenTargetPoint];
-
-            Vector3Int selfPointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(currentPoint);
-            Vector3Int zonePointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(targetPlayerPoint);
-            Vector3Int rangepointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(selected);
-
-            WayPoint pointToSelect = GraphMaker.Instance.serializedPointDict[selfPointPos + (zonePointPos - rangepointPos)];
-
-            entitySpellCaster.PreviewSpellRange(choosenSpell);
-            await UniTask.Delay(2000);
-            entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect);
-            await UniTask.Delay(2000);
-            await entitySpellCaster.TryCastSpell(choosenSpell, pointToSelect);
+            rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint);
+            await UniTask.Delay(1000);
+            zonePoints = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints);
+            await UniTask.Delay(1000);
+            await entitySpellCaster.TryCastSpell(choosenSpell, pointToSelect, rangePoints, zonePoints);
 
             return true;
         }
         return false;
+    }
+
+    WayPoint GetInvertShot(WayPoint originalTarget, WayPoint rangeTarget, SpellData choosenSpell, out WayPoint pointToSelect)
+    {
+
+        Vector3Int selfPointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(originalTarget);
+        Vector3Int zonePointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(targetPlayerPoint);
+        Vector3Int rangepointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(rangeTarget);
+
+        pointToSelect = GraphMaker.Instance.serializedPointDict[selfPointPos + (zonePointPos - rangepointPos)];
+
+        print(pointToSelect);
+
+        return pointToSelect;
     }
 }

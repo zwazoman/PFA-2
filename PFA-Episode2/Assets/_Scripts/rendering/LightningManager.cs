@@ -4,12 +4,20 @@ public class LightningManager : MonoBehaviour
 {
     [Header("Lightning")]
     [SerializeField] Texture2D _gradientMap;
-    [SerializeField][Range(0,1)] float _enviroID;
+    [SerializeField] [Range(0,1)] float _enviroID;
     [SerializeField] float _bands = 5;
 
     [Header("Stippling")]
     [SerializeField] Texture2D _stippling;
     [SerializeField] float _stipplingTiling = 1;
+
+
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    public static void onSceneLoad()
+    {
+
+    }
 
     public void UpdateLightningInfo()
     {
@@ -24,4 +32,11 @@ public class LightningManager : MonoBehaviour
     {
         UpdateLightningInfo();
     }
+
+    private void Start()
+    {
+        UpdateLightningInfo();
+    }
+
+
 }
