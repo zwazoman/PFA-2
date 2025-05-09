@@ -66,9 +66,9 @@ public class PlayerMap : MonoBehaviour
 
     async UniTask MoveTo(Vector3 targetPos) //Faut pas qu'il se lance au start
     {
-        while (Vector3.Distance(transform.position, targetPos) > 0.1f)
+        while (Vector3.Distance(transform.position, targetPos) > 0.1f) 
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, speed) * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
             await UniTask.Yield();
         }
     }

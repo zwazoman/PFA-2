@@ -71,7 +71,6 @@ public class ChooseIngredient : MonoBehaviour
         int total = _probaCommon + _probaSavoureux + _probaDivin;
         int result = Random.Range(1, total + 1);
 
-        print(result);
         if (result <= _probaDivin && _listSauceDivin.Count != 0) //Divin
         {
             //_probaDivin = 0;

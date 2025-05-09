@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using System.Linq;
 
 public class CombatManager : MonoBehaviour
 {
@@ -33,13 +34,29 @@ public class CombatManager : MonoBehaviour
 
     public void RegisterEntity(Entity entity)
     {
-        if(entity is  PlayerEntity)
+        if (entity is PlayerEntity)
         {
             PlayerEntities.Add((PlayerEntity)entity);
-        }else if (entity is EnemyEntity)
+        }
+        else if (entity is EnemyEntity)
         {
             EnemyEntities.Add((EnemyEntity)entity);
-        } 
+        }
+    }
+
+    public async UniTask UnRegisterEntity(Entity entity)
+    {
+        if (entity is PlayerEntity && PlayerEntities.Contains(entity))
+        {
+            PlayerEntities.Remove((PlayerEntity)entity);
+            await GameOver();
+        }
+        else if (entity is EnemyEntity && EnemyEntities.Contains(entity))
+        {
+            EnemyEntities.Remove((EnemyEntity)entity);
+            if (EnemyEntities.Count == 0)
+                await Victory();
+        }
     }
 
     #endregion
@@ -52,16 +69,18 @@ public class CombatManager : MonoBehaviour
 
     public async UniTask StartGame()
     {
-        for(; ; )
+        for (; ; )
         {
-            foreach(PlayerEntity player in PlayerEntities)
+            for (int i = 0; i < PlayerEntities.Count; i++)
             {
+                PlayerEntity player = PlayerEntities[i];
                 if (player == null) continue;
                 await player.PlayTurn();
             }
-                
-            foreach(EnemyEntity enemy in EnemyEntities)
+
+            for (int i = 0; i < EnemyEntities.Count; i++)
             {
+                EnemyEntity enemy = EnemyEntities[i];
                 if (enemy == null) continue;
                 await enemy.PlayTurn();
             }
@@ -69,4 +88,17 @@ public class CombatManager : MonoBehaviour
             await UniTask.Yield();
         }
     }
+
+    async UniTask GameOver()
+    {
+        print("Game Over");
+        Application.Quit();
+    }
+
+    async UniTask Victory()
+    {
+        print("Victory");
+        await SceneTransitionManager.Instance.GoToScene("WorldMap");
+    }
+
 }

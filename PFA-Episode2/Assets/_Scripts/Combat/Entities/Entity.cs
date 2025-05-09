@@ -121,7 +121,6 @@ public class Entity : MonoBehaviour
         currentPoint = choosenPoint;
     }
 
-
     /// <summary>
     /// fait se déplacer l'entité vers la case la plus proche de la target
     /// </summary>
@@ -223,8 +222,11 @@ public class Entity : MonoBehaviour
 
     public async UniTask Die()
     {
+        print("Die");
+
         currentPoint.StepOff();
         Destroy(gameObject);
+        await CombatManager.Instance.UnRegisterEntity(this);
         //si il ets entrain de jouer EndTurn
     }
 }
