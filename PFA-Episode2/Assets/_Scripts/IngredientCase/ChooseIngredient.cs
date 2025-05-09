@@ -19,12 +19,13 @@ public class ChooseIngredient : MonoBehaviour
 
     [Header("Probability")]
 
-    [SerializeField] [Range(0, 100)] private int _probaSauce;
-    [SerializeField] [Range(0, 100)] private int _probaCommon;
-    [SerializeField] [Range(0, 100)] private int _probaSavoureux;
-    [SerializeField] [Range(0, 100)] private int _probaDivin;
+    [SerializeField][Range(0, 100)] private int _probaSauce;
+    [SerializeField][Range(0, 100)] private int _probaCommon;
+    [SerializeField][Range(0, 100)] private int _probaSavoureux;
+    [SerializeField][Range(0, 100)] private int _probaDivin;
 
     public List<IngredientBase> IngredientBaseChoose { get; private set; } = new();
+    private List<IngredientBase> _listTooPush = new();
 
     public static ChooseIngredient Instance;
 
@@ -45,17 +46,21 @@ public class ChooseIngredient : MonoBehaviour
                 if (IsSauce())
                 {
                     IngredientBaseChoose.Add(ReturnSauceChoose());
+                    _listTooPush.Add(ReturnSauceChoose());
                 }
                 else
                 {
                     IngredientBaseChoose.Add(ReturnIngredientChoose());
+                    _listTooPush.Add(ReturnSauceChoose());
                 }
             }
+            SetupIngredientUI.Instance.ListListIngredient.Add(_listTooPush);
+            _listTooPush.Clear();
             //_probaSavoureux = TempoProbaSavoureux;
             //_probaDivin = TempoProbaDivin;
             _probaSauce = TempoProbaSauce;
         }
-        for(int i = 0; i != IngredientBaseChoose.Count; i++)
+        for (int i = 0; i != IngredientBaseChoose.Count; i++)
         {
             SetupIngredientUI.Instance.SetupInfo(IngredientBaseChoose[i], i);
         }
@@ -128,6 +133,6 @@ public class ChooseIngredient : MonoBehaviour
     {
         int numberChoose = Random.Range(0, 101);
         if (numberChoose > _probaSauce) { return false; }
-        else { return true; } 
+        else { return true; }
     }
 }
