@@ -5,6 +5,5 @@ public interface ISavable<T> where T : ISavable<T>
     /// </summary>
     /// <param name="SaveFileID"></param>
     public abstract void Save(byte SaveFileID);
-
 }
 

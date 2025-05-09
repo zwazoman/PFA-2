@@ -38,12 +38,14 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(this);
             
             dishCombinationData = Resources.Load<DishCombinationData>("DishCombinationData");
-            
+
             //@temp
             foreach (PremadeSpell premadeSpell in premadeSpells)
             {
                 playerInventory.Spells.Add(premadeSpell.SpellData);
             }
+
+            LoadOrCreateSave();
         }
         else
         {
@@ -55,6 +57,6 @@ public class GameManager : MonoBehaviour
 
     void LoadOrCreateSave()
     {
-        playerInventory = SaveManager.Load<Inventory>(0);
+        playerInventory = SaveManager.Load(0);
     }
 }

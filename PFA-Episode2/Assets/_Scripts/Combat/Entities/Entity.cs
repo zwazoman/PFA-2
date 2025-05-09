@@ -3,25 +3,23 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
+using UnityEngine.Tilemaps;
 
-[RequireComponent(typeof(Health))]
 [RequireComponent(typeof(SpellCaster))]
 public class Entity : MonoBehaviour
 {
-    [HideInInspector] public WayPoint CurrentPoint;
-    [HideInInspector] public Health EntityHealth;
-    [HideInInspector] public SpellCaster EntitySpellCaster;
+    public EntityStats entityStats = new();
 
-    [SerializeField] public int MaxMovePoints;
-    protected int currentMovePoints;
+    [HideInInspector] public WayPoint currentPoint;
+    [HideInInspector] public SpellCaster entitySpellCaster;
 
-    protected Dictionary<WayPoint,int> WaypointDistance = new Dictionary<WayPoint,int>();
+    protected Dictionary<WayPoint, int> WaypointDistance = new Dictionary<WayPoint, int>();
     protected List<WayPoint> Walkables = new List<WayPoint>();
 
     protected virtual void Awake()
     {
-        TryGetComponent(out EntityHealth);
-        TryGetComponent(out EntitySpellCaster);
+        TryGetComponent(out entitySpellCaster);
+        entityStats.owner = this;
     }
 
     protected virtual void Start()
@@ -30,15 +28,19 @@ public class Entity : MonoBehaviour
         //transform.position = roundedPos;
         //transform.position += Vector3.up * 1.3f;
 
-        CurrentPoint = GraphMaker.Instance.serializedPointDict[roundedPos];
-        CurrentPoint.StepOn(this);
+        currentPoint = GraphMaker.Instance.serializedPointDict[roundedPos]; 
+        currentPoint.StepOn(this);
+
+        entityStats.currentHealth = entityStats.maxHealth;
+        entityStats.currentMovePoints = entityStats.maxMovePoints;
     }
 
     public virtual async UniTask PlayTurn()
     {
         print(gameObject.name);
-        Tools.Flood(CurrentPoint);
-        currentMovePoints = MaxMovePoints;
+        Tools.Flood(currentPoint);
+        entityStats.currentMovePoints = entityStats.maxMovePoints;
+        await entityStats.ApplyShield(-1);
     }
 
     public virtual async UniTask EndTurn()
@@ -47,90 +49,41 @@ public class Entity : MonoBehaviour
         ClearWalkables();
     }
 
-    public async UniTask ApplySpell(SpellData spell)
+    public async UniTask ApplySpell(SpellData spell, SpellCastingContext context)
     {
+        print("apply Spell");
         foreach (SpellEffect effect in spell.Effects)
         {
+            switch (effect.effectType)
             {
-                switch (effect.effectType)
-                {
-                    case SpellEffectType.Damage:
-                        EntityHealth.ApplyHealth(-effect.value);
-                        break;
-                    case SpellEffectType.Recoil:
-                        throw new NotImplementedException();
-                    case SpellEffectType.Shield:
-                        EntityHealth.ApplyShield(effect.value);
-                        break;
-                    case SpellEffectType.DamageIncreaseForEachHitEnnemy:
-                        throw new NotImplementedException();
-                    case SpellEffectType.DamageIncreasePercentageByDistanceToCaster:
-                        throw new NotImplementedException();
-                    case SpellEffectType.Fire:
-                        throw new NotImplementedException();
-                }
+                case SpellEffectType.Damage:
+                    await entityStats.ApplyDamage(effect.value);
+                    break;
+                case SpellEffectType.Recoil:
+                    await Push(context.PushDirection);
+                    break;
+                case SpellEffectType.Shield:
+                    await entityStats.ApplyShield(effect.value);
+                    break;
+                case SpellEffectType.DamageIncreaseForEachHitEnnemy:
+                    throw new NotImplementedException();
+                case SpellEffectType.DamageIncreasePercentageByDistanceToCaster:
+                    throw new NotImplementedException();
+                case SpellEffectType.Fire:
+                    throw new NotImplementedException();
             }
         }
     }
-    public virtual async UniTask TryMoveTo(WayPoint targetPoint, bool showTiles = true)
-    {
-        Stack<WayPoint> path = Tools.FindBestPath(CurrentPoint, targetPoint);
-        int pathlength = path.Count;
 
-        if(pathlength > currentMovePoints)
-        {
-            print("plus de pm !");
-            return;
-        }
-
-        foreach(WayPoint p in path)
-        {
-            p.ChangeTileColor(p._walkedMaterial);
-        }
-
-        for (int i = 0; i < pathlength; i++)
-        {
-            CurrentPoint.StepOff();
-
-            WayPoint steppedOnPoint = path.Pop();
-
-            await StartMoving(steppedOnPoint.transform.position);
-
-            CurrentPoint = steppedOnPoint;
-            steppedOnPoint.StepOn(this);
-
-            steppedOnPoint.ChangeTileColor(steppedOnPoint._normalMaterial);
-
-            currentMovePoints--;
-        }
-        Tools.Flood(CurrentPoint);
-        ClearWalkables();
-        ApplyWalkables(showTiles);
-    }
-
-    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 8)
-    {
-        targetPos.y = transform.position.y;
-        Vector3 offset = targetPos - (Vector3)transform.position;
-        Quaternion targetRotation = Quaternion.Euler(0, Mathf.Atan2(offset.z, offset.x) * Mathf.Rad2Deg, 0);
-        transform.rotation = targetRotation;
-        while ((Vector3)transform.position != targetPos)
-        {
-            Vector3 offset2 = targetPos - (Vector3)transform.position;
-            offset2 = Vector3.ClampMagnitude(offset2, Time.deltaTime * moveSpeed);
-            transform.Translate(offset2, Space.World);
-            await Task.Yield();
-        }
-    }
 
     public void ApplyWalkables(bool showTiles = true)
     {
-        if(Walkables.Count == 0)
-            Walkables.AddRange(Tools.GetWaypointsInRange(currentMovePoints));
+        if (Walkables.Count == 0)
+            Walkables.AddRange(Tools.SmallFlood(currentPoint, entityStats.currentMovePoints,true,true).Keys);
 
         foreach (WayPoint point in Walkables)
         {
-            if(point.State == WaypointState.Free)
+            if (point.State == WaypointState.Free)
             {
                 point.ChangeTileColor(point._walkableMaterial);
             }
@@ -146,6 +99,30 @@ public class Entity : MonoBehaviour
         Walkables.Clear();
     }
 
+    async UniTask Push(Vector3Int pushDirection)
+    {
+        WayPoint choosenPoint = null;
+        float damages = 0;
+
+        // si diagonale -> tirer un spherecast dans la direction longueur = force * racine de 2:
+        //si ça touche : pousser le joueur jusqu' au hit
+        //sinon le pousser jusu'a force (condition si hors du terrain/ bloquée mieux que raycast ? tomber dans le vide ?
+        //sinon -> tirer un raycast dans la direction longueur = force
+        //si ça touche pousser de force
+        //sinon -> le pousser jusu'a force (condition si hors du terrain/ bloquée mieux que raycast ? tomber dans le vide ?
+
+        if (damages > 0)
+        {
+            await entityStats.ApplyDamage(damages);
+        }
+
+        await StartMoving(choosenPoint.transform.position);
+
+        choosenPoint.StepOn(this);
+        currentPoint = choosenPoint;
+    }
+
+
     /// <summary>
     /// fait se déplacer l'entité vers la case la plus proche de la target
     /// </summary>
@@ -153,20 +130,19 @@ public class Entity : MonoBehaviour
     /// <returns></returns>
     protected async UniTask<bool> MoveToward(WayPoint targetPoint)
     {
+        print("move !");
+
         await UniTask.Delay(1000);
 
-        if (targetPoint == CurrentPoint)
+        if (targetPoint == currentPoint)
             return true;
 
-        if (Walkables.Contains(targetPoint))
+        if (Walkables.Contains(targetPoint) && targetPoint.State == WaypointState.Free)
         {
             print("target in range !");
             await TryMoveTo(targetPoint);
             return true;
         }
-
-        print("target not in range yet ! getting closer...");
-        print(Tools.FindClosestFloodPoint(Walkables, Tools.SmallFlood(targetPoint, Tools.FloodDict[targetPoint])));
 
         await TryMoveTo(Tools.FindClosestFloodPoint(Walkables, Tools.SmallFlood(targetPoint, Tools.FloodDict[targetPoint])));
         return false;
@@ -194,5 +170,62 @@ public class Entity : MonoBehaviour
         }
 
         await TryMoveTo(furthestPoint);
+    }
+    public virtual async UniTask TryMoveTo(WayPoint targetPoint, bool showTiles = true)
+    {
+        Stack<WayPoint> path = Tools.FindBestPath(currentPoint, targetPoint);
+        int pathlength = path.Count;
+
+        if (pathlength > entityStats.currentMovePoints)
+        {
+            print("plus de pm !");
+            return;
+        }
+
+        foreach (WayPoint p in path)
+        {
+            p.ChangeTileColor(p._walkedMaterial);
+        }
+
+        for (int i = 0; i < pathlength; i++)
+        {
+            currentPoint.StepOff();
+
+            WayPoint steppedOnPoint = path.Pop();
+
+            await StartMoving(steppedOnPoint.transform.position);
+
+            currentPoint = steppedOnPoint;
+            steppedOnPoint.StepOn(this);
+
+            steppedOnPoint.ChangeTileColor(steppedOnPoint._normalMaterial);
+
+            entityStats.currentMovePoints--;
+        }
+        Tools.Flood(currentPoint);
+        ClearWalkables();
+        ApplyWalkables(showTiles);
+    }
+
+    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 8)
+    {
+        targetPos.y = transform.position.y;
+        Vector3 offset = targetPos - (Vector3)transform.position;
+        Quaternion targetRotation = Quaternion.Euler(0, Mathf.Atan2(offset.z, offset.x) * Mathf.Rad2Deg, 0);
+        transform.rotation = targetRotation;
+        while ((Vector3)transform.position != targetPos)
+        {
+            Vector3 offset2 = targetPos - (Vector3)transform.position;
+            offset2 = Vector3.ClampMagnitude(offset2, Time.deltaTime * moveSpeed);
+            transform.Translate(offset2, Space.World);
+            await Task.Yield();
+        }
+    }
+
+    public async UniTask Die()
+    {
+        currentPoint.StepOff();
+        Destroy(gameObject);
+        //si il ets entrain de jouer EndTurn
     }
 }

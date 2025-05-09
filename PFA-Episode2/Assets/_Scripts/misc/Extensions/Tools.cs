@@ -16,6 +16,15 @@ public static class Tools
         return new Vector3Int(Mathf.RoundToInt(initialPos.x), 0, Mathf.RoundToInt(initialPos.z));
     }
 
+    public static bool CheckWallsBetween(WayPoint a, WayPoint b, float heightOffset = 0.7f)
+    {
+        Vector3 aPos = a.transform.position + Vector3.up * heightOffset;
+        Vector3 bPos = b.transform.position + Vector3.up * heightOffset;
+        Vector3 offset = bPos - aPos;
+
+        return Physics.Raycast(aPos, offset, offset.magnitude, LayerMask.GetMask("Wall"));
+    }
+
 
     public static T PickRandom<T>(this T[] array)
     {
@@ -129,6 +138,31 @@ public static class Tools
         return closest;
     }
 
+    public static WayPoint FindClosestFloodPoint(this Dictionary<WayPoint, List<WayPoint>>.KeyCollection wayPoints, Dictionary<WayPoint, int> floodDict = null)
+    {
+        WayPoint closest = null;
+        int closestDistance = int.MaxValue;
+
+        if (floodDict == null)
+            floodDict = FloodDict;
+
+        foreach (WayPoint point in wayPoints)
+        {
+            if (!floodDict.ContainsKey(point))
+            {
+                continue;
+            }
+
+            int pointDistance = floodDict[point];
+            if (pointDistance < closestDistance)
+            {
+                closest = point;
+                closestDistance = pointDistance;
+            }
+        }
+        return closest;
+    }
+
     public static T1 GetKeyFromValue<T1, T2>(this Dictionary<T1, T2> dict, T2 value)
     {
         foreach (var pair in dict)
@@ -183,7 +217,7 @@ public static class Tools
         return PointDistanceDict;
     }
 
-    public static Dictionary<WayPoint, int> SmallFlood(WayPoint startPoint, int range)
+    public static Dictionary<WayPoint, int> SmallFlood(WayPoint startPoint, int range, bool includesEntities = false, bool includesObstructed = false)
     {
         Dictionary<WayPoint, int> PointDistanceDict = new();
         Queue<(WayPoint, int)> queue = new();
@@ -198,7 +232,7 @@ public static class Tools
 
             if (distance < range)
                 foreach (var neighbor in node.Neighbours)
-                    if (neighbor is WayPoint point && !visited.Contains(point) && point.State != WaypointState.Obstructed)
+                    if (neighbor is WayPoint point && !visited.Contains(point) && !(includesEntities && point.State == WaypointState.HasEntity) && !(includesObstructed && point.State == WaypointState.Obstructed))
                     {
                         queue.Enqueue((point, distance + 1));
                         visited.Add(point);
@@ -209,22 +243,6 @@ public static class Tools
     public static void ClearFlood()
     {
         FloodDict.Clear();
-    }
-
-    public static List<WayPoint> GetWaypointsInRange(int range, Dictionary<WayPoint, int> floodDict = null)
-    {
-        if (floodDict == null)
-            floodDict = FloodDict;
-
-        List<WayPoint> wayPoints = new();
-
-        foreach (WayPoint point in floodDict.Keys)
-        {
-            if (floodDict[point] <= range && floodDict[point] >= range - SpellCaster.RangeRingThickness)
-                wayPoints.Add(point);
-        }
-
-        return wayPoints;
     }
 
     public static bool CheckMouseRay(out WayPoint point, bool blockedByUi = false)

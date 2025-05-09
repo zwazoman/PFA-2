@@ -5,6 +5,7 @@ using UnityEngine;
 /// </summary>
 public class InteractDontDestroyOnLoad : MonoBehaviour
 {
+    public Ingredient ingredient;
     // Fonction changer le numéro de la sauvegarde
     public void ChangeSaveID(int id)
     {
@@ -12,7 +13,7 @@ public class InteractDontDestroyOnLoad : MonoBehaviour
     }
 
     // Fonction pour lancer les fonction du SaveManager
-    public void SaveFunction(int function)
+    public void SaveMapFunction(int function)
     {
         switch (function)
         {
@@ -28,9 +29,19 @@ public class InteractDontDestroyOnLoad : MonoBehaviour
         }
     }
 
-    // Fonction pour appeler un changement de scene
-    public void ChangeScene(string sceneName)
+    public void SaveInventoryFunction()
     {
-        StartCoroutine(LoadScene.Instance.SceneLoadingOn(sceneName));
+        GameManager.Instance.playerInventory.Save(0);
+    }
+
+    // Fonction pour appeler un changement de scene
+    public async void ChangeScene(string sceneName)
+    {
+        await SceneTransitionManager.Instance.GoToScene(sceneName);
+    }
+
+    public void Yadesobjets()
+    {
+        GameManager.Instance.playerInventory.Ingredients.Add(ingredient);
     }
 }

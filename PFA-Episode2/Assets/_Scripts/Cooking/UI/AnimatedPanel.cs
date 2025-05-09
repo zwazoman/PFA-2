@@ -11,7 +11,7 @@ public class AnimatedPanel : MonoBehaviour
 
     [Header("Animated Panel")]
     [SerializeField] CanvasGroup _canvasGroup;
-    [SerializeField] private float _scaleJumpOnShow = .2f;
+    [SerializeField] private float _scaleJumpOnShow = 0f;
 
     protected virtual void Awake()
     {
@@ -21,7 +21,7 @@ public class AnimatedPanel : MonoBehaviour
     public void Show()
     {
         _canvasGroup.DOFade(1, TransitionTime);
-        transform.DOPunchScale(Vector3.one * _scaleJumpOnShow, TransitionTime*2);
+        transform.DOPunchScale(Vector3.one * _scaleJumpOnShow, TransitionTime*2,5);
         _canvasGroup.blocksRaycasts = true;
         _canvasGroup.interactable = true;
 

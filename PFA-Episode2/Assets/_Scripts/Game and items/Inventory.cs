@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public class Inventory : ISavable<Inventory>
 {
@@ -9,7 +10,6 @@ public class Inventory : ISavable<Inventory>
 
     public void Save(byte SaveFileID)
     {
-        SaveManager.Save(this, SaveFileID);
+        SaveManager.Save<Inventory>(SaveFileID);
     }
-
 }

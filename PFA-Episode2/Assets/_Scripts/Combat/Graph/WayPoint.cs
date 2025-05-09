@@ -15,6 +15,8 @@ public class WayPoint : MonoBehaviour
     public event Action OnSteppedOn;
     public event Action OnSteppedOff;
 
+    public Vector3Int graphPos;
+
     public List<WayPoint> Neighbours;
 
     public Entity Content;
@@ -44,11 +46,9 @@ public class WayPoint : MonoBehaviour
 
     private void Awake()
     {
-        State = WaypointState.Free;
-
         TryGetComponent(out _mR);
 
-        if(_normalMaterial == null)
+        if(_normalMaterial == null && _mR != null)
             _normalMaterial = _mR.material;
     }
 
@@ -82,17 +82,9 @@ public class WayPoint : MonoBehaviour
         State = WaypointState.Free;
     }
 
-    public async UniTask TryApplySpell(SpellData spell)
-    {
-        if (Content == null)
-            return;
-
-        await Content.ApplySpell(spell);
-    }
-
     public void ChangeTileColor(Material material)
     {
-        if(_mR.material == material) return;
+        if(_mR == null || _mR.material == material) return;
 
         _mR.material = material;
     }

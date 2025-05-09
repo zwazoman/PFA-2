@@ -15,16 +15,24 @@ public class CookingPanel : AnimatedPanel
     [SerializeField] Transform _ustencilsParent;
     [SerializeField] CookingPot _pot;
     [SerializeField] DishInfoPanel _dishInfoPanel;
-    
+
+#if UNITY_EDITOR
     [Header("test")]
     [SerializeField] List<Ingredient> tests = new();
     [SerializeField] List<Sauce> testSauces = new();
+    [SerializeField] bool useTestInventory = false;
+#endif
 
     private void Start()
     {
-        LoadPlayerInventory();
-        return;
 
+#if UNITY_EDITOR
+        if (!useTestInventory)
+        {
+            LoadPlayerInventory();
+            return;
+        }
+#endif
         //@temp --
         Inventory inv = new();
         for(int i = 0; i < 12; i++)

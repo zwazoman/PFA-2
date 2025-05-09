@@ -43,15 +43,6 @@ public class GraphMaker : MonoBehaviour
     private void Awake()
     {
         instance = this;
-
-        if (_generatesGraph)
-            GenerateGraph();
-        else
-            print("singe");
-            //ComposeGraph();
-
-        print(_allWaypoints[10].Neighbours.Count);
-        print(serializedPointDict[new Vector3Int(3, 0, 1)].gameObject.name);
     }
 
     void GenerateGraph()
@@ -94,14 +85,14 @@ public class GraphMaker : MonoBehaviour
         {
             //add points to dictionary
             Vector3Int pointPos = point.transform.position.SnapOnGrid();
+            point.graphPos = pointPos;
             serializedPointDict.Add(pointPos, point);
 
             //set neighbours
             foreach(Vector3 flatDirection in Tools.AllFlatDirections)
             {
                 RaycastHit hit;
-
-                if (Physics.Raycast(point.transform.position + Vector3.up * 0.5f, flatDirection, out hit, 1, LayerMask.GetMask("Waypoint")))
+                if (Physics.Raycast(point.transform.position /*+ Vector3.up * 0.5f*/, flatDirection, out hit, 1, LayerMask.GetMask("Waypoint")))
                     if (hit.collider.TryGetComponent(out WayPoint wayPoint) && !point.Neighbours.Contains(wayPoint))
                         point.Neighbours.Add(wayPoint);
             }
@@ -114,7 +105,10 @@ public class GraphMaker : MonoBehaviour
         serializedPointDict.Clear();
 
         foreach (WayPoint point in _allWaypoints)
+        {
             point.Neighbours.Clear();
+            point.graphPos = Vector3Int.zero;
+        }
     }
 }
 

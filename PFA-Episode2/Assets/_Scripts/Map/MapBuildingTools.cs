@@ -8,8 +8,9 @@ public class MapBuildingTools : MonoBehaviour
 {
     [SerializeField][Tooltip("Image qui sera dupliqué pour faire les chemins entre les nodes")] private Image _origineImage;
     [SerializeField][Tooltip("GameObject parent des chemins, si null alors c'est le porteur du script le parent")] private GameObject _parent;
-    private List<Image> _trailList = new();
+    public List<Image> _trailList = new();
     public bool FirstTimeDraw = true;
+    public List<Image> _savePath = new();
 
     #region Singleton
     public static MapBuildingTools Instance;
@@ -52,6 +53,7 @@ public class MapBuildingTools : MonoBehaviour
             Vector3 dir = PointB.transform.localPosition - PointA.transform.localPosition;
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             CurrentTrail.transform.rotation = Quaternion.Euler(0, 0, angle);
+            _savePath.Add(CurrentTrail);
         }
         else
         {

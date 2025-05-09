@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using System.Drawing;
 
 public class SpellCaster : MonoBehaviour
 {
@@ -8,44 +9,35 @@ public class SpellCaster : MonoBehaviour
 
     [SerializeField] LayerMask _obstacleMask;
 
-    public List<WayPoint> RangePoints = new();
-    public List<WayPoint> ZonePoints = new();
-
     public const byte RangeRingThickness = 3;
 
-    public void PreviewSpellRange(SpellData spell, WayPoint center = null, bool showZone = true, int spellRange = 0)
+    public List<WayPoint> PreviewSpellRange(SpellData spell, WayPoint center = null, bool showZone = true, bool ignoreTerrain = false)
     {
-        Dictionary<WayPoint, int> floodDict = new();
-
         if (center == null)
-        {
-            center = entity.CurrentPoint;
-            floodDict = Tools.FloodDict;
-        }
-        else
-        {
-            floodDict = Tools.SmallFlood(center, spellRange);
-        }
+            center = entity.currentPoint;
 
-        List<WayPoint> rangePoints = Tools.GetWaypointsInRange(spell.Range, floodDict);
+        Dictionary<WayPoint, int> floodDict = Tools.SmallFlood(center, spell.Range);
 
-        for (byte i = 0; i < rangePoints.Count; i++)
+        List<WayPoint> rangePoints = new();
+
+        foreach (WayPoint point in floodDict.Keys)
         {
-            WayPoint point = rangePoints[i];
-            Vector3 pointPos = new Vector3(point.transform.position.x, transform.position.y, point.transform.position.z);
-            Vector3 pointToEntity = transform.position - pointPos;
-
-            if (spell.IsOccludedByWalls && Physics.Raycast(pointPos, pointToEntity, pointToEntity.magnitude, _obstacleMask))
-                rangePoints.RemoveAt(i);
+            if ((!ignoreTerrain && (spell.IsOccludedByWalls && Tools.CheckWallsBetween(center, point) || point.State == WaypointState.Obstructed)) || spell.Range > RangeRingThickness && (floodDict[point] - RangeRingThickness) < 0)
+                continue;
             else if (showZone)
                 point.ChangeTileColor(point._rangeMaterial);
+
+            rangePoints.Add(point);
         }
-        RangePoints.AddRange(rangePoints);
+
+        return rangePoints;
     }
 
-    public void PreviewSpellZone(SpellData spell, WayPoint targetedPoint, bool showZone = true)
+    public List<WayPoint> PreviewSpellZone(SpellData spell, WayPoint targetedPoint, List<WayPoint> rangePoints, bool showZone = true)
     {
-        if (!RangePoints.Contains(targetedPoint)) return;
+        if (!rangePoints.Contains(targetedPoint)) return null;
+
+        List<WayPoint> zonePoints = new();
 
         Vector3Int targetedPointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(targetedPoint);
 
@@ -61,30 +53,42 @@ public class SpellCaster : MonoBehaviour
                 if (showZone)
                     choosenWaypoint.ChangeTileColor(choosenWaypoint._zoneMaterial);
 
-                ZonePoints.Add(choosenWaypoint);
+                zonePoints.Add(choosenWaypoint);
             }
         }
+
+        return zonePoints;
     }
 
-    public void StopSpellRangePreview()
+    public void StopSpellRangePreview(ref List<WayPoint> rangePoints)
     {
-        foreach (WayPoint point in RangePoints)
+        foreach (WayPoint point in rangePoints)
         {
             point.ChangeTileColor(point._normalMaterial);
         }
 
-        RangePoints.Clear();
-
-        StopSpellZonePreview();
+        rangePoints.Clear();
     }
 
-    public void StopSpellZonePreview()
+    public void StopSpellRangePreview(ref List<WayPoint> rangePoints, ref List<WayPoint> zonePoints)
     {
-        if (ZonePoints.Count == 0) return;
-
-        foreach (WayPoint point in ZonePoints)
+        foreach (WayPoint point in rangePoints)
         {
-            if (RangePoints.Count != 0 && RangePoints.Contains(point))
+            point.ChangeTileColor(point._normalMaterial);
+        }
+
+        rangePoints.Clear();
+
+        StopSpellZonePreview(rangePoints, ref zonePoints);
+    }
+
+    public void StopSpellZonePreview(List<WayPoint> rangePoints, ref List<WayPoint> zonePoints, bool showZone = true)
+    {
+        if (zonePoints == null || zonePoints.Count == 0) return;
+
+        foreach (WayPoint point in zonePoints)
+        {
+            if (rangePoints.Count != 0 && rangePoints.Contains(point) && showZone)
             {
                 point.ChangeTileColor(point._rangeMaterial);
             }
@@ -94,24 +98,52 @@ public class SpellCaster : MonoBehaviour
             }
         }
 
-        ZonePoints.Clear();
+        zonePoints.Clear();
     }
 
-    public async UniTask TryCastSpell(SpellData spell, WayPoint target)
+    public async UniTask TryCastSpell(SpellData spell, WayPoint target, List<WayPoint> rangePoints, List<WayPoint> zonePoints)
     {
-        if (ZonePoints.Count == 0)
+        if (zonePoints.Count == 0)
         {
-            StopSpellRangePreview();
+            StopSpellRangePreview(ref rangePoints, ref zonePoints);
             return;
         }
 
-        foreach (WayPoint point in ZonePoints)
-        {
-            //await visual
+        SpellCastingContext context = new();
 
-            await point.TryApplySpell(spell);
+        List<Entity> hitEntities = new();
+
+        foreach (WayPoint point in zonePoints)
+        {
+            if (point.State == WaypointState.HasEntity)
+            {
+                hitEntities.Add(point.Content);
+            }
         }
 
-        StopSpellRangePreview();
+        context.numberOfHitEnnemies = (byte)hitEntities.Count;
+
+        foreach (Entity entity in hitEntities)
+        {
+            Vector3Int entityTilePos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(entity.currentPoint);
+            Vector3Int targetTilePos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(target);
+            Vector3Int targetToEntity = entityTilePos - targetTilePos;
+            context.distanceToPlayer = (byte)targetToEntity.magnitude;
+            context.PushDirection = new Vector3Int((int)Mathf.Sign(targetToEntity.x), targetToEntity.y, (int)Mathf.Sign(targetToEntity.z));
+
+            await entity.ApplySpell(spell, context);
+        }
+        StopSpellRangePreview(ref rangePoints, ref zonePoints);
     }
+}
+
+/// <summary>
+/// utilisé pour appliquer des effets en plus
+/// au moment de lancer un sort.
+/// </summary>
+public struct SpellCastingContext
+{
+    public byte numberOfHitEnnemies;
+    public byte distanceToPlayer;
+    public Vector3Int PushDirection;
 }
