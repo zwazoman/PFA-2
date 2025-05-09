@@ -6,6 +6,7 @@ using System;
 using UnityEngine.Tilemaps;
 using Unity.VisualScripting;
 using DG.Tweening;
+using Unity.Burst.CompilerServices;
 
 [RequireComponent(typeof(SpellCaster))]
 public class Entity : MonoBehaviour
@@ -29,7 +30,7 @@ public class Entity : MonoBehaviour
     {
         //set up position on graph
         Vector3Int roundedPos = transform.position.SnapOnGrid();
-        currentPoint = GraphMaker.Instance.serializedPointDict[roundedPos]; 
+        currentPoint = GraphMaker.Instance.serializedPointDict[roundedPos];
         currentPoint.StepOn(this);
 
     }
@@ -50,7 +51,6 @@ public class Entity : MonoBehaviour
 
     public async UniTask ApplySpell(SpellData spell, SpellCastingContext context)
     {
-        print("apply Spell");
         foreach (SpellEffect effect in spell.Effects)
         {
             switch (effect.effectType)
@@ -59,7 +59,7 @@ public class Entity : MonoBehaviour
                     await stats.ApplyDamage(effect.value);
                     break;
                 case SpellEffectType.Recoil:
-                    await Push(context.PushDirection);
+                    await Push(effect.value, context.PushDirection);
                     break;
                 case SpellEffectType.Shield:
                     await stats.ApplyShield(effect.value);
@@ -78,7 +78,7 @@ public class Entity : MonoBehaviour
     public void ApplyWalkables(bool showTiles = true)
     {
         if (Walkables.Count == 0)
-            Walkables.AddRange(Tools.SmallFlood(currentPoint, stats.currentMovePoints,true,true).Keys);
+            Walkables.AddRange(Tools.SmallFlood(currentPoint, stats.currentMovePoints, true, true).Keys);
 
         foreach (WayPoint point in Walkables)
         {
@@ -98,17 +98,56 @@ public class Entity : MonoBehaviour
         Walkables.Clear();
     }
 
-    async UniTask Push(Vector3Int pushDirection)
+    async UniTask Push(float pushForce, Vector3 pushDirection)
     {
         WayPoint choosenPoint = null;
         float damages = 0;
 
-        // si diagonale -> tirer un spherecast dans la direction longueur = force * racine de 2:
-        //si ça touche : pousser le joueur jusqu' au hit
-        //sinon le pousser jusu'a force (condition si hors du terrain/ bloquée mieux que raycast ? tomber dans le vide ?
-        //sinon -> tirer un raycast dans la direction longueur = force
-        //si ça touche pousser de force
-        //sinon -> le pousser jusu'a force (condition si hors du terrain/ bloquée mieux que raycast ? tomber dans le vide ?
+        bool isDiagonal = pushDirection.x == 0 || pushDirection.y == 0;
+
+        Debug.DrawRay(transform.position, pushDirection,Color.red,10);
+
+
+        Vector3 posWithHeigth = transform.position + Vector3.up * 0.2f;
+
+        if (isDiagonal)
+        {
+            RaycastHit hit;
+            if(Physics.SphereCast(posWithHeigth, 1, pushDirection, out hit, pushForce * Mathf.Sqrt(2), LayerMask.GetMask("Wall")))
+            {
+                damages = pushForce;
+                Vector3Int hitPos = hit.point.SnapOnGrid();
+
+                damages -= Mathf.FloorToInt(hit.distance);
+                choosenPoint = GraphMaker.Instance.serializedPointDict[(hitPos - pushDirection).SnapOnGrid()];
+            }
+            else
+            {
+                choosenPoint = GraphMaker.Instance.serializedPointDict[(posWithHeigth +pushDirection * (pushForce * Mathf.Sqrt(2))).SnapOnGrid()];
+            }
+        }
+        else
+        {
+            RaycastHit hit;
+            if(Physics.Raycast(posWithHeigth, pushDirection, out hit, pushForce, LayerMask.GetMask("Wall")))
+            {
+                damages = pushForce;
+
+                Debug.DrawLine(transform.position, hit.point);
+
+                Vector3Int hitPos = hit.point.SnapOnGrid();
+
+                damages -= Mathf.FloorToInt(hit.distance);
+                choosenPoint = GraphMaker.Instance.serializedPointDict[(hitPos - pushDirection/2).SnapOnGrid()];
+                choosenPoint.ChangeTileColor(choosenPoint._walkedMaterial);
+            }
+            else
+            {
+                choosenPoint = GraphMaker.Instance.serializedPointDict[(posWithHeigth + pushDirection * pushForce).SnapOnGrid()];
+            }
+        }
+
+        choosenPoint.ChangeTileColor(choosenPoint._walkedMaterial);
 
         if (damages > 0)
         {
@@ -118,7 +157,6 @@ public class Entity : MonoBehaviour
         await StartMoving(choosenPoint.transform.position);
 
         choosenPoint.StepOn(this);
-        currentPoint = choosenPoint;
     }
 
     /// <summary>
@@ -210,7 +248,7 @@ public class Entity : MonoBehaviour
         targetPos.y = transform.position.y;
         Vector3 offset = targetPos - (Vector3)transform.position;
         Quaternion targetRotation = Quaternion.Euler(0, Mathf.Atan2(-offset.z, offset.x) * Mathf.Rad2Deg, 0);
-        transform.DORotateQuaternion(targetRotation,1f/moveSpeed);
+        transform.DORotateQuaternion(targetRotation, 1f / moveSpeed);
         while ((Vector3)transform.position != targetPos)
         {
             Vector3 offset2 = targetPos - (Vector3)transform.position;

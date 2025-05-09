@@ -35,9 +35,9 @@ public class SpellCaster : MonoBehaviour
 
     public List<WayPoint> PreviewSpellZone(SpellData spell, WayPoint targetedPoint, List<WayPoint> rangePoints, bool showZone = true)
     {
-        if (!rangePoints.Contains(targetedPoint)) return null;
-
         List<WayPoint> zonePoints = new();
+
+        if (!rangePoints.Contains(targetedPoint)) return zonePoints ;
 
         Vector3Int targetedPointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(targetedPoint);
 
@@ -129,7 +129,7 @@ public class SpellCaster : MonoBehaviour
             Vector3Int targetTilePos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(target);
             Vector3Int targetToEntity = entityTilePos - targetTilePos;
             context.distanceToPlayer = (byte)targetToEntity.magnitude;
-            context.PushDirection = new Vector3Int((int)Mathf.Sign(targetToEntity.x), targetToEntity.y, (int)Mathf.Sign(targetToEntity.z));
+            context.PushDirection = new Vector3((int)Mathf.Sign(targetToEntity.x), 0, (int)Mathf.Sign(targetToEntity.z));
 
             await entity.ApplySpell(spell, context);
         }
@@ -145,5 +145,5 @@ public struct SpellCastingContext
 {
     public byte numberOfHitEnnemies;
     public byte distanceToPlayer;
-    public Vector3Int PushDirection;
+    public Vector3 PushDirection;
 }
