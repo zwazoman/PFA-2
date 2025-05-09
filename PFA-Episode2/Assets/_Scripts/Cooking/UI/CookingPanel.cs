@@ -29,7 +29,7 @@ public class CookingPanel : AnimatedPanel
             LoadPlayerInventory();
             return;
         }
-#endif
+
         //@temp --
         Inventory inv = new();
         for(int i = 0; i < 12; i++)
@@ -42,8 +42,14 @@ public class CookingPanel : AnimatedPanel
             inv.Sauces.Add(testSauces.PickRandom());
         }
 
+
         LoadInventory(inv);
         //--
+#else
+            LoadPlayerInventory();
+    
+#endif
+
     }
 
     void OnShown()
