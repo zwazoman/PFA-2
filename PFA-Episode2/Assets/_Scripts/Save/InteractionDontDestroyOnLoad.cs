@@ -5,6 +5,7 @@ using UnityEngine;
 /// </summary>
 public class InteractDontDestroyOnLoad : MonoBehaviour
 {
+    public Ingredient ingredient;
     // Fonction changer le numéro de la sauvegarde
     public void ChangeSaveID(int id)
     {
@@ -37,5 +38,10 @@ public class InteractDontDestroyOnLoad : MonoBehaviour
     public async void ChangeScene(string sceneName)
     {
         await SceneTransitionManager.Instance.GoToScene(sceneName);
+    }
+
+    public void Yadesobjets()
+    {
+        GameManager.Instance.playerInventory.Ingredients.Add(ingredient);
     }
 }

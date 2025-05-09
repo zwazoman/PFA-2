@@ -1,4 +1,5 @@
 using System.IO;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public static class SaveManager
@@ -18,7 +19,7 @@ public static class SaveManager
             {
                 type = "Spell",
                 name = spell.Name,
-                sprite = spell.Sprite.name,
+                sprite = spell.Sprite != null ? spell.Sprite.name : null,
                 ingredientsCombination = spell.IngredientsCombination,
                 isOccludedByWalls = spell.IsOccludedByWalls,
                 range = spell.Range,
@@ -31,9 +32,9 @@ public static class SaveManager
         }
 
 
-        foreach (Ingredient ing in GameManager.Instance.playerInventory.Ingredients)
+        foreach (ScriptableObject ing in GameManager.Instance.playerInventory.Ingredients)
         {
-            Ingredient ingredient = ing;
+            ScriptableObject ingredient = ing;
 
             InventoryData sdata = new()
             {
@@ -44,9 +45,9 @@ public static class SaveManager
             inventoryWrapper.items.Add(sdata);
         }
 
-        foreach (Sauce sc in GameManager.Instance.playerInventory.Sauces)
+        foreach (ScriptableObject sc in GameManager.Instance.playerInventory.Sauces)
         {
-            Sauce sauce = sc;
+            ScriptableObject sauce = sc;
 
             InventoryData sdata = new()
             {
@@ -79,6 +80,7 @@ public static class SaveManager
         if (!File.Exists(path))
         {
             Debug.LogWarning($"Fichier de sauvegarde introuvable à {path}");
+            return new();
         }
 
         string json = File.ReadAllText(path);
