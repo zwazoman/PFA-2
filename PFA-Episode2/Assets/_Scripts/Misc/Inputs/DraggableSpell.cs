@@ -41,7 +41,7 @@ public class DraggableSpell : Draggable
                 _currentPoint = point;
 
                 spellCaster.StopSpellZonePreview(_rangePoints, ref zonePoints);
-                spellCaster.PreviewSpellZone(spell, point, _rangePoints);
+                zonePoints = spellCaster.PreviewSpellZone(spell, point, _rangePoints);
             }
             else if (point == null)
             {

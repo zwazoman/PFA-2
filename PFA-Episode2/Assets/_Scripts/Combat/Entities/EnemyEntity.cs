@@ -116,38 +116,20 @@ public class EnemyEntity : Entity
     {
         Dictionary<WayPoint, List<WayPoint>> targetPointsDict = new();
 
-        List<WayPoint> rangePoints = new();
-        List<WayPoint> zonePoints = new();
+        List<WayPoint> rangePoints;
+        List<WayPoint> zonePoints;
 
-        rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, targetPlayerPoint, true, true);
-
-        await UniTask.Delay(1000);
+        rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, targetPlayerPoint, false, true);
 
         foreach (WayPoint rangePoint in rangePoints)
         {
-            zonePoints = entitySpellCaster.PreviewSpellZone(choosenSpell, rangePoint, rangePoints, true);
+            zonePoints = entitySpellCaster.PreviewSpellZone(choosenSpell, rangePoint, rangePoints, false);
             foreach (WayPoint zonePoint in zonePoints)
             {
                 if (!targetPointsDict.ContainsKey(zonePoint))
                     targetPointsDict.Add(zonePoint, new List<WayPoint>());
                 targetPointsDict[zonePoint].Add(rangePoint);
             }
-            await UniTask.Delay(100);
-
-            entitySpellCaster.StopSpellZonePreview(rangePoints, ref zonePoints);
-        }
-        entitySpellCaster.StopSpellRangePreview(ref rangePoints);
-
-        foreach (WayPoint zonePoint in targetPointsDict.Keys)
-        {
-            zonePoint.ChangeTileColor(zonePoint._zoneMaterial);
-        }
-
-        await UniTask.Delay(1000);
-
-        foreach (WayPoint zonePoint in targetPointsDict.Keys)
-        {
-            zonePoint.ChangeTileColor(zonePoint._normalMaterial);
         }
 
 
@@ -164,10 +146,8 @@ public class EnemyEntity : Entity
 
             print("singe encore encore");
 
-            rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint, true );
-            await UniTask.Delay(1000);
-            zonePoints = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints, true);
-            await UniTask.Delay(1000);
+            rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint, false );
+            zonePoints = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints, false);
 
             targetPointsDict[choosenTargetPoint].Remove(targetPointsDict[choosenTargetPoint][0]);
 
@@ -187,9 +167,9 @@ public class EnemyEntity : Entity
         {
             print("attack !");
             rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint);
-            await UniTask.Delay(2000);
+            await UniTask.Delay(1000);
             zonePoints = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints);
-            await UniTask.Delay(2000);
+            await UniTask.Delay(1000);
             await entitySpellCaster.TryCastSpell(choosenSpell, pointToSelect, rangePoints, zonePoints);
 
             return true;

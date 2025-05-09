@@ -22,7 +22,7 @@ public class SpellCaster : MonoBehaviour
 
         foreach (WayPoint point in floodDict.Keys)
         {
-            if ((!ignoreTerrain && (spell.IsOccludedByWalls && Tools.CheckWallsBetween(center, point) || point.State == WaypointState.Obstructed)) || (floodDict[point] - RangeRingThickness) < 0)
+            if ((!ignoreTerrain && (spell.IsOccludedByWalls && Tools.CheckWallsBetween(center, point) || point.State == WaypointState.Obstructed)) || spell.Range > RangeRingThickness && (floodDict[point] - RangeRingThickness) < 0)
                 continue;
             else if (showZone)
                 point.ChangeTileColor(point._rangeMaterial);
@@ -70,7 +70,7 @@ public class SpellCaster : MonoBehaviour
         rangePoints.Clear();
     }
 
-    public void StopSpellRangePreview(ref List<WayPoint> rangePoints,ref List<WayPoint> zonePoints)
+    public void StopSpellRangePreview(ref List<WayPoint> rangePoints, ref List<WayPoint> zonePoints)
     {
         foreach (WayPoint point in rangePoints)
         {
@@ -79,16 +79,16 @@ public class SpellCaster : MonoBehaviour
 
         rangePoints.Clear();
 
-        StopSpellZonePreview(rangePoints,ref zonePoints);
+        StopSpellZonePreview(rangePoints, ref zonePoints);
     }
 
-    public void StopSpellZonePreview(List<WayPoint> rangePoints,ref List<WayPoint> zonePoints)
+    public void StopSpellZonePreview(List<WayPoint> rangePoints, ref List<WayPoint> zonePoints, bool showZone = true)
     {
-        if (zonePoints.Count == 0) return;
+        if (zonePoints == null || zonePoints.Count == 0) return;
 
         foreach (WayPoint point in zonePoints)
         {
-            if (rangePoints.Count != 0 && rangePoints.Contains(point))
+            if (rangePoints.Count != 0 && rangePoints.Contains(point) && showZone)
             {
                 point.ChangeTileColor(point._rangeMaterial);
             }
@@ -101,11 +101,11 @@ public class SpellCaster : MonoBehaviour
         zonePoints.Clear();
     }
 
-    public async UniTask TryCastSpell(SpellData spell, WayPoint target,List<WayPoint> rangePoints, List<WayPoint> zonePoints)
+    public async UniTask TryCastSpell(SpellData spell, WayPoint target, List<WayPoint> rangePoints, List<WayPoint> zonePoints)
     {
         if (zonePoints.Count == 0)
         {
-            StopSpellRangePreview(ref rangePoints,ref zonePoints);
+            StopSpellRangePreview(ref rangePoints, ref zonePoints);
             return;
         }
 
@@ -133,7 +133,7 @@ public class SpellCaster : MonoBehaviour
 
             await entity.ApplySpell(spell, context);
         }
-        StopSpellRangePreview(ref rangePoints,ref zonePoints);
+        StopSpellRangePreview(ref rangePoints, ref zonePoints);
     }
 }
 

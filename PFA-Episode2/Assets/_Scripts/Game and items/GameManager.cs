@@ -39,13 +39,13 @@ public class GameManager : MonoBehaviour
             
             dishCombinationData = Resources.Load<DishCombinationData>("DishCombinationData");
 
-            LoadOrCreateSave();
-
             //@temp
             foreach (PremadeSpell premadeSpell in premadeSpells)
             {
                 playerInventory.Spells.Add(premadeSpell.SpellData);
             }
+
+            LoadOrCreateSave();
         }
         else
         {
