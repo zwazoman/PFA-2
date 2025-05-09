@@ -100,12 +100,14 @@ public class Entity : MonoBehaviour
 
     async UniTask Push(float pushForce, Vector3 pushDirection)
     {
+        return;
+
         WayPoint choosenPoint = null;
         float damages = 0;
 
         bool isDiagonal = pushDirection.x == 0 || pushDirection.y == 0;
 
-        Debug.DrawRay(transform.position, pushDirection,Color.red,10);
+        Debug.DrawRay(transform.position, pushDirection,Color.red,20);
 
 
         Vector3 posWithHeigth = transform.position + Vector3.up * 0.2f;
