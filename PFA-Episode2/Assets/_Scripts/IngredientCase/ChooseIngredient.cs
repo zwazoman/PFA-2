@@ -24,8 +24,8 @@ public class ChooseIngredient : MonoBehaviour
     [SerializeField][Range(0, 100)] private int _probaSavoureux;
     [SerializeField][Range(0, 100)] private int _probaDivin;
 
-    public List<IngredientBase> IngredientBaseChoose { get; private set; } = new();
-    private List<IngredientBase> _listTooPush = new();
+    public List<IngredientBase> IngredientBaseChooseBySac { get; private set; } = new();
+    private List<IngredientBase> _completeListIngredientChoose = new();
 
     public static ChooseIngredient Instance;
 
@@ -45,24 +45,26 @@ public class ChooseIngredient : MonoBehaviour
             {
                 if (IsSauce())
                 {
-                    IngredientBaseChoose.Add(ReturnSauceChoose());
-                    _listTooPush.Add(ReturnSauceChoose());
+                    IngredientBaseChooseBySac.Add(ReturnSauceChoose());
                 }
                 else
                 {
-                    IngredientBaseChoose.Add(ReturnIngredientChoose());
-                    _listTooPush.Add(ReturnSauceChoose());
+                    IngredientBaseChooseBySac.Add(ReturnIngredientChoose());
                 }
             }
-            SetupIngredientUI.Instance.ListListIngredient.Add(_listTooPush);
-            _listTooPush.Clear();
+            foreach(IngredientBase ing in IngredientBaseChooseBySac) { _completeListIngredientChoose.Add(ing); }
+            List<IngredientBase> tempo = new();
+            tempo.AddRange(IngredientBaseChooseBySac);
+            SetupIngredientUI.Instance.ListListIngredient.Add(tempo);
+            IngredientBaseChooseBySac.Clear();
+
             //_probaSavoureux = TempoProbaSavoureux;
             //_probaDivin = TempoProbaDivin;
             _probaSauce = TempoProbaSauce;
         }
-        for (int i = 0; i != IngredientBaseChoose.Count; i++)
+        for (int i = 0; i != _completeListIngredientChoose.Count; i++)
         {
-            SetupIngredientUI.Instance.SetupInfo(IngredientBaseChoose[i], i);
+            SetupIngredientUI.Instance.SetupInfo(_completeListIngredientChoose[i], i);
         }
 
     }
