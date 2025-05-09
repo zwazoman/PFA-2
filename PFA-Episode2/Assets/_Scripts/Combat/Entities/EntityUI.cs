@@ -9,17 +9,19 @@ public class EntityUI : MonoBehaviour
 
     Entity owner;
 
-    private void Awake()
-    {
-        TryGetComponent(out owner);
-    }
 
-    private void Start()
+    public void Setup(Entity owner)
     {
-        //owner.stats.healthFeedbackTasks += UpdateLifebar;
+        this.owner = owner;
+        
+        //healthbar
         owner.stats.healthFeedbackTasks.Add(UpdateLifebar);
         lifebar.MaxValue = owner.stats.maxHealth;
         lifebar.MinValue = 0;
+        UpdateLifebar(0,owner.stats.currentHealth);
+
+        //topleft icon
+        //...
     }
 
     private async UniTask UpdateLifebar(float delta, float newValue)

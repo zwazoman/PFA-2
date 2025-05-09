@@ -18,7 +18,7 @@ public class EnemyEntity : Entity
     {
         base.Awake();
 
-        stats.maxHealth = Data.MaxHealth;
+        
         stats.maxMovePoints = Data.MaxMovePoints;
     }
 
@@ -26,6 +26,7 @@ public class EnemyEntity : Entity
     {
         base.Start();
 
+        stats.Setup(Data.MaxHealth);
         CombatManager.Instance.RegisterEntity(this);
     }
 

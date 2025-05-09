@@ -26,7 +26,7 @@ public class CombatUiManager : MonoBehaviour
     }
     #endregion
 
-    [SerializeField] public CanvasGroup playerSpellGroup;
+    [SerializeField] public AnimatedPanel playerHUD;
 
     [SerializeField] public EndButton endButton;
 }

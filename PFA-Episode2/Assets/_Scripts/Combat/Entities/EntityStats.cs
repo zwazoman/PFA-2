@@ -22,11 +22,19 @@ public class EntityStats
     public int currentMovePoints;
     public float currentHealth;
 
+    public void Setup(float maxHP)
+    {
+        this.maxHealth = maxHP;
+        currentHealth = maxHP;
+        Debug.Log(maxHealth);
 
+        ApplyHealth(0);
+        owner.gameObject.GetComponent<EntityUI>().Setup(owner);
+    }
 
     public async UniTask ApplyDamage(float damage)
     {
-        Debug.Log("apply damage");
+        
 
         if (shieldAmount > 0)
         {
@@ -41,6 +49,7 @@ public class EntityStats
 
     public async UniTask ApplyHealth(float delta)
     {
+        Debug.Log("apply health : " + delta.ToString());
         currentHealth += delta;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 

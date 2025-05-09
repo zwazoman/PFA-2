@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine.Tilemaps;
 using Unity.VisualScripting;
+using DG.Tweening;
 
 [RequireComponent(typeof(SpellCaster))]
 public class Entity : MonoBehaviour
@@ -14,10 +15,9 @@ public class Entity : MonoBehaviour
     [HideInInspector] public WayPoint currentPoint;
     [HideInInspector] public SpellCaster entitySpellCaster;
 
-    
-
     protected Dictionary<WayPoint, int> WaypointDistance = new Dictionary<WayPoint, int>();
     protected List<WayPoint> Walkables = new List<WayPoint>();
+
 
     protected virtual void Awake()
     {
@@ -27,17 +27,11 @@ public class Entity : MonoBehaviour
 
     protected virtual void Start()
     {
-
         //set up position on graph
         Vector3Int roundedPos = transform.position.SnapOnGrid();
         currentPoint = GraphMaker.Instance.serializedPointDict[roundedPos]; 
         currentPoint.StepOn(this);
 
-        //set up health and movement
-        stats.currentHealth = stats.maxHealth;
-        stats.ApplyHealth(0);
-        stats.currentMovePoints = stats.maxMovePoints;
-        
     }
 
     public virtual async UniTask PlayTurn()
@@ -216,8 +210,8 @@ public class Entity : MonoBehaviour
     {
         targetPos.y = transform.position.y;
         Vector3 offset = targetPos - (Vector3)transform.position;
-        Quaternion targetRotation = Quaternion.Euler(0, Mathf.Atan2(offset.z, offset.x) * Mathf.Rad2Deg, 0);
-        transform.rotation = targetRotation;
+        Quaternion targetRotation = Quaternion.Euler(0, Mathf.Atan2(-offset.z, offset.x) * Mathf.Rad2Deg, 0);
+        transform.DORotateQuaternion(targetRotation,1f/moveSpeed);
         while ((Vector3)transform.position != targetPos)
         {
             Vector3 offset2 = targetPos - (Vector3)transform.position;

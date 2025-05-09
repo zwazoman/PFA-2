@@ -26,26 +26,40 @@ public class GameManager : MonoBehaviour
     [Header("Data")]
     public DishCombinationData dishCombinationData;
 
+#if UNITY_EDITOR
+    //@temp
     [Header("Tests")]
     [SerializeField] List<PremadeSpell> premadeSpells = new();
+    [SerializeField] bool tests = false;
+#endif
+
 
     private void Awake()
     {
         if(instance == this || instance == null)
         {
-            Debug.Log("Initializing game manager");
+            //singleton
+            Debug.Log("Initializing game manager",this);
             instance = this;
             DontDestroyOnLoad(this);
             
+            //load data
             dishCombinationData = Resources.Load<DishCombinationData>("DishCombinationData");
-
-            //@temp
-            foreach (PremadeSpell premadeSpell in premadeSpells)
-            {
-                playerInventory.Spells.Add(premadeSpell.SpellData);
-            }
-
             LoadOrCreateSave();
+
+#if UNITY_EDITOR
+            Debug.Log("Filling inventory with test Items and spells");
+            //@temp
+            if (tests)
+            {
+                foreach (PremadeSpell premadeSpell in premadeSpells)
+                {
+                    Debug.Log("- test spell ");
+                    playerInventory.Spells.Add(premadeSpell.SpellData);
+                }
+            }
+#endif
+
         }
         else
         {
