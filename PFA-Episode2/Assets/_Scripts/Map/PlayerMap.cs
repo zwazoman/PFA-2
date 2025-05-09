@@ -68,7 +68,7 @@ public class PlayerMap : MonoBehaviour
     {
         while (Vector3.Distance(transform.position, targetPos) > 0.1f)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, speed);
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, speed) * Time.deltaTime;
             await UniTask.Yield();
         }
     }
