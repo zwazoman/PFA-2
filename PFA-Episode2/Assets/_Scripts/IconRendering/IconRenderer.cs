@@ -126,7 +126,7 @@ public class IconRenderer : MonoBehaviour
                 GameObject child = transform.GetChild(i).gameObject;
                 child.SetActive(true);
 
-                await Task.Delay(100);
+                await Task.Yield();
 
                 RenderCurrentImage(rt, child.name, child.name);
                 child.SetActive(false);
