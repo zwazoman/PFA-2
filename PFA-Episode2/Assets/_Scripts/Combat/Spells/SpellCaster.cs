@@ -22,7 +22,7 @@ public class SpellCaster : MonoBehaviour
 
         foreach (WayPoint point in floodDict.Keys)
         {
-            if (!ignoreTerrain && (spell.IsOccludedByWalls && Tools.CheckWallsBetween(center, point) || point.State == WaypointState.Obstructed))
+            if ((!ignoreTerrain && (spell.IsOccludedByWalls && Tools.CheckWallsBetween(center, point) || point.State == WaypointState.Obstructed)) || (floodDict[point] - RangeRingThickness) < 0)
                 continue;
             else if (showZone)
                 point.ChangeTileColor(point._rangeMaterial);
