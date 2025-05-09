@@ -22,7 +22,6 @@ public class PlayerEntity : Entity
 
         //edit les valeurs du entityspell avec celles de l'inventaire
 
-        stats.maxHealth = maxHealth;
         stats.maxMovePoints = maxMovePoints;
     }
 
@@ -30,7 +29,7 @@ public class PlayerEntity : Entity
     {
         base.Start();
         CombatManager.Instance.RegisterEntity(this);
-
+        stats.Setup(maxHealth);
     }
 
     public override async UniTask PlayTurn()
@@ -74,12 +73,12 @@ public class PlayerEntity : Entity
 
     void ShowSpellsUI()
     {
-        CombatUiManager.Instance.playerSpellGroup.Show();
+        CombatUiManager.Instance.playerHUD.Show();
     }
 
     void HideSpellsUI()
     {
-        CombatUiManager.Instance.playerSpellGroup.Hide();
+        CombatUiManager.Instance.playerHUD.Hide();
     }
 
 }

@@ -17,17 +17,21 @@ public class PlayerUIHandler : MonoBehaviour
     private void Start()
     {
         AssignEndTurnButton();
-
         if (GameManager.Instance.playerInventory != null)
+        {
+            Debug.Log("boule 2 ");
+
             foreach (SpellData spell in GameManager.Instance.playerInventory.Spells)
             {
+                Debug.Log("creation du spell");
                 CreateSpellUI(spell);
             }
+        }
     }
 
     void CreateSpellUI(SpellData spellData)
     {
-        GameObject uiSpell = Instantiate(_uiSpellPrefab, CombatUiManager.Instance.playerSpellGroup.transform);
+        GameObject uiSpell = Instantiate(_uiSpellPrefab, CombatUiManager.Instance.playerHUD.transform);
 
         Image spellImage;
         DraggableSpell draggableSpell;
