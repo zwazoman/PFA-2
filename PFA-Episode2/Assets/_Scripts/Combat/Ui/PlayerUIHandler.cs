@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 [RequireComponent (typeof(PlayerEntity))]
 public class PlayerUIHandler : MonoBehaviour

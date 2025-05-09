@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 
 
 public class ChooseIngredient : MonoBehaviour

@@ -3,10 +3,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
-using UnityEngine.Tilemaps;
-using Unity.VisualScripting;
 using DG.Tweening;
-using Unity.Burst.CompilerServices;
 
 [RequireComponent(typeof(SpellCaster))]
 public class Entity : MonoBehaviour
