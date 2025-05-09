@@ -6,6 +6,7 @@ public class SetupIngredientUI : MonoBehaviour
 {
     [SerializeField] private List<IngredientUI> _listIngredientUI = new();
     [SerializeField] private List<ColorPanel> _listColor = new();
+    public List<List<IngredientBase>> ListListIngredient = new();
 
     public static SetupIngredientUI Instance;
 
@@ -72,9 +73,13 @@ public class SetupIngredientUI : MonoBehaviour
             img.color = _listColor[colorIndex].ColorDark;
         }
     }
-    public async void Next()
+    public async void Next(int index)
     {
-        //ing
+        foreach(IngredientBase ing in ListListIngredient[index])
+        {
+            if (ing is Sauce Sauce) { GameManager.Instance.playerInventory.Sauces.Add(Sauce); }
+            else if (ing is Ingredient Ingredient) { GameManager.Instance.playerInventory.Ingredients.Add(Ingredient); }
+        }
         await SceneTransitionManager.Instance.GoToScene("WorldMap");
     }
 }
