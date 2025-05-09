@@ -50,6 +50,7 @@ public class CookingPanel : AnimatedPanel
     
 #endif
 
+        
     }
 
     void OnShown()
