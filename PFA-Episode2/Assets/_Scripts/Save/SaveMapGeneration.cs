@@ -12,6 +12,7 @@ public class SaveMapGeneration : MonoBehaviour
     [Tooltip("Numéro de fichier de sauvegarde")] public byte SaveID;
     const string ENCRYPT_KEY = "Tr0mp1ne7te";
     private int _numberLink = 0;
+    public int PositionMap { get; private set; }
 
     #region Singleton
     public static SaveMapGeneration Instance;
@@ -129,6 +130,8 @@ public class SaveMapGeneration : MonoBehaviour
                     //PlayerMap.Instance.SetupTarget(node.transform.position);
                     PlayerMap.Instance.transform.localPosition = item.playerPosition;
                     PlayerMap.Instance.PositionMap = item.PositionMap;
+                    PositionMap = item.PositionMap;
+
                 }
             }
 
