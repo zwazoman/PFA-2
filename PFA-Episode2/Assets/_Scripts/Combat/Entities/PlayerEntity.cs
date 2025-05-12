@@ -1,7 +1,6 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(SpellCaster))]
@@ -22,15 +21,14 @@ public class PlayerEntity : Entity
 
         //edit les valeurs du entityspell avec celles de l'inventaire
 
-        entityStats.maxHealth = maxHealth;
-        entityStats.maxMovePoints = maxMovePoints;
+        stats.maxMovePoints = maxMovePoints;
     }
 
     protected override void Start()
     {
         base.Start();
-
-        CombatManager.Instance.PlayerEntities.Add(this);
+        CombatManager.Instance.RegisterEntity(this);
+        stats.Setup(maxHealth);
     }
 
     public override async UniTask PlayTurn()
@@ -74,12 +72,12 @@ public class PlayerEntity : Entity
 
     void ShowSpellsUI()
     {
-        CombatUiManager.Instance.playerSpellGroup.Show();
+        CombatUiManager.Instance.playerHUD.Show();
     }
 
     void HideSpellsUI()
     {
-        CombatUiManager.Instance.playerSpellGroup.Hide();
+        CombatUiManager.Instance.playerHUD.Hide();
     }
 
 }

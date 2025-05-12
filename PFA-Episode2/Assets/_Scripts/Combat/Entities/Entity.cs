@@ -3,12 +3,12 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
-using UnityEngine.Tilemaps;
+using DG.Tweening;
 
 [RequireComponent(typeof(SpellCaster))]
 public class Entity : MonoBehaviour
 {
-    public EntityStats entityStats = new();
+    public EntityStats stats = new();
 
     [HideInInspector] public WayPoint currentPoint;
     [HideInInspector] public SpellCaster entitySpellCaster;
@@ -16,31 +16,28 @@ public class Entity : MonoBehaviour
     protected Dictionary<WayPoint, int> WaypointDistance = new Dictionary<WayPoint, int>();
     protected List<WayPoint> Walkables = new List<WayPoint>();
 
+
     protected virtual void Awake()
     {
         TryGetComponent(out entitySpellCaster);
-        entityStats.owner = this;
+        stats.owner = this;
     }
 
     protected virtual void Start()
     {
+        //set up position on graph
         Vector3Int roundedPos = transform.position.SnapOnGrid();
-        //transform.position = roundedPos;
-        //transform.position += Vector3.up * 1.3f;
-
-        currentPoint = GraphMaker.Instance.serializedPointDict[roundedPos]; 
+        currentPoint = GraphMaker.Instance.serializedPointDict[roundedPos];
         currentPoint.StepOn(this);
 
-        entityStats.currentHealth = entityStats.maxHealth;
-        entityStats.currentMovePoints = entityStats.maxMovePoints;
     }
 
     public virtual async UniTask PlayTurn()
     {
         print(gameObject.name);
         Tools.Flood(currentPoint);
-        entityStats.currentMovePoints = entityStats.maxMovePoints;
-        await entityStats.ApplyShield(-1);
+        stats.currentMovePoints = stats.maxMovePoints;
+        await stats.ApplyShield(-1);
     }
 
     public virtual async UniTask EndTurn()
@@ -51,19 +48,18 @@ public class Entity : MonoBehaviour
 
     public async UniTask ApplySpell(SpellData spell, SpellCastingContext context)
     {
-        print("apply Spell");
         foreach (SpellEffect effect in spell.Effects)
         {
             switch (effect.effectType)
             {
                 case SpellEffectType.Damage:
-                    await entityStats.ApplyDamage(effect.value);
+                    await stats.ApplyDamage(effect.value);
                     break;
                 case SpellEffectType.Recoil:
-                    await Push(context.PushDirection);
+                    await Push(effect.value, context.PushDirection);
                     break;
                 case SpellEffectType.Shield:
-                    await entityStats.ApplyShield(effect.value);
+                    await stats.ApplyShield(effect.value);
                     break;
                 case SpellEffectType.DamageIncreaseForEachHitEnnemy:
                     throw new NotImplementedException();
@@ -79,7 +75,7 @@ public class Entity : MonoBehaviour
     public void ApplyWalkables(bool showTiles = true)
     {
         if (Walkables.Count == 0)
-            Walkables.AddRange(Tools.SmallFlood(currentPoint, entityStats.currentMovePoints,true,true).Keys);
+            Walkables.AddRange(Tools.SmallFlood(currentPoint, stats.currentMovePoints, true, true).Keys);
 
         foreach (WayPoint point in Walkables)
         {
@@ -99,29 +95,68 @@ public class Entity : MonoBehaviour
         Walkables.Clear();
     }
 
-    async UniTask Push(Vector3Int pushDirection)
+    async UniTask Push(float pushForce, Vector3 pushDirection)
     {
+        return;
+
         WayPoint choosenPoint = null;
         float damages = 0;
 
-        // si diagonale -> tirer un spherecast dans la direction longueur = force * racine de 2:
-        //si ça touche : pousser le joueur jusqu' au hit
-        //sinon le pousser jusu'a force (condition si hors du terrain/ bloquée mieux que raycast ? tomber dans le vide ?
-        //sinon -> tirer un raycast dans la direction longueur = force
-        //si ça touche pousser de force
-        //sinon -> le pousser jusu'a force (condition si hors du terrain/ bloquée mieux que raycast ? tomber dans le vide ?
+        bool isDiagonal = pushDirection.x == 0 || pushDirection.y == 0;
+
+        Debug.DrawRay(transform.position, pushDirection,Color.red,20);
+
+
+        Vector3 posWithHeigth = transform.position + Vector3.up * 0.2f;
+
+        if (isDiagonal)
+        {
+            RaycastHit hit;
+            if(Physics.SphereCast(posWithHeigth, 1, pushDirection, out hit, pushForce * Mathf.Sqrt(2), LayerMask.GetMask("Wall")))
+            {
+                damages = pushForce;
+                Vector3Int hitPos = hit.point.SnapOnGrid();
+
+                damages -= Mathf.FloorToInt(hit.distance);
+                choosenPoint = GraphMaker.Instance.serializedPointDict[(hitPos - pushDirection).SnapOnGrid()];
+            }
+            else
+            {
+                choosenPoint = GraphMaker.Instance.serializedPointDict[(posWithHeigth +pushDirection * (pushForce * Mathf.Sqrt(2))).SnapOnGrid()];
+            }
+        }
+        else
+        {
+            RaycastHit hit;
+            if(Physics.Raycast(posWithHeigth, pushDirection, out hit, pushForce, LayerMask.GetMask("Wall")))
+            {
+                damages = pushForce;
+
+                Debug.DrawLine(transform.position, hit.point);
+
+                Vector3Int hitPos = hit.point.SnapOnGrid();
+
+                damages -= Mathf.FloorToInt(hit.distance);
+                choosenPoint = GraphMaker.Instance.serializedPointDict[(hitPos - pushDirection/2).SnapOnGrid()];
+                choosenPoint.ChangeTileColor(choosenPoint._walkedMaterial);
+            }
+            else
+            {
+                choosenPoint = GraphMaker.Instance.serializedPointDict[(posWithHeigth + pushDirection * pushForce).SnapOnGrid()];
+            }
+        }
+
+        choosenPoint.ChangeTileColor(choosenPoint._walkedMaterial);
 
         if (damages > 0)
         {
-            await entityStats.ApplyDamage(damages);
+            await stats.ApplyDamage(damages);
         }
 
         await StartMoving(choosenPoint.transform.position);
 
         choosenPoint.StepOn(this);
-        currentPoint = choosenPoint;
     }
-
 
     /// <summary>
     /// fait se déplacer l'entité vers la case la plus proche de la target
@@ -176,7 +211,7 @@ public class Entity : MonoBehaviour
         Stack<WayPoint> path = Tools.FindBestPath(currentPoint, targetPoint);
         int pathlength = path.Count;
 
-        if (pathlength > entityStats.currentMovePoints)
+        if (pathlength > stats.currentMovePoints)
         {
             print("plus de pm !");
             return;
@@ -200,7 +235,7 @@ public class Entity : MonoBehaviour
 
             steppedOnPoint.ChangeTileColor(steppedOnPoint._normalMaterial);
 
-            entityStats.currentMovePoints--;
+            stats.currentMovePoints--;
         }
         Tools.Flood(currentPoint);
         ClearWalkables();
@@ -211,8 +246,8 @@ public class Entity : MonoBehaviour
     {
         targetPos.y = transform.position.y;
         Vector3 offset = targetPos - (Vector3)transform.position;
-        Quaternion targetRotation = Quaternion.Euler(0, Mathf.Atan2(offset.z, offset.x) * Mathf.Rad2Deg, 0);
-        transform.rotation = targetRotation;
+        Quaternion targetRotation = Quaternion.Euler(0, Mathf.Atan2(-offset.z, offset.x) * Mathf.Rad2Deg, 0);
+        transform.DORotateQuaternion(targetRotation, 1f / moveSpeed);
         while ((Vector3)transform.position != targetPos)
         {
             Vector3 offset2 = targetPos - (Vector3)transform.position;
@@ -224,8 +259,11 @@ public class Entity : MonoBehaviour
 
     public async UniTask Die()
     {
+        print("Die");
+
         currentPoint.StepOff();
         Destroy(gameObject);
+        await CombatManager.Instance.UnRegisterEntity(this);
         //si il ets entrain de jouer EndTurn
     }
 }

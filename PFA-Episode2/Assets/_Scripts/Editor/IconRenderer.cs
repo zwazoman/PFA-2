@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
-
+#if UNITY_EDITOR
 public class IconRenderer : MonoBehaviour
 {
     [Header("References")]
@@ -126,7 +126,7 @@ public class IconRenderer : MonoBehaviour
                 GameObject child = transform.GetChild(i).gameObject;
                 child.SetActive(true);
 
-                await Task.Delay(100);
+                await Task.Yield();
 
                 RenderCurrentImage(rt, child.name, child.name);
                 child.SetActive(false);
@@ -181,5 +181,7 @@ public class IconRendererEditor : Editor
         
     }
 }
+
+#endif
 
 #endif

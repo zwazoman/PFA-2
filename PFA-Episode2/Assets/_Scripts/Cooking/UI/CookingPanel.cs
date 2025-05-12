@@ -1,9 +1,6 @@
 using DG.Tweening;
 using System.Collections.Generic;
-using TMPro;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Profiling;
 using UnityEngine.Scripting;
 using UnityEngine.UI;
 
@@ -32,7 +29,7 @@ public class CookingPanel : AnimatedPanel
             LoadPlayerInventory();
             return;
         }
-#endif
+
         //@temp --
         Inventory inv = new();
         for(int i = 0; i < 12; i++)
@@ -45,8 +42,15 @@ public class CookingPanel : AnimatedPanel
             inv.Sauces.Add(testSauces.PickRandom());
         }
 
+
         LoadInventory(inv);
         //--
+#else
+            LoadPlayerInventory();
+    
+#endif
+
+        
     }
 
     void OnShown()
@@ -59,12 +63,18 @@ public class CookingPanel : AnimatedPanel
 
     public void LoadPlayerInventory()
     {
+        Debug.Log("about to load player inventory");
         LoadInventory(GameManager.Instance.playerInventory);
     }
 
     public void LoadInventory(Inventory inv)
     {
         Clear();
+
+        Debug.Log("-- loading inventory --");
+        Debug.Log("Sauce count : " + inv.Sauces.Count);
+        Debug.Log("Ingredient count : " + inv.Ingredients.Count);
+        Debug.Log("Spell count : " + inv.Spells.Count);
 
         //content height
         float height = _ingredientsParent.cellSize.y + _ingredientsParent.spacing.y;
@@ -91,7 +101,7 @@ public class CookingPanel : AnimatedPanel
                 .GetComponentInChildren<DraggableIngredientContainer>()
                 .SetUp(inv.Sauces[i]);
         }
-
+        Debug.Log("----");
     }
     private void Clear()
     {

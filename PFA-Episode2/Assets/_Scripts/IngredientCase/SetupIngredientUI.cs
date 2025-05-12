@@ -6,6 +6,7 @@ public class SetupIngredientUI : MonoBehaviour
 {
     [SerializeField] private List<IngredientUI> _listIngredientUI = new();
     [SerializeField] private List<ColorPanel> _listColor = new();
+    public List<List<IngredientBase>> ListListIngredient = new();
 
     public static SetupIngredientUI Instance;
 
@@ -21,6 +22,9 @@ public class SetupIngredientUI : MonoBehaviour
             _listIngredientUI[index].effectDescription.text = Serializer.GetSauceEffectString(Sauce);
             if (_listIngredientUI[index].familly != null) { _listIngredientUI[index].familly.text = "Sauce"; }
             _listIngredientUI[index].rarityFrame.sprite = IngredientBase.frame;
+            _listIngredientUI[index].SpriteZone.SetActive(true);
+            _listIngredientUI[index].famillyPanelColorDark[0].rectTransform.sizeDelta = new Vector2(450, 100);
+            _listIngredientUI[index].famillyPanelColorDark[0].rectTransform.localPosition = new Vector3(131, -81, _listIngredientUI[index].famillyPanelColorDark[0].rectTransform.position.z);
             SetupColor(index, 4);
         }
         else                                                                                  //Ingrédient
@@ -28,6 +32,9 @@ public class SetupIngredientUI : MonoBehaviour
             Ingredient Ingredient = (Ingredient)IngredientBase;
             _listIngredientUI[index].effectDescription.text = Serializer.GetIngredientEffectString(Ingredient);
             if (_listIngredientUI[index].familly != null) { _listIngredientUI[index].familly.text = Ingredient.Family.ToString(); }
+            _listIngredientUI[index].SpriteZone.SetActive(false);
+            _listIngredientUI[index].famillyPanelColorDark[0].rectTransform.sizeDelta = new Vector2(655, 100);
+            _listIngredientUI[index].famillyPanelColorDark[0].rectTransform.localPosition = new Vector3(234,-81, _listIngredientUI[index].famillyPanelColorDark[0].rectTransform.position.z);
 
             switch (Ingredient.Family)
             {
@@ -66,9 +73,13 @@ public class SetupIngredientUI : MonoBehaviour
             img.color = _listColor[colorIndex].ColorDark;
         }
     }
-    public async void Next()
+    public async void Next(int index)
     {
-        //ing
+        foreach(IngredientBase ing in ListListIngredient[index])
+        {
+            if (ing is Sauce Sauce) { GameManager.Instance.playerInventory.Sauces.Add(Sauce); }
+            else if (ing is Ingredient Ingredient) { GameManager.Instance.playerInventory.Ingredients.Add(Ingredient); }
+        }
         await SceneTransitionManager.Instance.GoToScene("WorldMap");
     }
 }

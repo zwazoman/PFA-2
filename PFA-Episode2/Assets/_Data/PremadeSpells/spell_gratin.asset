@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c346ecbdd44d67468abc4e569bf79f9, type: 3}
-  m_Name: premadeTest
-  m_EditorClassIdentifier: 
+  m_Name: spell_gratin
+  m_EditorClassIdentifier: Assembly-CSharp::PremadeSpell
   SpellData:
-    Name: test
-    Sprite: {fileID: 21300000, guid: 45d808fee3e46c64ab69634e7c4bebea, type: 3}
+    Name: gratin
+    Sprite: {fileID: 21300000, guid: 40f5be10fe958074cb7f027a20cbb681, type: 3}
     IngredientsCombination: 
     IsOccludedByWalls: 1
-    Range: 2
-    CoolDown: 2
+    Range: 0
+    CoolDown: 0
     Effects:
-    - effectType: 0
+    - effectType: 2
       statType: 0
-      value: 4
-    AreaOfEffect: {fileID: 11400000, guid: 9536495f8a6d0fc469e8425b558580e4, type: 2}
+      value: 5
+    AreaOfEffect: {fileID: 11400000, guid: fa6ea6f8da8fad049b72eda33bab4a99, type: 2}

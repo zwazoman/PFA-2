@@ -10,14 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c346ecbdd44d67468abc4e569bf79f9, type: 3}
-  m_Name: new spell 1
+  m_Name: spell_brochettes
   m_EditorClassIdentifier: Assembly-CSharp::PremadeSpell
   SpellData:
-    Name: boule
+    Name: Brochettes
     Sprite: {fileID: 21300000, guid: 807b7c03d549e074bb5768b826418b56, type: 3}
     IngredientsCombination: 
     IsOccludedByWalls: 1
-    Range: 0
+    Range: 5
     CoolDown: 1
-    Effects: []
+    Effects:
+    - effectType: 0
+      statType: 0
+      value: 1
     AreaOfEffect: {fileID: 11400000, guid: fa6ea6f8da8fad049b72eda33bab4a99, type: 2}

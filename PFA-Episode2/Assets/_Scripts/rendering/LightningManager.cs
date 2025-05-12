@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class LightningManager : MonoBehaviour
@@ -16,8 +17,16 @@ public class LightningManager : MonoBehaviour
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     public static void onSceneLoad()
     {
-
+        try
+        {
+            ((LightningManager)FindAnyObjectByType(typeof(LightningManager))).UpdateLightningInfo();
+        }
+        catch(Exception e)
+        {
+            Debug.LogException(e);
+        }
     }
+
 
     public void UpdateLightningInfo()
     {

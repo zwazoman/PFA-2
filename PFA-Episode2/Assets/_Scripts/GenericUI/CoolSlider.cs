@@ -11,24 +11,41 @@ public class CoolSlider : MonoBehaviour
         get => _value;
         set
         {
-            _value = value;
+            
 
 #if UNITY_EDITOR
             if (Application.isPlaying)
             {
-                _mainSlider.DOValue(value, _tweenDuration);
-                _backGroundSlider.DOValue(value, _tweenDuration * 2f);
+                if(value<_value)
+                {
+                    _mainSlider.DOValue(value, _tweenDuration);
+                    _backGroundSlider.DOValue(value, _tweenDuration * 2f);
+                }
+                else
+                {
+                    _mainSlider.DOValue(value, _tweenDuration * 2f);
+                    _backGroundSlider.DOValue(value, _tweenDuration);
+                }
+                
             }
             else
             {
                 _mainSlider.value = value;
                 _backGroundSlider.value = value;
             }
-            
 #else
-            _mainSlider.DOValue(value, _tweenDuration);
-            _backGroundSlider.DOValue(value, _tweenDuration*2f);
+            if(value<_value)
+                {
+                    _mainSlider.DOValue(value, _tweenDuration);
+                    _backGroundSlider.DOValue(value, _tweenDuration * 2f);
+                }
+                else
+                {
+                    _mainSlider.DOValue(value, _tweenDuration * 2f);
+                    _backGroundSlider.DOValue(value, _tweenDuration);
+                }
 #endif
+            _value = value;
         }
     }
 
