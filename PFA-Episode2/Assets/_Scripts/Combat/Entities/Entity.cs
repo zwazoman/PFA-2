@@ -4,6 +4,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
 using DG.Tweening;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(SpellCaster))]
 public class Entity : MonoBehaviour
@@ -17,6 +18,10 @@ public class Entity : MonoBehaviour
     protected List<WayPoint> Walkables = new List<WayPoint>();
 
     public Sprite Icon;
+
+    //events
+    public event Action OnDead;
+
 
     protected virtual void Awake()
     {
@@ -265,7 +270,7 @@ public class Entity : MonoBehaviour
     public async UniTask Die()
     {
         print("Die");
-
+        OnDead?.Invoke();
         currentPoint.StepOff();
         Destroy(gameObject);
         await CombatManager.Instance.UnRegisterEntity(this);

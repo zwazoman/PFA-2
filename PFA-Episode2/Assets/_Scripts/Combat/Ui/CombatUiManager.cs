@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
+using static UnityEngine.UI.GridLayoutGroup;
+using UnityEngine.UI;
 
 public class CombatUiManager : MonoBehaviour
 {
@@ -30,7 +32,7 @@ public class CombatUiManager : MonoBehaviour
     [SerializeField] public EndButton endButton;
 
     [SerializeField] public List<Transform> SpellSlots = new();
-    [SerializeField] Transform _entityFramesGroup;
+    [SerializeField] HorizontalOrVerticalLayoutGroup _entityFramesGroup;
     [SerializeField] EntityInfoFrame _playerFrame;
 
     [Header("Asset References")]
@@ -40,13 +42,17 @@ public class CombatUiManager : MonoBehaviour
     {
         if(e is EnemyEntity)
         {
-            EntityInfoFrame frame = (EntityInfoFrame)Instantiate(_ennemyInfoFramePrefab, _entityFramesGroup);
+            EntityInfoFrame frame = (EntityInfoFrame)Instantiate(_ennemyInfoFramePrefab, _entityFramesGroup.transform);
             frame.Setup(e);
+            frame.transform.SetAsFirstSibling();
         }
         else if(e is PlayerEntity)
         {
             _playerFrame.Setup(e);
         }
+
         
+        
+
     }
 }
