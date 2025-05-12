@@ -52,7 +52,7 @@ public class MapBuildingTools : MonoBehaviour
             // Rotation du sprite
             Vector3 dir = PointB.transform.localPosition - PointA.transform.localPosition;
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-            CurrentTrail.transform.rotation = Quaternion.Euler(0, 0, angle);
+            CurrentTrail.transform.localRotation = Quaternion.Euler(0, 0, angle);
             _savePath.Add(CurrentTrail);
         }
         else
