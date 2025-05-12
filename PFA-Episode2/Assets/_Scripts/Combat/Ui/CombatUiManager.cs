@@ -25,8 +25,28 @@ public class CombatUiManager : MonoBehaviour
     }
     #endregion
 
+    [Header("Scene references")]
     [SerializeField] public AnimatedPanel playerHUD;
     [SerializeField] public EndButton endButton;
 
     [SerializeField] public List<Transform> SpellSlots = new();
+    [SerializeField] Transform _entityFramesGroup;
+    [SerializeField] EntityInfoFrame _playerFrame;
+
+    [Header("Asset References")]
+    [SerializeField] EntityInfoFrame _ennemyInfoFramePrefab;
+
+    public void RegisterEntity(Entity e)
+    {
+        if(e is EnemyEntity)
+        {
+            EntityInfoFrame frame = (EntityInfoFrame)Instantiate(_ennemyInfoFramePrefab, _entityFramesGroup);
+            frame.Setup(e);
+        }
+        else if(e is PlayerEntity)
+        {
+            _playerFrame.Setup(e);
+        }
+        
+    }
 }

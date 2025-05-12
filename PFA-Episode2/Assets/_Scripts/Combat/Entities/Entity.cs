@@ -16,6 +16,7 @@ public class Entity : MonoBehaviour
     protected Dictionary<WayPoint, int> WaypointDistance = new Dictionary<WayPoint, int>();
     protected List<WayPoint> Walkables = new List<WayPoint>();
 
+    public Sprite Icon;
 
     protected virtual void Awake()
     {
