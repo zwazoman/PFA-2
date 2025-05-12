@@ -27,5 +27,7 @@ public class Sauce : IngredientBase
                 Spell.Effects.Add(new(SpellEffectType.Fire, StatType.PercentageIncrease, -1));
                 break;
         }
+
+        Spell.AreaOfEffect = areaOfEffect;
     }
 }
