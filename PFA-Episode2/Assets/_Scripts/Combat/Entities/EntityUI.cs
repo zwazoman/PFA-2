@@ -25,7 +25,7 @@ public class EntityUI : MonoBehaviour
 
     private async UniTask UpdateLifebar(float delta, float newValue)
     {
-        Debug.Log("delta : " + delta.ToString() + " , new value : " + newValue.ToString());
+        //Debug.Log("delta : " + delta.ToString() + " , new value : " + newValue.ToString());
         lifebar.Value = newValue;
     }
 }

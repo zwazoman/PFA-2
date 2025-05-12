@@ -36,7 +36,7 @@ public class SpellCaster : MonoBehaviour
     {
         List<WayPoint> zonePoints = new();
 
-        if (!rangePoints.Contains(targetedPoint)) return zonePoints ;
+        if (!rangePoints.Contains(targetedPoint)) return zonePoints;
 
         Vector3Int targetedPointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(targetedPoint);
 
@@ -127,8 +127,12 @@ public class SpellCaster : MonoBehaviour
             Vector3Int entityTilePos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(entity.currentPoint);
             Vector3Int targetTilePos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(target);
             Vector3Int targetToEntity = entityTilePos - targetTilePos;
+
+            int xPushDirection = targetToEntity.x != 0 ? (int)Mathf.Sign(targetToEntity.x) : 0;
+            int zPushDirection = targetToEntity.z != 0 ? (int)Mathf.Sign(targetToEntity.z) : 0;
+
             context.distanceToPlayer = (byte)targetToEntity.magnitude;
-            context.PushDirection = new Vector3((int)Mathf.Sign(targetToEntity.x), 0, (int)Mathf.Sign(targetToEntity.z));
+            context.PushDirection = new Vector3(xPushDirection, 0, zPushDirection);
 
             await entity.ApplySpell(spell, context);
         }
