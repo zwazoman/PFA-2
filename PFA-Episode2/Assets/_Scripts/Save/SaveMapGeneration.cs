@@ -98,7 +98,7 @@ public class SaveMapGeneration : MonoBehaviour
     public void LoadMap()
     {
         string path = Application.persistentDataPath + $"/MapSave{SaveID}.json";
-
+        print(path);
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
