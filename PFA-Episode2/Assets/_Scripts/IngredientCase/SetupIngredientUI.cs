@@ -7,6 +7,7 @@ public class SetupIngredientUI : MonoBehaviour
     [SerializeField] private List<IngredientUI> _listIngredientUI = new();
     [SerializeField] private List<ColorPanel> _listColor = new();
     public List<List<IngredientBase>> ListListIngredient = new();
+    private bool _firstTime;
 
     public static SetupIngredientUI Instance;
 
@@ -73,6 +74,7 @@ public class SetupIngredientUI : MonoBehaviour
             img.color = _listColor[colorIndex].ColorDark;
         }
     }
+
     public async void Next(int index)
     {
         foreach(IngredientBase ing in ListListIngredient[index])
@@ -80,6 +82,15 @@ public class SetupIngredientUI : MonoBehaviour
             if (ing is Sauce Sauce) { GameManager.Instance.playerInventory.Sauces.Add(Sauce); }
             else if (ing is Ingredient Ingredient) { GameManager.Instance.playerInventory.Ingredients.Add(Ingredient); }
         }
-        await SceneTransitionManager.Instance.GoToScene("WorldMap");
+        if (SaveMapGeneration.Instance.PositionMap == 0 && !_firstTime)
+        {
+            _firstTime = true;
+            ListListIngredient.Clear();
+            ChooseIngredient.Instance.ResetIngredient();
+        }
+        else
+        {
+            await SceneTransitionManager.Instance.GoToScene("WorldMap");
+        }
     }
 }

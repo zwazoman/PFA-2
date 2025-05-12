@@ -35,7 +35,6 @@ public class DraggableSpell : Draggable
 
     public async UniTask BeginDrag()
     {
-        Debug.Log("begin drag");
         if (isDragging)
         {
             spellCaster.entity.ClearWalkables();
@@ -55,8 +54,8 @@ public class DraggableSpell : Draggable
                 _currentPoint = point;
 
                 spellCaster.StopSpellZonePreview(_rangePoints, ref zonePoints);
-                Debug.Log("null spell : " + spell == null);
-                Debug.Log("spell name : " + spell.Name);
+                //Debug.Log("null spell : " + spell == null);
+                //Debug.Log("spell name : " + spell.Name);
                 zonePoints = spellCaster.PreviewSpellZone(spell, point, _rangePoints);
             }
             else if (point == null)

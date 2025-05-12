@@ -183,7 +183,6 @@ public class EnemyEntity : Entity
 
     WayPoint GetInvertShot(WayPoint originalTarget, WayPoint rangeTarget, SpellData choosenSpell, out WayPoint pointToSelect)
     {
-
         Vector3Int selfPointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(originalTarget);
         Vector3Int zonePointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(targetPlayerPoint);
         Vector3Int rangepointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(rangeTarget);

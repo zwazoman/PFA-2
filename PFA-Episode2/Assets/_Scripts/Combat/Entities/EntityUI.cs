@@ -19,13 +19,14 @@ public class EntityUI : MonoBehaviour
         lifebar.MinValue = 0;
         UpdateLifebar(0,owner.stats.currentHealth);
 
-        //topleft icon
-        //...
+
+        //topleft icons
+        CombatUiManager.Instance.RegisterEntity(owner);
     }
 
     private async UniTask UpdateLifebar(float delta, float newValue)
     {
-        Debug.Log("delta : " + delta.ToString() + " , new value : " + newValue.ToString());
+        //Debug.Log("delta : " + delta.ToString() + " , new value : " + newValue.ToString());
         lifebar.Value = newValue;
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
 using DG.Tweening;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(SpellCaster))]
 public class Entity : MonoBehaviour
@@ -15,6 +16,11 @@ public class Entity : MonoBehaviour
 
     protected Dictionary<WayPoint, int> WaypointDistance = new Dictionary<WayPoint, int>();
     protected List<WayPoint> Walkables = new List<WayPoint>();
+
+    public Sprite Icon;
+
+    //events
+    public event Action OnDead;
 
 
     protected virtual void Awake()
@@ -97,15 +103,19 @@ public class Entity : MonoBehaviour
 
     async UniTask Push(float pushForce, Vector3 pushDirection)
     {
-        return;
+        print(pushDirection);
 
         WayPoint choosenPoint = null;
         float damages = 0;
 
-        bool isDiagonal = pushDirection.x == 0 || pushDirection.y == 0;
+        bool isDiagonal = pushDirection.x != 0 && pushDirection.z != 0;
+
+        print(isDiagonal);
+
+        if (pushDirection == Vector3.zero)
+            return;
 
         Debug.DrawRay(transform.position, pushDirection,Color.red,20);
-
 
         Vector3 posWithHeigth = transform.position + Vector3.up * 0.2f;
 
@@ -260,7 +270,7 @@ public class Entity : MonoBehaviour
     public async UniTask Die()
     {
         print("Die");
-
+        OnDead?.Invoke();
         currentPoint.StepOff();
         Destroy(gameObject);
         await CombatManager.Instance.UnRegisterEntity(this);
