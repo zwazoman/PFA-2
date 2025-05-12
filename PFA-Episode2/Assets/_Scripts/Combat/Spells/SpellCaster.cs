@@ -108,15 +108,20 @@ public class SpellCaster : MonoBehaviour
             return;
         }
 
+        print("cast Spell");
+
         SpellCastingContext context = new();
 
         List<Entity> hitEntities = new();
+
+        print(zonePoints.Count);
 
         foreach (WayPoint point in zonePoints)
         {
             if (point.State == WaypointState.HasEntity)
             {
                 hitEntities.Add(point.Content);
+                print(point.Content.gameObject.name);
             }
         }
 
