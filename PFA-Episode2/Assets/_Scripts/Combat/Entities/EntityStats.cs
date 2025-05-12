@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,10 +23,10 @@ public class EntityStats
     public void Setup(float maxHP)
     {
         this.maxHealth = maxHP;
-        currentHealth = maxHP;
+        currentHealth = maxHP+1;
         Debug.Log(maxHealth);
 
-        ApplyHealth(0);
+        ApplyHealth(-1);
         owner.gameObject.GetComponent<EntityUI>().Setup(owner);
     }
 
