@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using System;
 using UnityEngine;
 
 //controle la camera pendant les combats.
@@ -8,12 +9,34 @@ public class CameraBehaviour : MonoBehaviour
 
     Vector3 basePosition;
 
-    private void Start()
+    private async void Start()
     {
         basePosition = transform.position;
 
         CombatManager.Instance.OnNewTurn += OnNewTurn;
+
+        await Awaitable.NextFrameAsync();
+
+        foreach(Entity e in CombatManager.Instance.PlayerEntities)
+        {
+            if(e is PlayerEntity )
+            {
+                e.stats.healthFeedbackTasks.Add(OnPlayerHit);
+            }
+        }
     }
+
+    private async UniTask OnPlayerHit(float delta, float newHealth)
+    {
+        if(delta < 0)
+        {
+            transform.DOShakePosition(.3f, .4f);
+        }
+
+        await UniTask.Yield();
+        return;
+    }
+
 
     void OnNewTurn(Entity e)
     {
