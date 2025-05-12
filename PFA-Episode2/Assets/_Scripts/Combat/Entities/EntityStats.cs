@@ -46,7 +46,7 @@ public class EntityStats
 
     public async UniTask ApplyHealth(float delta)
     {
-        Debug.Log("apply health : " + delta.ToString());
+        //Debug.Log("apply health : " + delta.ToString());
         currentHealth += delta;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
