@@ -25,7 +25,6 @@ public class SpellData
 
     [Header("Zone")]
     public AreaOfEffect AreaOfEffect;
-    
 }
 
 [Serializable]
