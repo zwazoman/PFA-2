@@ -52,11 +52,9 @@ public class PlayerMap : MonoBehaviour
 
         foreach (KeyValuePair<Vector3Int, Node> KeyAndValues in MapMaker2.Instance.DicoNode)
         {
-            print(positionX);
             if (KeyAndValues.Key == position)
             {
                 SaveMapGeneration.Instance.SaveMap();
-
                 if (KeyAndValues.Value.EventName.ToString() == "Start") { break; }
                 await SceneTransitionManager.Instance.GoToScene(KeyAndValues.Value.EventName.ToString());
             }
