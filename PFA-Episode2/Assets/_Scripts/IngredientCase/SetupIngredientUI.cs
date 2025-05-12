@@ -85,6 +85,7 @@ public class SetupIngredientUI : MonoBehaviour
         if (SaveMapGeneration.Instance.PositionMap == 0 && !_firstTime)
         {
             _firstTime = true;
+            ListListIngredient.Clear();
             ChooseIngredient.Instance.ResetIngredient();
         }
         else
