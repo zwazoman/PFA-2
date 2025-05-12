@@ -72,7 +72,7 @@ public class SaveMapGeneration : MonoBehaviour
             SerializableLink linkObj = new()
             {
                 transformLink = list,
-                rotationLink = link.transform.rotation
+                rotationLink = link.transform.localRotation
             };
 
             wrapper.links.Add(linkObj);
