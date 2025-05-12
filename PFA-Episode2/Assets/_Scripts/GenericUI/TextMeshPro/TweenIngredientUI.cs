@@ -2,12 +2,14 @@ using UnityEngine;
 using DG.Tweening;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 
 public class TweenIngredientUI : MonoBehaviour
 {
     [SerializeField] private RectTransform _tmpRect;
     [SerializeField] private List<RectTransform> _panelToTween = new();
+    [SerializeField] private HorizontalLayoutGroup _layout;
     public static TweenIngredientUI Instance;
 
     private void Awake()
@@ -17,6 +19,7 @@ public class TweenIngredientUI : MonoBehaviour
 
     private async void Start()
     {
+        //_layout.enabled = true;
         Sequence seq = DOTween.Sequence();
         seq.Join(_tmpRect.DOScale(0.9f, 0.7f).SetEase(Ease.OutBack));
         seq.Join(_tmpRect.DOAnchorPos(new Vector2(0, 955), 0.5f).SetEase(Ease.InOutQuad));
