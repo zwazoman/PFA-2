@@ -16,6 +16,11 @@ public class Entity : MonoBehaviour
     protected Dictionary<WayPoint, int> WaypointDistance = new Dictionary<WayPoint, int>();
     protected List<WayPoint> Walkables = new List<WayPoint>();
 
+    public Sprite Icon;
+
+    //events
+    public event Action OnDead;
+
     protected virtual void Awake()
     {
         TryGetComponent(out entitySpellCaster);
