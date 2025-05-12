@@ -86,10 +86,12 @@ public class SetupIngredientUI : MonoBehaviour
         {
             _firstTime = true;
             ListListIngredient.Clear();
+            await TweenIngredientUI.Instance.TweenUIDespawn();
             ChooseIngredient.Instance.ResetIngredient();
         }
         else
         {
+            await TweenIngredientUI.Instance.TweenUIDespawn();
             await SceneTransitionManager.Instance.GoToScene("WorldMap");
         }
     }

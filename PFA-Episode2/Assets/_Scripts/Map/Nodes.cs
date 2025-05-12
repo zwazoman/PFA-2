@@ -66,5 +66,9 @@ public class Node : MonoBehaviour
         }
         if(PlayerMap.Instance.PositionMap == Position - 1) { _button.interactable = true; }
         else { _button.interactable = false; }
+        Vector3 rot = transform.eulerAngles;
+        rot.z = -90f;
+        transform.eulerAngles = rot;
+
     }
 }

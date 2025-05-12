@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
+using System.Threading.Tasks;
 
 
 public class ChooseIngredient : MonoBehaviour
@@ -149,10 +150,11 @@ public class ChooseIngredient : MonoBehaviour
         else { return true; }
     }
 
-    public void ResetIngredient()
+    public async Task ResetIngredient()
     {
         IngredientBaseChooseBySac.Clear();
         _completeListIngredientChoose.Clear();
         ChooseRandomIngredient();
+        await TweenIngredientUI.Instance.TweenUISpawn();
     }
 }
