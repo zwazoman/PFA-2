@@ -35,6 +35,6 @@ public class EntityInfoFrame : MonoBehaviour
     private async UniTask OnHpUpdated(float delta, float newValue)
     {
         _lifebar.Value = newValue;
-        if (delta < 0) { transform.DOShakePosition(.2f, 20); }
+        if (delta < 0 && Time.timeSinceLevelLoad > 1) { transform.DOShakePosition(.2f, 20); }
     }
 }
