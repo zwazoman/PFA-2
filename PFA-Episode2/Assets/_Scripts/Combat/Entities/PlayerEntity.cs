@@ -7,13 +7,13 @@ using UnityEngine.EventSystems;
 public class PlayerEntity : Entity
 {
     [HideInInspector] public List<WayPoint> walkables = new();
-    
+    [HideInInspector] public EndButton endTurnButton;
+
     [SerializeField] public List<DraggableSpell> spellsUI = new();
 
     [SerializeField] int maxHealth;
     [SerializeField] int maxMovePoints;
 
-    [HideInInspector] public EndButton endTurnButton;
 
     protected override void Awake()
     {
@@ -29,6 +29,11 @@ public class PlayerEntity : Entity
         base.Start();
         CombatManager.Instance.RegisterEntity(this);
         stats.Setup(maxHealth);
+
+        foreach(DraggableSpell spell in spellsUI)
+        {
+            spells.Add(spell.spell);
+        }
     }
 
     public override async UniTask PlayTurn()

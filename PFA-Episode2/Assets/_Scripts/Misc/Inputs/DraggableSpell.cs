@@ -5,9 +5,8 @@ using UnityEngine.UI;
 
 public class DraggableSpell : Draggable
 {
-    [HideInInspector] public SpellData spell;
+    [HideInInspector] public Spell spell;
     [HideInInspector] public SpellCaster spellCaster;
-    [SerializeField] PremadeSpell _premadeSpell;
 
     WayPoint _currentPoint = null;
     List<WayPoint> _rangePoints = new();
@@ -15,12 +14,14 @@ public class DraggableSpell : Draggable
     [Header("scene references")]
     [SerializeField] private Image image;
 
-    public void SetUp(SpellData spell,Entity player)
+    public void SetUp(Spell spell,Entity player)
     {
-        if(spell.Sprite != null)
-            image.sprite = spell.Sprite;
+        if(spell.spellData.Sprite != null)
+            image.sprite = spell.spellData.Sprite;
 
         this.spell = spell;
+        spell.OnCooled += EnableSpell;
+
         spellCaster = player.entitySpellCaster;
     }
 
@@ -28,9 +29,6 @@ public class DraggableSpell : Draggable
     protected override void Awake()
     {
         base.Awake();
-
-        if (_premadeSpell != null)
-            spell = _premadeSpell.SpellData;
     }
 
     public async UniTask BeginDrag()
@@ -73,5 +71,15 @@ public class DraggableSpell : Draggable
         await spellCaster.TryCastSpell(spell, wayPoint, _rangePoints, zonePoints);
 
         spellCaster.entity.ApplyWalkables();
+    }
+
+    void EnableSpell()
+    {
+        //activer le spell de merde
+    }
+
+    void DisableSpell()
+    {
+        //désacctiver le spell de merde
     }
 }

@@ -15,6 +15,7 @@ public class Entity : MonoBehaviour
 
     protected Dictionary<WayPoint, int> WaypointDistance = new Dictionary<WayPoint, int>();
     protected List<WayPoint> Walkables = new List<WayPoint>();
+    protected List<Spell> spells = new();
 
     public Sprite Icon;
 
@@ -41,6 +42,8 @@ public class Entity : MonoBehaviour
         Tools.Flood(currentPoint);
         stats.currentMovePoints = stats.maxMovePoints;
         await stats.ApplyShield(-1);
+
+        TickCooldown();
     }
 
     public virtual async UniTask EndTurn()
@@ -49,13 +52,19 @@ public class Entity : MonoBehaviour
         ClearWalkables();
     }
 
+    void TickCooldown()
+    {
+        foreach(Spell spell in spells)
+        {
+            spell.TickSpellCooldown();
+        }
+    }
 
-
-    public async UniTask ApplySpell(SpellData spell, SpellCastingContext context)
+    public async UniTask ApplySpell(Spell spell, SpellCastingContext context)
     {
         print("applySpell");
 
-        foreach (SpellEffect effect in spell.Effects)
+        foreach (SpellEffect effect in spell.spellData.Effects)
         {
             switch (effect.effectType)
             {
@@ -77,7 +86,6 @@ public class Entity : MonoBehaviour
             }
         }
     }
-
 
     public void ApplyWalkables(bool showTiles = true)
     {

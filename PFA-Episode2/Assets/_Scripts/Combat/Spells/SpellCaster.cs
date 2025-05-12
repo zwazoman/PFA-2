@@ -10,18 +10,18 @@ public class SpellCaster : MonoBehaviour
 
     public const byte RangeRingThickness = 3;
 
-    public List<WayPoint> PreviewSpellRange(SpellData spell, WayPoint center = null, bool showZone = true, bool ignoreTerrain = false)
+    public List<WayPoint> PreviewSpellRange(Spell spell, WayPoint center = null, bool showZone = true, bool ignoreTerrain = false)
     {
         if (center == null)
             center = entity.currentPoint;
 
-        Dictionary<WayPoint, int> floodDict = Tools.SmallFlood(center, spell.Range);
+        Dictionary<WayPoint, int> floodDict = Tools.SmallFlood(center, spell.spellData.Range);
 
         List<WayPoint> rangePoints = new();
 
         foreach (WayPoint point in floodDict.Keys)
         {
-            if ((!ignoreTerrain && (spell.IsOccludedByWalls && Tools.CheckWallsBetween(center, point) || point.State == WaypointState.Obstructed)) || spell.Range > RangeRingThickness && (floodDict[point] - RangeRingThickness) < 0)
+            if ((!ignoreTerrain && (spell.spellData.IsOccludedByWalls && Tools.CheckWallsBetween(center, point) || point.State == WaypointState.Obstructed)) || spell.spellData.Range > RangeRingThickness && (floodDict[point] - RangeRingThickness) < 0)
                 continue;
             else if (showZone)
                 point.ChangeTileColor(point._rangeMaterial);
@@ -32,7 +32,7 @@ public class SpellCaster : MonoBehaviour
         return rangePoints;
     }
 
-    public List<WayPoint> PreviewSpellZone(SpellData spell, WayPoint targetedPoint, List<WayPoint> rangePoints, bool showZone = true)
+    public List<WayPoint> PreviewSpellZone(Spell spell, WayPoint targetedPoint, List<WayPoint> rangePoints, bool showZone = true)
     {
         List<WayPoint> zonePoints = new();
 
@@ -40,7 +40,7 @@ public class SpellCaster : MonoBehaviour
 
         Vector3Int targetedPointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(targetedPoint);
 
-        foreach (Vector2Int pos in spell.AreaOfEffect.AffectedTiles)
+        foreach (Vector2Int pos in spell.spellData.AreaOfEffect.AffectedTiles)
         {
             Vector3Int posOffset = new Vector3Int(pos.x, 0, pos.y);
             Vector3Int newPos = targetedPointPos + posOffset;
@@ -100,7 +100,7 @@ public class SpellCaster : MonoBehaviour
         zonePoints.Clear();
     }
 
-    public async UniTask TryCastSpell(SpellData spell, WayPoint target, List<WayPoint> rangePoints, List<WayPoint> zonePoints)
+    public async UniTask TryCastSpell(Spell spell, WayPoint target, List<WayPoint> rangePoints, List<WayPoint> zonePoints)
     {
         if (zonePoints.Count == 0)
         {
@@ -141,6 +141,9 @@ public class SpellCaster : MonoBehaviour
 
             await entity.ApplySpell(spell, context);
         }
+
+        spell.StartCooldown();
+
         StopSpellRangePreview(ref rangePoints, ref zonePoints);
     }
 }
