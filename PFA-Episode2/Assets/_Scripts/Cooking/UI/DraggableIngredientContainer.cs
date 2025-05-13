@@ -55,7 +55,7 @@ public class DraggableIngredientContainer : DraggableItemContainer
         _descriptionPanel.gameObject.SetActive(false);
         List<RaycastResult> a = new();
         EventSystem.current.RaycastAll(eventData, a);
-        if (a[0].gameObject.TryGetComponent(out CookingPot pot) && pot.TryAddIngredient(this))
+        if (a.Count > 0 && a[0].gameObject.TryGetComponent(out CookingPot pot) && pot.TryAddIngredient(this))
         {
             DeleteIcon.SetActive(true);
             CancelButton.onClick.AddListener( () => pot.RemoveIngredient(this));
