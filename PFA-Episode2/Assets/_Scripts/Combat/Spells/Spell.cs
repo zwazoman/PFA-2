@@ -18,7 +18,7 @@ public class Spell
 
     bool _canUse;
 
-    int cooling = 0;
+    public int cooling = 0;
 
     public void StartCooldown()
     {

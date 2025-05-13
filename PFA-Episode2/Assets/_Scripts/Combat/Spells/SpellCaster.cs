@@ -100,12 +100,12 @@ public class SpellCaster : MonoBehaviour
         zonePoints.Clear();
     }
 
-    public async UniTask TryCastSpell(Spell spell, WayPoint target, List<WayPoint> rangePoints, List<WayPoint> zonePoints)
+    public async UniTask<bool> TryCastSpell(Spell spell, WayPoint target, List<WayPoint> rangePoints, List<WayPoint> zonePoints)
     {
         if (zonePoints.Count == 0)
         {
             StopSpellRangePreview(ref rangePoints, ref zonePoints);
-            return;
+            return false;
         }
 
         print("cast Spell");
@@ -145,6 +145,8 @@ public class SpellCaster : MonoBehaviour
         spell.StartCooldown();
 
         StopSpellRangePreview(ref rangePoints, ref zonePoints);
+
+        return true;
     }
 }
 
@@ -157,4 +159,5 @@ public struct SpellCastingContext
     public byte numberOfHitEnnemies;
     public byte distanceToPlayer;
     public Vector3 PushDirection;
+    public Vector3 casterPos;
 }

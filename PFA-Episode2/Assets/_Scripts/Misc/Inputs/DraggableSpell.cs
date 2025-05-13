@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,12 +13,19 @@ public class DraggableSpell : Draggable
     List<WayPoint> _rangePoints = new();
 
     [Header("scene references")]
-    [SerializeField] private Image image;
+    [SerializeField] private Image _spellImage;
+    [SerializeField] private Image _cooldownImage;
+
+    [SerializeField] private TMP_Text _cooldownText;
+
+    bool _canUse = true;
 
     public void SetUp(Spell spell,Entity player)
     {
         if(spell.spellData.Sprite != null)
-            image.sprite = spell.spellData.Sprite;
+        { 
+            _spellImage.sprite = _cooldownImage.sprite = spell.spellData.Sprite; 
+        }
 
         this.spell = spell;
         spell.OnCooled += EnableSpell;
@@ -33,7 +41,7 @@ public class DraggableSpell : Draggable
 
     public async UniTask BeginDrag()
     {
-        if (isDragging)
+        if (isDragging && _canUse)
         {
             spellCaster.entity.ClearWalkables();
             _rangePoints = spellCaster.PreviewSpellRange(spell);
@@ -68,18 +76,35 @@ public class DraggableSpell : Draggable
         WayPoint wayPoint = _currentPoint;
         Reset();
 
-        await spellCaster.TryCastSpell(spell, wayPoint, _rangePoints, zonePoints);
+        if(await spellCaster.TryCastSpell(spell, wayPoint, _rangePoints, zonePoints))
+            DisableSpell();
 
         spellCaster.entity.ApplyWalkables();
     }
 
     void EnableSpell()
     {
-        //activer le spell de merde
+        _canUse = true;
+
+        _spellImage.enabled = true;
+
+        _cooldownImage.enabled = false;
+        _cooldownText.enabled = false;
+    }
+
+    public void TickCooldownText()
+    {
+        _cooldownText.text = spell.cooling.ToString();
     }
 
     void DisableSpell()
     {
-        //désacctiver le spell de merde
+        _canUse = false;
+
+        _cooldownImage.enabled = true;
+        _cooldownText.enabled = true;
+        TickCooldownText();
+
+        _spellImage.enabled = false;
     }
 }

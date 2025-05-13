@@ -78,6 +78,11 @@ public class PlayerEntity : Entity
     void ShowSpellsUI()
     {
         CombatUiManager.Instance.playerHUD.Show();
+
+        foreach (DraggableSpell spell in spellsUI)
+        {
+            spell.TickCooldownText();
+        }
     }
 
     void HideSpellsUI()
