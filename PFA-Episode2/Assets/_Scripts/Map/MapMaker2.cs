@@ -214,7 +214,6 @@ public class MapMaker2 : MonoBehaviour
 
                     MapBuildingTools.Instance.TraceTonTrait(ParentNode, nodeExistant);// Trace une ligne entre le parent actuel et le node déjà existant
                     nodeExistant.Creator = ParentNode;
-
                     NodeList.Enqueue(CurrentNode);
                     break;
                 }
@@ -239,6 +238,7 @@ public class MapMaker2 : MonoBehaviour
                     CreateBranch(tour, false); // descendre
                     if (_existingValue != null)
                     {
+                        _existingValue.Intersection = true;
                         MapBuildingTools.Instance.TraceTonTrait(ParentNode, _existingValue);
                         _toutdroit = 0;
                     }

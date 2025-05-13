@@ -78,7 +78,7 @@ public class Node : MonoBehaviour
             case NodesEventTypes.Start:
                 break;
         }
-        if(PlayerMap.Instance.Y == gameObject.transform.localPosition.y || (PlayerMap.Instance.PositionMap == Position - 1 && Intersection)) { _button.interactable = true; }
+        if((PlayerMap.Instance.PositionMap == Position - 1 && PlayerMap.Instance.Y == gameObject.transform.localPosition.y) || (PlayerMap.Instance.PositionMap == Position - 1 && Intersection)) { _button.interactable = true; }
         else { _button.interactable = false; }
         Vector3 rot = transform.eulerAngles;
         rot.z = -90f;
