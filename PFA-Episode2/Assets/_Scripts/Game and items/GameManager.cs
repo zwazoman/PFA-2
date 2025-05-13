@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(this);
             
             //load data
-            staticData = Resources.Load<GameStaticData>("DishCombinationData");
+            staticData = Resources.Load<GameStaticData>("GameStaticData");
             LoadOrCreateSave();
 
 #if UNITY_EDITOR

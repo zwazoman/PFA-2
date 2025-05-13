@@ -21,6 +21,7 @@ public class EntityVisuals : MonoBehaviour
 
     async UniTask OnHealthUpdated(float delta, float newValue)
     {
+        if (Time.timeSinceLevelLoad < 1) return;
         if (delta < 0) //damage
         {
             await VisualsRoot.DOShakePosition(.5f, .2f).AsyncWaitForCompletion().AsUniTask();

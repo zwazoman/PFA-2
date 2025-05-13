@@ -15,6 +15,8 @@ public class EnemyEntity : Entity
 
     WayPoint targetPlayerPoint;
 
+    const int ThinkDelayMilis = 300;
+
     protected override void Awake()
     {
         base.Awake();
@@ -171,7 +173,7 @@ public class EnemyEntity : Entity
 
         // possibilité pour pas qu'elle se tire dessus ? ça serait rigolo n la stock qq part si ça se touche et on réésaie. si pas de solution on utilise celle qui touche
 
-        await UniTask.Delay(1000);
+        await UniTask.Delay(ThinkDelayMilis);
 
         bool targetReached = await MoveToward(choosenTargetPoint); // le point le plus proche de lancé de sort
 

@@ -4,6 +4,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
 using DG.Tweening;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(SpellCaster))]
 public class Entity : MonoBehaviour
@@ -21,6 +22,8 @@ public class Entity : MonoBehaviour
 
     //events
     public event Action OnDead;
+
+    public bool isDead { get; private set; }
 
     protected virtual void Awake()
     {
@@ -133,7 +136,7 @@ public class Entity : MonoBehaviour
     {
         print("move !");
 
-        await UniTask.Delay(1000);
+        await UniTask.Delay(300);
 
         if (targetPoint == currentPoint)
             return true;
@@ -226,10 +229,13 @@ public class Entity : MonoBehaviour
     public async UniTask Die()
     {
         print("Die");
-
+        
         currentPoint.StepOff();
-        Destroy(gameObject);
+        isDead = true;
+        OnDead?.Invoke();
+        gameObject.SetActive(false);
         await CombatManager.Instance.UnRegisterEntity(this);
-        //si il ets entrain de jouer EndTurn
+
+        EndTurn();
     }
 }

@@ -74,7 +74,7 @@ public class CombatManager : MonoBehaviour
     {
         for (; ; )
         {
-
+            //player entities
             for (int i = 0; i < PlayerEntities.Count; i++)
             {
                 PlayerEntity player = PlayerEntities[i];
@@ -83,6 +83,7 @@ public class CombatManager : MonoBehaviour
                 await player.PlayTurn();
             }
 
+            //enemy entities
             for (int i = 0; i < EnemyEntities.Count; i++)
             {
                 EnemyEntity enemy = EnemyEntities[i];
@@ -90,6 +91,10 @@ public class CombatManager : MonoBehaviour
                 OnNewTurn?.Invoke(enemy);
                 await enemy.PlayTurn();
             }
+
+            //cleanup corpses
+            foreach(PlayerEntity player in PlayerEntities) if(player.isDead) Destroy(player);
+            foreach(EnemyEntity e in EnemyEntities) if(e.isDead) Destroy(e);
 
             await UniTask.Yield();
         }
