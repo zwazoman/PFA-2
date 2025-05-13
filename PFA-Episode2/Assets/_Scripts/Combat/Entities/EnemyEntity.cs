@@ -188,9 +188,9 @@ public class EnemyEntity : Entity
     {
         print("attack !");
         rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint);
-        await UniTask.Delay(1000);
+        await UniTask.Delay(ThinkDelayMilis);
         zoneData = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints);
-        await UniTask.Delay(1000);
+        await UniTask.Delay(ThinkDelayMilis);
         await entitySpellCaster.TryCastSpell(choosenSpell, pointToSelect, rangePoints, zoneData);
 
         return targetPlayerPoint.Content != null;
