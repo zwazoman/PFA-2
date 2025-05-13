@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "DishCombinationData", menuName = "Cooking/DishCombinationData")]
-public class DishCombinationData : ScriptableObject
+public class GameStaticData : ScriptableObject
 {
     public SerializedDictionary<string, spellVisualData> Visuals = new();
+
+    public SerializedDictionary<Rarity, Sprite> itemFramesPerRarity = new();
 
     public void RebuildTable()
     {

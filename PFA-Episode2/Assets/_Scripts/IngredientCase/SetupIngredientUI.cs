@@ -22,7 +22,7 @@ public class SetupIngredientUI : MonoBehaviour
         {
             _listIngredientUI[index].effectDescription.text = Serializer.GetSauceEffectString(Sauce);
             if (_listIngredientUI[index].familly != null) { _listIngredientUI[index].familly.text = "Sauce"; }
-            _listIngredientUI[index].rarityFrame.sprite = IngredientBase.frame;
+            _listIngredientUI[index].rarityFrame.sprite = GameManager.Instance.staticData.itemFramesPerRarity[IngredientBase.rarity];
             _listIngredientUI[index].SpriteZone.SetActive(true);
             _listIngredientUI[index].famillyPanelColorDark[0].rectTransform.sizeDelta = new Vector2(450, 100);
             _listIngredientUI[index].famillyPanelColorDark[0].rectTransform.localPosition = new Vector3(131, -81, _listIngredientUI[index].famillyPanelColorDark[0].rectTransform.position.z);
@@ -56,7 +56,7 @@ public class SetupIngredientUI : MonoBehaviour
                     SetupColor(index, 1);
                     break;
             }
-            _listIngredientUI[index].rarityFrame.sprite = Ingredient.frame;
+            _listIngredientUI[index].rarityFrame.sprite = GameManager.Instance.staticData.itemFramesPerRarity[IngredientBase.rarity]; ;
         }
     }
 

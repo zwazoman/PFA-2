@@ -25,7 +25,7 @@ public class Crafting : MonoBehaviour
         spell.IngredientsCombination = ComputeFamilyCombinaison(ingredients[0], ingredients[1], ingredients[2]);
 
         //fetch visual data
-        DishCombinationData.spellVisualData data = GameManager.Instance.dishCombinationData.Visuals[spell.IngredientsCombination];
+        GameStaticData.spellVisualData data = GameManager.Instance.staticData.Visuals[spell.IngredientsCombination];
         spell.Name = data.name;
         spell.Sprite = data.sprite;
 
