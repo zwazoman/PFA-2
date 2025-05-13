@@ -231,8 +231,8 @@ public class Entity : MonoBehaviour
         print("Die");
 
         currentPoint.StepOff();
-        CombatManager.Instance.UnRegisterEntity(this);
         Destroy(gameObject);
+        await CombatManager.Instance.UnRegisterEntity(this);
         //si il ets entrain de jouer EndTurn
     }
 }
