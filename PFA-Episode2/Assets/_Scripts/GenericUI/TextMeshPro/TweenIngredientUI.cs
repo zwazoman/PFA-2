@@ -2,14 +2,14 @@ using UnityEngine;
 using DG.Tweening;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using UnityEngine.UI;
 
-
+/// <summary>
+/// Script qui Tween les panels liées aux ingredients
+/// </summary>
 public class TweenIngredientUI : MonoBehaviour
 {
     [SerializeField] private RectTransform _tmpRect;
-    [SerializeField] private List<RectTransform> _panelToTween = new();
-    [SerializeField] private HorizontalLayoutGroup _layout;
+    public List<RectTransform> PanelToTween = new();
     public static TweenIngredientUI Instance;
 
     private void Awake()
@@ -17,36 +17,33 @@ public class TweenIngredientUI : MonoBehaviour
         Instance = this;
     }
 
-    private async void Start()
+    private async void Start() //Pour le texte du début
     {
-        //_layout.enabled = true;
         Sequence seq = DOTween.Sequence();
-        seq.Join(_tmpRect.DOScale(0.9f, 0.7f).SetEase(Ease.OutBack));
-        seq.Join(_tmpRect.DOAnchorPos(new Vector2(0, 955), 0.5f).SetEase(Ease.InOutQuad));
+        seq.Join(_tmpRect.DOScale(0.9f, 0.5f).SetEase(Ease.OutBack));
+        seq.Join(_tmpRect.DOAnchorPos(new Vector2(0, 955), 0.35f).SetEase(Ease.InOutQuad));
         await seq.AsyncWaitForCompletion();
 
         await TweenUISpawn();
     }
 
-    public async Task TweenUISpawn()
+    public async Task TweenUISpawn() //Spawn des 3 cartes
     {
-        for (int i = 0; i < _panelToTween.Count; i++)
+        for (int i = 0; i < PanelToTween.Count; i++)
         {
-            RectTransform rect = _panelToTween[i];
-
+            RectTransform rect = PanelToTween[i];
             Sequence seq = DOTween.Sequence();
-            //seq.Join(rect.DOScale(0.9f, 0.2f).SetEase(Ease.OutBack));
 
             switch (i)
             {
                 case 0:
-                    seq.Join(rect.DOAnchorPos(new Vector2(-1300, -180), 0.5f).SetEase(Ease.OutQuad));
+                    seq.Join(rect.DOAnchorPos(new Vector2(-1300, -180), 0.35f).SetEase(Ease.OutBack));
                     break;
                 case 1:
-                    seq.Join(rect.DOAnchorPos(new Vector2(0, -180), 0.5f).SetEase(Ease.OutQuad));
+                    seq.Join(rect.DOAnchorPos(new Vector2(0, -180), 0.35f).SetEase(Ease.OutBack));
                     break;
                 case 2:
-                    seq.Join(rect.DOAnchorPos(new Vector2(1300, -180), 0.5f).SetEase(Ease.OutQuad));
+                    seq.Join(rect.DOAnchorPos(new Vector2(1300, -180), 0.35f).SetEase(Ease.OutBack));
                     break;
             }
 
@@ -54,31 +51,37 @@ public class TweenIngredientUI : MonoBehaviour
         }
     }
 
-    public async Task TweenUIDespawn()
+    public async Task TweenUIDespawn() //Dispawn des 3 cartes
     {
-        for (int i = 0; i < _panelToTween.Count; i++)
+        for (int i = 0; i < PanelToTween.Count; i++)
         {
-            RectTransform rect = _panelToTween[i];
-
             Sequence seq = DOTween.Sequence();
-            ///seq.Join(rect.DOScale(0f, 0.3f).SetEase(Ease.InBack));
+            RectTransform rect = PanelToTween[i];
 
             switch (i)
             {
                 case 0:
-                    seq.Join(rect.DOAnchorPos(new Vector2(-1300, -2100), 0.4f).SetEase(Ease.InCubic));
+                    seq.Join(rect.DOAnchorPos(new Vector2(-1300, -2100), 0.35f).SetEase(Ease.InBack));
                     break;
                 case 1:
-                    seq.Join(rect.DOAnchorPos(new Vector2(0, -2100), 0.4f).SetEase(Ease.InCubic));
+                    seq.Join(rect.DOAnchorPos(new Vector2(0, -2100), 0.35f).SetEase(Ease.InBack));
                     break;
                 case 2:
-                    seq.Join(rect.DOAnchorPos(new Vector2(1300, -2100), 0.4f).SetEase(Ease.InCubic));
+                    seq.Join(rect.DOAnchorPos(new Vector2(1300, -2100), 0.35f).SetEase(Ease.InBack));
                     break;
             }
-
-            ///seq.Join(rect.DOScale(0.9f, 0.2f).SetEase(Ease.OutBack));
             await seq.AsyncWaitForCompletion();
         }
+    }
+
+    public async Task Monte(RectTransform chosenUI) //Carte choisi 
+    {
+        Sequence seq = DOTween.Sequence();
+        seq.Join(chosenUI.DOPunchScale(new Vector3(0.5f, 0.5f, 0.5f), 0.2f, 5, 0.6f));
+        await Task.Delay(200);
+        seq.Join(chosenUI.DOAnchorPos(new Vector2(chosenUI.anchoredPosition.x, 2100), 0.35f).SetEase(Ease.InBack));
+        await Task.Delay(400);
+        chosenUI.position = new Vector2(chosenUI.anchoredPosition.x, -2100);
     }
 
 
