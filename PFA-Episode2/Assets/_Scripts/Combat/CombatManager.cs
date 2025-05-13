@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using System.Linq;
+using System;
 
 public class CombatManager : MonoBehaviour
 {
@@ -29,6 +30,8 @@ public class CombatManager : MonoBehaviour
 
     public List<PlayerEntity> PlayerEntities = new();
     public List<EnemyEntity> EnemyEntities = new();
+
+    public event Action<Entity> OnNewTurn;
 
     #region entity registration
 
@@ -71,10 +74,12 @@ public class CombatManager : MonoBehaviour
     {
         for (; ; )
         {
+
             for (int i = 0; i < PlayerEntities.Count; i++)
             {
                 PlayerEntity player = PlayerEntities[i];
                 if (player == null) continue;
+                OnNewTurn?.Invoke(player);
                 await player.PlayTurn();
             }
 
@@ -82,6 +87,7 @@ public class CombatManager : MonoBehaviour
             {
                 EnemyEntity enemy = EnemyEntities[i];
                 if (enemy == null) continue;
+                OnNewTurn?.Invoke(enemy);
                 await enemy.PlayTurn();
             }
 

@@ -1,6 +1,7 @@
 using UnityEngine;
+using System.Collections.Generic;
+using static UnityEngine.UI.GridLayoutGroup;
 using UnityEngine.UI;
-using DG.Tweening;
 
 public class CombatUiManager : MonoBehaviour
 {
@@ -26,7 +27,32 @@ public class CombatUiManager : MonoBehaviour
     }
     #endregion
 
-    [SerializeField] public CanvasGroup playerSpellGroup;
-
+    [Header("Scene references")]
+    [SerializeField] public AnimatedPanel playerHUD;
     [SerializeField] public EndButton endButton;
+
+    [SerializeField] public List<Transform> SpellSlots = new();
+    [SerializeField] HorizontalOrVerticalLayoutGroup _entityFramesGroup;
+    [SerializeField] EntityInfoFrame _playerFrame;
+
+    [Header("Asset References")]
+    [SerializeField] EntityInfoFrame _ennemyInfoFramePrefab;
+
+    public void RegisterEntity(Entity e)
+    {
+        if(e is EnemyEntity)
+        {
+            EntityInfoFrame frame = (EntityInfoFrame)Instantiate(_ennemyInfoFramePrefab, _entityFramesGroup.transform);
+            frame.Setup(e);
+            frame.transform.SetAsFirstSibling();
+        }
+        else if(e is PlayerEntity)
+        {
+            _playerFrame.Setup(e);
+        }
+
+        
+        
+
+    }
 }

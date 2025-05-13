@@ -16,5 +16,7 @@ public class IngredientUI : MonoBehaviour
 
     public TextMeshProUGUI effectDescription;
 
+    public GameObject SpriteZone;
+
     public TextMeshProUGUI familly;
 }

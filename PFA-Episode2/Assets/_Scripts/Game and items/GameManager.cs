@@ -24,28 +24,42 @@ public class GameManager : MonoBehaviour
     public Inventory playerInventory = new();
 
     [Header("Data")]
-    public DishCombinationData dishCombinationData;
+    public GameStaticData staticData;
 
+#if UNITY_EDITOR
+    //@temp
     [Header("Tests")]
     [SerializeField] List<PremadeSpell> premadeSpells = new();
+    [SerializeField] bool tests = false;
+#endif
+
 
     private void Awake()
     {
         if(instance == this || instance == null)
         {
-            Debug.Log("Initializing game manager");
+            //singleton
+            Debug.Log("Initializing game manager",this);
             instance = this;
             DontDestroyOnLoad(this);
             
-            dishCombinationData = Resources.Load<DishCombinationData>("DishCombinationData");
-
-            //@temp
-            foreach (PremadeSpell premadeSpell in premadeSpells)
-            {
-                playerInventory.Spells.Add(premadeSpell.SpellData);
-            }
-
+            //load data
+            staticData = Resources.Load<GameStaticData>("DishCombinationData");
             LoadOrCreateSave();
+
+#if UNITY_EDITOR
+            Debug.Log("Filling inventory with test Items and spells");
+            //@temp
+            if (tests)
+            {
+                foreach (PremadeSpell premadeSpell in premadeSpells)
+                {
+                    Debug.Log("- test spell ");
+                    playerInventory.Spells.Add(premadeSpell.SpellData);
+                }
+            }
+#endif
+
         }
         else
         {
@@ -57,6 +71,6 @@ public class GameManager : MonoBehaviour
 
     void LoadOrCreateSave()
     {
-        playerInventory = SaveManager.Load(0);
+        playerInventory = SaveManager.Load<Inventory>(playerInventory.NameSave, false);
     }
 }

@@ -24,6 +24,7 @@ public class FaceCamera : MonoBehaviour
         LookAtCamera();
     }
 }
+#if UNITY_EDITOR
 
 [CustomEditor(typeof(FaceCamera))]
 class FaceCameraEditor : Editor
@@ -34,3 +35,4 @@ class FaceCameraEditor : Editor
         if (GUILayout.Button("Look at camera")) ((FaceCamera)target).LookAtCamera();
     }
 }
+#endif

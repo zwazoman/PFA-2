@@ -4,6 +4,6 @@ public interface ISavable<T> where T : ISavable<T>
     /// sauvegarde l'objet 
     /// </summary>
     /// <param name="SaveFileID"></param>
-    public abstract void Save(byte SaveFileID);
+    public abstract void Save(string saveName);
 }
 

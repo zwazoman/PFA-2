@@ -25,10 +25,12 @@ public class CookingPot : MonoBehaviour
     [SerializeField] Image _sauceAreaImage;
     [SerializeField] TMP_Text _txt_cooldown, _txt_range;
 
+    [Header("Asset References")]
+    [SerializeField] Sauce _defaultSauce;
+
     #region Display
     private void UpdateCooldownAndRangeDisplay()
     {
-        Debug.Log("fzqesgrhzfegrht");
         byte cd = 0, range = 0;
         foreach(Ingredient ing in ingredients)
         {
@@ -37,8 +39,6 @@ public class CookingPot : MonoBehaviour
         }
         _txt_cooldown.text = Serializer.GetCoolDownString(cd);
         _txt_range.text = Serializer.GetRangeString(range);
-
-        Debug.Log("RDCYFGTVUYIHUIJPKO¨POJHYGULDKYTCIHJUIOKPµPIHGUPYFKCGT");
     }
 
     void UpdateIngredientsStatsDisplay()
@@ -50,19 +50,20 @@ public class CookingPot : MonoBehaviour
 
     void UpdateSauceDisplay() //@revoir image zone
     {
-        if(sauce == null)
-        {
-            txt_sauceName.text = "";
-            txt_sauceEffect.text = "";
-            _sauceAreaImage.sprite = null;
-        }
-        else
-        {
-            txt_sauceName.text = sauce.name;
-            txt_sauceEffect.text = Serializer.GetSauceEffectString(sauce);
-            _sauceAreaImage.sprite = sauce.areaOfEffect.sprite;
-        }
+        Sauce s = sauce == null ? _defaultSauce : sauce;
+
+        txt_sauceName.text = s.name;
+        txt_sauceEffect.text = Serializer.GetSauceEffectString(s);
+        _sauceAreaImage.sprite = s.areaOfEffect.sprite;
         
+        
+    }
+
+    private void Start()
+    {
+        UpdateSauceDisplay();
+        UpdateIngredientsStatsDisplay();
+        UpdateCooldownAndRangeDisplay();
     }
 
     #endregion
@@ -128,9 +129,10 @@ public class CookingPot : MonoBehaviour
     {
         spell = null;
         if (ingredients.Count != 3) return false;
-        if (sauce == null) return false;
+        //if (sauce == null) return false;
 
-        spell = Crafting.CraftNewSpell(ingredients.ToArray(),sauce);
+        spell = Crafting.CraftNewSpell(ingredients.ToArray(),sauce == null ? _defaultSauce : sauce);
+        GameManager.Instance.playerInventory.Spells.Add(spell);
 
         return true;
     }

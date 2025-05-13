@@ -13,9 +13,9 @@ public class AreaOfEffect : ScriptableObject
         Texture2D texture = new((int)Bounds.width,(int)Bounds.height);
         texture.filterMode = FilterMode.Point;
 
-        for(int i = 0; i < texture.width; i++)
+        for(int i = 0; i < 7; i++)
         {
-            for(int j = 0; j < texture.height; j++)
+            for(int j = 0; j < 7; j++)
             {
                 texture.SetPixel(i,j,AffectedTiles.Contains(new Vector2Int(i+(int)Bounds.xMin,j+ (int)Bounds.yMin)) ? Color.red : Color.white);
             }
