@@ -11,7 +11,9 @@ public class EntityInfoFrame : MonoBehaviour
     [Header("SceneReferences")]
 
     [SerializeField] CoolSlider _lifebar;
+    [SerializeField] CoolSlider _shieldBar;
     [SerializeField] TMP_Text _hpText;
+    [SerializeField] TMP_Text _shieldText;
 
     Entity _owner;
 
@@ -22,8 +24,14 @@ public class EntityInfoFrame : MonoBehaviour
 
         //healthbar
         owner.stats.healthFeedbackTasks.Add(OnHpUpdated);
-        _lifebar.MaxValue = owner.stats.maxHealth;
-        _lifebar.MinValue = 0;
+
+        owner.stats.ShieldUpdateFeeback += (float a) => {
+            _shieldBar.Value = owner.stats.shieldAmount;
+            _shieldText.text = owner.stats.shieldAmount>0? owner.stats.shieldAmount.ToString() : "";
+        };
+
+        _lifebar.MaxValue = _shieldBar.MaxValue = owner.stats.maxHealth;
+        _lifebar.MinValue = _shieldBar.MinValue = 0;
         OnHpUpdated(-1, owner.stats.currentHealth);
 
         //icon
