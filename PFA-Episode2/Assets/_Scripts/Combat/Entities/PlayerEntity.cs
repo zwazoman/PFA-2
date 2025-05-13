@@ -81,7 +81,7 @@ public class PlayerEntity : Entity
 
         foreach (DraggableSpell spell in spellsUI)
         {
-            spell.TickCooldownText();
+            spell.TickCooldownUI();
         }
     }
 

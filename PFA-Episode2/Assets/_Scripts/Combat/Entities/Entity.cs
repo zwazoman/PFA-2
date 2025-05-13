@@ -207,7 +207,7 @@ public class Entity : MonoBehaviour
     {
         print("move !");
 
-        await UniTask.Delay(1000);
+        await UniTask.Delay(300);
 
         if (targetPoint == currentPoint)
             return true;
