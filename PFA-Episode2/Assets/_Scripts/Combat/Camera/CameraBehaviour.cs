@@ -28,7 +28,7 @@ public class CameraBehaviour : MonoBehaviour
 
     private async UniTask OnPlayerHit(float delta, float newHealth)
     {
-        if(delta < 0)
+        if(delta < 0 && Time.timeSinceLevelLoad > 1)
         {
             transform.DOShakePosition(.3f, .4f);
         }

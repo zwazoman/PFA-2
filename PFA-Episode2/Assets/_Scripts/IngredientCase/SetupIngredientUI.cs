@@ -56,7 +56,12 @@ public class SetupIngredientUI : MonoBehaviour
                     SetupColor(index, 1);
                     break;
             }
-            _listIngredientUI[index].rarityFrame.sprite = GameManager.Instance.staticData.itemFramesPerRarity[IngredientBase.rarity]; ;
+
+            Debug.Log(GameManager.Instance);
+            Debug.Log(GameManager.Instance.staticData);
+            Debug.Log(GameManager.Instance.staticData.itemFramesPerRarity);
+            Debug.Log(GameManager.Instance.staticData.itemFramesPerRarity[IngredientBase.rarity]);
+            _listIngredientUI[index].rarityFrame.sprite = GameManager.Instance.staticData.itemFramesPerRarity[IngredientBase.rarity] ;
         }
     }
 
