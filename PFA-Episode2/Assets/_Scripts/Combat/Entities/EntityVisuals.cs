@@ -21,13 +21,14 @@ public class EntityVisuals : MonoBehaviour
 
     async UniTask OnHealthUpdated(float delta, float newValue)
     {
-        if(delta < 0) //damage
+        if (Time.timeSinceLevelLoad < 1) return;
+        if (delta < 0) //damage
         {
             await VisualsRoot.DOShakePosition(.5f, .2f).AsyncWaitForCompletion().AsUniTask();
         }
         else //heal
         {
-            await VisualsRoot.DOPunchScale(Vector3.one*1.2f, .5f,5).AsyncWaitForCompletion().AsUniTask(); ;
+            await VisualsRoot.DOPunchScale(Vector3.one * .2f, .5f, 5).AsyncWaitForCompletion().AsUniTask(); ;
         }
     }
 }

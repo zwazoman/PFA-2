@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
@@ -18,23 +19,28 @@ public class AnimatedPanel : MonoBehaviour
         TryGetComponent(out _canvasGroup);
     }
 
-    public void Show()
+    public async void Show()
     {
-        _canvasGroup.DOFade(1, TransitionTime);
-        transform.DOPunchScale(Vector3.one * _scaleJumpOnShow, TransitionTime*2,5);
+        _canvasGroup.gameObject.SetActive(true);
+        transform.DOPunchScale(Vector3.one * _scaleJumpOnShow, TransitionTime * 2, 5);
+        await _canvasGroup.DOFade(1, TransitionTime).AsyncWaitForCompletion().AsUniTask();
+
         _canvasGroup.blocksRaycasts = true;
         _canvasGroup.interactable = true;
 
         SendMessage(MethodNameOnShown,SendMessageOptions.DontRequireReceiver);
+        
     }
 
-    public void Hide()
+    public async void Hide()
     {
-        _canvasGroup.DOFade(0, TransitionTime);
+        await _canvasGroup.DOFade(0, TransitionTime).AsyncWaitForCompletion().AsUniTask();
         _canvasGroup.blocksRaycasts = false;
         _canvasGroup.interactable = false;
 
         SendMessage(MethodNameOnHidden, SendMessageOptions.DontRequireReceiver);
+        _canvasGroup.gameObject.SetActive(false);
+
     }
 
 }

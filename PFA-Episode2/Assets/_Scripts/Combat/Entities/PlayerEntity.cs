@@ -1,20 +1,19 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(SpellCaster))]
 public class PlayerEntity : Entity
 {
     [HideInInspector] public List<WayPoint> walkables = new();
-    
+    [HideInInspector] public EndButton endTurnButton;
+
     [SerializeField] public List<DraggableSpell> spellsUI = new();
 
     [SerializeField] int maxHealth;
     [SerializeField] int maxMovePoints;
 
-    [HideInInspector] public EndButton endTurnButton;
 
     protected override void Awake()
     {
@@ -22,7 +21,6 @@ public class PlayerEntity : Entity
 
         //edit les valeurs du entityspell avec celles de l'inventaire
 
-        stats.maxHealth = maxHealth;
         stats.maxMovePoints = maxMovePoints;
     }
 
@@ -30,7 +28,12 @@ public class PlayerEntity : Entity
     {
         base.Start();
         CombatManager.Instance.RegisterEntity(this);
+        stats.Setup(maxHealth);
 
+        foreach(DraggableSpell spell in spellsUI)
+        {
+            spells.Add(spell.spell);
+        }
     }
 
     public override async UniTask PlayTurn()
@@ -74,12 +77,17 @@ public class PlayerEntity : Entity
 
     void ShowSpellsUI()
     {
-        CombatUiManager.Instance.playerSpellGroup.Show();
+        CombatUiManager.Instance.playerHUD.Show();
+
+        foreach (DraggableSpell spell in spellsUI)
+        {
+            spell.TickCooldownUI();
+        }
     }
 
     void HideSpellsUI()
     {
-        CombatUiManager.Instance.playerSpellGroup.Hide();
+        CombatUiManager.Instance.playerHUD.Hide();
     }
 
 }

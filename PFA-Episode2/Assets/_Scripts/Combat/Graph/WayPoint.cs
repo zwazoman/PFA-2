@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -68,11 +67,17 @@ public class WayPoint : MonoBehaviour
         }
     }
 
-    public void StepOn(Entity entity)
+    public async void StepOn(Entity entity)
     {
-        State = WaypointState.HasEntity;
-        Content = entity;
-        OnSteppedOn?.Invoke();
+        if(State == WaypointState.Obstructed)
+            await entity.Die();
+        else
+        {
+            State = WaypointState.HasEntity;
+            Content = entity;
+            entity.currentPoint = this;
+            OnSteppedOn?.Invoke();
+        }
     }
 
     public void StepOff()
@@ -166,9 +171,6 @@ public class WayPoint : MonoBehaviour
         {
             Gizmos.DrawLine(transform.position, point.transform.position);
         }
-
-        //foreach(Vector3 flatDirection in Tools.AllFlatDirections)
-        //    Debug.DrawLine(transform.position, transform.position + flatDirection);
     }
 
 

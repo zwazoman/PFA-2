@@ -1,8 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class EntityStats
@@ -14,6 +12,11 @@ public class EntityStats
     /// float : new HP
     /// </summary>
     public List<HealthUpdateFeeback> healthFeedbackTasks = new();
+    
+    /// <summary>
+    /// float : 
+    /// </summary>
+    public event Action<float> ShieldUpdateFeeback;
 
     public float maxHealth;
     public int maxMovePoints;
@@ -22,11 +25,20 @@ public class EntityStats
     public int currentMovePoints;
     public float currentHealth;
 
+    public void Setup(float maxHP)
+    {
+        this.maxHealth = maxHP;
+        currentHealth = maxHP+1;
+        Debug.Log(maxHealth);
 
+        ApplyHealth(-1);
+        owner.gameObject.GetComponent<EntityUI>().Setup(owner);
+        ApplyShield(0);
+
+    }
 
     public async UniTask ApplyDamage(float damage)
     {
-        Debug.Log("apply damage");
 
         if (shieldAmount > 0)
         {
@@ -36,11 +48,11 @@ public class EntityStats
         }
 
         await ApplyHealth(-damage);
-
     }
 
     public async UniTask ApplyHealth(float delta)
     {
+        //Debug.Log("apply health : " + delta.ToString());
         currentHealth += delta;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
@@ -66,6 +78,8 @@ public class EntityStats
 
         if (shieldAmount < 0)
             shieldAmount = 0;
+
+        ShieldUpdateFeeback?.Invoke(shieldAmount);
     }
 }
 
