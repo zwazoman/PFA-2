@@ -77,7 +77,7 @@ public class SetupIngredientUI : MonoBehaviour
 
     public async void Next(int index)
     {
-        foreach(IngredientBase ing in ListListIngredient[index])
+        foreach (IngredientBase ing in ListListIngredient[index])
         {
             if (ing is Sauce Sauce) { GameManager.Instance.playerInventory.Sauces.Add(Sauce); }
             else if (ing is Ingredient Ingredient) { GameManager.Instance.playerInventory.Ingredients.Add(Ingredient); }
@@ -86,11 +86,13 @@ public class SetupIngredientUI : MonoBehaviour
         {
             _firstTime = true;
             ListListIngredient.Clear();
+            await TweenIngredientUI.Instance.Monte(TweenIngredientUI.Instance.PanelToTween[index]);
             await TweenIngredientUI.Instance.TweenUIDespawn();
-            ChooseIngredient.Instance.ResetIngredient();
+            await ChooseIngredient.Instance.ResetIngredient();
         }
         else
         {
+            await TweenIngredientUI.Instance.Monte(TweenIngredientUI.Instance.PanelToTween[index]);
             await TweenIngredientUI.Instance.TweenUIDespawn();
             await SceneTransitionManager.Instance.GoToScene("WorldMap");
         }

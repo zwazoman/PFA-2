@@ -72,7 +72,7 @@ public class Entity : MonoBehaviour
                     await stats.ApplyDamage(effect.value);
                     break;
                 case SpellEffectType.Recoil:
-                    await Push(effect.value, context.PushDirection);
+                    await Push(effect.value, context.PushDirection, context.casterPos);
                     break;
                 case SpellEffectType.Shield:
                     await stats.ApplyShield(effect.value);
@@ -110,22 +110,31 @@ public class Entity : MonoBehaviour
         Walkables.Clear();
     }
 
-    async UniTask Push(float pushForce, Vector3 pushDirection)
+    async UniTask Push(float pushForce, Vector3 pushDirection, Vector3 casterPos)
     {
         Debug.DrawLine(transform.position, transform.position + pushDirection, Color.red, 20);
 
         WayPoint choosenPoint = null;
         float damages = 0;
 
-        bool isDiagonal = pushDirection.x != 0 && pushDirection.z != 0;
-
-        print(isDiagonal);
-
-        if (pushDirection == Vector3.zero)
-            return;
-
         Vector3 posWithHeigth = transform.position + Vector3.up * 0.2f;
 
+        bool isDiagonal = pushDirection.x != 0 && pushDirection.z != 0;
+
+        if (pushDirection == Vector3.zero)
+        {
+            Vector3 casterPosWithHeight = casterPos + Vector3.up * 0.2f;
+            Vector3 casterToEntity = posWithHeigth - casterPos;
+
+            if (casterToEntity == Vector3.zero)
+                return;
+
+            int xPushDirection = casterToEntity.x != 0 ? (int)Mathf.Sign(casterToEntity.x) : 0;
+            int zPushDirection = casterToEntity.z != 0 ? (int)Mathf.Sign(casterToEntity.z) : 0;
+
+            pushDirection = new Vector3(xPushDirection, 0, zPushDirection);
+        }
+            
         if (isDiagonal)
         {
             RaycastHit hit;
@@ -135,10 +144,12 @@ public class Entity : MonoBehaviour
 
                 Debug.DrawLine(transform.position, hit.point, Color.black, 20);
                 damages = pushForce;
-                Vector3Int hitPos = hit.point.SnapOnGrid();
+                Vector3 hitPos = hit.point/*.SnapOnGrid()*/;
+
+                Debug.DrawLine(hitPos, (hitPos - pushDirection * .3f).SnapOnGrid(),Color.blue, 20);
 
                 damages -= Mathf.FloorToInt(hit.distance);
-                choosenPoint = GraphMaker.Instance.serializedPointDict[(hitPos - pushDirection).SnapOnGrid()];
+                choosenPoint = GraphMaker.Instance.serializedPointDict[(hitPos - pushDirection * .3f).SnapOnGrid()];
             }
             else
             {
@@ -154,13 +165,14 @@ public class Entity : MonoBehaviour
             {
                 damages = pushForce;
 
-                Debug.DrawLine(transform.position, hit.point);
+                Debug.DrawLine(posWithHeigth, hit.point, Color.black, 20);
 
-                Vector3Int hitPos = hit.point.SnapOnGrid();
+                Vector3 hitPos = hit.point;
+
+                Debug.DrawLine(hitPos, hitPos - pushDirection * .3f, Color.blue, 20);
 
                 damages -= Mathf.FloorToInt(hit.distance);
-                choosenPoint = GraphMaker.Instance.serializedPointDict[(hitPos - pushDirection / 2).SnapOnGrid()];
-                choosenPoint.ChangeTileColor(choosenPoint._walkedMaterial);
+                choosenPoint = GraphMaker.Instance.serializedPointDict[(hitPos - pushDirection * .3f).SnapOnGrid()];
             }
             else
             {
@@ -168,16 +180,18 @@ public class Entity : MonoBehaviour
             }
         }
 
+        print(damages);
+        print(choosenPoint.gameObject.name);
+
         choosenPoint.ChangeTileColor(choosenPoint._walkedMaterial);
 
-        if (damages > 0)
-        {
-            await stats.ApplyDamage(damages);
-        }
-
-        await StartMoving(choosenPoint.transform.position);
-
         currentPoint.StepOff();
+
+        await StartMoving(choosenPoint.transform.position,20);
+
+        if (damages > 0)
+            await stats.ApplyDamage(damages);
+
         choosenPoint.StepOn(this);
     }
 
