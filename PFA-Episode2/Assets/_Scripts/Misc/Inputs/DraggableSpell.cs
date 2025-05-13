@@ -89,7 +89,7 @@ public class DraggableSpell : Draggable
         _spellImage.enabled = true;
 
         _cooldownImage.enabled = false;
-        _cooldownText.enabled = false;
+        //_cooldownText.enabled = false;
     }
 
     public void TickCooldownText()
@@ -102,8 +102,8 @@ public class DraggableSpell : Draggable
         _canUse = false;
 
         _cooldownImage.enabled = true;
-        _cooldownText.enabled = true;
-        TickCooldownText();
+        //_cooldownText.enabled = true;
+        //TickCooldownText();
 
         _spellImage.enabled = false;
     }
