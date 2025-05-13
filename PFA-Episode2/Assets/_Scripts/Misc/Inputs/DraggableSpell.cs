@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -85,6 +86,7 @@ public class DraggableSpell : Draggable
     void EnableSpell()
     {
         _canUse = true;
+        enabled = true;
 
         _spellImage.enabled = true;
 
@@ -92,18 +94,20 @@ public class DraggableSpell : Draggable
         //_cooldownText.enabled = false;
     }
 
-    public void TickCooldownText()
+    public void TickCooldownUI()
     {
-        _cooldownText.text = spell.cooling.ToString();
+        _cooldownImage.DOFillAmount(spell.cooling / spell.spellData.CoolDown,0.2f).SetEase(Ease.OutBack);
+        //_cooldownText.text = spell.cooling.ToString();
     }
 
     void DisableSpell()
     {
         _canUse = false;
+        enabled = false;
 
         _cooldownImage.enabled = true;
         //_cooldownText.enabled = true;
-        //TickCooldownText();
+        TickCooldownUI();
 
         _spellImage.enabled = false;
     }
