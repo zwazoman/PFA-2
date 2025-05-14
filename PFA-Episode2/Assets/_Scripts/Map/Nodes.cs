@@ -15,6 +15,7 @@ public class Node : MonoBehaviour
     [SerializeField] private GameObject _prefabBoss;
     [SerializeField] private Button _button;
     public bool Visited;
+    public bool Intersection;
 
     public static void TriggerMapCompleted()
     {
@@ -77,7 +78,7 @@ public class Node : MonoBehaviour
             case NodesEventTypes.Start:
                 break;
         }
-        if(PlayerMap.Instance.PositionMap == Position - 1) { _button.interactable = true; }
+        if((PlayerMap.Instance.PositionMap == Position - 1 && PlayerMap.Instance.Y == gameObject.transform.localPosition.y) || (PlayerMap.Instance.PositionMap == Position - 1 && Intersection)) { _button.interactable = true; }
         else { _button.interactable = false; }
         Vector3 rot = transform.eulerAngles;
         rot.z = -90f;

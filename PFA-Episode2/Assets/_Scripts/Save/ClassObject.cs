@@ -11,6 +11,7 @@ public class SerializableNode
     public int hauteur;
     public NodesEventTypes eventName;
     public bool onYReviendra;
+    public bool Intersection;
 
     //référence au créateur
     public Vector3Int creatorKey;
@@ -18,6 +19,7 @@ public class SerializableNode
     //information Player
     public Vector3Int playerPosition;
     public int PositionMap;
+    public int Y;
 }
 
 [Serializable]

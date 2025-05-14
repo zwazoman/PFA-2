@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 /// <summary>
@@ -109,6 +110,7 @@ public class MapMaker2 : MonoBehaviour
             {
                 _probaToutDroitCroisement = 0;
                 CurrentNode = NodeList.Dequeue();
+                CurrentNode.Intersection = true;
                 CurrentNode.OnYReviendra = true;
                 Intersection.Add(CurrentNode);
                 ToutDroit(tourboucle, ParentNode);
@@ -116,6 +118,7 @@ public class MapMaker2 : MonoBehaviour
             }
 
             CurrentNode = NodeList.Dequeue();
+            CurrentNode.Intersection = true;
             _distanceSpawnYModifiable = _distanceSpawnY;
             CurrentNode.OnYReviendra = true;
             Intersection.Add(CurrentNode);
@@ -124,6 +127,7 @@ public class MapMaker2 : MonoBehaviour
             print(CurrentNode.Hauteur);
 
             CurrentNode = NodeList.Dequeue();
+            CurrentNode.Intersection = true;
             _distanceSpawnYModifiable = -_distanceSpawnY;
             ToutDroit(tourboucle, ParentNode);
             CurrentNode.Hauteur = _currentHeight - 1;
@@ -172,6 +176,7 @@ public class MapMaker2 : MonoBehaviour
 
     public void CreateBranch(int tourboucle, bool Up)
     {
+        CurrentNode.Intersection = true;
         if (Up) //Si on peut monter
         {
             _distanceSpawnYModifiable = _distanceSpawnY;
@@ -209,7 +214,6 @@ public class MapMaker2 : MonoBehaviour
 
                     MapBuildingTools.Instance.TraceTonTrait(ParentNode, nodeExistant);// Trace une ligne entre le parent actuel et le node déjà existant
                     nodeExistant.Creator = ParentNode;
-
                     NodeList.Enqueue(CurrentNode);
                     break;
                 }
@@ -234,6 +238,7 @@ public class MapMaker2 : MonoBehaviour
                     CreateBranch(tour, false); // descendre
                     if (_existingValue != null)
                     {
+                        _existingValue.Intersection = true;
                         MapBuildingTools.Instance.TraceTonTrait(ParentNode, _existingValue);
                         _toutdroit = 0;
                     }
@@ -248,6 +253,13 @@ public class MapMaker2 : MonoBehaviour
                 }
                 MapBuildingTools.Instance.AttributeEvent(MapRange);
                 ParentNode = CurrentNode;
+            }
+        }
+        foreach (Node node in DicoNode.Values)
+        {
+            if (node.OnYReviendra)
+            {
+                node.Intersection = true;
             }
         }
         MapBuildingTools.Instance.AttributeEvent(MapRange);

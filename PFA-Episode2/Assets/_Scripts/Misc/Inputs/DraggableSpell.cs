@@ -44,7 +44,7 @@ public class DraggableSpell : Draggable
     {
         if (isDragging && _canUse)
         {
-            spellCaster.entity.ClearWalkables();
+            spellCaster.castingEntity.ClearWalkables();
             _rangePoints = spellCaster.PreviewSpellRange(spell);
             await DragAndDrop();
         }
@@ -52,7 +52,7 @@ public class DraggableSpell : Draggable
 
     public async UniTask DragAndDrop()
     {
-        List<WayPoint> zonePoints = new();
+        SpellZoneData zoneData = new();
 
         while (isDragging)
         {
@@ -60,14 +60,14 @@ public class DraggableSpell : Draggable
             {
                 _currentPoint = point;
 
-                spellCaster.StopSpellZonePreview(_rangePoints, ref zonePoints);
+                spellCaster.StopSpellZonePreview(_rangePoints, ref zoneData);
                 //Debug.Log("null spell : " + spell == null);
                 //Debug.Log("spell name : " + spell.Name);
-                zonePoints = spellCaster.PreviewSpellZone(spell, point, _rangePoints);
+                zoneData = spellCaster.PreviewSpellZone(spell, point, _rangePoints);
             }
             else if (point == null)
             {
-                spellCaster.StopSpellZonePreview(_rangePoints, ref zonePoints);
+                spellCaster.StopSpellZonePreview(_rangePoints, ref zoneData);
                 _currentPoint = null;
             }
             await UniTask.Yield();
@@ -77,10 +77,10 @@ public class DraggableSpell : Draggable
         WayPoint wayPoint = _currentPoint;
         Reset();
 
-        if(await spellCaster.TryCastSpell(spell, wayPoint, _rangePoints, zonePoints))
+        if(await spellCaster.TryCastSpell(spell, wayPoint, _rangePoints, zoneData))
             DisableSpell();
 
-        spellCaster.entity.ApplyWalkables();
+        spellCaster.castingEntity.ApplyWalkables();
     }
 
     void EnableSpell()
