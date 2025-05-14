@@ -121,4 +121,17 @@ public class MapBuildingTools : MonoBehaviour
         }
         return null;
     }
+
+    public List<Node> ReturnListOfNodeFromNodePosition(int nodePosition)
+    {
+        List<Node> nodeList = new();
+        foreach (Node node in MapMaker2.Instance.AllNodeGood)
+        {
+            if (node.Position == nodePosition)
+            {
+                nodeList.Add(node);
+            }
+        }
+        return nodeList;
+    }
 }
