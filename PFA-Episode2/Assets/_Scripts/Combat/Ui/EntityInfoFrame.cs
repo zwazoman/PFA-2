@@ -25,6 +25,7 @@ public class EntityInfoFrame : MonoBehaviour
         //healthbar
         owner.stats.healthFeedbackTasks.Add(OnHpUpdated);
 
+        //shield bar
         owner.stats.ShieldUpdateFeeback += OnShieldUpdated;
         _lifebar.MaxValue = _shieldBar.MaxValue = owner.stats.maxHealth;
         _lifebar.MinValue = _shieldBar.MinValue = 0;
