@@ -59,6 +59,8 @@ public class PlayerMap : MonoBehaviour
             {
                 print("true");
                 SaveMapGeneration.Instance.SaveMap();
+                GameManager.Instance.playerInventory.Save(GameManager.Instance.playerInventory.NameSave);
+
                 if (KeyAndValues.Value.EventName.ToString() == "Start") { break; }
                 await SceneTransitionManager.Instance.GoToScene(KeyAndValues.Value.EventName.ToString());
             }
