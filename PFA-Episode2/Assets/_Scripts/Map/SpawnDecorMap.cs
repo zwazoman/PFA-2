@@ -21,13 +21,18 @@ public class SpawnDecorMap : MonoBehaviour
 
     public void SetupDecor()
     {
-        if(PlayerMap.Instance.PositionMap == _caseToMoveMapDecor.Dequeue()) //Je vais utiliser Intersection dans les nodes pour savoir si I doit spawn ou si c'est on revieng (gd gp)
-        {
-            //Un changement
-        }
+        if (PlayerMap.Instance.PositionMap == 0) { /*C'est Start*/ /*C'est Droit*/}
+        if (PlayerMap.Instance.PositionMap == 1) { /*C'est Intersection et c'est plus Start*/}
+        if (PlayerMap.Instance.PositionMap == 3) { /*c'est plus droit*/}
+        if (PlayerMap.Instance.PositionMap == 5) { /*c'est plus Intersection*/}
+        if (PlayerMap.Instance.PositionMap == MapMaker2.Instance.MapRange - 5) { /*C'est le boss*/ }
         foreach(Node node in MapMaker2.Instance.AllNodeGood)
         {
-            if(node.Position == 0) { /*C'est Start*/}
+            if(PlayerMap.Instance.PositionMap == node.Position)
+            {
+                //if(node.Intersection && node)
+            }
         }
+
     }
 }

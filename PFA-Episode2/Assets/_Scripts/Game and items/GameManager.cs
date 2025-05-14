@@ -27,9 +27,12 @@ public class GameManager : MonoBehaviour
     [Header("Data")]
     public GameStaticData staticData;
 
-    public List<SceneAsset> CombatScenes = new();
+    public List<string> combatScenesName = new();
 
 #if UNITY_EDITOR
+
+    [SerializeField] List<SceneAsset> _combatScenes = new();
+
     //@temp
     [Header("Tests")]
     [SerializeField] List<PremadeSpell> premadeSpells = new();
@@ -77,9 +80,20 @@ public class GameManager : MonoBehaviour
         playerInventory = SaveManager.Load<Inventory>(playerInventory.NameSave, false);
     }
 
-    public SceneAsset ReturnSceneCombat()
+    private void OnValidate()
     {
-        int index = Random.Range(0, CombatScenes.Count);
-        return CombatScenes[index];
+        if (_combatScenes.Count == 0)
+            return;
+        foreach(SceneAsset scene in _combatScenes)
+        {
+            if (!combatScenesName.Contains(scene.name))
+                combatScenesName.Add(scene.name);
+        }
+    }
+
+    public string ReturnSceneCombat()
+    {
+        int index = Random.Range(0, combatScenesName.Count);
+        return combatScenesName[index];
     }
 }
