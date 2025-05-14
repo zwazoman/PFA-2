@@ -30,6 +30,7 @@ public class CombatManager : MonoBehaviour
 
     public List<PlayerEntity> PlayerEntities = new();
     public List<EnemyEntity> EnemyEntities = new();
+    public List<Entity> Entities { get; private set; } = new();
 
     public event Action<Entity> OnNewTurn;
 
@@ -37,6 +38,7 @@ public class CombatManager : MonoBehaviour
 
     public void RegisterEntity(Entity entity)
     {
+        Entities.Add(entity);
         if (entity is PlayerEntity)
         {
             PlayerEntities.Add((PlayerEntity)entity);
@@ -49,6 +51,7 @@ public class CombatManager : MonoBehaviour
 
     public async UniTask UnRegisterEntity(Entity entity)
     {
+        Entities.Remove(entity);
         if (entity is PlayerEntity && PlayerEntities.Contains(entity))
         {
             PlayerEntities.Remove((PlayerEntity)entity);

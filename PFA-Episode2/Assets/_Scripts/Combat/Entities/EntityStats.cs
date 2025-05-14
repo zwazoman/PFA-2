@@ -34,20 +34,17 @@ public class EntityStats
 
         ApplyHealth(-1);
         owner.gameObject.GetComponent<EntityUI>().Setup(owner);
-        ApplyShield(0);
+        ApplyShield(10);
 
     }
 
     public async UniTask ApplyDamage(float damage)
     {
+        float newShield = Mathf.Max(0, shieldAmount - damage);
+        float tankedDamage = Mathf.Abs( newShield - shieldAmount);
+        damage = Mathf.Max(damage - tankedDamage,0);
 
-        if (shieldAmount > 0)
-        {
-            float damageRemain = Mathf.Abs(shieldAmount - damage);
-            await ApplyShield(damage);
-            damage = damageRemain;
-        }
-
+        await ApplyShield(- tankedDamage);
         await ApplyHealth(-damage);
     }
 

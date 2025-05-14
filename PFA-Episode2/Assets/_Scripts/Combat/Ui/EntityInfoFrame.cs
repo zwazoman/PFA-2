@@ -34,14 +34,28 @@ public class EntityInfoFrame : MonoBehaviour
         //icon
         _image.sprite = _owner.Icon;
 
+        //death
         owner.OnDead += () => { OnHpUpdated(-1,0); OnShieldUpdated(0); _image.color = new Color(.5f,.4f,.4f); };
+
+        //spell preview
+        owner.OnPreviewSpell += (float newShield, float newHP, Vector3 direction) =>
+        {
+            _lifebar.PreviewValue(newHP);
+            _shieldBar.PreviewValue(newShield);
+        };
+
+        owner.OnSpellPreviewCancel += () =>
+        {
+            _lifebar.CancelPreview();
+            _shieldBar.CancelPreview();
+        };
 
     }
 
     private void OnShieldUpdated(float newShield)
     {
         _shieldBar.Value = newShield;
-        _shieldText.text = newShield > 0 ? newShield.ToString() : "";
+        _shieldText.text = newShield > 0 ?( "+" + newShield.ToString()): "";
     }
 
     private async UniTask OnHpUpdated(float delta, float newValue)
