@@ -4,6 +4,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
 using DG.Tweening;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(SpellCaster))]
 public class Entity : MonoBehaviour
@@ -21,6 +22,8 @@ public class Entity : MonoBehaviour
 
     //events
     public event Action OnDead;
+
+    public bool isDead { get; private set; }
 
     protected virtual void Awake()
     {
@@ -72,7 +75,7 @@ public class Entity : MonoBehaviour
                     await stats.ApplyDamage(effect.value);
                     break;
                 case SpellEffectType.Recoil:
-                    await Push(effect.value, context.PushDirection);
+                    await Push(context.PushDamage, context.PushPoint);
                     break;
                 case SpellEffectType.Shield:
                     await stats.ApplyShield(effect.value);
@@ -110,75 +113,18 @@ public class Entity : MonoBehaviour
         Walkables.Clear();
     }
 
-    async UniTask Push(float pushForce, Vector3 pushDirection)
+    async UniTask Push(int pushDamages, WayPoint pushTarget)
     {
-        Debug.DrawLine(transform.position, transform.position + pushDirection, Color.red, 20);
-
-        WayPoint choosenPoint = null;
-        float damages = 0;
-
-        bool isDiagonal = pushDirection.x != 0 && pushDirection.z != 0;
-
-        print(isDiagonal);
-
-        if (pushDirection == Vector3.zero)
-            return;
-
-        Vector3 posWithHeigth = transform.position + Vector3.up * 0.2f;
-
-        if (isDiagonal)
-        {
-            RaycastHit hit;
-            if (Physics.SphereCast(posWithHeigth, .45f, pushDirection, out hit, pushForce * Mathf.Sqrt(2), LayerMask.GetMask("Wall")))
-            {
-                print("wall hit");
-
-                Debug.DrawLine(transform.position, hit.point, Color.black, 20);
-                damages = pushForce;
-                Vector3Int hitPos = hit.point.SnapOnGrid();
-
-                damages -= Mathf.FloorToInt(hit.distance);
-                choosenPoint = GraphMaker.Instance.serializedPointDict[(hitPos - pushDirection).SnapOnGrid()];
-            }
-            else
-            {
-                Debug.DrawLine(posWithHeigth, posWithHeigth + (pushDirection * pushForce), Color.black, 20);
-                Vector3Int choosenPos = (posWithHeigth + (pushDirection * pushForce)).SnapOnGrid();
-                choosenPoint = GraphMaker.Instance.serializedPointDict[choosenPos];
-            }
-        }
-        else
-        {
-            RaycastHit hit;
-            if (Physics.Raycast(posWithHeigth, pushDirection, out hit, pushForce, LayerMask.GetMask("Wall")))
-            {
-                damages = pushForce;
-
-                Debug.DrawLine(transform.position, hit.point);
-
-                Vector3Int hitPos = hit.point.SnapOnGrid();
-
-                damages -= Mathf.FloorToInt(hit.distance);
-                choosenPoint = GraphMaker.Instance.serializedPointDict[(hitPos - pushDirection / 2).SnapOnGrid()];
-                choosenPoint.ChangeTileColor(choosenPoint._walkedMaterial);
-            }
-            else
-            {
-                choosenPoint = GraphMaker.Instance.serializedPointDict[(posWithHeigth + pushDirection * pushForce).SnapOnGrid()];
-            }
-        }
-
-        choosenPoint.ChangeTileColor(choosenPoint._walkedMaterial);
-
-        if (damages > 0)
-        {
-            await stats.ApplyDamage(damages);
-        }
-
-        await StartMoving(choosenPoint.transform.position);
+        print(pushDamages);
 
         currentPoint.StepOff();
-        choosenPoint.StepOn(this);
+
+        await StartMoving(pushTarget.transform.position,20);
+
+        if (pushDamages > 0)
+            await stats.ApplyDamage(pushDamages);
+
+        pushTarget.StepOn(this);
     }
 
     /// <summary>
@@ -190,7 +136,7 @@ public class Entity : MonoBehaviour
     {
         print("move !");
 
-        await UniTask.Delay(1000);
+        await UniTask.Delay(300);
 
         if (targetPoint == currentPoint)
             return true;
@@ -283,10 +229,13 @@ public class Entity : MonoBehaviour
     public async UniTask Die()
     {
         print("Die");
-
+        
         currentPoint.StepOff();
-        Destroy(gameObject);
+        isDead = true;
+        OnDead?.Invoke();
+        gameObject.SetActive(false);
         await CombatManager.Instance.UnRegisterEntity(this);
-        //si il ets entrain de jouer EndTurn
+
+        EndTurn();
     }
 }

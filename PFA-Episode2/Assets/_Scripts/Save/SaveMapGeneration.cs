@@ -49,6 +49,8 @@ public class SaveMapGeneration : MonoBehaviour
                     hauteur = node.Hauteur,
                     eventName = node.EventName,
                     onYReviendra = node.OnYReviendra,
+                    Intersection = node.Intersection,
+                    Y = PlayerMap.Instance.Y,
                     playerPosition = Vector3Int.RoundToInt(PlayerMap.Instance.transform.localPosition),
                     PositionMap = PlayerMap.Instance.PositionMap,
 
@@ -120,6 +122,7 @@ public class SaveMapGeneration : MonoBehaviour
                 node.Hauteur = item.hauteur;
                 node.EventName = item.eventName;
                 node.OnYReviendra = item.onYReviendra;
+                node.Intersection = item.Intersection;
 
                 tempDico[item.key] = node;
                 node.gameObject.SetActive(true);
@@ -130,6 +133,7 @@ public class SaveMapGeneration : MonoBehaviour
                     //PlayerMap.Instance.SetupTarget(node.transform.position);
                     PlayerMap.Instance.transform.localPosition = item.playerPosition;
                     PlayerMap.Instance.PositionMap = item.PositionMap;
+                    PlayerMap.Instance.Y = item.Y;
                     PositionMap = item.PositionMap;
 
                 }

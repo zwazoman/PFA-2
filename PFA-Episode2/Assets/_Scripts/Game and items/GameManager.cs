@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     public Inventory playerInventory = new();
 
     [Header("Data")]
-    public DishCombinationData dishCombinationData;
+    public GameStaticData staticData;
 
 #if UNITY_EDITOR
     //@temp
@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(this);
             
             //load data
-            dishCombinationData = Resources.Load<DishCombinationData>("DishCombinationData");
+            staticData = Resources.Load<GameStaticData>("GameStaticData");
             LoadOrCreateSave();
 
 #if UNITY_EDITOR

@@ -171,9 +171,6 @@ public class WayPoint : MonoBehaviour
         {
             Gizmos.DrawLine(transform.position, point.transform.position);
         }
-
-        //foreach(Vector3 flatDirection in Tools.AllFlatDirections)
-        //    Debug.DrawLine(transform.position, transform.position + flatDirection);
     }
 
 
