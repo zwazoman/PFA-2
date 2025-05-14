@@ -26,13 +26,34 @@ public class SpawnDecorMap : MonoBehaviour
         if (PlayerMap.Instance.PositionMap == 3) { /*c'est plus droit*/}
         if (PlayerMap.Instance.PositionMap == 5) { /*c'est plus Intersection*/}
         if (PlayerMap.Instance.PositionMap == MapMaker2.Instance.MapRange - 5) { /*C'est le boss*/ }
-        foreach(Node node in MapMaker2.Instance.AllNodeGood)
+        if (PlayerMap.Instance.PositionMap == MapMaker2.Instance.MapRange - 3) { /* Désactive tout sauf boss*/ }
+        foreach (Node node in MapMaker2.Instance.AllNodeGood)
         {
+            if(MapBuildingTools.Instance.ReturnNodeFromNodePosition(node.Position, 1).Intersection && MapBuildingTools.Instance.ReturnNodeFromNodePosition(node.Position, 1).Hauteur != 3)
+            {
+                /*Intersection*/
+            }
             if(PlayerMap.Instance.PositionMap == node.Position)
             {
-                //if(node.Intersection && node)
+                if(node.Intersection)
+                {
+                    if (MapBuildingTools.Instance.ReturnNodeFromNodePosition(node.Position, 2).Hauteur == node.Hauteur) //Si son bool est true et que 2 node plus loin est à la même hauteur
+                    {
+                        /* tout droit */
+                    }
+                    else
+                    {
+                        if(node.Hauteur < 3) //il manque ES
+                        {
+                            /*DP*/
+                        }
+                        else
+                        {
+                            /* DG*/
+                        }
+                    }
+                }
             }
         }
-
     }
 }
