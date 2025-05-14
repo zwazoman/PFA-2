@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 279633862603933050, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
       propertyPath: m_Name
-      value: E_Enemy Variant
+      value: E_EnemyRoot
       objectReference: {fileID: 0}
     - target: {fileID: 1126320524359264305, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -72,6 +72,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3659406706944900222, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3940952041982709943, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4334235415200547474, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
+      propertyPath: VisualsRoot
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5207839571026480074, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
       propertyPath: entity
       value: 
@@ -87,7 +99,8 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 2814213667352254204, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
     - {fileID: 2919549843284504080, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 5452149140871937494, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 279633862603933050, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
@@ -113,5 +126,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentPoint: {fileID: 0}
   entitySpellCaster: {fileID: 0}
-  Icon: {fileID: 21300000, guid: 1e2bcf0815a39754c9b4ff56fd2c0c8d, type: 2}
-  Data: {fileID: 11400000, guid: 6ca8de14af1ad2e43ad13666b3f619c8, type: 2}
+  Icon: {fileID: 0}
+  Data: {fileID: 0}

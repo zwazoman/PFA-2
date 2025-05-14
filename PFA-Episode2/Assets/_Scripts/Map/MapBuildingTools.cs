@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static NodeTypes;
@@ -106,6 +107,18 @@ public class MapBuildingTools : MonoBehaviour
             if (kvp.Value == node)
                 return kvp.Key;
         }
-        return Vector3Int.zero; // par d?faut si pas trouv?
+        return Vector3Int.zero; // par defaut si pas trouve
+    }
+
+    public Node ReturnNodeFromNodePosition(int nodePosition)
+    {
+        foreach(Node node in MapMaker2.Instance.AllNodeGood)
+        {
+            if (node.Position == nodePosition + 2)
+            {
+                return node;
+            }
+        }
+        return null;
     }
 }

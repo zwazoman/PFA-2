@@ -1,0 +1,68 @@
+using AYellowpaper.SerializedCollections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+public class Spawner : MonoBehaviour
+{
+    [SerializeField] SerializedDictionary<GameObject, float> entitiesProba = new();
+
+    [Space(20)]
+    [Header("Single Entity")]
+
+    [SerializeField] GameObject singleEntity;
+
+    WayPoint spawnPoint;
+    float totalProba;
+
+    private void Awake()
+    {
+        foreach (GameObject entity in entitiesProba.Keys)
+            totalProba += entitiesProba[entity];
+
+
+        RaycastHit hit;
+        if (!Physics.Raycast(transform.position, Vector3.down, out hit) || !hit.collider.TryGetComponent(out spawnPoint))
+            print("spawner not linked");
+    }
+
+    public void SummonRandomEntity()
+    {
+        if(entitiesProba.Count == 0)
+            SummonSingleEntity();
+
+        float randomProba = Random.Range(0, totalProba);
+
+        List<float> probas = new();
+
+        foreach(GameObject entity in entitiesProba.Keys)
+            probas.Add(entitiesProba[entity]);
+
+        probas.Sort();
+
+        float delta = Mathf.Infinity;
+        GameObject choosenEntity = null;
+
+        foreach(float proba in probas)
+        {
+            if(delta > Mathf.Abs(randomProba - proba))
+            {
+                delta = proba;
+                choosenEntity = entitiesProba.GetKeyFromValue(proba);
+            }
+        }
+
+        Instantiate(choosenEntity, transform);
+    }
+
+    public void SummonSingleEntity()
+    {
+        if (singleEntity == null)
+            throw new System.Exception("pas d'entity");
+        else
+        {
+            Instantiate(singleEntity, transform);
+            print("connard player spawn");
+        }
+    }
+}
