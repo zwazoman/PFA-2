@@ -253,7 +253,7 @@ public class SpellCaster : MonoBehaviour
 
     public async UniTask<bool> TryCastSpell(Spell spell, WayPoint target, List<WayPoint> rangePoints, SpellZoneData zoneData)
     {
-        if (zoneData.zonePoints.Count == 0)
+        if (zoneData.zonePoints == null || zoneData.zonePoints.Count == 0)
         {
             StopSpellRangePreview(ref rangePoints, ref zoneData);
             return false;
