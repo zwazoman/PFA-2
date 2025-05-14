@@ -12,6 +12,11 @@ public class EntityStats
     /// float : new HP
     /// </summary>
     public List<HealthUpdateFeeback> healthFeedbackTasks = new();
+    
+    /// <summary>
+    /// float : 
+    /// </summary>
+    public event Action<float> ShieldUpdateFeeback;
 
     public float maxHealth;
     public int maxMovePoints;
@@ -28,11 +33,12 @@ public class EntityStats
 
         ApplyHealth(-1);
         owner.gameObject.GetComponent<EntityUI>().Setup(owner);
+        ApplyShield(0);
+
     }
 
     public async UniTask ApplyDamage(float damage)
     {
-        
 
         if (shieldAmount > 0)
         {
@@ -42,7 +48,6 @@ public class EntityStats
         }
 
         await ApplyHealth(-damage);
-
     }
 
     public async UniTask ApplyHealth(float delta)
@@ -73,6 +78,8 @@ public class EntityStats
 
         if (shieldAmount < 0)
             shieldAmount = 0;
+
+        ShieldUpdateFeeback?.Invoke(shieldAmount);
     }
 }
 

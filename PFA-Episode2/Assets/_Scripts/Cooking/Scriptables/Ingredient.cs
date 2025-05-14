@@ -6,7 +6,6 @@ public class Ingredient : IngredientBase
 {
     [Header("Ingredient")]
     public IngredientsInfo.Family Family;
-    public Rarity Rarity;
 
     [Header("Effect")]
     public IngredientEffectType EffectType;

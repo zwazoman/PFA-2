@@ -6,7 +6,6 @@ public class Sauce : IngredientBase
     [Header("Sauce Effect")]
     public AreaOfEffect areaOfEffect;
     public SauceEffectType effect;
-    public Rarity rarity;
 
     public override void ModifySpellEffect(SpellData Spell)
     {
@@ -27,5 +26,7 @@ public class Sauce : IngredientBase
                 Spell.Effects.Add(new(SpellEffectType.Fire, StatType.PercentageIncrease, -1));
                 break;
         }
+
+        Spell.AreaOfEffect = areaOfEffect;
     }
 }

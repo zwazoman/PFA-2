@@ -16,12 +16,14 @@ public class Entity : MonoBehaviour
 
     protected Dictionary<WayPoint, int> WaypointDistance = new Dictionary<WayPoint, int>();
     protected List<WayPoint> Walkables = new List<WayPoint>();
+    protected List<Spell> spells = new();
 
     public Sprite Icon;
 
     //events
     public event Action OnDead;
 
+    public bool isDead { get; private set; }
 
     protected virtual void Awake()
     {
@@ -35,7 +37,6 @@ public class Entity : MonoBehaviour
         Vector3Int roundedPos = transform.position.SnapOnGrid();
         currentPoint = GraphMaker.Instance.serializedPointDict[roundedPos];
         currentPoint.StepOn(this);
-
     }
 
     public virtual async UniTask PlayTurn()
@@ -44,6 +45,8 @@ public class Entity : MonoBehaviour
         Tools.Flood(currentPoint);
         stats.currentMovePoints = stats.maxMovePoints;
         await stats.ApplyShield(-1);
+
+        TickCooldown();
     }
 
     public virtual async UniTask EndTurn()
@@ -52,9 +55,19 @@ public class Entity : MonoBehaviour
         ClearWalkables();
     }
 
-    public async UniTask ApplySpell(SpellData spell, SpellCastingContext context)
+    void TickCooldown()
     {
-        foreach (SpellEffect effect in spell.Effects)
+        foreach(Spell spell in spells)
+        {
+            spell.TickSpellCooldown();
+        }
+    }
+
+    public async UniTask ApplySpell(Spell spell, SpellCastingContext context)
+    {
+        print("applySpell");
+
+        foreach (SpellEffect effect in spell.spellData.Effects)
         {
             switch (effect.effectType)
             {
@@ -62,7 +75,7 @@ public class Entity : MonoBehaviour
                     await stats.ApplyDamage(effect.value);
                     break;
                 case SpellEffectType.Recoil:
-                    await Push(effect.value, context.PushDirection);
+                    await Push(context.PushDamage, context.PushPoint);
                     break;
                 case SpellEffectType.Shield:
                     await stats.ApplyShield(effect.value);
@@ -76,7 +89,6 @@ public class Entity : MonoBehaviour
             }
         }
     }
-
 
     public void ApplyWalkables(bool showTiles = true)
     {
@@ -101,71 +113,18 @@ public class Entity : MonoBehaviour
         Walkables.Clear();
     }
 
-    async UniTask Push(float pushForce, Vector3 pushDirection)
+    async UniTask Push(int pushDamages, WayPoint pushTarget)
     {
-        print(pushDirection);
+        print(pushDamages);
 
-        WayPoint choosenPoint = null;
-        float damages = 0;
+        currentPoint.StepOff();
 
-        bool isDiagonal = pushDirection.x != 0 && pushDirection.z != 0;
+        await StartMoving(pushTarget.transform.position,20);
 
-        print(isDiagonal);
+        if (pushDamages > 0)
+            await stats.ApplyDamage(pushDamages);
 
-        if (pushDirection == Vector3.zero)
-            return;
-
-        Debug.DrawRay(transform.position, pushDirection,Color.red,20);
-
-        Vector3 posWithHeigth = transform.position + Vector3.up * 0.2f;
-
-        if (isDiagonal)
-        {
-            RaycastHit hit;
-            if(Physics.SphereCast(posWithHeigth, 1, pushDirection, out hit, pushForce * Mathf.Sqrt(2), LayerMask.GetMask("Wall")))
-            {
-                damages = pushForce;
-                Vector3Int hitPos = hit.point.SnapOnGrid();
-
-                damages -= Mathf.FloorToInt(hit.distance);
-                choosenPoint = GraphMaker.Instance.serializedPointDict[(hitPos - pushDirection).SnapOnGrid()];
-            }
-            else
-            {
-                choosenPoint = GraphMaker.Instance.serializedPointDict[(posWithHeigth +pushDirection * (pushForce * Mathf.Sqrt(2))).SnapOnGrid()];
-            }
-        }
-        else
-        {
-            RaycastHit hit;
-            if(Physics.Raycast(posWithHeigth, pushDirection, out hit, pushForce, LayerMask.GetMask("Wall")))
-            {
-                damages = pushForce;
-
-                Debug.DrawLine(transform.position, hit.point);
-
-                Vector3Int hitPos = hit.point.SnapOnGrid();
-
-                damages -= Mathf.FloorToInt(hit.distance);
-                choosenPoint = GraphMaker.Instance.serializedPointDict[(hitPos - pushDirection/2).SnapOnGrid()];
-                choosenPoint.ChangeTileColor(choosenPoint._walkedMaterial);
-            }
-            else
-            {
-                choosenPoint = GraphMaker.Instance.serializedPointDict[(posWithHeigth + pushDirection * pushForce).SnapOnGrid()];
-            }
-        }
-
-        choosenPoint.ChangeTileColor(choosenPoint._walkedMaterial);
-
-        if (damages > 0)
-        {
-            await stats.ApplyDamage(damages);
-        }
-
-        await StartMoving(choosenPoint.transform.position);
-
-        choosenPoint.StepOn(this);
+        pushTarget.StepOn(this);
     }
 
     /// <summary>
@@ -177,7 +136,7 @@ public class Entity : MonoBehaviour
     {
         print("move !");
 
-        await UniTask.Delay(1000);
+        await UniTask.Delay(300);
 
         if (targetPoint == currentPoint)
             return true;
@@ -270,10 +229,13 @@ public class Entity : MonoBehaviour
     public async UniTask Die()
     {
         print("Die");
-        OnDead?.Invoke();
+        
         currentPoint.StepOff();
-        Destroy(gameObject);
+        isDead = true;
+        OnDead?.Invoke();
+        gameObject.SetActive(false);
         await CombatManager.Instance.UnRegisterEntity(this);
-        //si il ets entrain de jouer EndTurn
+
+        EndTurn();
     }
 }

@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(DishCombinationData))]
+[CustomEditor(typeof(GameStaticData))]
 public class DishCombinationDataEditor : Editor
 {
     public override void OnInspectorGUI()
@@ -10,7 +10,7 @@ public class DishCombinationDataEditor : Editor
         GUILayout.Space(20);
         if (GUILayout.Button("RebuildTable"))
         {
-            ((DishCombinationData)target).RebuildTable();
+            ((GameStaticData)target).RebuildTable();
         }
     }
 }

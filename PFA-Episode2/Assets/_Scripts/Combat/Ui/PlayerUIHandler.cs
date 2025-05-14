@@ -25,12 +25,15 @@ public class PlayerUIHandler : MonoBehaviour
                 i < Mathf.Min(3, GameManager.Instance.playerInventory.Spells.Count);
                 i++)
             {
-                CreateSpellUI(GameManager.Instance.playerInventory.Spells[i],i);
+                Spell spell = new();
+                spell.spellData = GameManager.Instance.playerInventory.Spells[i];
+
+                CreateSpellUI(spell,i);
             }
         }
     }
 
-    void CreateSpellUI(SpellData spellData,int i)
+    void CreateSpellUI(Spell spellData,int i)
     {
         DraggableSpell draggableSpellSlot = Instantiate(_uiSpellPrefab, CombatUiManager.Instance.SpellSlots[i]);
         draggableSpellSlot.SetUp(spellData, _player);
@@ -42,5 +45,4 @@ public class PlayerUIHandler : MonoBehaviour
     {
         _player.endTurnButton = CombatUiManager.Instance.endButton;
     }
-
 }

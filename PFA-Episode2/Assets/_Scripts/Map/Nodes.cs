@@ -1,6 +1,5 @@
 using UnityEngine;
 using System;
-using System.Collections.Generic;
 using UnityEngine.UI;
 using static NodeTypes;
 
@@ -12,10 +11,11 @@ public class Node : MonoBehaviour
     public Node Creator;
     public NodesEventTypes EventName;
     public bool OnYReviendra;
-    [SerializeField] private Image _componentImageRef;
-    [SerializeField] private List<Sprite> _listOfSprite = new();
+    [SerializeField] private GameObject _parentGO;
+    [SerializeField] private GameObject _prefabBoss;
     [SerializeField] private Button _button;
     public bool Visited;
+    public bool Intersection;
 
     public static void TriggerMapCompleted()
     {
@@ -46,25 +46,43 @@ public class Node : MonoBehaviour
         switch (EventName)
         {
             case NodesEventTypes.Cuisine:
-                _componentImageRef.sprite = _listOfSprite[0];
+                GameObject CuisinePrefab = PoolObject.Instance.CusineList.Dequeue();
+                CuisinePrefab.transform.position = _parentGO.transform.position;
+                CuisinePrefab.transform.SetParent(gameObject.transform);
+                CuisinePrefab.SetActive(true);
                 break;
             case NodesEventTypes.Combat:
-                _componentImageRef.sprite = _listOfSprite[1];
+                GameObject CombatPrefab = PoolObject.Instance.CombatList.Dequeue();
+                CombatPrefab.transform.position = _parentGO.transform.position;
+                CombatPrefab.transform.SetParent(gameObject.transform);
+                CombatPrefab.SetActive(true);
                 break;
             case NodesEventTypes.Ingredient:
-                _componentImageRef.sprite = _listOfSprite[2];
+                GameObject IngredientPrefab = PoolObject.Instance.IngredientList.Dequeue();
+                IngredientPrefab.transform.position = _parentGO.transform.position;
+                IngredientPrefab.transform.parent = gameObject.transform;
+                IngredientPrefab.SetActive(true);
                 break;
             case NodesEventTypes.Heal:
-                _componentImageRef.sprite = _listOfSprite[3];
+                GameObject HealPrefab = PoolObject.Instance.HealList.Dequeue();
+                HealPrefab.transform.position = _parentGO.transform.position;
+                HealPrefab.transform.SetParent(gameObject.transform);
+                HealPrefab.SetActive(true);
                 break;
             case NodesEventTypes.Boss:
-                _componentImageRef.sprite = _listOfSprite[4];
+                GameObject go = Instantiate(_prefabBoss);
+                go.transform.position = _parentGO.transform.position;
+                go.transform.SetParent(gameObject.transform);
+                go.SetActive(true);
                 break;
             case NodesEventTypes.Start:
-                _componentImageRef.sprite = _listOfSprite[5];
                 break;
         }
-        if(PlayerMap.Instance.PositionMap == Position - 1) { _button.interactable = true; }
+        if((PlayerMap.Instance.PositionMap == Position - 1 && PlayerMap.Instance.Y == gameObject.transform.localPosition.y) || (PlayerMap.Instance.PositionMap == Position - 1 && Intersection)) { _button.interactable = true; }
         else { _button.interactable = false; }
+        Vector3 rot = transform.eulerAngles;
+        rot.z = -90f;
+        transform.eulerAngles = rot;
+
     }
 }

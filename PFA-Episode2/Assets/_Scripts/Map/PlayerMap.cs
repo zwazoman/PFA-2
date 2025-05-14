@@ -8,6 +8,7 @@ public class PlayerMap : MonoBehaviour
     public float speed;
     public static PlayerMap Instance;
     public int PositionMap = 0;
+    public int Y;
 
     [HideInInspector] public Node clickedNode;
 
@@ -42,18 +43,21 @@ public class PlayerMap : MonoBehaviour
 
         //---------------- Charge une nouvelle scène -------------------------
 
-        int positionX = Mathf.RoundToInt(gameObject.transform.localPosition.x) / 10;
+        int positionX = Mathf.RoundToInt((gameObject.transform.localPosition.x) / 10);
         positionX = positionX * 10;
 
-        int Y = Mathf.RoundToInt(gameObject.transform.localPosition.y) / 10;
-        int y = Y * 10;
+        int y = Mathf.RoundToInt((gameObject.transform.localPosition.y) / 10);
+        Y = y * 10;
 
-        Vector3Int position = new Vector3Int(positionX, y, Mathf.RoundToInt(gameObject.transform.localPosition.z));
+        Vector3Int position = new Vector3Int(positionX, Y, Mathf.RoundToInt(gameObject.transform.localPosition.z));
 
         foreach (KeyValuePair<Vector3Int, Node> KeyAndValues in MapMaker2.Instance.DicoNode)
         {
+            print("Ma position : " + position);
+            print(KeyAndValues);
             if (KeyAndValues.Key == position)
             {
+                print("true");
                 SaveMapGeneration.Instance.SaveMap();
                 GameManager.Instance.playerInventory.Save(GameManager.Instance.playerInventory.NameSave);
 

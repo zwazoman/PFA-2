@@ -1,26 +1,36 @@
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class DraggableSpell : Draggable
 {
-    [HideInInspector] public SpellData spell;
+    [HideInInspector] public Spell spell;
     [HideInInspector] public SpellCaster spellCaster;
-    [SerializeField] PremadeSpell _premadeSpell;
 
     WayPoint _currentPoint = null;
     List<WayPoint> _rangePoints = new();
 
     [Header("scene references")]
-    [SerializeField] private Image image;
+    [SerializeField] private Image _spellImage;
+    [SerializeField] private Image _cooldownImage;
 
-    public void SetUp(SpellData spell,Entity player)
+    [SerializeField] private TMP_Text _cooldownText;
+
+    bool _canUse = true;
+
+    public void SetUp(Spell spell,Entity player)
     {
-        if(spell.Sprite != null)
-            image.sprite = spell.Sprite;
+        if(spell.spellData.Sprite != null)
+        { 
+            _spellImage.sprite = _cooldownImage.sprite = spell.spellData.Sprite; 
+        }
 
         this.spell = spell;
+        spell.OnCooled += EnableSpell;
+
         spellCaster = player.entitySpellCaster;
     }
 
@@ -28,16 +38,13 @@ public class DraggableSpell : Draggable
     protected override void Awake()
     {
         base.Awake();
-
-        if (_premadeSpell != null)
-            spell = _premadeSpell.SpellData;
     }
 
     public async UniTask BeginDrag()
     {
-        if (isDragging)
+        if (isDragging && _canUse)
         {
-            spellCaster.entity.ClearWalkables();
+            spellCaster.castingEntity.ClearWalkables();
             _rangePoints = spellCaster.PreviewSpellRange(spell);
             await DragAndDrop();
         }
@@ -45,7 +52,7 @@ public class DraggableSpell : Draggable
 
     public async UniTask DragAndDrop()
     {
-        List<WayPoint> zonePoints = new();
+        SpellZoneData zoneData = new();
 
         while (isDragging)
         {
@@ -53,14 +60,14 @@ public class DraggableSpell : Draggable
             {
                 _currentPoint = point;
 
-                spellCaster.StopSpellZonePreview(_rangePoints, ref zonePoints);
+                spellCaster.StopSpellZonePreview(_rangePoints, ref zoneData);
                 //Debug.Log("null spell : " + spell == null);
                 //Debug.Log("spell name : " + spell.Name);
-                zonePoints = spellCaster.PreviewSpellZone(spell, point, _rangePoints);
+                zoneData = spellCaster.PreviewSpellZone(spell, point, _rangePoints);
             }
             else if (point == null)
             {
-                spellCaster.StopSpellZonePreview(_rangePoints, ref zonePoints);
+                spellCaster.StopSpellZonePreview(_rangePoints, ref zoneData);
                 _currentPoint = null;
             }
             await UniTask.Yield();
@@ -70,8 +77,38 @@ public class DraggableSpell : Draggable
         WayPoint wayPoint = _currentPoint;
         Reset();
 
-        await spellCaster.TryCastSpell(spell, wayPoint, _rangePoints, zonePoints);
+        if(await spellCaster.TryCastSpell(spell, wayPoint, _rangePoints, zoneData))
+            DisableSpell();
 
-        spellCaster.entity.ApplyWalkables();
+        spellCaster.castingEntity.ApplyWalkables();
+    }
+
+    void EnableSpell()
+    {
+        _canUse = true;
+        enabled = true;
+
+        _spellImage.enabled = true;
+
+        _cooldownImage.enabled = false;
+        //_cooldownText.enabled = false;
+    }
+
+    public void TickCooldownUI()
+    {
+        _cooldownImage.DOFillAmount(spell.cooling / spell.spellData.CoolDown,0.2f).SetEase(Ease.OutBack);
+        //_cooldownText.text = spell.cooling.ToString();
+    }
+
+    void DisableSpell()
+    {
+        _canUse = false;
+        enabled = false;
+
+        _cooldownImage.enabled = true;
+        //_cooldownText.enabled = true;
+        TickCooldownUI();
+
+        _spellImage.enabled = false;
     }
 }

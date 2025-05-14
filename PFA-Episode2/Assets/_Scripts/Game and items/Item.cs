@@ -5,5 +5,5 @@ public class Item : ScriptableObject
     [Header("Item")]
     public string name;
     public Sprite sprite;
-    public Sprite frame;
+    public Rarity rarity;
 }
