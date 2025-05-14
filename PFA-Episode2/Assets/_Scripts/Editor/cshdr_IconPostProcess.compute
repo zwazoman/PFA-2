@@ -4,7 +4,6 @@
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
 RWTexture2D<float4> Result;
-RWTexture2D<float4> Source;
 int OutlinePixelSize;
 float4 OutlineColor;
 float ExposureMultiplier;
@@ -14,17 +13,16 @@ void CSMain (uint3 id : SV_DispatchThreadID)
 {
     // TODO: insert actual code here!
 
-    float4 r = Source[id.xy];
-    
+    float4 r = Result[id.xy];
     
     //alpha clipping
     r.w = r.w>0;
-/*
+
     //outline
-    float a = Source[id.xy + int2(OutlinePixelSize,0)].w;
-    float b = Source[id.xy - int2(OutlinePixelSize,0)].w;
-    float c = Source[id.xy + int2(0,OutlinePixelSize)].w;
-    float d = Source[id.xy - int2(0,OutlinePixelSize)].w;
+    float a = Result[id.xy + int2(OutlinePixelSize,0)].w;
+    float b = Result[id.xy - int2(OutlinePixelSize,0)].w;
+    float c = Result[id.xy + int2(0,OutlinePixelSize)].w;
+    float d = Result[id.xy - int2(0,OutlinePixelSize)].w;
     float outline = max(abs(a-b),abs(c-d));
      
     r.w = max(r.w,outline);
@@ -32,6 +30,7 @@ void CSMain (uint3 id : SV_DispatchThreadID)
 
      //color correction
      r*= ExposureMultiplier;
-*/
+
+
     Result[id.xy] = r;
 }

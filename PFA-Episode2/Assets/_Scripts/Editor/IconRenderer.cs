@@ -28,7 +28,7 @@ public class IconRenderer : MonoBehaviour
         _textureSuffix = "txtr_rendered_icon_";
     }
 
-    /*public void RenderCurrentImage(string spriteName,string textureName)
+    public void RenderCurrentImage(string spriteName,string textureName)
     {
         RenderTexture rt = new(_resolution, _resolution, 0, RenderTextureFormat.ARGB32);
         rt.enableRandomWrite = true;
@@ -39,9 +39,9 @@ public class IconRenderer : MonoBehaviour
 
         rt.Release();
         DestroyImmediate(rt);
-    }*/
+    }
 
-    public void RenderCurrentImage(RenderTexture source, RenderTexture Result,string spriteName,string textureName)
+    public void RenderCurrentImage(RenderTexture rt,string spriteName,string textureName)
     {
         Debug.Log("  - Rendering : " + spriteName);
 
@@ -54,23 +54,20 @@ public class IconRenderer : MonoBehaviour
         if (NoValidTextureAlreadyExists) t = new(_resolution, _resolution);
 
         //render image
-        _renderCamera.targetTexture = source;
-        _renderCamera.depthTextureMode = DepthTextureMode.Depth;
+        _renderCamera.targetTexture = rt;
         _renderCamera.Render();
 
         //apply icon post process
-        _postProcessShader.SetTexture(0, "Source", source);
-        _postProcessShader.SetTexture(0, "Result", Result);
+        _postProcessShader.SetTexture(0, "Result", rt);
         _postProcessShader.SetInt("OutlinePixelSize", _outlinePixelSize);
         _postProcessShader.SetFloat("ExposureMultiplier", _exposureMultiplier);
         _postProcessShader.SetVector("OutlineColor", _outlineColor);
-        _postProcessShader.Dispatch(0, Result.width / 8, Result.height / 8, 1);
+        _postProcessShader.Dispatch(0, rt.width / 8, rt.height / 8, 1);
 
         //copy render to texture
-        RenderTexture.active = Result;
-        t.ReadPixels(new Rect(0, 0, Result.width, Result.height), 0, 0);
+        RenderTexture.active = _renderCamera.targetTexture;
+        t.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
         t.Apply();
-
 
         //save output texture to disk
         if (NoValidTextureAlreadyExists)
@@ -117,13 +114,9 @@ public class IconRenderer : MonoBehaviour
         }
 
         //initialize render texture
-        RenderTexture result = new(_resolution, _resolution, 0, RenderTextureFormat.ARGB32);
-        result.enableRandomWrite = true;
-        result.Create();
-
-        RenderTexture source = new(_resolution, _resolution, 0, RenderTextureFormat.ARGB32);
-        source.enableRandomWrite = true;
-        source.Create();
+        RenderTexture rt = new(_resolution, _resolution, 0, RenderTextureFormat.ARGB32);
+        rt.enableRandomWrite = true;
+        rt.Create();
 
         try
         {
@@ -133,20 +126,18 @@ public class IconRenderer : MonoBehaviour
                 GameObject child = transform.GetChild(i).gameObject;
                 child.SetActive(true);
 
-                await Task.Delay(1000);
+                await Task.Yield();
 
-                RenderCurrentImage(source,result, child.name, child.name) ;
+                RenderCurrentImage(rt, child.name, child.name);
                 child.SetActive(false);
             }
         } catch ( Exception e) { RenderTexture.active = null; Debug.LogException(e); } 
 
 
         //release render texture 
-        result.Release();
-        DestroyImmediate(result);
+        rt.Release();
+        DestroyImmediate(rt);
 
-        source.Release();
-        DestroyImmediate(source);
 
         Debug.Log("-- render finished. --");
     }
@@ -183,10 +174,10 @@ public class IconRendererEditor : Editor
             ((IconRenderer)target).RenderAllObjects();
         }
 
-        /*if (GUILayout.Button("render current view as test"))
+        if (GUILayout.Button("render current view as test"))
         {
             ((IconRenderer)target).RenderCurrentImage("test", "test");
-        }*/
+        }
         
     }
 }
