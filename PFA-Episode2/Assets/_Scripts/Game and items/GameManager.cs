@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -25,6 +26,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Data")]
     public GameStaticData staticData;
+
+    public List<SceneAsset> SceneCombat = new();
 
 #if UNITY_EDITOR
     //@temp
@@ -72,5 +75,11 @@ public class GameManager : MonoBehaviour
     void LoadOrCreateSave()
     {
         playerInventory = SaveManager.Load<Inventory>(playerInventory.NameSave, false);
+    }
+
+    public SceneAsset ReturnSceneCombat()
+    {
+        int index = Random.Range(0, SceneCombat.Count);
+        return SceneCombat[index];
     }
 }
