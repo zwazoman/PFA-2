@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     [Header("Data")]
     public GameStaticData staticData;
 
-    public List<SceneAsset> SceneCombat = new();
+    public List<SceneAsset> CombatScenes = new();
 
 #if UNITY_EDITOR
     //@temp
@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
 
     public SceneAsset ReturnSceneCombat()
     {
-        int index = Random.Range(0, SceneCombat.Count);
-        return SceneCombat[index];
+        int index = Random.Range(0, CombatScenes.Count);
+        return CombatScenes[index];
     }
 }
