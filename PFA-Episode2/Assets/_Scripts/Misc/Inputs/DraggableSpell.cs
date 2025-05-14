@@ -53,6 +53,7 @@ public class DraggableSpell : Draggable
     public async UniTask DragAndDrop()
     {
         SpellZoneData zoneData = new();
+        zoneData.zonePoints = new();
 
         while (isDragging)
         {

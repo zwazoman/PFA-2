@@ -163,7 +163,7 @@ public static class Tools
 
     public static T1 GetKeyFromValue<T1, T2>(this Dictionary<T1, T2> dict, T2 value)
     {
-        foreach (var pair in dict)
+        foreach (KeyValuePair<T1,T2> pair in dict)
         {
             if (pair.Value.Equals(value))
             {
