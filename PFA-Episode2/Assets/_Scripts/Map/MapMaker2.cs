@@ -38,6 +38,7 @@ public class MapMaker2 : MonoBehaviour
     public Dictionary<Vector3Int, Node> DicoNode { get; set; } = new(); //ToDo :Faire en sorte qu'il soit privé sauf pour la save.
     private int _currentHeight = 3;
     private Node _existingValue;
+    public List<Node> AllNodeGood = new();
     #endregion
     private void Awake()
     {
@@ -256,6 +257,7 @@ public class MapMaker2 : MonoBehaviour
         }
         foreach (Node node in DicoNode.Values)
         {
+            AllNodeGood.Add(node);
             if (node.OnYReviendra)
             {
                 node.Intersection = true;
