@@ -12,24 +12,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: E_EnemyRoot
       objectReference: {fileID: 0}
-    - target: {fileID: 1126320524359264305, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: be90dc85a6e81494599c0d5b2aa8b698, type: 2}
-    - target: {fileID: 2901877015449345275, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: -7069114320658533896, guid: b871180e9b11616468213f6df60827d3, type: 3}
-    - target: {fileID: 3061929779469775917, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3061929779469775917, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3061929779469775917, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
-      propertyPath: m_LocalScale.z
+    - target: {fileID: 2913154218648722504, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3061929779469775917, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
@@ -80,39 +64,42 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4334235415200547474, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
-      propertyPath: VisualsRoot
+    - target: {fileID: 4504407417257943303, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5032404836428488651, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
+      propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5207839571026480074, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
-      propertyPath: entity
+      propertyPath: castingEntity
       value: 
-      objectReference: {fileID: 3325493092759117535}
-    - target: {fileID: 6317766465006088616, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 9c3542fe97105d44aae01c7cff5e0ace, type: 2}
-    - target: {fileID: 8091209764538729826, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
+      objectReference: {fileID: 0}
+    - target: {fileID: 5774824966706320485, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: -7069114320658533896, guid: b871180e9b11616468213f6df60827d3, type: 3}
+      objectReference: {fileID: 0}
+    - target: {fileID: 6904206773815292165, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2814213667352254204, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
     - {fileID: 2919549843284504080, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
-    m_RemovedGameObjects:
-    - {fileID: 5452149140871937494, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 279633862603933050, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3325493092759117535}
+      addedObject: {fileID: 7373305816925480054}
   m_SourcePrefab: {fileID: 100100000, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
 --- !u!1 &8577999774472716630 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 279633862603933050, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
   m_PrefabInstance: {fileID: 8424643759018230828}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3325493092759117535
+--- !u!114 &7373305816925480054
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -124,6 +111,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae3a4480272969c41bafb12d3cecf0d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stats:
+    owner: {fileID: 0}
+    maxHealth: 0
+    maxMovePoints: 0
+    shieldAmount: 0
+    currentMovePoints: 0
+    currentHealth: 0
   currentPoint: {fileID: 0}
   entitySpellCaster: {fileID: 0}
   Icon: {fileID: 0}

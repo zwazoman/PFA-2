@@ -80,6 +80,7 @@ public class GameManager : MonoBehaviour
         playerInventory = SaveManager.Load<Inventory>(playerInventory.NameSave, false);
     }
 
+#if UNITY_EDITOR
     private void OnValidate()
     {
         if (_combatScenes.Count == 0)
@@ -91,6 +92,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+#endif
     public string ReturnSceneCombat()
     {
         int index = Random.Range(0, combatScenesName.Count);

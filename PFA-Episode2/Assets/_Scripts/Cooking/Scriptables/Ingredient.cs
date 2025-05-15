@@ -32,7 +32,7 @@ public class Ingredient : IngredientBase
         }
 
         Spell.CoolDown += CoolDownIncrease;
-        Spell.Range += RangeIncrease;
+        Spell.Range = (byte)Mathf.Max(1,Spell.Range + RangeIncrease);
 
     }
 
