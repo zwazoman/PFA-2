@@ -110,15 +110,28 @@ public class MapBuildingTools : MonoBehaviour
         return Vector3Int.zero; // par defaut si pas trouve
     }
 
-    public Node ReturnNodeFromNodePosition(int nodePosition)
+    public Node ReturnNodeFromNodePosition(int nodePosition, int distanceVerif)
     {
         foreach(Node node in MapMaker2.Instance.AllNodeGood)
         {
-            if (node.Position == nodePosition + 2)
+            if (node.Position == nodePosition + distanceVerif)
             {
                 return node;
             }
         }
         return null;
+    }
+
+    public List<Node> ReturnListOfNodeFromNodePosition(int nodePosition)
+    {
+        List<Node> nodeList = new();
+        foreach (Node node in MapMaker2.Instance.AllNodeGood)
+        {
+            if (node.Position == nodePosition)
+            {
+                nodeList.Add(node);
+            }
+        }
+        return nodeList;
     }
 }
