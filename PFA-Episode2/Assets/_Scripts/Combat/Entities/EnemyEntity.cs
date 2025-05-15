@@ -21,7 +21,7 @@ public class EnemyEntity : Entity
     {
         base.Awake();
 
-
+        
         stats.maxMovePoints = Data.MaxMovePoints;
     }
 
@@ -32,7 +32,7 @@ public class EnemyEntity : Entity
         stats.Setup(Data.MaxHealth);
         CombatManager.Instance.RegisterEntity(this);
 
-        foreach (PremadeSpell premadeSpell in Data.Spells)
+        foreach(PremadeSpell premadeSpell in Data.Spells)
         {
             Spell spell = new();
             spell.spellData = premadeSpell.SpellData;
@@ -72,31 +72,14 @@ public class EnemyEntity : Entity
         await base.EndTurn();
     }
 
-    List<Spell> ComputeActiveSpells()
-    {
-        List<Spell> activeSpells = new();
-
-        foreach (Spell spell in spells)
-            if (spell.canUse)
-                activeSpells.Add(spell);
-
-        return activeSpells;
-    }
-
     protected Spell ChooseSpell(int spellIndex)
     {
-        if (ComputeActiveSpells().Count == 0)
-            return null;
-        else
-            return ComputeActiveSpells()[spellIndex];
+        return spells[spellIndex];
     }
 
     protected Spell ChooseRandomSpell()
     {
-        if (ComputeActiveSpells().Count == 0)
-            return null;
-        else
-            return ComputeActiveSpells().PickRandom();
+        return spells.PickRandom();
     }
 
     protected Spell ChooseSpellWithRange()
@@ -106,19 +89,16 @@ public class EnemyEntity : Entity
         int offset = int.MaxValue;
         Spell choosenSpell = null;
 
-        if (ComputeActiveSpells().Count == 0)
-            return null;
-        else
-            foreach (Spell spell in ComputeActiveSpells())
+        foreach (Spell premadeSpell in spells)
+        {
+            int spellMaxReach = stats.currentMovePoints + premadeSpell.spellData.Range + Mathf.FloorToInt(premadeSpell.spellData.AreaOfEffect.Bounds.width / 2);
+            int targetToMaxReachOffset = Mathf.Abs(spellMaxReach - targetDistance);
+            if (targetToMaxReachOffset < offset)
             {
-                int spellMaxReach = stats.currentMovePoints + spell.spellData.Range + Mathf.FloorToInt(spell.spellData.AreaOfEffect.Bounds.width / 2);
-                int targetToMaxReachOffset = Mathf.Abs(spellMaxReach - targetDistance);
-                if (targetToMaxReachOffset < offset)
-                {
-                    offset = targetToMaxReachOffset;
-                    choosenSpell = spell;
-                }
+                offset = targetToMaxReachOffset;
+                choosenSpell = premadeSpell;
             }
+        }
 
         return choosenSpell;
     }
@@ -147,15 +127,15 @@ public class EnemyEntity : Entity
         Dictionary<WayPoint, List<WayPoint>> targetPointsDict = new();
 
         List<WayPoint> rangePoints;
-        SpellZoneData zoneData = new();
+        SpellCastData castData = new();
 
         rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, targetPlayerPoint, false, true);
 
         foreach (WayPoint rangePoint in rangePoints)
         {
-            zoneData = entitySpellCaster.PreviewSpellZone(choosenSpell, rangePoint, rangePoints, false);
-            print(zoneData.zonePoints.Count);
-            foreach (WayPoint zonePoint in zoneData.zonePoints)
+            castData = entitySpellCaster.PreviewSpellZone(choosenSpell, rangePoint, rangePoints, false);
+            print(castData.zonePoints.Count);
+            foreach (WayPoint zonePoint in castData.zonePoints)
             {
                 if (!targetPointsDict.ContainsKey(zonePoint))
                     targetPointsDict.Add(zonePoint, new List<WayPoint>());
@@ -167,9 +147,9 @@ public class EnemyEntity : Entity
         WayPoint choosenTargetPoint = null;
         WayPoint pointToSelect = null;
 
-        zoneData.zonePoints = null;
+        castData.zonePoints = null;
 
-        while (zoneData.zonePoints == null)
+        while (castData.zonePoints == null)
         {
             choosenTargetPoint = targetPointsDict.Keys.FindClosestFloodPoint();
 
@@ -180,8 +160,8 @@ public class EnemyEntity : Entity
 
             print("singe encore encore");
 
-            rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint, false);
-            zoneData = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints, false);
+            rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint, false );
+            castData = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints, false);
 
             targetPointsDict[choosenTargetPoint].Remove(targetPointsDict[choosenTargetPoint][0]);
 
@@ -199,19 +179,19 @@ public class EnemyEntity : Entity
 
         if (targetReached)
         {
-            return await CastSpell(rangePoints, zoneData, choosenSpell, choosenTargetPoint, pointToSelect);
+            return await CastSpell(rangePoints, castData,choosenSpell,choosenTargetPoint,pointToSelect);
         }
         return false;
     }
 
-    async UniTask<bool> CastSpell(List<WayPoint> rangePoints, SpellZoneData zoneData, Spell choosenSpell, WayPoint choosenTargetPoint, WayPoint pointToSelect)
+    async UniTask<bool> CastSpell(List<WayPoint> rangePoints, SpellCastData castData, Spell choosenSpell, WayPoint choosenTargetPoint, WayPoint pointToSelect)
     {
         print("attack !");
         rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint);
         await UniTask.Delay(ThinkDelayMilis);
-        zoneData = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints);
+        castData = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints);
         await UniTask.Delay(ThinkDelayMilis);
-        await entitySpellCaster.TryCastSpell(choosenSpell, pointToSelect, rangePoints, zoneData);
+        await entitySpellCaster.TryCastSpell(choosenSpell, pointToSelect, rangePoints, castData);
 
         return targetPlayerPoint.Content != null;
     }

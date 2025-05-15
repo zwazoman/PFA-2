@@ -33,12 +33,15 @@ public class CombatManager : MonoBehaviour
 
     [SerializeField] public List<SpawnSetup> Setups = new();
 
+    public List<Entity> Entities { get; private set; } = new();
+
     public event Action<Entity> OnNewTurn;
 
     #region entity registration
 
     public void RegisterEntity(Entity entity)
     {
+        Entities.Add(entity);
         if (entity is PlayerEntity)
         {
             PlayerEntities.Add((PlayerEntity)entity);
@@ -51,6 +54,7 @@ public class CombatManager : MonoBehaviour
 
     public async UniTask UnRegisterEntity(Entity entity)
     {
+        Entities.Remove(entity);
         if (entity is PlayerEntity && PlayerEntities.Contains(entity))
         {
             PlayerEntities.Remove((PlayerEntity)entity);
@@ -107,7 +111,7 @@ public class CombatManager : MonoBehaviour
     {
         if(Setups.Count == 0)
         {
-            throw new Exception("T'as pas setup les entités mon frère");
+            throw new Exception("T'as pas setup les entitï¿½s mon frï¿½re");
         }
 
         SpawnSetup setup = Setups[UnityEngine.Random.Range(0, Setups.Count)];
