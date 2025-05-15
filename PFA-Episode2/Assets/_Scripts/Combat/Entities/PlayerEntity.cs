@@ -27,10 +27,11 @@ public class PlayerEntity : Entity
     protected override void Start()
     {
         base.Start();
-        CombatManager.Instance.RegisterEntity(this);
-        stats.Setup(maxHealth);
 
-        foreach(DraggableSpell spell in spellsUI)
+        stats.Setup(maxHealth);
+        CombatManager.Instance.RegisterEntity(this);
+
+        foreach (DraggableSpell spell in spellsUI)
         {
             spells.Add(spell.spell);
         }

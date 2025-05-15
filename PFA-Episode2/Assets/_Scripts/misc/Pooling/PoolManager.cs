@@ -29,9 +29,9 @@ public class PoolManager : MonoBehaviour
     }
 
 
-
-    [Header("VFXs")]
-    public Pool VfxHitPool, VFXDeathPool,VfxHealPool;
+    public Pool ArrowPool;
+    //[Header("VFXs")]
+    //public Pool VfxHitPool, VFXDeathPool,VfxHealPool;
 
 
 }
