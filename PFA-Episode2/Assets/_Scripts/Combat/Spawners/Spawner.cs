@@ -22,8 +22,8 @@ public class Spawner : MonoBehaviour
 
 
         RaycastHit hit;
-        if (!Physics.Raycast(transform.position, Vector3.down, out hit) || !hit.collider.TryGetComponent(out spawnPoint))
-            print("spawner not linked");
+        if (Physics.Raycast(transform.position, Vector3.down, out hit) && hit.collider.TryGetComponent(out spawnPoint))
+            print("spawner linked");
     }
 
     public void SummonRandomEntity()
