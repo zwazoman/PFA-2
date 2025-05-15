@@ -20,6 +20,7 @@ public class PlayerUIHandler : MonoBehaviour
         if (GameManager.Instance.playerInventory != null)
         {
             //instantiate draggable spell slots
+            Debug.Log("Forrrrrr");
             for (
                 int i = 0;
                 i < Mathf.Min(3, GameManager.Instance.playerInventory.Spells.Count);
@@ -35,6 +36,7 @@ public class PlayerUIHandler : MonoBehaviour
 
     void CreateSpellUI(Spell spellData,int i)
     {
+        Debug.Log("nique sa mere ptn - " + i.ToString());
         DraggableSpell draggableSpellSlot = Instantiate(_uiSpellPrefab, CombatUiManager.Instance.SpellSlots[i]);
         draggableSpellSlot.SetUp(spellData, _player);
 
