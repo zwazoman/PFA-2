@@ -3,6 +3,7 @@ using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class EntityVisuals : MonoBehaviour
@@ -25,18 +26,31 @@ public class EntityVisuals : MonoBehaviour
         //spell preview
         owner.OnPreviewSpell += (float newShield, float newHP, Vector3 direction) =>
         {
-            try
+            //try
+            //{
+            foreach (PooledObject obj in Arrows)
             {
-                for (int i = 1; i < Mathf.RoundToInt(direction.magnitude) + 1; i++)
-                {
-                    PooledObject o = PoolManager.Instance.ArrowPool
-                        .PullObjectFromPool(transform.position + direction.normalized * i, transform)
-                        .GetComponent<PooledObject>();
+                obj.GoBackIntoPool();
+            }
+            Arrows.Clear();
 
-                    o.transform.right = direction.normalized;
+            for (int i = 1; i < Mathf.RoundToInt(direction.magnitude) + 1; i++)
+                {
+                    Vector3 pose = transform.position + direction.normalized * i;
+                    pose.y = 0.7f;    
+
+                    PooledObject o = PoolManager.Instance.ArrowPool
+                        .PullObjectFromPool(pose, transform)
+                        .GetComponent<PooledObject>();
+                    
+
+                    float angle = Mathf.Atan2(direction.z, -direction.x) * Mathf.Rad2Deg;
+                    o.transform.rotation = Quaternion.Euler(-90, angle , 0);
                     Arrows.Add(o);
+                    o.transform.position = pose;
                 }
-            }catch(Exception ex) { Debug.LogException(ex); }
+                //if(direction!=Vector3.zero)EditorApplication.isPaused = true;
+           // }catch(Exception ex) { Debug.LogException(ex); }
             
         };
 
@@ -46,6 +60,8 @@ public class EntityVisuals : MonoBehaviour
             {
                 obj.GoBackIntoPool();
             }
+            Arrows.Clear();
+
         };
     }
 

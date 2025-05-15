@@ -90,6 +90,7 @@ public class DraggableSpell : Draggable
         _spellImage.enabled = true;
 
         _cooldownImage.enabled = false;
+        Debug.Log("Cooldown up !!!!");
         //_cooldownText.enabled = false;
     }
 

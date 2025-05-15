@@ -9,6 +9,7 @@ public class GameStaticData : ScriptableObject
     public SerializedDictionary<string, spellVisualData> Visuals = new();
 
     public SerializedDictionary<Rarity, Sprite> itemFramesPerRarity = new();
+    public SerializedDictionary<Rarity, Sprite> framesPerRarity = new();
 
     public void RebuildTable()
     {
