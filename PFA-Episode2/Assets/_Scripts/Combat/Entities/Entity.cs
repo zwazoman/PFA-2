@@ -5,6 +5,8 @@ using Cysharp.Threading.Tasks;
 using System;
 using DG.Tweening;
 using Unity.VisualScripting;
+using static UnityEngine.EventSystems.EventTrigger;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(SpellCaster))]
 public class Entity : MonoBehaviour
@@ -23,6 +25,12 @@ public class Entity : MonoBehaviour
     //events
     public event Action OnDead;
 
+    /// <summary>
+    /// float newShield,float newHP,Vector3 direction
+    /// </summary>
+    public event Action<float,float,Vector3> OnPreviewSpell;
+    public event Action OnSpellPreviewCancel;
+
     public bool isDead { get; private set; }
 
     protected virtual void Awake()
@@ -39,6 +47,7 @@ public class Entity : MonoBehaviour
         currentPoint.StepOn(this);
     }
 
+    // game management
     public virtual async UniTask PlayTurn()
     {
         print(gameObject.name);
@@ -63,33 +72,38 @@ public class Entity : MonoBehaviour
         }
     }
 
-    public async UniTask ApplySpell(Spell spell, SpellCastingContext context)
+    //spell preview
+    public void previewSpellEffect(BakedSpellEffect e)
     {
-        print("applySpell");
+        float newShield = stats.shieldAmount + e.shield;
+        Debug.Log("-new shield : " + newShield.ToString());
 
-        foreach (SpellEffect effect in spell.spellData.Effects)
-        {
-            switch (effect.effectType)
-            {
-                case SpellEffectType.Damage:
-                    await stats.ApplyDamage(effect.value);
-                    break;
-                case SpellEffectType.Recoil:
-                    await Push(context.PushDamage, context.PushPoint);
-                    break;
-                case SpellEffectType.Shield:
-                    await stats.ApplyShield(effect.value);
-                    break;
-                case SpellEffectType.DamageIncreaseForEachHitEnnemy:
-                    throw new NotImplementedException();
-                case SpellEffectType.DamageIncreasePercentageByDistanceToCaster:
-                    throw new NotImplementedException();
-                case SpellEffectType.Fire:
-                    throw new NotImplementedException();
-            }
-        }
+        newShield = Mathf.Max(0, newShield - e.damage);
+        Debug.Log("new shield : " + newShield.ToString());
+
+        float tankedDamage = Mathf.Abs(newShield - stats.shieldAmount);
+        float damage = Mathf.Max(e.damage - tankedDamage, 0);
+
+        float newHP = stats.currentHealth - damage;
+        
+
+        OnPreviewSpell?.Invoke(newShield, newHP,e.pushPoint != null ? e.pushPoint.transform.position-transform.position : Vector3.zero);
     }
 
+    public void StopPreviewingSpellEffect()
+    {
+        OnSpellPreviewCancel?.Invoke();
+    }
+
+    //spell effect
+    public async UniTask ApplySpell(BakedSpellEffect effect)
+    {
+        if(effect.shield != 0) await stats.ApplyShield(effect.shield);
+        if (effect.damage != 0) await stats.ApplyDamage(effect.damage);
+        if (effect.pushPoint != null) await Push(Mathf.RoundToInt(effect.pushDamage), effect.pushPoint);
+    }
+
+    //walkable tiles
     public void ApplyWalkables(bool showTiles = true)
     {
         if (Walkables.Count == 0)
@@ -113,6 +127,7 @@ public class Entity : MonoBehaviour
         Walkables.Clear();
     }
 
+    //recoil
     async UniTask Push(int pushDamages, WayPoint pushTarget)
     {
         print(pushDamages);
@@ -127,6 +142,8 @@ public class Entity : MonoBehaviour
         pushTarget.StepOn(this);
     }
 
+    //movement
+
     /// <summary>
     /// fait se déplacer l'entité vers la case la plus proche de la target
     /// </summary>
@@ -134,7 +151,6 @@ public class Entity : MonoBehaviour
     /// <returns></returns>
     protected async UniTask<bool> MoveToward(WayPoint targetPoint)
     {
-        print("move !");
 
         await UniTask.Delay(300);
 
@@ -226,6 +242,7 @@ public class Entity : MonoBehaviour
         }
     }
 
+    //death
     public async UniTask Die()
     {
         print("Die");
