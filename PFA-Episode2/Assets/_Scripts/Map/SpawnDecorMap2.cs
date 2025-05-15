@@ -1,11 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Script qui Setup le decor de la map
+/// </summary>
 public class SpawnDecorMap2 : MonoBehaviour
 {
     [SerializeField] private List<GameObject> _mapBorderDecor = new();
     [SerializeField] private List<GameObject> _mapListSecondary = new();
-    private Queue<GameObject> _activeDecor = new(); //A save
+    private Queue<GameObject> _activeDecor = new();
     private void Start()
     {
         ActiveSecondaryDecor();
@@ -16,8 +19,8 @@ public class SpawnDecorMap2 : MonoBehaviour
     {
         if (!MapMaker2.Instance.DicoNode.ContainsKey(new Vector3Int(250,0,0))) { _mapListSecondary[1].SetActive(true); }
         else if (!MapMaker2.Instance.DicoNode.ContainsKey(new Vector3Int(-250, 0, 0))) { _mapListSecondary[0].SetActive(true); }
-        else if ( !MapMaker2.Instance.DicoNode.ContainsKey(new Vector3Int(1750, 0, 0))) { _mapListSecondary[2].SetActive(true); }
-        print(MapMaker2.Instance.DicoNode.ContainsKey(new Vector3Int(250, 0, 0)));
+        if (!MapMaker2.Instance.DicoNode.ContainsKey(new Vector3Int(1750, 0, 0))) { _mapListSecondary[2].SetActive(true); }
+        if ( !MapMaker2.Instance.DicoNode.ContainsKey(new Vector3Int(3750, 0, 0))) { _mapListSecondary[3].SetActive(true); }
     }
 
     public void SpawnDecor()
@@ -41,11 +44,5 @@ public class SpawnDecorMap2 : MonoBehaviour
     {
         foreach (GameObject go in _mapBorderDecor) { go.SetActive(false); }
         foreach (GameObject go in _activeDecor) { go.SetActive(true); }
-    }
-
-    public void test()
-    {
-        PlayerMap.Instance.PositionMap++;
-        SpawnDecor();
     }
 }
