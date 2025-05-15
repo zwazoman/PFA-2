@@ -76,10 +76,10 @@ public class Entity : MonoBehaviour
     public void previewSpellEffect(BakedSpellEffect e)
     {
         float newShield = stats.shieldAmount + e.shield;
-        Debug.Log("-new shield : " + newShield.ToString());
+        //Debug.Log("-new shield : " + newShield.ToString());
 
         newShield = Mathf.Max(0, newShield - e.damage);
-        Debug.Log("new shield : " + newShield.ToString());
+        //Debug.Log("new shield : " + newShield.ToString());
 
         float tankedDamage = Mathf.Abs(newShield - stats.shieldAmount);
         float damage = Mathf.Max(e.damage - tankedDamage, 0);
@@ -151,6 +151,7 @@ public class Entity : MonoBehaviour
     /// <returns></returns>
     protected async UniTask<bool> MoveToward(WayPoint targetPoint)
     {
+        ApplyWalkables(true);
 
         await UniTask.Delay(300);
 
@@ -164,7 +165,15 @@ public class Entity : MonoBehaviour
             return true;
         }
 
-        await TryMoveTo(Tools.FindClosestFloodPoint(Walkables, Tools.SmallFlood(targetPoint, Tools.FloodDict[targetPoint])));
+        //print(Tools.FindClosestFloodPoint(Walkables, Tools.SmallFlood(targetPoint, Tools.FloodDict[targetPoint], true, true)));
+
+        await UniTask.Delay(500);
+
+        WayPoint moveToPoint;
+
+        Walkables.FindClosestFloodPoint(out moveToPoint, Tools.SmallFlood(targetPoint, Tools.FloodDict[targetPoint], false, true));
+
+        await TryMoveTo(moveToPoint);
         return false;
     }
 

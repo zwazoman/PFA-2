@@ -112,7 +112,8 @@ public class EnemyEntity : Entity
             points.Add(player.currentPoint);
         }
 
-        WayPoint result = points.FindClosestFloodPoint();
+        WayPoint result; 
+        points.FindClosestFloodPoint(out result);
 
         return result;
     }
@@ -134,7 +135,6 @@ public class EnemyEntity : Entity
         foreach (WayPoint rangePoint in rangePoints)
         {
             castData = entitySpellCaster.PreviewSpellZone(choosenSpell, rangePoint, rangePoints, false);
-            print(castData.zonePoints.Count);
             foreach (WayPoint zonePoint in castData.zonePoints)
             {
                 if (!targetPointsDict.ContainsKey(zonePoint))
@@ -143,22 +143,28 @@ public class EnemyEntity : Entity
             }
         }
 
+        entitySpellCaster.StopSpellRangePreview(ref rangePoints, ref castData);
 
         WayPoint choosenTargetPoint = null;
         WayPoint pointToSelect = null;
 
-        castData.zonePoints = null;
-
-        while (castData.zonePoints == null)
+        while (castData.zonePoints == null || castData.zonePoints.Count == 0)
         {
             choosenTargetPoint = targetPointsDict.Keys.FindClosestFloodPoint();
+
+            //if (!Tools.FloodDict.ContainsKey(choosenTargetPoint))
+            //{
+            //    targetPointsDict[choosenTargetPoint].Remove(targetPointsDict[choosenTargetPoint][0]);
+
+            //    if (targetPointsDict[choosenTargetPoint].Count == 0)
+            //        targetPointsDict.Remove(choosenTargetPoint);
+            //    break;
+            //}
 
             print(targetPointsDict.Keys.Count);
             print(choosenTargetPoint);
 
             GetInvertShot(choosenTargetPoint, targetPointsDict[choosenTargetPoint][0], choosenSpell, out pointToSelect);
-
-            print("singe encore encore");
 
             rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint, false );
             castData = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints, false);
@@ -170,6 +176,8 @@ public class EnemyEntity : Entity
 
             await UniTask.Yield();
         }
+
+        choosenTargetPoint.ChangeTileColor(choosenTargetPoint._zoneMaterial);
 
         // possibilité pour pas qu'elle se tire dessus ? ça serait rigolo n la stock qq part si ça se touche et on réésaie. si pas de solution on utilise celle qui touche
 

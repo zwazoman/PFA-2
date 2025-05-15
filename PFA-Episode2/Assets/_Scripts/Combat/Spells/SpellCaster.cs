@@ -164,8 +164,6 @@ public class SpellCaster : MonoBehaviour
 
         Vector3 posWithHeigth = hitEntity.transform.position + Vector3.up * 0.2f;
 
-        bool isDiagonal = pushDirection.x != 0 && pushDirection.z != 0;
-
         if (pushDirection == Vector3.zero)
         {
             Vector3 casterPosWithHeight = transform.position + Vector3.up * 0.2f;
@@ -180,14 +178,21 @@ public class SpellCaster : MonoBehaviour
             pushDirection = new Vector3(xPushDirection, 0, zPushDirection);
         }
 
+        bool isDiagonal = pushDirection.x != 0 && pushDirection.z != 0;
+
+        print(pushDirection);
+
         if (isDiagonal)
         {
+            print("diag");
+
+            Debug.DrawLine(posWithHeigth, posWithHeigth + pushDirection * pushForce /** Mathf.Sqrt(2)*/, Color.red, 20);
+
             RaycastHit hit;
-            if (Physics.SphereCast(posWithHeigth, .45f, pushDirection, out hit, pushForce * Mathf.Sqrt(2), LayerMask.GetMask("Wall")))
+            if (Physics.SphereCast(posWithHeigth, .45f, pushDirection, out hit, pushForce * Mathf.Sqrt(2) - .5f))
             {
                 print("wall hit");
-
-                Debug.DrawLine(transform.position, hit.point, Color.black, 20);
+                //Debug.DrawLine(transform.position, hit.point, Color.black, 20);
                 pushDamages = pushForce;
                 Vector3 hitPos = hit.point/*.SnapOnGrid()*/;
 
@@ -205,9 +210,15 @@ public class SpellCaster : MonoBehaviour
         }
         else
         {
+            print("not diag");
+            Debug.DrawLine(posWithHeigth, posWithHeigth + pushDirection * pushForce, Color.red, 20);
+
+
             RaycastHit hit;
             if (Physics.Raycast(posWithHeigth, pushDirection, out hit, pushForce, LayerMask.GetMask("Wall")))
             {
+                print("wall hit");
+
                 pushDamages = pushForce;
 
                 Debug.DrawLine(posWithHeigth, hit.point, Color.black, 20);
