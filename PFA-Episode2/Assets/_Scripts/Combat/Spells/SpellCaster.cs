@@ -133,6 +133,9 @@ public class SpellCaster : MonoBehaviour
             }
         }
 
+        foreach(Entity entity in CombatManager.Instance.Entities)
+        StopSpellEffectPreview(entity);
+
         zoneData.zonePoints.Clear();
     }
 

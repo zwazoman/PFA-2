@@ -50,11 +50,11 @@ public class Entity : MonoBehaviour
     // game management
     public virtual async UniTask PlayTurn()
     {
-        print(gameObject.name);
         Tools.Flood(currentPoint);
         stats.currentMovePoints = stats.maxMovePoints;
         await stats.ApplyShield(-1);
 
+        Debug.Log("== about to tick CD ==",gameObject);
         TickCooldown();
     }
 
@@ -76,10 +76,8 @@ public class Entity : MonoBehaviour
     public void previewSpellEffect(BakedSpellEffect e)
     {
         float newShield = stats.shieldAmount + e.shield;
-        //Debug.Log("-new shield : " + newShield.ToString());
 
         newShield = Mathf.Max(0, newShield - e.damage);
-        //Debug.Log("new shield : " + newShield.ToString());
 
         float tankedDamage = Mathf.Abs(newShield - stats.shieldAmount);
         float damage = Mathf.Max(e.damage - tankedDamage, 0);

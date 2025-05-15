@@ -88,8 +88,13 @@ public class CombatManager : MonoBehaviour
             {
                 PlayerEntity player = PlayerEntities[i];
                 if (player == null) continue;
+
+                foreach (Entity e in Entities) e.StopPreviewingSpellEffect();
+
                 OnNewTurn?.Invoke(player);
                 await player.PlayTurn();
+
+
             }
 
             //enemy entities
@@ -97,6 +102,9 @@ public class CombatManager : MonoBehaviour
             {
                 EnemyEntity enemy = EnemyEntities[i];
                 if (enemy == null) continue;
+
+                foreach (Entity e in Entities) e.StopPreviewingSpellEffect();
+
                 OnNewTurn?.Invoke(enemy);
                 await enemy.PlayTurn();
             }

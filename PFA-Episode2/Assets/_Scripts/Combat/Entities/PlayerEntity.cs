@@ -10,6 +10,7 @@ public class PlayerEntity : Entity
     [HideInInspector] public EndButton endTurnButton;
 
     [SerializeField] public List<DraggableSpell> spellsUI = new();
+    [SerializeField] private PlayerUIHandler _playerUIHandler;
 
     [SerializeField] int maxHealth;
     [SerializeField] int maxMovePoints;
@@ -30,6 +31,8 @@ public class PlayerEntity : Entity
 
         stats.Setup(maxHealth);
         CombatManager.Instance.RegisterEntity(this);
+
+        _playerUIHandler.SetUp();
 
         foreach (DraggableSpell spell in spellsUI)
         {

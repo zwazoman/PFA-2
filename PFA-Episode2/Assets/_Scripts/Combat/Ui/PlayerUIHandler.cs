@@ -13,7 +13,7 @@ public class PlayerUIHandler : MonoBehaviour
             TryGetComponent(out _player);
     }
 
-    private void Start()
+    public void SetUp()
     {
         AssignEndTurnButton();
 
