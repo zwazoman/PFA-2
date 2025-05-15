@@ -32,8 +32,7 @@ public class CombatManager : MonoBehaviour
     [HideInInspector] public List<EnemyEntity> EnemyEntities = new();
 
     [SerializeField] public List<SpawnSetup> Setups = new();
-    public List<PlayerEntity> PlayerEntities = new();
-    public List<EnemyEntity> EnemyEntities = new();
+
     public List<Entity> Entities { get; private set; } = new();
 
     public event Action<Entity> OnNewTurn;
