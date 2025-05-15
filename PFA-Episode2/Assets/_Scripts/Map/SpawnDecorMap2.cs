@@ -3,25 +3,35 @@ using UnityEngine;
 
 public class SpawnDecorMap2 : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> _mapListDecor = new();
+    [SerializeField] private List<GameObject> _mapBorderDecor = new();
+    [SerializeField] private List<GameObject> _mapListSecondary = new();
     private Queue<GameObject> _activeDecor = new(); //A save
     private void Start()
     {
+        ActiveSecondaryDecor();
         SpawnDecor();
+    }
+
+    public void ActiveSecondaryDecor()
+    {
+        if (!MapMaker2.Instance.DicoNode.ContainsKey(new Vector3Int(250,0,0))) { _mapListSecondary[1].SetActive(true); }
+        else if (!MapMaker2.Instance.DicoNode.ContainsKey(new Vector3Int(-250, 0, 0))) { _mapListSecondary[0].SetActive(true); }
+        else if ( !MapMaker2.Instance.DicoNode.ContainsKey(new Vector3Int(1750, 0, 0))) { _mapListSecondary[2].SetActive(true); }
+        print(MapMaker2.Instance.DicoNode.ContainsKey(new Vector3Int(250, 0, 0)));
     }
 
     public void SpawnDecor()
     {
-        if (PlayerMap.Instance.PositionMap >= 0) { _activeDecor.Enqueue(_mapListDecor[0]); _activeDecor.Enqueue(_mapListDecor[1]); }
-        if (PlayerMap.Instance.PositionMap >= 1) { _activeDecor.Dequeue(); _activeDecor.Enqueue(_mapListDecor[2]); }
-        if (PlayerMap.Instance.PositionMap >= 3) { _activeDecor.Enqueue(_mapListDecor[3]); }
-        if (PlayerMap.Instance.PositionMap >= 4) { _activeDecor.Dequeue(); _activeDecor.Enqueue(_mapListDecor[4]); }
-        if (PlayerMap.Instance.PositionMap >= 6) { _activeDecor.Dequeue(); _activeDecor.Enqueue(_mapListDecor[5]); }
-        if (PlayerMap.Instance.PositionMap >= 7) { _activeDecor.Enqueue(_mapListDecor[6]); }
+        if (PlayerMap.Instance.PositionMap >= 0) { _activeDecor.Enqueue(_mapBorderDecor[0]); _activeDecor.Enqueue(_mapBorderDecor[1]); }
+        if (PlayerMap.Instance.PositionMap >= 1) { _activeDecor.Dequeue(); _activeDecor.Enqueue(_mapBorderDecor[2]); }
+        if (PlayerMap.Instance.PositionMap >= 3) { _activeDecor.Enqueue(_mapBorderDecor[3]); }
+        if (PlayerMap.Instance.PositionMap >= 4) { _activeDecor.Dequeue(); _activeDecor.Enqueue(_mapBorderDecor[4]); }
+        if (PlayerMap.Instance.PositionMap >= 6) { _activeDecor.Dequeue(); _activeDecor.Enqueue(_mapBorderDecor[5]); }
+        if (PlayerMap.Instance.PositionMap >= 7) { _activeDecor.Enqueue(_mapBorderDecor[6]); }
         if (PlayerMap.Instance.PositionMap >= 8) { _activeDecor.Dequeue(); }
-        if (PlayerMap.Instance.PositionMap >= 9) { _activeDecor.Dequeue(); _activeDecor.Dequeue(); _activeDecor.Enqueue(_mapListDecor[7]); }
+        if (PlayerMap.Instance.PositionMap >= 9) { _activeDecor.Dequeue(); _activeDecor.Dequeue(); _activeDecor.Enqueue(_mapBorderDecor[7]); }
         if (PlayerMap.Instance.PositionMap >= 10) { _activeDecor.Dequeue(); }
-        if (PlayerMap.Instance.PositionMap >= 10) { _activeDecor.Enqueue(_mapListDecor[8]); }
+        if (PlayerMap.Instance.PositionMap >= 10) { _activeDecor.Enqueue(_mapBorderDecor[8]); }
         if (PlayerMap.Instance.PositionMap >= 14) { _activeDecor.Dequeue(); }
 
         LoadDecor();
@@ -29,7 +39,7 @@ public class SpawnDecorMap2 : MonoBehaviour
 
     public void LoadDecor()
     {
-        foreach (GameObject go in _mapListDecor) { go.SetActive(false); }
+        foreach (GameObject go in _mapBorderDecor) { go.SetActive(false); }
         foreach (GameObject go in _activeDecor) { go.SetActive(true); }
     }
 
