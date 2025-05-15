@@ -32,6 +32,7 @@ public class EntityVisuals : MonoBehaviour
             {
                 obj.GoBackIntoPool();
             }
+            Arrows.Clear();
 
             for (int i = 1; i < Mathf.RoundToInt(direction.magnitude) + 1; i++)
                 {
@@ -59,6 +60,8 @@ public class EntityVisuals : MonoBehaviour
             {
                 obj.GoBackIntoPool();
             }
+            Arrows.Clear();
+
         };
     }
 
