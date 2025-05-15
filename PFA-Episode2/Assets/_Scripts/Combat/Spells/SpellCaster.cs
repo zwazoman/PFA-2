@@ -172,6 +172,8 @@ public class SpellCaster : MonoBehaviour
             Vector3 casterPosWithHeight = transform.position + Vector3.up * 0.2f;
             Vector3 casterToEntity = posWithHeigth - casterPosWithHeight;
 
+            Debug.DrawLine(casterPosWithHeight, casterPosWithHeight + casterToEntity, Color.blue, 20);
+
             if (casterToEntity == Vector3.zero)
                 return hitEntity.currentPoint;
 
@@ -192,7 +194,7 @@ public class SpellCaster : MonoBehaviour
             Debug.DrawLine(posWithHeigth, posWithHeigth + pushDirection * pushForce /** Mathf.Sqrt(2)*/, Color.red, 20);
 
             RaycastHit hit;
-            if (Physics.SphereCast(posWithHeigth, .45f, pushDirection, out hit, pushForce * Mathf.Sqrt(2) - .5f))
+            if (Physics.SphereCast(posWithHeigth, .45f, pushDirection, out hit, pushForce * Mathf.Sqrt(2) - .5f) && hit.collider.gameObject != gameObject)
             {
                 print("wall hit");
                 //Debug.DrawLine(transform.position, hit.point, Color.black, 20);
@@ -218,7 +220,7 @@ public class SpellCaster : MonoBehaviour
 
 
             RaycastHit hit;
-            if (Physics.Raycast(posWithHeigth, pushDirection, out hit, pushForce, LayerMask.GetMask("Wall")))
+            if (Physics.Raycast(posWithHeigth, pushDirection, out hit, pushForce))
             {
                 print("wall hit");
 

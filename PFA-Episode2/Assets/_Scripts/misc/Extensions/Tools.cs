@@ -257,7 +257,7 @@ public static class Tools
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        Physics.Raycast(ray, out hit, Mathf.Infinity/*, LayerMask.GetMask("Waypoint")*/);
+        Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Waypoint"));
 
         if (hit.collider != null && hit.collider.gameObject.TryGetComponent<WayPoint>(out WayPoint wayPoint))
         {
