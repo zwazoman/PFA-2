@@ -28,9 +28,11 @@ public class Spell
     public void TickSpellCooldown(int value = 1)
     {
         cooling -= value;
+        Debug.Log("Cooling : " + cooling.ToString());
+
         if (cooling < 0)
             cooling = 0;
-        else if (cooling == 0)
+        else if (cooling <= 0)
             OnCooled?.Invoke();
 
     }
