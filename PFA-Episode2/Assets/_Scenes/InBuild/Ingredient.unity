@@ -8005,7 +8005,10 @@ MonoBehaviour:
   - {fileID: 1552012166}
   - {fileID: 590371522}
   - {fileID: 1263652101}
-  _equippedInventory: []
+  _equippedInventory:
+  - {fileID: 1351998744}
+  - {fileID: 73356773}
+  - {fileID: 1443142094}
   _prefabItem: {fileID: 6523432043138074556, guid: 22fa50956fc2e1740bcd124f166db6d1, type: 3}
   SpellChoose:
     Name: 
@@ -13267,64 +13270,6 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1060.7571, y: -660.3956, z: -1.8682837}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1232944566
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1232944568}
-  - component: {fileID: 1232944567}
-  m_Layer: 0
-  m_Name: GAME MANAGER
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1232944567
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1232944566}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9d25737d63f5fa49a5d682381d507bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerInventory:
-    Spells: []
-    Ingredients: []
-    Sauces: []
-    NameSave: InventorySave
-  playerEquipedSpell: []
-  staticData: {fileID: 0}
-  combatScenesName: []
-  _combatScenes: []
-  premadeSpells:
-  - {fileID: 11400000, guid: df234ba12e6c2f4408c0cb02b398830d, type: 2}
-  - {fileID: 11400000, guid: ccc1286fb8222bd49a91fa99c9eca902, type: 2}
-  - {fileID: 11400000, guid: 23ce562214881154eb373f2fed5dcbb2, type: 2}
-  tests: 1
---- !u!4 &1232944568
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1232944566}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.38657045, y: 0.35516047, z: -1.258878}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -24199,4 +24144,3 @@ SceneRoots:
   - {fileID: 359951104}
   - {fileID: 2067983624}
   - {fileID: 230081156}
-  - {fileID: 1232944568}

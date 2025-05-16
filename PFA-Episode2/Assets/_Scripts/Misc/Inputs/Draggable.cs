@@ -10,7 +10,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     //original set up
     Vector3 originalPos;
-    Transform originalParent;
+    public Transform originalParent;
     int siblingIndex;
     CanvasGroup canvasGroup;
 

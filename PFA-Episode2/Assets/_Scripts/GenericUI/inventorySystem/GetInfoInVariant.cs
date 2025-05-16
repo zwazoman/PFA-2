@@ -9,5 +9,5 @@ public class GetInfoInVariant : MonoBehaviour
     public TextMeshProUGUI Effect;
     public Image SpellZoneEffect;
     public Image SpellIconDisable;
-    public SpellData ActualSpell;
+    public int IndexInPlayerSpell;
 }
