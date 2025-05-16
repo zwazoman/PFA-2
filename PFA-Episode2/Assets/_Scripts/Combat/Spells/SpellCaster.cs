@@ -210,15 +210,12 @@ public class SpellCaster : MonoBehaviour
         }
         else
         {
-            print("not diag");
             Debug.DrawLine(posWithHeigth, posWithHeigth + pushDirection * pushForce, Color.red, 20);
 
 
             RaycastHit hit;
             if (Physics.Raycast(posWithHeigth, pushDirection, out hit, pushForce))
             {
-                print("wall hit");
-
                 pushDamages = pushForce;
 
                 Debug.DrawLine(posWithHeigth, hit.point, Color.black, 20);
@@ -312,6 +309,8 @@ public class SpellCaster : MonoBehaviour
             {
                 //cancel preview
                 StopSpellEffectPreview(entity);
+
+                await entity.visuals.PlayAnimation(entity.attackTrigger);
 
                 //apply effect
                 BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);

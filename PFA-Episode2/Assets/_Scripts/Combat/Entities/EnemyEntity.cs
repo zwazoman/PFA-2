@@ -44,6 +44,8 @@ public class EnemyEntity : Entity
     {
         await base.PlayTurn();
 
+        //await visuals.PlayAnimation("Attack");
+
         ApplyWalkables(true);
 
         targetPlayerPoint = FindClosestPlayerPoint();
@@ -176,15 +178,6 @@ public class EnemyEntity : Entity
         while (castData.zonePoints == null || castData.zonePoints.Count == 0)
         {
             choosenTargetPoint = targetPointsDict.Keys.FindClosestFloodPoint();
-
-            //if (!Tools.FloodDict.ContainsKey(choosenTargetPoint))
-            //{
-            //    targetPointsDict[choosenTargetPoint].Remove(targetPointsDict[choosenTargetPoint][0]);
-
-            //    if (targetPointsDict[choosenTargetPoint].Count == 0)
-            //        targetPointsDict.Remove(choosenTargetPoint);
-            //    break;
-            //}
 
             print(targetPointsDict.Keys.Count);
             print(choosenTargetPoint);
