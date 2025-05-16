@@ -149,6 +149,7 @@ public class Entity : MonoBehaviour
     /// <returns></returns>
     protected async UniTask<bool> MoveToward(WayPoint targetPoint)
     {
+        ApplyWalkables(true);
 
         await UniTask.Delay(300);
 
@@ -162,7 +163,15 @@ public class Entity : MonoBehaviour
             return true;
         }
 
-        await TryMoveTo(Tools.FindClosestFloodPoint(Walkables, Tools.SmallFlood(targetPoint, Tools.FloodDict[targetPoint])));
+        //print(Tools.FindClosestFloodPoint(Walkables, Tools.SmallFlood(targetPoint, Tools.FloodDict[targetPoint], true, true)));
+
+        await UniTask.Delay(500);
+
+        WayPoint moveToPoint;
+
+        Walkables.FindClosestFloodPoint(out moveToPoint, Tools.SmallFlood(targetPoint, Tools.FloodDict[targetPoint], false, true));
+
+        await TryMoveTo(moveToPoint);
         return false;
     }
 

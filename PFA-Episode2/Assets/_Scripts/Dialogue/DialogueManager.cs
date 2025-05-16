@@ -4,25 +4,31 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 
-public class Dialogue : MonoBehaviour
+public class DialogueManager : MonoBehaviour
 {
     [SerializeField] private TextAsset _textData;
 
     [SerializeField] TMP_Text _nameCharacter;
     [SerializeField] TMP_Text _text;
 
-    [SerializeField] private float _speed = 0.05f;
+    [SerializeField] private float _characterDelay = 0.05f;
+    [SerializeField] private float _punctuationDelay = 0.1f;
 
     [SerializeField] private GameObject _panel;
     [SerializeField] private GameObject _textBox;
 
-    private List<Tweener> _shakeTweeners = new(); // Stocke tous les tweens actifs pour pouvoir les arrêter
+    private List<Tweener> _shakeTweeners = new();
     private bool _textEffect = false;
     private bool _isWriting = false;
     private string _nextDialogueKey;
+    private List<string> _colors = new();
+    private List<string[]> _intsColor = new();
+    private List<string> _styles = new();
+    private List<string[]> _intsStyle = new();
+    private bool IsPunctuation(char c) => c is '?' or '.' or '!' or ',';
 
     #region Singleton
-    public static Dialogue Instance;
+    public static DialogueManager Instance;
 
     private void Awake()
     {
@@ -43,7 +49,7 @@ public class Dialogue : MonoBehaviour
         SearchDialogue(_nextDialogueKey);
     }
 
-    // appelle la clé de fin de dialogue du Excel
+    // Appelle la clé de fin de dialogue du Excel
     public void Skip()
     {
         SearchDialogue("Fin");
@@ -64,14 +70,54 @@ public class Dialogue : MonoBehaviour
         {
             string[] elements = line.Split(";");
 
-            if (elements.Length >= 6 && elements[0] == textKey)
+            if (elements.Length >= 7 && elements[0] == textKey)
             {
+                _colors.Clear();
+                _intsColor.Clear();
+
+                if (elements[6].StartsWith("#"))
+                {
+                    string[] color = elements[6].Split("/");
+
+                    foreach (string infocolor in color)
+                    {
+                        if (infocolor.StartsWith("#"))
+                        {
+                            _colors.Add(infocolor);
+                            Debug.Log(infocolor);
+                        }
+                        else if (infocolor.StartsWith(":"))
+                        {
+                            string[] indices = infocolor.Substring(1).Split(":");
+                            _intsColor.Add(indices);
+                            Debug.Log(infocolor);
+                        }
+                    }
+                }
+
+                string[] style = elements[2].Split("/");
+
+                foreach (string infostyle in style)
+                {
+                    if (infostyle.StartsWith(":"))
+                    {
+                        string[] indices = infostyle.Substring(1).Split(":");
+                        _intsStyle.Add(indices);
+                    }
+                    else
+                    {
+                        infostyle.ToLower();
+                        _styles.Add(infostyle);
+                    }
+                }
+
                 _nameCharacter.text = elements[1];
 
                 _nextDialogueKey = elements[5];
-                FontStyle(elements[2]);
+                string dialogue = FontStyle(elements[4]);
+                dialogue = ColorWord(dialogue);
                 _textEffect = TextEffect(elements[3]);
-                TextBoxEffect(elements[4]);
+                TextBoxEffect(dialogue);
 
                 break;
             }
@@ -118,17 +164,26 @@ public class Dialogue : MonoBehaviour
         }
 
         _isWriting = true;
+        _text.text = "";
 
         message = message.Substring(subtext);
-        _text.text = "";
+        bool insideTag = false;
 
         for (int i = 0; i < message.Length; i++)
         {
-            _text.text += message[i];
+            float speed = _characterDelay;
+            char currentChar = message[i];
 
-            if (_textEffect) StartShakeEffect();
+            // Gestion des balises <...>
+            if (currentChar == '<') insideTag = true;
+            if (currentChar == '>') insideTag = false;
+            if (IsPunctuation(currentChar)) speed = _punctuationDelay;
 
-            await UniTask.Delay(System.TimeSpan.FromSeconds(_speed));
+            _text.text += currentChar;
+
+            if (_textEffect && !insideTag) StartShakeEffect(); // Évite l'effet sur les balises
+
+            if (!insideTag) await UniTask.Delay(System.TimeSpan.FromSeconds(speed));
         }
 
         _isWriting = false;
@@ -201,15 +256,50 @@ public class Dialogue : MonoBehaviour
     }
 
     // Lis les différent caractère pour potentielement changer le style de la police
-    private void FontStyle(string style)
+    private string FontStyle(string dialogue)
     {
-        style = style.ToUpper();
+        string[] words = dialogue.Split(' ');
 
-        FontStyles fontStyle = FontStyles.Normal;
+        for (int i = 0; i < _intsStyle.Count; i++)
+        {
+            for (int j = 0; j < _intsStyle[i].Length; j++)
+            {
+                if (int.TryParse(_intsStyle[i][j], out int wordIndex))
+                {
+                    if (wordIndex >= 0 && wordIndex < words.Length)
+                    {
+                        words[wordIndex] = $"<{_styles[i]}>{words[wordIndex]}</{_styles[i]}>";
+                    }
+                }
+            }
+        }
 
-        if (style.Contains("B")) fontStyle |= FontStyles.Bold;
-        if (style.Contains("I")) fontStyle |= FontStyles.Italic;
+        _styles.Clear();
+        _intsStyle.Clear();
+        return string.Join(" ", words);
+    }
 
-        _text.fontStyle = fontStyle;
+    // Change la couleur des mots désigné avec la/les couleurs mises 
+    private string ColorWord(string dialogue)
+    {
+        string[] words = dialogue.Split(' ');
+
+        for (int i = 0; i < _intsColor.Count; i++)
+        {
+            for (int j = 0; j < _intsColor[i].Length; j++)
+            {
+                if (int.TryParse(_intsColor[i][j], out int wordIndex))
+                {
+                    if (wordIndex >= 0 && wordIndex < words.Length)
+                    {
+                        words[wordIndex] = $"<color={_colors[i]}>{words[wordIndex]}</color>";
+                    }
+                }
+            }
+        }
+
+        _colors.Clear();
+        _intsColor.Clear();
+        return string.Join(" ", words);
     }
 }
