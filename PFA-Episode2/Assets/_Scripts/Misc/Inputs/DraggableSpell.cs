@@ -52,32 +52,31 @@ public class DraggableSpell : Draggable
 
     public async UniTask DragAndDrop()
     {
-        SpellZoneData zoneData = new();
+        SpellCastData castData = new();
+        castData.zonePoints = new();
 
         while (isDragging)
         {
+            //on dragging on new tile
             if (Tools.CheckMouseRay(out WayPoint point) && point != null && (_currentPoint == null || point != _currentPoint))
             {
                 _currentPoint = point;
 
-                spellCaster.StopSpellZonePreview(_rangePoints, ref zoneData);
-                //Debug.Log("null spell : " + spell == null);
-                //Debug.Log("spell name : " + spell.Name);
-                zoneData = spellCaster.PreviewSpellZone(spell, point, _rangePoints);
+                spellCaster.StopSpellZonePreview(_rangePoints, ref castData);
+                castData = spellCaster.PreviewSpellZone(spell, point, _rangePoints);
             }
-            else if (point == null)
+            else if (point == null && (_currentPoint != null))//dragging outside of board
             {
-                spellCaster.StopSpellZonePreview(_rangePoints, ref zoneData);
+                spellCaster.StopSpellZonePreview(_rangePoints, ref castData);
                 _currentPoint = null;
             }
             await UniTask.Yield();
-            Debug.Log("Dragging");
         }
 
         WayPoint wayPoint = _currentPoint;
         Reset();
 
-        if(await spellCaster.TryCastSpell(spell, wayPoint, _rangePoints, zoneData))
+        if(await spellCaster.TryCastSpell(spell, wayPoint, _rangePoints, castData))
             DisableSpell();
 
         spellCaster.castingEntity.ApplyWalkables();
@@ -91,6 +90,7 @@ public class DraggableSpell : Draggable
         _spellImage.enabled = true;
 
         _cooldownImage.enabled = false;
+        Debug.Log("Cooldown up !!!!");
         //_cooldownText.enabled = false;
     }
 

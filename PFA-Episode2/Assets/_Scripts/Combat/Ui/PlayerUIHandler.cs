@@ -13,13 +13,14 @@ public class PlayerUIHandler : MonoBehaviour
             TryGetComponent(out _player);
     }
 
-    private void Start()
+    public void SetUp()
     {
         AssignEndTurnButton();
 
         if (GameManager.Instance.playerInventory != null)
         {
             //instantiate draggable spell slots
+            Debug.Log("Forrrrrr");
             for (
                 int i = 0;
                 i < Mathf.Min(3, GameManager.Instance.playerInventory.Spells.Count);
@@ -35,6 +36,7 @@ public class PlayerUIHandler : MonoBehaviour
 
     void CreateSpellUI(Spell spellData,int i)
     {
+        Debug.Log("nique sa mere ptn - " + i.ToString());
         DraggableSpell draggableSpellSlot = Instantiate(_uiSpellPrefab, CombatUiManager.Instance.SpellSlots[i]);
         draggableSpellSlot.SetUp(spellData, _player);
 

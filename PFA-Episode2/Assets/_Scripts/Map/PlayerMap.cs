@@ -62,7 +62,11 @@ public class PlayerMap : MonoBehaviour
                 GameManager.Instance.playerInventory.Save(GameManager.Instance.playerInventory.NameSave);
 
                 if (KeyAndValues.Value.EventName.ToString() == "Start") { break; }
-                await SceneTransitionManager.Instance.GoToScene(KeyAndValues.Value.EventName.ToString());
+                if (KeyAndValues.Value.EventName.ToString() == "Combat")
+                {
+                    await SceneTransitionManager.Instance.GoToScene(GameManager.Instance.ReturnSceneCombat().ToString());
+                }
+                else { await SceneTransitionManager.Instance.GoToScene(KeyAndValues.Value.EventName.ToString()); }
             }
         }
     }

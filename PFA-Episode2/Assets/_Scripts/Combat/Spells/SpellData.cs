@@ -17,7 +17,7 @@ public class SpellData
     [Header("Casting")]
 
     public bool IsOccludedByWalls = true;
-    public byte Range = 1;
+    public byte Range = 2;
     public byte CoolDown = 1;
 
     [Header("Effects")]

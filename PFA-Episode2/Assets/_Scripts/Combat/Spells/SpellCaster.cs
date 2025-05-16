@@ -1,10 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using System;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
-using UnityEditor.Experimental.GraphView;
-using Unity.VisualScripting;
 
 public class SpellCaster : MonoBehaviour
 {
@@ -20,6 +16,8 @@ public class SpellCaster : MonoBehaviour
             TryGetComponent(out castingEntity);
     }
 
+
+    //preview spell range
     public List<WayPoint> PreviewSpellRange(Spell spell, WayPoint center = null, bool showZone = true, bool ignoreTerrain = false)
     {
         if (center == null)
@@ -41,10 +39,22 @@ public class SpellCaster : MonoBehaviour
 
         return rangePoints;
     }
-
-    public SpellZoneData PreviewSpellZone(Spell spell, WayPoint targetedPoint, List<WayPoint> rangePoints, bool showZone = true)
+    public void StopSpellRangePreview(ref List<WayPoint> rangePoints, ref SpellCastData zoneData)
     {
-        SpellZoneData zoneData = new();
+        foreach (WayPoint point in rangePoints)
+        {
+            point.ChangeTileColor(point._normalMaterial);
+        }
+
+        rangePoints.Clear();
+
+        StopSpellZonePreview(rangePoints, ref zoneData);
+    }
+
+    //preview spell zone
+    public SpellCastData PreviewSpellZone(Spell spell, WayPoint targetedPoint, List<WayPoint> rangePoints, bool showZone = true)
+    {
+        SpellCastData castData = new();
 
         List<WayPoint> zonePoints = new();
         Dictionary<Entity, SpellCastingContext> hitEntityCTXDict = new();
@@ -53,7 +63,7 @@ public class SpellCaster : MonoBehaviour
 
         if (!rangePoints.Contains(targetedPoint))
         {
-            return zoneData;
+            return castData;
         }
 
         Vector3Int targetedPointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(targetedPoint);
@@ -76,24 +86,55 @@ public class SpellCaster : MonoBehaviour
                     hitEntities.Add(choosenWaypoint.Content);
             }
         }
-        zoneData.zonePoints = zonePoints;
+        castData.zonePoints = zonePoints;
 
-        foreach (Entity entity in hitEntities)
+        foreach (Entity entity in CombatManager.Instance.Entities)
         {
-            SpellCastingContext context = new();
+            if (hitEntities.Contains(entity))
+            {
+                SpellCastingContext context = new();
 
-            context = ComputeCTX(spell, entity, hitEntities, targetedPoint);
+                context = ComputeCTX(spell, entity, hitEntities, targetedPoint);
 
-            hitEntityCTXDict.Add(entity, context);
+                hitEntityCTXDict.Add(entity, context);
 
-            zoneData.hitEntityCTXDict = hitEntityCTXDict;
+                castData.hitEntityCTXDict = hitEntityCTXDict;
 
-            PreviewSpellEffect(spell, entity, ref zoneData);
+                PreviewSpellEffect(spell, entity, ref castData);
+            }
+            else
+            {
+                StopSpellEffectPreview(entity);
+            }
+            
         }
 
-        return zoneData;
+        return castData;
     }
 
+    public void StopSpellZonePreview(List<WayPoint> rangePoints, ref SpellCastData zoneData, bool showZone = true)
+    {
+        if (zoneData.zonePoints == null || zoneData.zonePoints.Count == 0) return;
+
+        foreach (WayPoint point in zoneData.zonePoints)
+        {
+            if (rangePoints.Count != 0 && rangePoints.Contains(point) && showZone)
+            {
+                point.ChangeTileColor(point._rangeMaterial);
+            }
+            else
+            {
+                point.ChangeTileColor(point._normalMaterial);
+            }
+        }
+
+        foreach(Entity entity in CombatManager.Instance.Entities)
+        StopSpellEffectPreview(entity);
+
+        zoneData.zonePoints.Clear();
+    }
+
+    //computations
     SpellCastingContext ComputeCTX(Spell spell, Entity hitEntity, List<Entity> hitEntities, WayPoint target)
     {
         Vector3Int entityTilePos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(hitEntity.currentPoint);
@@ -107,7 +148,7 @@ public class SpellCaster : MonoBehaviour
         SpellCastingContext context = new();
 
         context.numberOfHitEnnemies = (byte)hitEntities.Count;
-        context.distanceToPlayer = (byte)targetToEntity.magnitude;
+        context.distanceToHitEnemy = (byte)targetToEntity.magnitude;
         context.pushDirection = pushDirection;
         context.casterPos = hitEntity.transform.position;
 
@@ -119,14 +160,14 @@ public class SpellCaster : MonoBehaviour
         WayPoint choosenPoint = null;
         pushDamages = 0;
 
-        Vector3 posWithHeigth = hitEntity.transform.position + Vector3.up * 0.2f;
-
-        bool isDiagonal = pushDirection.x != 0 && pushDirection.z != 0;
+        Vector3 posWithHeigth = hitEntity.transform.position + Vector3.up * 0.5f;
 
         if (pushDirection == Vector3.zero)
         {
-            Vector3 casterPosWithHeight = transform.position + Vector3.up * 0.2f;
+            Vector3 casterPosWithHeight = transform.position + Vector3.up * 0.5f;
             Vector3 casterToEntity = posWithHeigth - casterPosWithHeight;
+
+            Debug.DrawLine(casterPosWithHeight, casterPosWithHeight + casterToEntity, Color.blue, 20);
 
             if (casterToEntity == Vector3.zero)
                 return hitEntity.currentPoint;
@@ -137,18 +178,25 @@ public class SpellCaster : MonoBehaviour
             pushDirection = new Vector3(xPushDirection, 0, zPushDirection);
         }
 
+        bool isDiagonal = pushDirection.x != 0 && pushDirection.z != 0;
+
+        print(pushDirection);
+
         if (isDiagonal)
         {
-            RaycastHit hit;
-            if (Physics.SphereCast(posWithHeigth, .45f, pushDirection, out hit, pushForce * Mathf.Sqrt(2), LayerMask.GetMask("Wall")))
-            {
-                print("wall hit");
+            print("diag");
 
-                Debug.DrawLine(transform.position, hit.point, Color.black, 20);
+            Debug.DrawRay(posWithHeigth, pushDirection * pushForce, Color.red, 20);
+
+            RaycastHit hit;
+            if (Physics.SphereCast(posWithHeigth, .45f, pushDirection /*+Vector3.up * 0.5f*/, out hit, pushForce * Mathf.Sqrt(2)))
+            {
+                print(hit.collider.gameObject);
+
                 pushDamages = pushForce;
                 Vector3 hitPos = hit.point/*.SnapOnGrid()*/;
 
-                Debug.DrawLine(hitPos, (hitPos - pushDirection * .3f).SnapOnGrid(), Color.blue, 20);
+                Debug.DrawLine(hitPos, (hitPos - pushDirection * .25f).SnapOnGrid(), Color.blue, 20);
 
                 pushDamages -= Mathf.FloorToInt(hit.distance);
                 choosenPoint = GraphMaker.Instance.serializedPointDict[(hitPos - pushDirection * .3f).SnapOnGrid()];
@@ -162,9 +210,15 @@ public class SpellCaster : MonoBehaviour
         }
         else
         {
+            print("not diag");
+            Debug.DrawLine(posWithHeigth, posWithHeigth + pushDirection * pushForce, Color.red, 20);
+
+
             RaycastHit hit;
-            if (Physics.Raycast(posWithHeigth, pushDirection, out hit, pushForce, LayerMask.GetMask("Wall")))
+            if (Physics.Raycast(posWithHeigth, pushDirection, out hit, pushForce))
             {
+                print("wall hit");
+
                 pushDamages = pushForce;
 
                 Debug.DrawLine(posWithHeigth, hit.point, Color.black, 20);
@@ -185,83 +239,85 @@ public class SpellCaster : MonoBehaviour
         return choosenPoint;
     }
 
-    void PreviewSpellEffect(Spell spell, Entity entity, ref SpellZoneData zoneData)
+    BakedSpellEffect ComputeBakedSpellEffect(Spell spell, Entity entity, ref SpellCastData zoneData)
     {
+        BakedSpellEffect e = new();
+
         foreach (SpellEffect effect in spell.spellData.Effects)
         {
             switch (effect.effectType)
             {
                 case SpellEffectType.Damage:
-                    // preview
+                    e.damage += effect.value;
                     break;
                 case SpellEffectType.Recoil:
-                    int pushDamages = 0;
-                    WayPoint pushPoint = ComputePushPoint(zoneData.hitEntityCTXDict[entity].pushDirection, entity, (int)effect.value, out pushDamages);
 
-                    SpellCastingContext context = new();
-                    context = zoneData.hitEntityCTXDict[entity];
-                    context.PushDamage = pushDamages;
-                    context.PushPoint = pushPoint;
+                    WayPoint pushPoint = ComputePushPoint(
+                        zoneData.hitEntityCTXDict[entity].pushDirection,
+                        entity,
+                        (int)effect.value,
+                        out int pushDamages);
 
-                    zoneData.hitEntityCTXDict[entity] = context;
+                    zoneData.hitEntityCTXDict[entity].PushDamage = pushDamages;
+                    zoneData.hitEntityCTXDict[entity].PushPoint = pushPoint;
+
+                    e.pushDamage = pushDamages;
+                    e.pushPoint = zoneData.hitEntityCTXDict[entity].PushPoint;
+
                     break;
                 case SpellEffectType.Shield:
-                    //await stats.ApplyShield(effect.value);
+                    e.shield += effect.value;
                     break;
+
                 case SpellEffectType.DamageIncreaseForEachHitEnnemy:
-                    throw new NotImplementedException();
+                    e.damage += 8 * (zoneData.hitEntityCTXDict[entity].numberOfHitEnnemies - 1);
+                    break;
                 case SpellEffectType.DamageIncreasePercentageByDistanceToCaster:
-                    throw new NotImplementedException();
+                    e.damage += 5 * zoneData.hitEntityCTXDict[entity].distanceToHitEnemy;
+                    break;
+
                 case SpellEffectType.Fire:
-                    throw new NotImplementedException();
+                    break;
             }
         }
+
+        return e;
     }
 
-    public void StopSpellRangePreview(ref List<WayPoint> rangePoints, ref SpellZoneData zoneData)
+    //preview spell effect
+    void PreviewSpellEffect(Spell spell, Entity entity, ref SpellCastData zoneData)
     {
-        foreach (WayPoint point in rangePoints)
-        {
-            point.ChangeTileColor(point._normalMaterial);
-        }
-
-        rangePoints.Clear();
-
-        StopSpellZonePreview(rangePoints, ref zoneData);
+        BakedSpellEffect e = ComputeBakedSpellEffect(spell,entity,ref zoneData);
+        entity.previewSpellEffect(e);
     }
 
-    public void StopSpellZonePreview(List<WayPoint> rangePoints, ref SpellZoneData zoneData, bool showZone = true)
+    void StopSpellEffectPreview(Entity entity)
     {
-        if (zoneData.zonePoints == null || zoneData.zonePoints.Count == 0) return;
-
-        foreach (WayPoint point in zoneData.zonePoints)
-        {
-            if (rangePoints.Count != 0 && rangePoints.Contains(point) && showZone)
-            {
-                point.ChangeTileColor(point._rangeMaterial);
-            }
-            else
-            {
-                point.ChangeTileColor(point._normalMaterial);
-            }
-        }
-
-        zoneData.zonePoints.Clear();
+        entity.StopPreviewingSpellEffect();
     }
 
 
 
-    public async UniTask<bool> TryCastSpell(Spell spell, WayPoint target, List<WayPoint> rangePoints, SpellZoneData zoneData)
+    //spell casting
+    public async UniTask<bool> TryCastSpell(Spell spell, WayPoint target, List<WayPoint> rangePoints, SpellCastData zoneData)
     {
-        if (zoneData.zonePoints.Count == 0)
+        if (zoneData.zonePoints == null || zoneData.zonePoints.Count == 0)
         {
             StopSpellRangePreview(ref rangePoints, ref zoneData);
             return false;
         }
 
-        if(zoneData.hitEntityCTXDict.Keys != null)
+        if(zoneData.hitEntityCTXDict != null && zoneData.hitEntityCTXDict.Keys != null)
             foreach(Entity entity in zoneData.hitEntityCTXDict.Keys)
-                await entity.ApplySpell(spell, zoneData.hitEntityCTXDict[entity]);
+            {
+                //cancel preview
+                StopSpellEffectPreview(entity);
+
+                //apply effect
+                BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);
+                await entity.ApplySpell(e);
+            }
+                
 
         spell.StartCooldown();
 
@@ -271,7 +327,17 @@ public class SpellCaster : MonoBehaviour
     }
 }
 
-public struct SpellZoneData
+// == data  ==
+
+public struct BakedSpellEffect
+{
+    public float damage;
+    public float shield;
+    public float pushDamage;
+    public WayPoint pushPoint;
+}
+
+public struct SpellCastData
 {
     public List<WayPoint> zonePoints;
     public Dictionary<Entity, SpellCastingContext> hitEntityCTXDict;
@@ -281,13 +347,12 @@ public struct SpellZoneData
 /// utilisé pour appliquer des effets en plus
 /// au moment de lancer un sort.
 /// </summary>
-public struct SpellCastingContext
+public class SpellCastingContext
 {
     public byte numberOfHitEnnemies;
-    public byte distanceToPlayer;
+    public byte distanceToHitEnemy;
     public Vector3 pushDirection;
     public Vector3 casterPos;
-
     public WayPoint PushPoint;
     public int PushDamage;
 }

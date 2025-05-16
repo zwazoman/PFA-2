@@ -111,9 +111,9 @@ public static class Tools
         return closest;
     }
 
-    public static WayPoint FindClosestFloodPoint(this List<WayPoint> wayPoints, Dictionary<WayPoint, int> floodDict = null)
+    public static bool FindClosestFloodPoint(this List<WayPoint> wayPoints, out WayPoint closest, Dictionary<WayPoint, int> floodDict = null)
     {
-        WayPoint closest = null;
+        closest = null;
         int closestDistance = int.MaxValue;
 
         if (floodDict == null)
@@ -122,9 +122,7 @@ public static class Tools
         foreach (WayPoint point in wayPoints)
         {
             if (!floodDict.ContainsKey(point))
-            {
                 continue;
-            }
 
             int pointDistance = floodDict[point];
             if (pointDistance < closestDistance)
@@ -133,7 +131,11 @@ public static class Tools
                 closestDistance = pointDistance;
             }
         }
-        return closest;
+
+        Debug.Log(closestDistance);
+        if(closest != null)
+            return true;
+        return false;
     }
 
     public static WayPoint FindClosestFloodPoint(this Dictionary<WayPoint, List<WayPoint>>.KeyCollection wayPoints, Dictionary<WayPoint, int> floodDict = null)
@@ -163,7 +165,7 @@ public static class Tools
 
     public static T1 GetKeyFromValue<T1, T2>(this Dictionary<T1, T2> dict, T2 value)
     {
-        foreach (var pair in dict)
+        foreach (KeyValuePair<T1,T2> pair in dict)
         {
             if (pair.Value.Equals(value))
             {
@@ -204,11 +206,11 @@ public static class Tools
             var (node, distance) = queue.Dequeue();
             PointDistanceDict.Add(node, distance);
 
-            foreach (var neighbor in node.Neighbours)
-                if (neighbor is WayPoint point && !visited.Contains(point) && point.State != WaypointState.Obstructed)
+            foreach (WayPoint neighbor in node.Neighbours)
+                if (!visited.Contains(neighbor) && neighbor.State != WaypointState.Obstructed)
                 {
-                    queue.Enqueue((point, distance + 1));
-                    visited.Add(point);
+                    queue.Enqueue((neighbor, distance + 1));
+                    visited.Add(neighbor);
                 }
         }
         FloodDict = PointDistanceDict;
@@ -230,10 +232,10 @@ public static class Tools
 
             if (distance < range)
                 foreach (var neighbor in node.Neighbours)
-                    if (neighbor is WayPoint point && !visited.Contains(point) && !(includesEntities && point.State == WaypointState.HasEntity) && !(includesObstructed && point.State == WaypointState.Obstructed))
+                    if (!visited.Contains(neighbor) && !(includesEntities && neighbor.State == WaypointState.HasEntity) && !(includesObstructed && neighbor.State == WaypointState.Obstructed))
                     {
-                        queue.Enqueue((point, distance + 1));
-                        visited.Add(point);
+                        queue.Enqueue((neighbor, distance + 1));
+                        visited.Add(neighbor);
                     }
         }
         return PointDistanceDict;
@@ -255,7 +257,7 @@ public static class Tools
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        Physics.Raycast(ray, out hit, Mathf.Infinity/*, LayerMask.GetMask("Waypoint")*/);
+        Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Waypoint"));
 
         if (hit.collider != null && hit.collider.gameObject.TryGetComponent<WayPoint>(out WayPoint wayPoint))
         {

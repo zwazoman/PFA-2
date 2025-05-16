@@ -112,7 +112,8 @@ public class EnemyEntity : Entity
             points.Add(player.currentPoint);
         }
 
-        WayPoint result = points.FindClosestFloodPoint();
+        WayPoint result; 
+        points.FindClosestFloodPoint(out result);
 
         return result;
     }
@@ -127,15 +128,14 @@ public class EnemyEntity : Entity
         Dictionary<WayPoint, List<WayPoint>> targetPointsDict = new();
 
         List<WayPoint> rangePoints;
-        SpellZoneData zoneData = new();
+        SpellCastData castData = new();
 
         rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, targetPlayerPoint, false, true);
 
         foreach (WayPoint rangePoint in rangePoints)
         {
-            zoneData = entitySpellCaster.PreviewSpellZone(choosenSpell, rangePoint, rangePoints, false);
-            print(zoneData.zonePoints.Count);
-            foreach (WayPoint zonePoint in zoneData.zonePoints)
+            castData = entitySpellCaster.PreviewSpellZone(choosenSpell, rangePoint, rangePoints, false);
+            foreach (WayPoint zonePoint in castData.zonePoints)
             {
                 if (!targetPointsDict.ContainsKey(zonePoint))
                     targetPointsDict.Add(zonePoint, new List<WayPoint>());
@@ -143,25 +143,31 @@ public class EnemyEntity : Entity
             }
         }
 
+        entitySpellCaster.StopSpellRangePreview(ref rangePoints, ref castData);
 
         WayPoint choosenTargetPoint = null;
         WayPoint pointToSelect = null;
 
-        zoneData.zonePoints = null;
-
-        while (zoneData.zonePoints == null)
+        while (castData.zonePoints == null || castData.zonePoints.Count == 0)
         {
             choosenTargetPoint = targetPointsDict.Keys.FindClosestFloodPoint();
+
+            //if (!Tools.FloodDict.ContainsKey(choosenTargetPoint))
+            //{
+            //    targetPointsDict[choosenTargetPoint].Remove(targetPointsDict[choosenTargetPoint][0]);
+
+            //    if (targetPointsDict[choosenTargetPoint].Count == 0)
+            //        targetPointsDict.Remove(choosenTargetPoint);
+            //    break;
+            //}
 
             print(targetPointsDict.Keys.Count);
             print(choosenTargetPoint);
 
             GetInvertShot(choosenTargetPoint, targetPointsDict[choosenTargetPoint][0], choosenSpell, out pointToSelect);
 
-            print("singe encore encore");
-
             rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint, false );
-            zoneData = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints, false);
+            castData = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints, false);
 
             targetPointsDict[choosenTargetPoint].Remove(targetPointsDict[choosenTargetPoint][0]);
 
@@ -171,6 +177,8 @@ public class EnemyEntity : Entity
             await UniTask.Yield();
         }
 
+        choosenTargetPoint.ChangeTileColor(choosenTargetPoint._zoneMaterial);
+
         // possibilité pour pas qu'elle se tire dessus ? ça serait rigolo n la stock qq part si ça se touche et on réésaie. si pas de solution on utilise celle qui touche
 
         await UniTask.Delay(ThinkDelayMilis);
@@ -179,19 +187,19 @@ public class EnemyEntity : Entity
 
         if (targetReached)
         {
-            return await CastSpell(rangePoints, zoneData,choosenSpell,choosenTargetPoint,pointToSelect);
+            return await CastSpell(rangePoints, castData,choosenSpell,choosenTargetPoint,pointToSelect);
         }
         return false;
     }
 
-    async UniTask<bool> CastSpell(List<WayPoint> rangePoints, SpellZoneData zoneData, Spell choosenSpell, WayPoint choosenTargetPoint, WayPoint pointToSelect)
+    async UniTask<bool> CastSpell(List<WayPoint> rangePoints, SpellCastData castData, Spell choosenSpell, WayPoint choosenTargetPoint, WayPoint pointToSelect)
     {
         print("attack !");
         rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint);
         await UniTask.Delay(ThinkDelayMilis);
-        zoneData = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints);
+        castData = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints);
         await UniTask.Delay(ThinkDelayMilis);
-        await entitySpellCaster.TryCastSpell(choosenSpell, pointToSelect, rangePoints, zoneData);
+        await entitySpellCaster.TryCastSpell(choosenSpell, pointToSelect, rangePoints, castData);
 
         return targetPlayerPoint.Content != null;
     }
