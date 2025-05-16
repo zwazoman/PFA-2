@@ -160,11 +160,11 @@ public class SpellCaster : MonoBehaviour
         WayPoint choosenPoint = null;
         pushDamages = 0;
 
-        Vector3 posWithHeigth = hitEntity.transform.position + Vector3.up * 0.2f;
+        Vector3 posWithHeigth = hitEntity.transform.position + Vector3.up * 0.5f;
 
         if (pushDirection == Vector3.zero)
         {
-            Vector3 casterPosWithHeight = transform.position + Vector3.up * 0.2f;
+            Vector3 casterPosWithHeight = transform.position + Vector3.up * 0.5f;
             Vector3 casterToEntity = posWithHeigth - casterPosWithHeight;
 
             Debug.DrawLine(casterPosWithHeight, casterPosWithHeight + casterToEntity, Color.blue, 20);
@@ -186,17 +186,17 @@ public class SpellCaster : MonoBehaviour
         {
             print("diag");
 
-            Debug.DrawLine(posWithHeigth, posWithHeigth + pushDirection * pushForce /** Mathf.Sqrt(2)*/, Color.red, 20);
+            Debug.DrawRay(posWithHeigth, pushDirection * pushForce, Color.red, 20);
 
             RaycastHit hit;
-            if (Physics.SphereCast(posWithHeigth, .45f, pushDirection, out hit, pushForce * Mathf.Sqrt(2) - .5f) && hit.collider.gameObject != gameObject)
+            if (Physics.SphereCast(posWithHeigth, .45f, pushDirection /*+Vector3.up * 0.5f*/, out hit, pushForce * Mathf.Sqrt(2)))
             {
-                print("wall hit");
-                //Debug.DrawLine(transform.position, hit.point, Color.black, 20);
+                print(hit.collider.gameObject);
+
                 pushDamages = pushForce;
                 Vector3 hitPos = hit.point/*.SnapOnGrid()*/;
 
-                Debug.DrawLine(hitPos, (hitPos - pushDirection * .3f).SnapOnGrid(), Color.blue, 20);
+                Debug.DrawLine(hitPos, (hitPos - pushDirection * .25f).SnapOnGrid(), Color.blue, 20);
 
                 pushDamages -= Mathf.FloorToInt(hit.distance);
                 choosenPoint = GraphMaker.Instance.serializedPointDict[(hitPos - pushDirection * .3f).SnapOnGrid()];
