@@ -48,7 +48,13 @@ public class EnemyEntity : Entity
 
         targetPlayerPoint = FindClosestPlayerPoint();
 
-        bool attacked = await TryAttack(ChooseSpell(0));
+        Spell choosenSpell = ChooseSpell(0);
+        bool attacked;
+
+        if (choosenSpell != null)
+            attacked = await TryAttack(choosenSpell);
+        else
+            attacked = true;
 
         if (attacked && stats.currentMovePoints > 0)
         {
@@ -63,23 +69,36 @@ public class EnemyEntity : Entity
                     break;
             }
         }
-
         await EndTurn();
     }
 
     public override async UniTask EndTurn()
     {
         await base.EndTurn();
+
+    }
+
+    List<Spell> ComputeCastableSpells(List<Spell> spells)
+    {
+        List<Spell> castableSpells = new();
+
+        foreach(Spell spell in spells)
+        {
+            if(spell.canUse)
+                castableSpells.Add(spell);
+        }
+
+        return castableSpells;
     }
 
     protected Spell ChooseSpell(int spellIndex)
     {
-        return spells[spellIndex];
+        return ComputeCastableSpells(spells)[spellIndex];
     }
 
     protected Spell ChooseRandomSpell()
     {
-        return spells.PickRandom();
+        return ComputeCastableSpells(spells).PickRandom();
     }
 
     protected Spell ChooseSpellWithRange()
@@ -89,7 +108,7 @@ public class EnemyEntity : Entity
         int offset = int.MaxValue;
         Spell choosenSpell = null;
 
-        foreach (Spell premadeSpell in spells)
+        foreach (Spell premadeSpell in ComputeCastableSpells(spells))
         {
             int spellMaxReach = stats.currentMovePoints + premadeSpell.spellData.Range + Mathf.FloorToInt(premadeSpell.spellData.AreaOfEffect.Bounds.width / 2);
             int targetToMaxReachOffset = Mathf.Abs(spellMaxReach - targetDistance);
@@ -105,6 +124,9 @@ public class EnemyEntity : Entity
 
     protected WayPoint FindClosestPlayerPoint()
     {
+        if (CombatManager.Instance.PlayerEntities.Count == 0)
+            return null;
+
         List<WayPoint> points = new List<WayPoint>();
 
         foreach (PlayerEntity player in CombatManager.Instance.PlayerEntities)
@@ -125,6 +147,9 @@ public class EnemyEntity : Entity
     /// <returns></returns>
     protected async UniTask<bool> TryAttack(Spell choosenSpell)
     {
+        if (targetPlayerPoint == null)
+            return false;
+
         Dictionary<WayPoint, List<WayPoint>> targetPointsDict = new();
 
         List<WayPoint> rangePoints;
