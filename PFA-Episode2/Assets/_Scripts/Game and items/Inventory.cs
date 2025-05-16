@@ -8,6 +8,7 @@ public class Inventory : ISavable<Inventory>
     public List<SpellData> Spells = new();
     public List<Ingredient> Ingredients = new();
     public List<Sauce> Sauces = new();
+    public List<int> playerEquipedSpell = new();
 
     public string NameSave = "InventorySave";
 

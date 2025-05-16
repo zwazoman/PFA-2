@@ -10,6 +10,8 @@ public class SetupSpellInventory : MonoBehaviour
     private int _index = 0;
     private GetInfoInVariant _refInfoVariant;
     public SpellData SpellChoose;
+    [HideInInspector] public GameObject ConnardDeMes2;
+
     private void Start()
     {
         SetupInventory();
@@ -23,7 +25,7 @@ public class SetupSpellInventory : MonoBehaviour
 
             GameObject go = Instantiate(_prefabItem, _targetInventory[i]); //Création 
             _refInfoVariant = go.GetComponent<GetInfoInVariant>();
-            _refInfoVariant.ActualSpell = SpellChoose;
+            _refInfoVariant.IndexInPlayerSpell = i;
             _refInfoVariant.SpellIcon.sprite = SpellChoose.Sprite; //Sprite
             _refInfoVariant.SpellIconDisable.sprite = SpellChoose.Sprite;
 
@@ -37,25 +39,23 @@ public class SetupSpellInventory : MonoBehaviour
             if (_refInfoVariant.SpellZoneEffect.sprite != null) //Sécurité
             { _refInfoVariant.SpellZoneEffect.sprite = SpellChoose.AreaOfEffect.sprite; } //Area
 
-            foreach(SpellData spellData in GameManager.Instance.playerEquipedSpell) //pour chaque spell qu'on construit on vérifie si il est equipe
+            foreach (int spellDataIndex in GameManager.Instance.playerInventory.playerEquipedSpell) //pour chaque spell qu'on construit on vérifie si il est equipe
             {
-                if (SpellChoose == spellData) //Il est équipé
+                if(i == spellDataIndex)
                 {
-                    go.transform.GetChild(0).gameObject.SetActive(true);
-                    gameObject.transform.SetParent(_equippedInventory[_index].gameObject.transform);
-                    gameObject.transform.localPosition = Vector3.zero;
+                    ConnardDeMes2 = go; //L'objet entier
+                    Transform parent = go.transform.parent; //SpellSlot
+                    GameObject enfant = ConnardDeMes2.transform.GetChild(0).gameObject; //L'image disable
+
+                    ConnardDeMes2.transform.SetParent(_equippedInventory[_index].gameObject.transform);
+                    ConnardDeMes2.transform.localPosition = Vector3.zero;
+                    enfant.SetActive(true);
+                    enfant.transform.SetParent(parent);
+                    enfant.transform.localPosition = Vector3.zero;
+                    ConnardDeMes2.transform.GetComponent<DraggableSpellContainer>().originalParent = enfant.transform.parent;
                     _index++;
                 }
             }
         }
     }
-
-    //public void SaveSpellEquiped() //Button
-    //{
-    //    for (int i = 0; i < GameManager.Instance.playerEquipedSpell.Count; i++)
-    //    {
-    //        GameManager.Instance.playerEquipedSpell[i] = gameObject.transform.parent.GetComponent<SetupSpellInventory>().SpellChoose;
-    //    }
-    //    print("c'est save... ?");
-    //}
 }
