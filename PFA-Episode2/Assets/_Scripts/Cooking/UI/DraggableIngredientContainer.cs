@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -58,7 +57,7 @@ public class DraggableIngredientContainer : DraggableItemContainer
         if (a.Count > 0 && a[0].gameObject.TryGetComponent(out CookingPot pot) && pot.TryAddIngredient(this))
         {
             DeleteIcon.SetActive(true);
-            CancelButton.onClick.AddListener( () => pot.RemoveIngredient(this));
+            CancelButton.onClick.AddListener(() => pot.RemoveIngredient(this));
             gameObject.SetActive(false);
         }
         else
