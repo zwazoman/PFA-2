@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 public class DraggableItemContainer : Draggable
 {
     [field: SerializeField]
-    public Object item {get; protected set;}
+    public Object item; //{get; protected set;}
 
 
 
