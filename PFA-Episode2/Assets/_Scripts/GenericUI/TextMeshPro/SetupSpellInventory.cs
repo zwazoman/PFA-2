@@ -44,8 +44,11 @@ public class SetupSpellInventory : MonoBehaviour
                 if(i == spellDataIndex)
                 {
                     ConnardDeMes2 = go; //L'objet entier
+                    ConnardDeMes2.GetComponent<DraggableSpellContainer>()._faudraRemove = true;
+                    ConnardDeMes2.GetComponent<DraggableSpellContainer>().Target = _targetInventory[i];
+                    print(_targetInventory[i].name);
                     Transform parent = go.transform.parent; //SpellSlot
-                    GameObject enfant = ConnardDeMes2.transform.GetChild(0).gameObject; //L'image disable
+                    GameObject enfant = ConnardDeMes2.transform.GetChild(1).gameObject; //L'image disable
 
                     ConnardDeMes2.transform.SetParent(_equippedInventory[_index].gameObject.transform);
                     ConnardDeMes2.transform.localPosition = Vector3.zero;

@@ -14,9 +14,16 @@ public class DraggableSpellContainer : DraggableItemContainer
     [SerializeField] GameObject DeleteIcon;
     [SerializeField] Image _descriptionPanel;
     [SerializeField] GetInfoInVariant _infoVariant;
+    public Transform Target;
+    [SerializeField] Transform _enfant;
 
-    private bool _faudraRemove;
+    public bool _faudraRemove;
 
+    private void Start()
+    {
+        if (Target == null) { Target = gameObject.transform.transform.parent; }
+
+    }
 
     public override void OnBeginDrag(PointerEventData eventData)
     {
@@ -36,6 +43,8 @@ public class DraggableSpellContainer : DraggableItemContainer
             backGroundImage.gameObject.SetActive(true);
             gameObject.transform.SetParent(a[0].gameObject.transform);
             gameObject.transform.localPosition = Vector3.zero;
+            _enfant.transform.SetParent(Target);
+            _enfant.transform.localPosition = Vector3.zero;
             GameManager.Instance.playerInventory.playerEquipedSpell.Add(_infoVariant.IndexInPlayerSpell);
             _faudraRemove = true;
         }
@@ -47,6 +56,8 @@ public class DraggableSpellContainer : DraggableItemContainer
 
     public override void Reset()
     {
+        _enfant.parent = gameObject.transform;
+        _enfant.localPosition = Vector3.zero;
         if(_faudraRemove) { GameManager.Instance.playerInventory.playerEquipedSpell.Remove(_infoVariant.IndexInPlayerSpell); _faudraRemove = false; }
         CancelButton.onClick.RemoveAllListeners();
         backGroundImage.gameObject.SetActive(false);
