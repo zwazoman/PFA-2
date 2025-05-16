@@ -73,4 +73,9 @@ public class GameManager : MonoBehaviour
     {
         playerInventory = SaveManager.Load<Inventory>(playerInventory.NameSave, false);
     }
+
+    public void DeleteSave()
+    {
+        SaveManager.Delete(playerInventory.NameSave);
+    }
 }

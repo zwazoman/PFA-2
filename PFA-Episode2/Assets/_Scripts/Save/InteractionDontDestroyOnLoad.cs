@@ -29,9 +29,17 @@ public class InteractDontDestroyOnLoad : MonoBehaviour
         }
     }
 
-    public void SaveInventoryFunction()
+    public void SaveInventoryFunction(string function)
     {
-        GameManager.Instance.playerInventory.Save(GameManager.Instance.playerInventory.NameSave);
+        switch (function)
+        {
+            case "Save":
+                GameManager.Instance.playerInventory.Save(GameManager.Instance.playerInventory.NameSave);
+                break;
+            case "Delete":
+                GameManager.Instance.DeleteSave();
+                break;
+        }
     }
 
     // Fonction pour appeler un changement de scene
