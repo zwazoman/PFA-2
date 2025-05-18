@@ -4685,11 +4685,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6df00e5ef7d1445499bf7dd917a215ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gradientMap: {fileID: 2800000, guid: d859f14269d938b49bc499feae0b2ab2, type: 3}
-  _enviroID: 0.213
+  _gradientMap: {fileID: 2800000, guid: 92552989b7c8cf642bbf8544d1c0a8fd, type: 3}
+  _enviroID: 0
   _bands: 8
   _stippling: {fileID: 2800000, guid: db3db9f7456bb0d47959944a96756c0b, type: 3}
   _stipplingTiling: 1
+  _fogOn: 0
+  _fogRadius: 5218
+  _fogIntensity: 0
 --- !u!1001 &325583547
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6163,9 +6166,9 @@ Light:
     m_Resolution: 3
     m_CustomResolution: -1
     m_Strength: 1
-    m_Bias: 0.05
-    m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_Bias: 0.19
+    m_NormalBias: 0.08
+    m_NearPlane: 0.1
     m_CullingMatrixOverride:
       e00: 1
       e01: 0

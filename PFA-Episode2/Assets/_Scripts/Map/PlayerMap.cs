@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using DG.Tweening;
 
 public class PlayerMap : MonoBehaviour
 {
@@ -12,15 +13,31 @@ public class PlayerMap : MonoBehaviour
 
     [HideInInspector] public Node clickedNode;
 
+    //camera
+    [SerializeField] Transform _camera;
+    [SerializeField] Vector3 camOffset = new Vector3(-3.75f, 1.6f, 0);
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        _camera.transform.position = transform.position + camOffset;
+    }
+#endif
+
     private void Awake()
     {
         Instance = this;
         _target = transform.position;
+
+        
     }
 
     private void Start()
     {
         LoadNextScene();
+        Vector3 p = transform.position + camOffset;
+        p.z = 100;
+        _camera.transform.position = p;
     }
 
     public async UniTask<Vector3> SetupTarget() 
@@ -73,10 +90,9 @@ public class PlayerMap : MonoBehaviour
 
     async UniTask MoveTo(Vector3 targetPos) //Faut pas qu'il se lance au start
     {
-        while (Vector3.Distance(transform.position, targetPos) > 0.1f) 
-        {
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
-            await UniTask.Yield();
-        }
+        Vector3 p = targetPos + camOffset;
+        p.z = 100;
+        _camera.transform.DOMove(p, 1f / speed).SetEase(Ease.InOutSine);
+        await transform.DOMove(targetPos,1f/speed).SetEase(Ease.InOutCubic).AsyncWaitForCompletion().AsUniTask();
     }
 }
