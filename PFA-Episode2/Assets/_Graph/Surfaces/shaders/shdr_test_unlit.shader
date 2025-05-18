@@ -141,20 +141,22 @@ Shader "Unlit/shdr_test_unlit"
                 coloredShadow = lerp(coloredShadow,coloredShadow*.8  ,stippling.y * (1-shadow)*(1-shadow)*(1-shadow)); //tiling : 0.218 //petits triangles clairs
 
                 //light blending 
-                col = lerp(col,col * coloredShadow,.5);
+                //col = lerp(col,col * coloredShadow,.5);
                 //col = (col > 0.5) * (1 - (1-2*(col-0.5)) * (1-coloredShadow)) + (col <= 0.5) * ((2*col) * coloredShadow); // overlay
                 
                 
                 col =  lerp(col, (coloredShadow > 0.5) * (1 - (1-col) * (1-(coloredShadow-0.5))) + (coloredShadow <= 0.5) * (col * (coloredShadow+0.5)),1); //softlight
                 
+                col = lerp(col,coloredShadow,saturate((1-shadow)*(1-shadow)*(1-shadow))*.8);
+
                 //color adjustment
-                //col *= _lightness;
+                col *= _lightness;
 
                 //vignette (mettre dans post process plutot si y en a)
                 float vignette =  1-saturate((distance(float2(0.5,0.5),i.pos.xy/_ScreenParams.xy)-.4)*1);
                 col *= vignette;
- 
-                return lerp(col,coloredShadow,saturate((1-shadow)*(1-shadow)*(1-shadow))*.8);
+                
+                return col;
             }
             ENDCG
         }
