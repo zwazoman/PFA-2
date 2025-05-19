@@ -12,7 +12,6 @@ public class PlayerEntity : Entity
     [SerializeField] public List<DraggableSpell> spellsUI = new();
     [SerializeField] private PlayerUIHandler _playerUIHandler;
 
-    [SerializeField] int maxHealth;
     [SerializeField] int maxMovePoints;
 
 
@@ -29,7 +28,7 @@ public class PlayerEntity : Entity
     {
         base.Start();
 
-        stats.Setup(maxHealth);
+        stats.Setup(GameManager.Instance.playerInventory.playerHealth.maxHealth);
         CombatManager.Instance.RegisterEntity(this);
 
         _playerUIHandler.SetUp();
@@ -38,6 +37,8 @@ public class PlayerEntity : Entity
         {
             spells.Add(spell.spell);
         }
+
+        CombatManager.Instance.OnWin += () => GameManager.Instance.playerInventory.playerHealth.health = Mathf.RoundToInt(stats.currentHealth);
     }
 
     public override async UniTask PlayTurn()
@@ -93,5 +94,4 @@ public class PlayerEntity : Entity
     {
         CombatUiManager.Instance.playerHUD.Hide();
     }
-
 }

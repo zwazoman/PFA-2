@@ -36,10 +36,10 @@ public class Entity : MonoBehaviour
     public event Action OnSpellPreviewCancel;
 
     #region AnimationTriggers
-    [HideInInspector] public string moveTrigger = "Move";
+    [HideInInspector] public string moveBool = "Move";
     [HideInInspector] public string attackTrigger = "Attack";
     [HideInInspector] public string idleTrigger = "Idle";
-    [HideInInspector] public string pushTrigger = "Push";
+    [HideInInspector] public string pushBool = "Push";
     [HideInInspector] public string hitTrigger = "Hit";
     [HideInInspector] public string deathTrigger = "Death";
 
@@ -151,12 +151,12 @@ public class Entity : MonoBehaviour
 
         if(pushTarget != currentPoint)
         {
-            visuals.StartLoopAnimation(pushTrigger);
+            visuals.animator.PlayAnimationBool(pushBool);
             await UniTask.Delay(300);
 
             await StartMoving(pushTarget.transform.position,5,-1);
 
-            visuals.EndLoopAnimation();
+            visuals.animator.EndAnimationBool(pushBool);
         }
 
 
@@ -241,7 +241,7 @@ public class Entity : MonoBehaviour
             p.ChangeTileColor(p._walkedMaterial);
         }
 
-        visuals.StartLoopAnimation(moveTrigger);
+        visuals.animator.PlayAnimationBool(moveBool);
 
         for (int i = 0; i < pathlength; i++)
         {
@@ -259,7 +259,7 @@ public class Entity : MonoBehaviour
             stats.currentMovePoints--;
         }
 
-        visuals.EndLoopAnimation();
+        visuals.animator.EndAnimationBool(moveBool);
         Tools.Flood(currentPoint);
         ClearWalkables();
         ApplyWalkables(showTiles);
@@ -286,7 +286,7 @@ public class Entity : MonoBehaviour
     {
         print("Die");
 
-        await visuals.PlayAnimation(deathTrigger);
+        await visuals.animator.PlayAnimationTrigger(deathTrigger);
 
         currentPoint.StepOff();
         isDead = true;
