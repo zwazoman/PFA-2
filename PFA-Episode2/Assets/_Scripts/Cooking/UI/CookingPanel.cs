@@ -78,6 +78,14 @@ public class CookingPanel : AnimatedPanel
 
         //content height
         float height = _ingredientsParent.cellSize.y + _ingredientsParent.spacing.y;
+        if (_ingredientsParent.TryGetComponent(out RectTransform IngredientsGrid))
+        {
+            IngredientsGrid.sizeDelta = new Vector2(IngredientsGrid.sizeDelta.x, height * ( (inv.Ingredients.Count) / 3));
+        }
+        if (_saucesParent.transform.parent.parent.TryGetComponent(out RectTransform SauceGrid))
+        {
+            SauceGrid.sizeDelta = new Vector2(SauceGrid.sizeDelta.x, height * ((inv.Ingredients.Count + inv.Sauces.Count) / 3 ));
+        }
         if (_ingredientsParent.transform.parent.parent.TryGetComponent(out RectTransform ScrollbarContent))
         {
             ScrollbarContent.sizeDelta = new Vector2(ScrollbarContent.sizeDelta.x, height * (3 + (inv.Ingredients.Count + inv.Sauces.Count) / 3 * 2));
@@ -93,6 +101,8 @@ public class CookingPanel : AnimatedPanel
                 .GetComponentInChildren<DraggableIngredientContainer>()
                 .SetUp(inv.Ingredients[i]);
         }
+
+
 
         //sauces
         for (byte i = 0; i < inv.Sauces.Count; ++i)

@@ -5,6 +5,8 @@ using UnityEngine;
 [Serializable]
 public class Inventory : ISavable<Inventory>
 {
+    public PlayerHealth playerHealth = new(50);
+
     public List<SpellData> Spells = new();
     public List<Ingredient> Ingredients = new();
     public List<Sauce> Sauces = new();
