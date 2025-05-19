@@ -180,18 +180,14 @@ public class SpellCaster : MonoBehaviour
 
         bool isDiagonal = pushDirection.x != 0 && pushDirection.z != 0;
 
-        print(pushDirection);
-
         if (isDiagonal)
         {
-            print("diag");
 
             Debug.DrawRay(posWithHeigth, pushDirection * pushForce, Color.red, 20);
 
             RaycastHit hit;
             if (Physics.SphereCast(posWithHeigth, .45f, pushDirection /*+Vector3.up * 0.5f*/, out hit, pushForce * Mathf.Sqrt(2)))
             {
-                print(hit.collider.gameObject);
 
                 pushDamages = pushForce;
                 Vector3 hitPos = hit.point/*.SnapOnGrid()*/;
