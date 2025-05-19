@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 using static NodeTypes;
+using System.Collections.Generic;
 
 public class Node : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class Node : MonoBehaviour
     [SerializeField] private Button _button;
     public bool Visited;
     public bool Intersection;
+    public List<Image> PathBetweenNode = new();
 
     public static void TriggerMapCompleted()
     {
@@ -83,6 +85,14 @@ public class Node : MonoBehaviour
         Vector3 rot = transform.eulerAngles;
         rot.z = -90f;
         transform.eulerAngles = rot;
+        CleanUnBug();
+    }
 
+    private void CleanUnBug()
+    {
+        if (PathBetweenNode.Count > 1)
+        {
+            if (Hauteur != 3) { Destroy(PathBetweenNode[1]); }
+        }
     }
 }
