@@ -103,4 +103,6 @@ public class GameManager : MonoBehaviour
         int index = Random.Range(0, combatScenesName.Count);
         return combatScenesName[index];
     }
+
+
 }
