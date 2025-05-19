@@ -78,6 +78,7 @@ public class CombatManager : MonoBehaviour
     {
         SummonEntities();
         await UniTask.Yield();
+        print(EnemyEntities.Count);
         await StartGame();
     }
 
