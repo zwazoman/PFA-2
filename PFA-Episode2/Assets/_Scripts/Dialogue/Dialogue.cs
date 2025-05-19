@@ -9,6 +9,12 @@ public class Dialogue : ScriptableObject
 }
 
 [Serializable]
+public class SceneText
+{
+    public List<DialogueData> DialogueDatas;
+}
+
+[Serializable]
 public class DialogueData
 {
     public List<Sentence> Sentence;
