@@ -42,6 +42,8 @@ public class EnemyEntity : Entity
 
     public override async UniTask PlayTurn()
     {
+        print("PlayEnemy");
+
         await base.PlayTurn();
 
         //await visuals.PlayAnimation("Attack");
@@ -149,6 +151,8 @@ public class EnemyEntity : Entity
     /// <returns></returns>
     protected async UniTask<bool> TryAttack(Spell choosenSpell)
     {
+        print("try attack");
+
         if (targetPlayerPoint == null)
             return false;
 
