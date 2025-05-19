@@ -23,7 +23,6 @@ public class GameManager : MonoBehaviour
     #endregion
 
     public Inventory playerInventory = new();
-    public List<SpellData> playerEquipedSpell = new();
 
     [Header("Data")]
     public GameStaticData staticData;
