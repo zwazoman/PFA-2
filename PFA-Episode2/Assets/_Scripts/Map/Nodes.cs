@@ -3,6 +3,7 @@ using System;
 using UnityEngine.UI;
 using static NodeTypes;
 using System.Collections.Generic;
+using DG.Tweening;
 
 public class Node : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class Node : MonoBehaviour
     [SerializeField] private GameObject _parentGO;
     [SerializeField] private GameObject _prefabBoss;
     [SerializeField] private Button _button;
+    private GameObject _mesh;
     public bool Visited;
     public bool Intersection;
     public List<Image> PathBetweenNode = new();
@@ -28,6 +30,7 @@ public class Node : MonoBehaviour
     {
         Visited = true;
         PlayerMap.Instance.clickedNode = this;
+        TweenMesh();
     }
 
     private void OnEnable()
@@ -45,6 +48,7 @@ public class Node : MonoBehaviour
     /// </summary>
     private void SetupSprite()
     {
+        if (PlayerMap.Instance.PositionMap == Position) { return; }
         switch (EventName)
         {
             case NodesEventTypes.Cuisine:
@@ -52,30 +56,35 @@ public class Node : MonoBehaviour
                 CuisinePrefab.transform.position = _parentGO.transform.position;
                 CuisinePrefab.transform.SetParent(gameObject.transform);
                 CuisinePrefab.SetActive(true);
+                _mesh = CuisinePrefab;
                 break;
             case NodesEventTypes.Combat:
                 GameObject CombatPrefab = PoolObject.Instance.CombatList.Dequeue();
                 CombatPrefab.transform.position = _parentGO.transform.position;
                 CombatPrefab.transform.SetParent(gameObject.transform);
                 CombatPrefab.SetActive(true);
+                _mesh = CombatPrefab;
                 break;
             case NodesEventTypes.Ingredient:
                 GameObject IngredientPrefab = PoolObject.Instance.IngredientList.Dequeue();
                 IngredientPrefab.transform.position = _parentGO.transform.position;
                 IngredientPrefab.transform.parent = gameObject.transform;
                 IngredientPrefab.SetActive(true);
+                _mesh = IngredientPrefab;
                 break;
             case NodesEventTypes.Heal:
                 GameObject HealPrefab = PoolObject.Instance.HealList.Dequeue();
                 HealPrefab.transform.position = _parentGO.transform.position;
                 HealPrefab.transform.SetParent(gameObject.transform);
                 HealPrefab.SetActive(true);
+                _mesh = HealPrefab;
                 break;
             case NodesEventTypes.Boss:
                 GameObject go = Instantiate(_prefabBoss);
                 go.transform.position = _parentGO.transform.position;
                 go.transform.SetParent(gameObject.transform);
                 go.SetActive(true);
+                _mesh = go;
                 break;
             case NodesEventTypes.Start:
                 break;
@@ -94,5 +103,10 @@ public class Node : MonoBehaviour
         {
             if (Hauteur != 3) { Destroy(PathBetweenNode[1]); }
         }
+    }
+
+    private void TweenMesh()
+    {
+        _mesh.transform.DOScale(new Vector3(0,0,0), 0.3f).SetEase(Ease.InBack);
     }
 }
