@@ -102,16 +102,12 @@ public class EntityVisuals : MonoBehaviour
     public void EndLoopAnimation()
     {
         if (!_enableAnimations) return;
-
-        print("back to Idle");
         _animator.SetTrigger("Idle");
     }
 
     float GetAnimationLength(string trigger)
     {
         AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
-        print(stateInfo.length);
-
         return stateInfo.length;
     }
 }
