@@ -45,7 +45,7 @@ public class DraggableSpellContainer : DraggableItemContainer
             gameObject.transform.localPosition = Vector3.zero;
             _enfant.transform.SetParent(Target);
             _enfant.transform.localPosition = Vector3.zero;
-            GameManager.Instance.playerInventory.playerEquipedSpell.Add(_infoVariant.IndexInPlayerSpell);
+            GameManager.Instance.playerInventory.playerEquipedSpellIndex.Add(_infoVariant.IndexInPlayerSpell);
             _faudraRemove = true;
         }
         else
@@ -58,7 +58,7 @@ public class DraggableSpellContainer : DraggableItemContainer
     {
         _enfant.parent = gameObject.transform;
         _enfant.localPosition = Vector3.zero;
-        if(_faudraRemove) { GameManager.Instance.playerInventory.playerEquipedSpell.Remove(_infoVariant.IndexInPlayerSpell); _faudraRemove = false; }
+        if(_faudraRemove) { GameManager.Instance.playerInventory.playerEquipedSpellIndex.Remove(_infoVariant.IndexInPlayerSpell); _faudraRemove = false; }
         CancelButton.onClick.RemoveAllListeners();
         backGroundImage.gameObject.SetActive(false);
         base.Reset();

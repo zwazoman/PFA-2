@@ -39,14 +39,13 @@ public class SetupSpellInventory : MonoBehaviour
             if (_refInfoVariant.SpellZoneEffect.sprite != null) //Sécurité
             { _refInfoVariant.SpellZoneEffect.sprite = SpellChoose.AreaOfEffect.sprite; } //Area
 
-            foreach (int spellDataIndex in GameManager.Instance.playerInventory.playerEquipedSpell) //pour chaque spell qu'on construit on vérifie si il est equipe
+            foreach (int spellDataIndex in GameManager.Instance.playerInventory.playerEquipedSpellIndex) //pour chaque spell qu'on construit on vérifie si il est equipe
             {
                 if(i == spellDataIndex)
                 {
                     ConnardDeMes2 = go; //L'objet entier
                     ConnardDeMes2.GetComponent<DraggableSpellContainer>()._faudraRemove = true;
                     ConnardDeMes2.GetComponent<DraggableSpellContainer>().Target = _targetInventory[i];
-                    print(_targetInventory[i].name);
                     Transform parent = go.transform.parent; //SpellSlot
                     GameObject enfant = ConnardDeMes2.transform.GetChild(1).gameObject; //L'image disable
 
@@ -59,6 +58,15 @@ public class SetupSpellInventory : MonoBehaviour
                     _index++;
                 }
             }
+        }
+    }
+
+    public void PourNestror()
+    {
+        GameManager.Instance.playerInventory.playerEquipedSpell.Clear();
+        foreach (int spellDataIndex in GameManager.Instance.playerInventory.playerEquipedSpellIndex)
+        {
+            GameManager.Instance.playerInventory.playerEquipedSpell.Add(GameManager.Instance.playerInventory.Spells[spellDataIndex]);
         }
     }
 }
