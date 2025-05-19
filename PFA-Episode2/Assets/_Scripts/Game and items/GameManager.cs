@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
                 foreach (PremadeSpell premadeSpell in premadeSpells)
                 {
                     Debug.Log("- test spell ");
-                    playerInventory.Spells.Add(premadeSpell.SpellData);
+                    playerInventory.playerEquipedSpell.Add(premadeSpell.SpellData);
                 }
             }
 #endif
