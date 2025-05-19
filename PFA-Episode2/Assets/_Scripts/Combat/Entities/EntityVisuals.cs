@@ -90,6 +90,7 @@ public class EntityVisuals : MonoBehaviour
 
         _animator.SetTrigger(trigger);
         await Awaitable.WaitForSecondsAsync(GetAnimationLength(trigger));
+        _animator.SetTrigger("Idle");
     }
 
     public void StartLoopAnimation(string trigger)

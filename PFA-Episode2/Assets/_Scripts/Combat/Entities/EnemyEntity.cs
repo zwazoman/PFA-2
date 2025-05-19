@@ -179,9 +179,6 @@ public class EnemyEntity : Entity
         {
             choosenTargetPoint = targetPointsDict.Keys.FindClosestFloodPoint();
 
-            print(targetPointsDict.Keys.Count);
-            print(choosenTargetPoint);
-
             GetInvertShot(choosenTargetPoint, targetPointsDict[choosenTargetPoint][0], choosenSpell, out pointToSelect);
 
             rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint, false );
@@ -212,7 +209,6 @@ public class EnemyEntity : Entity
 
     async UniTask<bool> CastSpell(List<WayPoint> rangePoints, SpellCastData castData, Spell choosenSpell, WayPoint choosenTargetPoint, WayPoint pointToSelect)
     {
-        print("attack !");
         rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint);
         await UniTask.Delay(ThinkDelayMilis);
         castData = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints);
@@ -229,8 +225,6 @@ public class EnemyEntity : Entity
         Vector3Int rangepointPos = GraphMaker.Instance.serializedPointDict.GetKeyFromValue(rangeTarget);
 
         pointToSelect = GraphMaker.Instance.serializedPointDict[selfPointPos + (zonePointPos - rangepointPos)];
-
-        print(pointToSelect);
 
         return pointToSelect;
     }

@@ -144,8 +144,6 @@ public class Entity : MonoBehaviour
     //recoil
     async UniTask Push(int pushDamages, WayPoint pushTarget)
     {
-        print(pushDamages);
-
         currentPoint.StepOff();
 
         visuals.StartLoopAnimation(pushTrigger);
@@ -183,7 +181,7 @@ public class Entity : MonoBehaviour
             return true;
         }
 
-        //print(Tools.FindClosestFloodPoint(Walkables, Tools.SmallFlood(targetPoint, Tools.FloodDict[targetPoint], true, true)));
+        
 
         await UniTask.Delay(500);
 
@@ -202,6 +200,8 @@ public class Entity : MonoBehaviour
     /// <returns></returns>
     protected async UniTask MoveAwayFrom(WayPoint targetPoint)
     {
+        print("move away");
+
         float distanceToFurthestPoint = 0;
         WayPoint furthestPoint = null;
 
@@ -225,7 +225,6 @@ public class Entity : MonoBehaviour
 
         if (pathlength > stats.currentMovePoints)
         {
-            print("plus de pm !");
             return;
         }
 
