@@ -813,11 +813,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6df00e5ef7d1445499bf7dd917a215ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gradientMap: {fileID: 2800000, guid: d859f14269d938b49bc499feae0b2ab2, type: 3}
-  _enviroID: 0.232
+  _gradientMap: {fileID: 2800000, guid: 92552989b7c8cf642bbf8544d1c0a8fd, type: 3}
+  _enviroID: 0.321
   _bands: 5
   _stippling: {fileID: 2800000, guid: db3db9f7456bb0d47959944a96756c0b, type: 3}
   _stipplingTiling: 1
+  _fogOn: 0
+  _fogRadius: 527.7
+  _fogIntensity: 0
 --- !u!4 &625358998
 Transform:
   m_ObjectHideFlags: 0
@@ -867,10 +870,13 @@ MonoBehaviour:
     Spells: []
     Ingredients: []
     Sauces: []
+    playerEquipedSpell: 
     NameSave: InventorySave
   staticData: {fileID: 11400000, guid: 66a493f66f77dc74e9960868ba638afc, type: 2}
-  combatScenesName: []
-  _combatScenes: []
+  combatScenesName:
+  - Forest_Combat_1
+  _combatScenes:
+  - {fileID: 102900000, guid: a12bbd682e5d49241beb28fb7e0d344c, type: 3}
   premadeSpells:
   - {fileID: 11400000, guid: ebc3ce0f2326f0340822f46c609b391c, type: 2}
   tests: 0

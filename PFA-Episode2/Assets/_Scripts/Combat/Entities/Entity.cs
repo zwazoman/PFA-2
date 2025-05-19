@@ -7,20 +7,24 @@ using DG.Tweening;
 using Unity.VisualScripting;
 using static UnityEngine.EventSystems.EventTrigger;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks.Triggers;
 
 [RequireComponent(typeof(SpellCaster))]
 public class Entity : MonoBehaviour
 {
+    public bool isDead { get; private set; }
+
     public EntityStats stats = new();
+    public Sprite Icon;
 
     [HideInInspector] public WayPoint currentPoint;
     [HideInInspector] public SpellCaster entitySpellCaster;
 
+    public EntityVisuals visuals;
+
     protected Dictionary<WayPoint, int> WaypointDistance = new Dictionary<WayPoint, int>();
     protected List<WayPoint> Walkables = new List<WayPoint>();
     protected List<Spell> spells = new();
-
-    public Sprite Icon;
 
     //events
     public event Action OnDead;
@@ -31,11 +35,21 @@ public class Entity : MonoBehaviour
     public event Action<float,float,Vector3> OnPreviewSpell;
     public event Action OnSpellPreviewCancel;
 
-    public bool isDead { get; private set; }
+    #region AnimationTriggers
+    [HideInInspector] public string moveTrigger = "Move";
+    [HideInInspector] public string attackTrigger = "Attack";
+    [HideInInspector] public string idleTrigger = "Idle";
+    [HideInInspector] public string pushTrigger = "Push";
+    [HideInInspector] public string hitTrigger = "Hit";
+    [HideInInspector] public string deathTrigger = "Death";
+
+    #endregion
+
 
     protected virtual void Awake()
     {
         TryGetComponent(out entitySpellCaster);
+        TryGetComponent(out visuals);
         stats.owner = this;
     }
 
@@ -128,11 +142,13 @@ public class Entity : MonoBehaviour
     //recoil
     async UniTask Push(int pushDamages, WayPoint pushTarget)
     {
-        print(pushDamages);
-
         currentPoint.StepOff();
 
-        await StartMoving(pushTarget.transform.position,20);
+        visuals.StartLoopAnimation(pushTrigger);
+
+        await StartMoving(pushTarget.transform.position,5);
+
+        visuals.EndLoopAnimation();
 
         if (pushDamages > 0)
             await stats.ApplyDamage(pushDamages);
@@ -163,7 +179,7 @@ public class Entity : MonoBehaviour
             return true;
         }
 
-        //print(Tools.FindClosestFloodPoint(Walkables, Tools.SmallFlood(targetPoint, Tools.FloodDict[targetPoint], true, true)));
+        
 
         await UniTask.Delay(500);
 
@@ -182,6 +198,8 @@ public class Entity : MonoBehaviour
     /// <returns></returns>
     protected async UniTask MoveAwayFrom(WayPoint targetPoint)
     {
+        print("move away");
+
         float distanceToFurthestPoint = 0;
         WayPoint furthestPoint = null;
 
@@ -205,7 +223,6 @@ public class Entity : MonoBehaviour
 
         if (pathlength > stats.currentMovePoints)
         {
-            print("plus de pm !");
             return;
         }
 
@@ -213,6 +230,8 @@ public class Entity : MonoBehaviour
         {
             p.ChangeTileColor(p._walkedMaterial);
         }
+
+        visuals.StartLoopAnimation(moveTrigger);
 
         for (int i = 0; i < pathlength; i++)
         {
@@ -229,16 +248,18 @@ public class Entity : MonoBehaviour
 
             stats.currentMovePoints--;
         }
+
+        visuals.EndLoopAnimation();
         Tools.Flood(currentPoint);
         ClearWalkables();
         ApplyWalkables(showTiles);
     }
 
-    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 8)
+    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 3, bool turnsBackward = false)
     {
         targetPos.y = transform.position.y;
         Vector3 offset = targetPos - (Vector3)transform.position;
-        Quaternion targetRotation = Quaternion.Euler(0, Mathf.Atan2(-offset.z, offset.x) * Mathf.Rad2Deg, 0);
+        Quaternion targetRotation = Quaternion.Euler(0, Mathf.Atan2(-offset.z, offset.x) * Mathf.Rad2Deg +90, 0);
         transform.DORotateQuaternion(targetRotation, 1f / moveSpeed);
         while ((Vector3)transform.position != targetPos)
         {
@@ -253,7 +274,9 @@ public class Entity : MonoBehaviour
     public async UniTask Die()
     {
         print("Die");
-        
+
+        await visuals.PlayAnimation(deathTrigger);
+
         currentPoint.StepOff();
         isDead = true;
         OnDead?.Invoke();
