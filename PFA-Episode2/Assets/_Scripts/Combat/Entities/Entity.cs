@@ -110,8 +110,6 @@ public class Entity : MonoBehaviour
     //spell effect
     public async UniTask ApplySpell(BakedSpellEffect effect)
     {
-        await visuals.PlayAnimation(hitTrigger);
-
         if(effect.shield != 0) await stats.ApplyShield(effect.shield);
         if (effect.damage != 0) await stats.ApplyDamage(effect.damage);
         if (effect.pushPoint != null) await Push(Mathf.RoundToInt(effect.pushDamage), effect.pushPoint);
@@ -257,7 +255,7 @@ public class Entity : MonoBehaviour
         ApplyWalkables(showTiles);
     }
 
-    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 3)
+    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 3, bool turnsBackward = false)
     {
         targetPos.y = transform.position.y;
         Vector3 offset = targetPos - (Vector3)transform.position;

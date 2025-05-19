@@ -300,13 +300,15 @@ public class SpellCaster : MonoBehaviour
             return false;
         }
 
+        await castingEntity.visuals.PlayAnimation(castingEntity.attackTrigger);
+
         if(zoneData.hitEntityCTXDict != null && zoneData.hitEntityCTXDict.Keys != null)
             foreach(Entity entity in zoneData.hitEntityCTXDict.Keys)
             {
                 //cancel preview
                 StopSpellEffectPreview(entity);
 
-                await entity.visuals.PlayAnimation(entity.attackTrigger);
+                await entity.visuals.PlayAnimation(entity.hitTrigger);
 
                 //apply effect
                 BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);

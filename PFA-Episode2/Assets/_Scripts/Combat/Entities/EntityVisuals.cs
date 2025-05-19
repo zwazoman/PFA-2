@@ -103,6 +103,7 @@ public class EntityVisuals : MonoBehaviour
     {
         if (!_enableAnimations) return;
 
+        print("back to Idle");
         _animator.SetTrigger("Idle");
     }
 

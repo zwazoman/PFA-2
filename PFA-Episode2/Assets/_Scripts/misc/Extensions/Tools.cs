@@ -132,7 +132,6 @@ public static class Tools
             }
         }
 
-        Debug.Log(closestDistance);
         if(closest != null)
             return true;
         return false;
