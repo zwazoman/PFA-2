@@ -180,18 +180,14 @@ public class SpellCaster : MonoBehaviour
 
         bool isDiagonal = pushDirection.x != 0 && pushDirection.z != 0;
 
-        print(pushDirection);
-
         if (isDiagonal)
         {
-            print("diag");
 
             Debug.DrawRay(posWithHeigth, pushDirection * pushForce, Color.red, 20);
 
             RaycastHit hit;
             if (Physics.SphereCast(posWithHeigth, .45f, pushDirection /*+Vector3.up * 0.5f*/, out hit, pushForce * Mathf.Sqrt(2)))
             {
-                print(hit.collider.gameObject);
 
                 pushDamages = pushForce;
                 Vector3 hitPos = hit.point/*.SnapOnGrid()*/;
@@ -210,15 +206,12 @@ public class SpellCaster : MonoBehaviour
         }
         else
         {
-            print("not diag");
             Debug.DrawLine(posWithHeigth, posWithHeigth + pushDirection * pushForce, Color.red, 20);
 
 
             RaycastHit hit;
             if (Physics.Raycast(posWithHeigth, pushDirection, out hit, pushForce))
             {
-                print("wall hit");
-
                 pushDamages = pushForce;
 
                 Debug.DrawLine(posWithHeigth, hit.point, Color.black, 20);
@@ -307,11 +300,15 @@ public class SpellCaster : MonoBehaviour
             return false;
         }
 
+        await castingEntity.visuals.PlayAnimation(castingEntity.attackTrigger);
+
         if(zoneData.hitEntityCTXDict != null && zoneData.hitEntityCTXDict.Keys != null)
             foreach(Entity entity in zoneData.hitEntityCTXDict.Keys)
             {
                 //cancel preview
                 StopSpellEffectPreview(entity);
+
+                await entity.visuals.PlayAnimation(entity.hitTrigger);
 
                 //apply effect
                 BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);
