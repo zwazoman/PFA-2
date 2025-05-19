@@ -57,7 +57,12 @@ public class Entity : MonoBehaviour
     {
         //set up position on graph
         Vector3Int roundedPos = transform.position.SnapOnGrid();
-        currentPoint = GraphMaker.Instance.serializedPointDict[roundedPos];
+        try
+        {
+            currentPoint = GraphMaker.Instance.serializedPointDict[roundedPos];
+        }
+        catch(Exception e) { Debug.LogException(e); }
+
         currentPoint.StepOn(this);
     }
 
@@ -144,11 +149,16 @@ public class Entity : MonoBehaviour
     {
         currentPoint.StepOff();
 
-        visuals.StartLoopAnimation(pushTrigger);
+        if(pushTarget != currentPoint)
+        {
+            visuals.StartLoopAnimation(pushTrigger);
+            await UniTask.Delay(300);
 
-        await StartMoving(pushTarget.transform.position,5);
+            await StartMoving(pushTarget.transform.position,5,-1);
 
-        visuals.EndLoopAnimation();
+            visuals.EndLoopAnimation();
+        }
+
 
         if (pushDamages > 0)
             await stats.ApplyDamage(pushDamages);
@@ -255,11 +265,12 @@ public class Entity : MonoBehaviour
         ApplyWalkables(showTiles);
     }
 
-    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 3, bool turnsBackward = false)
+    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 3, float rotmultiplyer = 1)
     {
         targetPos.y = transform.position.y;
         Vector3 offset = targetPos - (Vector3)transform.position;
-        Quaternion targetRotation = Quaternion.Euler(0, Mathf.Atan2(-offset.z, offset.x) * Mathf.Rad2Deg +90, 0);
+        float rotation = 90f * rotmultiplyer;
+        Quaternion targetRotation = Quaternion.Euler(0, Mathf.Atan2(-offset.z, offset.x) * Mathf.Rad2Deg + rotation, 0);
         transform.DORotateQuaternion(targetRotation, 1f / moveSpeed);
         while ((Vector3)transform.position != targetPos)
         {

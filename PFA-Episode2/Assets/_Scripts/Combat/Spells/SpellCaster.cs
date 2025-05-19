@@ -88,7 +88,8 @@ public class SpellCaster : MonoBehaviour
         }
         castData.zonePoints = zonePoints;
 
-        foreach (Entity entity in CombatManager.Instance.Entities)
+        if(showZone)
+            foreach (Entity entity in CombatManager.Instance.Entities)
         {
             if (hitEntities.Contains(entity))
             {
