@@ -35,6 +35,8 @@ public class CombatManager : MonoBehaviour
 
     public List<Entity> Entities { get; private set; } = new();
 
+    [SerializeField] bool _summonEntities;
+
     public event Action<Entity> OnNewTurn;
 
     #region entity registration
@@ -86,8 +88,13 @@ public class CombatManager : MonoBehaviour
             {
                 PlayerEntity player = PlayerEntities[i];
                 if (player == null) continue;
+
+                foreach (Entity e in Entities) e.StopPreviewingSpellEffect();
+
                 OnNewTurn?.Invoke(player);
                 await player.PlayTurn();
+
+
             }
 
             //enemy entities
@@ -95,6 +102,9 @@ public class CombatManager : MonoBehaviour
             {
                 EnemyEntity enemy = EnemyEntities[i];
                 if (enemy == null) continue;
+
+                foreach (Entity e in Entities) e.StopPreviewingSpellEffect();
+
                 OnNewTurn?.Invoke(enemy);
                 await enemy.PlayTurn();
             }
@@ -109,7 +119,10 @@ public class CombatManager : MonoBehaviour
 
     void SummonEntities()
     {
-        if(Setups.Count == 0)
+        if (!_summonEntities)
+            return;
+
+        if (Setups.Count == 0)
         {
             throw new Exception("T'as pas setup les entit�s mon fr�re");
         }

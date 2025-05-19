@@ -1,11 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using System;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
-using UnityEditor.Experimental.GraphView;
-using Unity.VisualScripting;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class SpellCaster : MonoBehaviour
 {
@@ -133,6 +128,9 @@ public class SpellCaster : MonoBehaviour
             }
         }
 
+        foreach(Entity entity in CombatManager.Instance.Entities)
+        StopSpellEffectPreview(entity);
+
         zoneData.zonePoints.Clear();
     }
 
@@ -162,14 +160,14 @@ public class SpellCaster : MonoBehaviour
         WayPoint choosenPoint = null;
         pushDamages = 0;
 
-        Vector3 posWithHeigth = hitEntity.transform.position + Vector3.up * 0.2f;
-
-        bool isDiagonal = pushDirection.x != 0 && pushDirection.z != 0;
+        Vector3 posWithHeigth = hitEntity.transform.position + Vector3.up * 0.5f;
 
         if (pushDirection == Vector3.zero)
         {
-            Vector3 casterPosWithHeight = transform.position + Vector3.up * 0.2f;
+            Vector3 casterPosWithHeight = transform.position + Vector3.up * 0.5f;
             Vector3 casterToEntity = posWithHeigth - casterPosWithHeight;
+
+            Debug.DrawLine(casterPosWithHeight, casterPosWithHeight + casterToEntity, Color.blue, 20);
 
             if (casterToEntity == Vector3.zero)
                 return hitEntity.currentPoint;
@@ -180,18 +178,21 @@ public class SpellCaster : MonoBehaviour
             pushDirection = new Vector3(xPushDirection, 0, zPushDirection);
         }
 
+        bool isDiagonal = pushDirection.x != 0 && pushDirection.z != 0;
+
         if (isDiagonal)
         {
-            RaycastHit hit;
-            if (Physics.SphereCast(posWithHeigth, .45f, pushDirection, out hit, pushForce * Mathf.Sqrt(2), LayerMask.GetMask("Wall")))
-            {
-                print("wall hit");
 
-                Debug.DrawLine(transform.position, hit.point, Color.black, 20);
+            Debug.DrawRay(posWithHeigth, pushDirection * pushForce, Color.red, 20);
+
+            RaycastHit hit;
+            if (Physics.SphereCast(posWithHeigth, .45f, pushDirection /*+Vector3.up * 0.5f*/, out hit, pushForce * Mathf.Sqrt(2)))
+            {
+
                 pushDamages = pushForce;
                 Vector3 hitPos = hit.point/*.SnapOnGrid()*/;
 
-                Debug.DrawLine(hitPos, (hitPos - pushDirection * .3f).SnapOnGrid(), Color.blue, 20);
+                Debug.DrawLine(hitPos, (hitPos - pushDirection * .25f).SnapOnGrid(), Color.blue, 20);
 
                 pushDamages -= Mathf.FloorToInt(hit.distance);
                 choosenPoint = GraphMaker.Instance.serializedPointDict[(hitPos - pushDirection * .3f).SnapOnGrid()];
@@ -205,8 +206,11 @@ public class SpellCaster : MonoBehaviour
         }
         else
         {
+            Debug.DrawLine(posWithHeigth, posWithHeigth + pushDirection * pushForce, Color.red, 20);
+
+
             RaycastHit hit;
-            if (Physics.Raycast(posWithHeigth, pushDirection, out hit, pushForce, LayerMask.GetMask("Wall")))
+            if (Physics.Raycast(posWithHeigth, pushDirection, out hit, pushForce))
             {
                 pushDamages = pushForce;
 
@@ -296,11 +300,15 @@ public class SpellCaster : MonoBehaviour
             return false;
         }
 
+        await castingEntity.visuals.PlayAnimation(castingEntity.attackTrigger);
+
         if(zoneData.hitEntityCTXDict != null && zoneData.hitEntityCTXDict.Keys != null)
             foreach(Entity entity in zoneData.hitEntityCTXDict.Keys)
             {
                 //cancel preview
                 StopSpellEffectPreview(entity);
+
+                await entity.visuals.PlayAnimation(entity.hitTrigger);
 
                 //apply effect
                 BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);

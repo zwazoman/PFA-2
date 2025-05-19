@@ -3,6 +3,7 @@ using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class EntityVisuals : MonoBehaviour
@@ -11,11 +12,17 @@ public class EntityVisuals : MonoBehaviour
 
     [SerializeField] Transform VisualsRoot;
 
+    [SerializeField] Animator _animator;
+    [SerializeField] bool _enableAnimations = true;
+
     List<PooledObject> Arrows = new();
 
     private void Awake()
     {
         TryGetComponent(out owner);
+
+        if (_animator == null)
+            _animator = VisualsRoot.GetComponentInChildren<Animator>();
     }
 
     private void Start()
@@ -25,18 +32,31 @@ public class EntityVisuals : MonoBehaviour
         //spell preview
         owner.OnPreviewSpell += (float newShield, float newHP, Vector3 direction) =>
         {
-            try
+            //try
+            //{
+            foreach (PooledObject obj in Arrows)
             {
-                for (int i = 1; i < Mathf.RoundToInt(direction.magnitude) + 1; i++)
-                {
-                    PooledObject o = PoolManager.Instance.ArrowPool
-                        .PullObjectFromPool(transform.position + direction.normalized * i, transform)
-                        .GetComponent<PooledObject>();
+                obj.GoBackIntoPool();
+            }
+            Arrows.Clear();
 
-                    o.transform.right = direction.normalized;
+            for (int i = 1; i < Mathf.RoundToInt(direction.magnitude) + 1; i++)
+                {
+                    Vector3 pose = transform.position + direction.normalized * i;
+                    pose.y = 0.7f;    
+
+                    PooledObject o = PoolManager.Instance.ArrowPool
+                        .PullObjectFromPool(pose, transform)
+                        .GetComponent<PooledObject>();
+                    
+
+                    float angle = Mathf.Atan2(direction.z, -direction.x) * Mathf.Rad2Deg;
+                    o.transform.rotation = Quaternion.Euler(-90, angle , 0);
                     Arrows.Add(o);
+                    o.transform.position = pose;
                 }
-            }catch(Exception ex) { Debug.LogException(ex); }
+                //if(direction!=Vector3.zero)EditorApplication.isPaused = true;
+           // }catch(Exception ex) { Debug.LogException(ex); }
             
         };
 
@@ -46,6 +66,8 @@ public class EntityVisuals : MonoBehaviour
             {
                 obj.GoBackIntoPool();
             }
+            Arrows.Clear();
+
         };
     }
 
@@ -60,5 +82,36 @@ public class EntityVisuals : MonoBehaviour
         {
             await VisualsRoot.DOPunchScale(Vector3.one * .2f, .5f, 5).AsyncWaitForCompletion().AsUniTask(); ;
         }
+    }
+
+    public async UniTask PlayAnimation(string trigger)
+    {
+        if (!_enableAnimations) return;
+
+        _animator.SetTrigger(trigger);
+        await Awaitable.WaitForSecondsAsync(GetAnimationLength(trigger));
+        _animator.SetTrigger("Idle");
+    }
+
+    public void StartLoopAnimation(string trigger)
+    {
+        if(!_enableAnimations) return;
+        _animator.SetTrigger(trigger);
+    }
+
+    public void EndLoopAnimation()
+    {
+        if (!_enableAnimations) return;
+
+        print("back to Idle");
+        _animator.SetTrigger("Idle");
+    }
+
+    float GetAnimationLength(string trigger)
+    {
+        AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+        print(stateInfo.length);
+
+        return stateInfo.length;
     }
 }

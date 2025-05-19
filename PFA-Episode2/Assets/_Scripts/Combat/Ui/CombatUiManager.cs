@@ -50,9 +50,5 @@ public class CombatUiManager : MonoBehaviour
         {
             _playerFrame.Setup(e);
         }
-
-        
-        
-
     }
 }

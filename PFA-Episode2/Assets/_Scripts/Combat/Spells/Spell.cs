@@ -12,7 +12,7 @@ public class Spell
     {
         get
         {
-            return cooling == 0;
+            return cooling <= 0;
         }
     }
 
@@ -27,10 +27,11 @@ public class Spell
 
     public void TickSpellCooldown(int value = 1)
     {
-        cooling -= value;
-        if (cooling < 0)
-            cooling = 0;
-        else if (cooling == 0)
+        cooling = Mathf.Max(0,cooling - value);
+        Debug.Log("Cooled : " + spellData.Name + " " + cooling.ToString()) ;
+        if (cooling == 0)
+            //cooling = spellData.CoolDown;
+            
             OnCooled?.Invoke();
 
     }

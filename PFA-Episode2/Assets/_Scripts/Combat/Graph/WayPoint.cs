@@ -48,7 +48,7 @@ public class WayPoint : MonoBehaviour
         TryGetComponent(out _mR);
 
         if(_normalMaterial == null && _mR != null)
-            _normalMaterial = _mR.material;
+            _normalMaterial = _mR.sharedMaterial;
     }
 
     private void Start()
@@ -89,9 +89,9 @@ public class WayPoint : MonoBehaviour
 
     public void ChangeTileColor(Material material)
     {
-        if(_mR == null || _mR.material == material) return;
+        if(_mR == null || _mR.sharedMaterial == material) return;
 
-        _mR.material = material;
+        _mR.sharedMaterial = material;
     }
 
     #region Astar
@@ -169,7 +169,7 @@ public class WayPoint : MonoBehaviour
         Gizmos.color = Color.blue;
         foreach (WayPoint point in Neighbours) //il dessine 2 fois mais t'inquietes
         {
-            Gizmos.DrawLine(transform.position, point.transform.position);
+            if(point!=null) Gizmos.DrawLine(transform.position, point.transform.position);
         }
     }
 

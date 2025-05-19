@@ -10,7 +10,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     //original set up
     Vector3 originalPos;
-    Transform originalParent;
+    public Transform originalParent;
     int siblingIndex;
     CanvasGroup canvasGroup;
 
@@ -25,6 +25,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         isDragging = true;
 
         originalParent = transform.parent;
+        Debug.Log("Original parent : " + originalParent);
         siblingIndex = transform.GetSiblingIndex();
         canvasGroup.blocksRaycasts = false;
         transform.parent = transform.root;

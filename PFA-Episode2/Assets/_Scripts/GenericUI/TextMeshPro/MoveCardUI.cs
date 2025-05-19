@@ -7,6 +7,10 @@ using UnityEngine;
 /// </summary>
 public class MoveCardUI : MonoBehaviour
 {
+    [SerializeField] private int maxRotaX = 11;
+    [SerializeField] private int maxRotaY = 11;
+    [SerializeField] private int maxRotaZ = 2;
+
     private void Start() { MoveCard(); }
 
     //fils de pute mateo
@@ -14,9 +18,9 @@ public class MoveCardUI : MonoBehaviour
     {
         while(isActiveAndEnabled)
         {
-            int x = Random.Range(0, 11);
-            int y = Random.Range(0, 11);
-            int z = Random.Range(0, 2);
+            int x = Random.Range(0, maxRotaX);
+            int y = Random.Range(0, maxRotaY);
+            int z = Random.Range(0, maxRotaZ);
             float delay = Random.Range(1f, 2f);
             Sequence seq = DOTween.Sequence();
             if (gameObject == null) { return; }
