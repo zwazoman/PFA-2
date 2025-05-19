@@ -301,7 +301,7 @@ public class SpellCaster : MonoBehaviour
             return false;
         }
 
-        await castingEntity.visuals.PlayAnimation(castingEntity.attackTrigger);
+        await castingEntity.visuals.animator.PlayAnimationTrigger(castingEntity.attackTrigger);
 
         if(zoneData.hitEntityCTXDict != null && zoneData.hitEntityCTXDict.Keys != null)
             foreach(Entity entity in zoneData.hitEntityCTXDict.Keys)
@@ -309,7 +309,7 @@ public class SpellCaster : MonoBehaviour
                 //cancel preview
                 StopSpellEffectPreview(entity);
 
-                await entity.visuals.PlayAnimation(entity.hitTrigger);
+                await entity.visuals.animator.PlayAnimationTrigger(entity.hitTrigger);
 
                 //apply effect
                 BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);
