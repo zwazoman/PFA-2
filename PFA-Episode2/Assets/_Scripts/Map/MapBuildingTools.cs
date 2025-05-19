@@ -54,6 +54,7 @@ public class MapBuildingTools : MonoBehaviour
             Vector3 dir = PointB.transform.localPosition - PointA.transform.localPosition;
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             CurrentTrail.transform.localRotation = Quaternion.Euler(0, 0, angle);
+            PointA.PathBetweenNode.Add(CurrentTrail);
             _savePath.Add(CurrentTrail);
         }
         else

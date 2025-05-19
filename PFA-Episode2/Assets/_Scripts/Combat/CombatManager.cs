@@ -36,8 +36,12 @@ public class CombatManager : MonoBehaviour
     public List<Entity> Entities { get; private set; } = new();
 
     [SerializeField] bool _summonEntities;
+    [SerializeField] bool _startGameOnSceneStart = false;
+
+    [SerializeField] GameOverPanel _gameOverPanel;
 
     public event Action<Entity> OnNewTurn;
+    public event Action OnWin;
 
     #region entity registration
 
@@ -74,13 +78,15 @@ public class CombatManager : MonoBehaviour
 
     private async void Start()
     {
-        SummonEntities();
         await UniTask.Yield();
-        await StartGame();
+        if(_startGameOnSceneStart)
+            await StartGame();
     }
 
     public async UniTask StartGame()
     {
+        SummonEntities();
+
         for (; ; )
         {
             //player entities
@@ -140,13 +146,15 @@ public class CombatManager : MonoBehaviour
     async UniTask GameOver()
     {
         print("Game Over");
-        Application.Quit();
+        SaveManager.DeleteAll();
+        _gameOverPanel?.Show();
     }
 
     async UniTask Victory()
     {
         print("Victory");
-        await SceneTransitionManager.Instance.GoToScene("WorldMap");
+        OnWin?.Invoke();
+        //await SceneTransitionManager.Instance.GoToScene("WorldMap");
     }
 
 }

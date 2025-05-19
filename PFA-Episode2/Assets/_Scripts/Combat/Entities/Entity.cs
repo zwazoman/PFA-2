@@ -57,7 +57,12 @@ public class Entity : MonoBehaviour
     {
         //set up position on graph
         Vector3Int roundedPos = transform.position.SnapOnGrid();
-        currentPoint = GraphMaker.Instance.serializedPointDict[roundedPos];
+        try
+        {
+            currentPoint = GraphMaker.Instance.serializedPointDict[roundedPos];
+        }
+        catch(Exception e) { Debug.LogException(e); }
+
         currentPoint.StepOn(this);
     }
 
@@ -144,7 +149,8 @@ public class Entity : MonoBehaviour
     {
         currentPoint.StepOff();
 
-        visuals.StartLoopAnimation(pushTrigger);
+        if(pushTarget == currentPoint)
+            visuals.StartLoopAnimation(pushTrigger);
 
         await StartMoving(pushTarget.transform.position,5);
 
