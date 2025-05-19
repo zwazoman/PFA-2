@@ -60,4 +60,21 @@ public static class SaveManager
             Debug.Log($"Fichier '{saveKey}' supprimé");
         }
     }
+
+    public static void DeleteAll()
+    {
+        string saveDirectory = Application.persistentDataPath;
+
+        if (Directory.Exists(saveDirectory))
+        {
+            string[] files = Directory.GetFiles(saveDirectory);
+
+            foreach (string filePath in files)
+            {
+                File.Delete(filePath);
+                Debug.Log($"Deleted: {filePath}");
+            }
+        }
+    }
 }
+
