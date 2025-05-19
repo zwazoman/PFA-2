@@ -27,6 +27,6 @@ public class fpsCounter : MonoBehaviour
             sum += f;
         }
         sum /= _frameTimes.Count;
-        txt.text = Mathf.RoundToInt(1f / sum).ToString();
+        txt.text = "FPS : " + Mathf.RoundToInt(1f / sum).ToString();
     }
 }
