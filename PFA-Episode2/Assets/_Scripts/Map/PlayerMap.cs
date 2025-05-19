@@ -70,11 +70,8 @@ public class PlayerMap : MonoBehaviour
 
         foreach (KeyValuePair<Vector3Int, Node> KeyAndValues in MapMaker2.Instance.DicoNode)
         {
-            print("Ma position : " + position);
-            print(KeyAndValues);
             if (KeyAndValues.Key == position)
             {
-                print("true");
                 SaveMapGeneration.Instance.SaveMap();
                 GameManager.Instance.playerInventory.Save(GameManager.Instance.playerInventory.NameSave);
 

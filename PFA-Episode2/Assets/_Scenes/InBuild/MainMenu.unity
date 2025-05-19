@@ -631,6 +631,26 @@ PrefabInstance:
       propertyPath: m_text
       value: Delete save
       objectReference: {fileID: 0}
+    - target: {fileID: 1095664684317190968, guid: da279978b5c360b40827c84549159183, type: 3}
+      propertyPath: m_fontSize
+      value: 95
+      objectReference: {fileID: 0}
+    - target: {fileID: 1095664684317190968, guid: da279978b5c360b40827c84549159183, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: df12ed238b7eddb4fb8e8386f9fcb84b, type: 2}
+    - target: {fileID: 1095664684317190968, guid: da279978b5c360b40827c84549159183, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 95
+      objectReference: {fileID: 0}
+    - target: {fileID: 1095664684317190968, guid: da279978b5c360b40827c84549159183, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -7659048758175403496, guid: df12ed238b7eddb4fb8e8386f9fcb84b, type: 2}
+    - target: {fileID: 1095664684317190968, guid: da279978b5c360b40827c84549159183, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4968685963310201950, guid: da279978b5c360b40827c84549159183, type: 3}
       propertyPath: m_Color.b
       value: 0.8484897
@@ -870,7 +890,8 @@ MonoBehaviour:
     Spells: []
     Ingredients: []
     Sauces: []
-    playerEquipedSpell: 
+    playerEquipedSpellIndex: 
+    playerEquipedSpell: []
     NameSave: InventorySave
   staticData: {fileID: 11400000, guid: 66a493f66f77dc74e9960868ba638afc, type: 2}
   combatScenesName:
@@ -952,6 +973,30 @@ PrefabInstance:
     - target: {fileID: 1095664684317190968, guid: da279978b5c360b40827c84549159183, type: 3}
       propertyPath: m_text
       value: Continue
+      objectReference: {fileID: 0}
+    - target: {fileID: 1095664684317190968, guid: da279978b5c360b40827c84549159183, type: 3}
+      propertyPath: m_fontSize
+      value: 95
+      objectReference: {fileID: 0}
+    - target: {fileID: 1095664684317190968, guid: da279978b5c360b40827c84549159183, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: df12ed238b7eddb4fb8e8386f9fcb84b, type: 2}
+    - target: {fileID: 1095664684317190968, guid: da279978b5c360b40827c84549159183, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 95
+      objectReference: {fileID: 0}
+    - target: {fileID: 1095664684317190968, guid: da279978b5c360b40827c84549159183, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -7659048758175403496, guid: df12ed238b7eddb4fb8e8386f9fcb84b, type: 2}
+    - target: {fileID: 1095664684317190968, guid: da279978b5c360b40827c84549159183, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2195968660770857956, guid: da279978b5c360b40827c84549159183, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6341872267839304706, guid: da279978b5c360b40827c84549159183, type: 3}
       propertyPath: m_Pivot.x
