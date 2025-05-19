@@ -144,7 +144,6 @@ public class CombatManager : MonoBehaviour
     {
         print("Game Over");
         SaveManager.DeleteAll();
-        Time.timeScale = 0;
         _gameOverPanel?.Show();
     }
 

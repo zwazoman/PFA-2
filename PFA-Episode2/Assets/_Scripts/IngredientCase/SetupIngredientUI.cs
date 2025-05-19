@@ -43,6 +43,17 @@ public class SetupIngredientUI : MonoBehaviour
             Debug.Log(GameManager.Instance.staticData.itemFramesPerRarity[IngredientBase.rarity]);
             _listIngredientUI[index].rarityFrame.sprite = GameManager.Instance.staticData.itemFramesPerRarity[IngredientBase.rarity] ;
         }
+
+
+
+
+
+
+
+
+
+
+
     }
 
     public async void Next(int index)
