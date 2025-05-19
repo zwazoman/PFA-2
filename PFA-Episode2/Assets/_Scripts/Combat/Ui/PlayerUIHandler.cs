@@ -20,14 +20,13 @@ public class PlayerUIHandler : MonoBehaviour
         if (GameManager.Instance.playerInventory != null)
         {
             //instantiate draggable spell slots
-            Debug.Log("Forrrrrr");
             for (
                 int i = 0;
-                i < Mathf.Min(3, GameManager.Instance.playerInventory.Spells.Count);
+                i < Mathf.Min(3, GameManager.Instance.playerInventory.playerEquipedSpell.Count);
                 i++)
             {
                 Spell spell = new();
-                spell.spellData = GameManager.Instance.playerInventory.Spells[i];
+                spell.spellData = GameManager.Instance.playerInventory.playerEquipedSpell[i];
 
                 CreateSpellUI(spell,i);
             }
