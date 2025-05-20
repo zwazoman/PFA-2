@@ -124,7 +124,7 @@ Shader "Unlit/shdr_test_unlit"
                 #if FOG_ON
                     float camDist = max(0, distance(i.wsPos, _WorldSpaceCameraPos)-30);
                     float fog = max(0, (_fogRadius - camDist)/_fogRadius);
-                    fog = 1-(1-fog) * (1-fog) ;
+                    fog = 1-(1-fog) * (1-fog) * (1-fog) ;
                 #endif
                 
 #if FOG_ON
@@ -148,7 +148,7 @@ Shader "Unlit/shdr_test_unlit"
                 
                 col =  lerp(col, (coloredShadow > 0.5) * (1 - (1-col) * (1-(coloredShadow-0.5))) + (coloredShadow <= 0.5) * (col * (coloredShadow+0.5)),1); //softlight
                 
-                col = lerp(col,coloredShadow,saturate((1-shadow)*(1-shadow)*(1-shadow))*.8);
+                col = lerp(col,coloredShadow,saturate((1-shadow)*(1-shadow)*(1-shadow))*.85);
 
                 //color adjustment
                 col *= _lightness;
