@@ -19,12 +19,9 @@ public class Node : MonoBehaviour
     private GameObject _mesh;
     public bool Visited;
     public bool Intersection;
-    public List<Image> PathBetweenNode = new();
+    public List<GameObject> PathBetweenNode = new();
 
-    public static void TriggerMapCompleted()
-    {
-        OnMapCompleted?.Invoke();
-    }
+    public static void TriggerMapCompleted() { OnMapCompleted?.Invoke(); }
 
     public void InteractPlayer()
     {
@@ -33,15 +30,9 @@ public class Node : MonoBehaviour
         TweenMesh();
     }
 
-    private void OnEnable()
-    {
-        OnMapCompleted += SetupSprite;
-    }
+    private void OnEnable() { OnMapCompleted += SetupSprite; }
 
-    private void OnDisable()
-    {
-        OnMapCompleted -= SetupSprite;
-    }
+    private void OnDisable() { OnMapCompleted -= SetupSprite; }
 
     /// <summary>
     /// Fonction qui peut setup un sprite pour le node selon son rôle
