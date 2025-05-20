@@ -73,6 +73,7 @@ public class PlayerEntity : Entity
 
             if (Input.GetMouseButtonUp(0) && Tools.CheckMouseRay(out WayPoint point) && !EventSystem.current.IsPointerOverGameObject(0))
             {
+                //await point.Lift(.6f, .5f,0);
                 await TryMoveTo(point);
             }
 

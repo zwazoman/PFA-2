@@ -282,7 +282,7 @@ public class SpellCaster : MonoBehaviour
     void PreviewSpellEffect(Spell spell, Entity entity, ref SpellCastData zoneData)
     {
         BakedSpellEffect e = ComputeBakedSpellEffect(spell,entity,ref zoneData);
-        entity.previewSpellEffect(e);
+        entity.PreviewSpellEffect(e);
     }
 
     void StopSpellEffectPreview(Entity entity)
