@@ -154,7 +154,7 @@ public class Entity : MonoBehaviour
             visuals.animator.PlayAnimationBool(pushBool);
             await UniTask.Delay(300);
 
-            await StartMoving(pushTarget.transform.position,5,-1);
+            await StartMoving(pushTarget.transform.position,7,-1);
 
             visuals.animator.EndAnimationBool(pushBool);
         }
@@ -265,7 +265,7 @@ public class Entity : MonoBehaviour
         ApplyWalkables(showTiles);
     }
 
-    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 3, float rotmultiplyer = 1)
+    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 5, float rotmultiplyer = 1)
     {
         targetPos.y = transform.position.y;
         Vector3 offset = targetPos - (Vector3)transform.position;

@@ -148,7 +148,7 @@ Shader "Unlit/shdr_test_unlit"
                 
                 col =  lerp(col, (coloredShadow > 0.5) * (1 - (1-col) * (1-(coloredShadow-0.5))) + (coloredShadow <= 0.5) * (col * (coloredShadow+0.5)),1); //softlight
                 
-                col = lerp(col,coloredShadow,saturate((1-shadow)*(1-shadow)*(1-shadow))*.85);
+                col = lerp(col,coloredShadow,saturate((1-shadow)*(1-shadow))*.85);
 
                 //color adjustment
                 col *= _lightness;

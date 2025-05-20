@@ -183,9 +183,6 @@ public class SpellCaster : MonoBehaviour
 
         if (isDiagonal)
         {
-
-            Debug.DrawRay(posWithHeigth, pushDirection * pushForce, Color.red, 20);
-
             RaycastHit hit;
             if (Physics.SphereCast(posWithHeigth, .45f, pushDirection /*+Vector3.up * 0.5f*/, out hit, pushForce * Mathf.Sqrt(2)))
             {
@@ -193,33 +190,23 @@ public class SpellCaster : MonoBehaviour
                 pushDamages = pushForce;
                 Vector3 hitPos = hit.point/*.SnapOnGrid()*/;
 
-                Debug.DrawLine(hitPos, (hitPos - pushDirection * .25f).SnapOnGrid(), Color.blue, 20);
-
                 pushDamages -= Mathf.FloorToInt(hit.distance);
                 choosenPoint = GraphMaker.Instance.serializedPointDict[(hitPos - pushDirection * .3f).SnapOnGrid()];
             }
             else
             {
-                Debug.DrawLine(posWithHeigth, posWithHeigth + (pushDirection * pushForce), Color.black, 20);
                 Vector3Int choosenPos = (posWithHeigth + (pushDirection * pushForce)).SnapOnGrid();
                 choosenPoint = GraphMaker.Instance.serializedPointDict[choosenPos];
             }
         }
         else
         {
-            Debug.DrawLine(posWithHeigth, posWithHeigth + pushDirection * pushForce, Color.red, 20);
-
-
             RaycastHit hit;
             if (Physics.Raycast(posWithHeigth, pushDirection, out hit, pushForce))
             {
                 pushDamages = pushForce;
 
-                Debug.DrawLine(posWithHeigth, hit.point, Color.black, 20);
-
                 Vector3 hitPos = hit.point;
-
-                Debug.DrawLine(hitPos, hitPos - pushDirection * .3f, Color.blue, 20);
 
                 pushDamages -= Mathf.FloorToInt(hit.distance);
                 choosenPoint = GraphMaker.Instance.serializedPointDict[(hitPos - pushDirection * .3f).SnapOnGrid()];

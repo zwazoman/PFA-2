@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using System;
 using System.Collections.Generic;
@@ -180,16 +179,8 @@ public class WayPoint : MonoBehaviour
         transform.DOMoveY(height, duration);
     }
 
-    public async UniTask Lift(float height, float duration, float stayTime)
+    public async void Lift(float height, float duration, float stayTime)
     {
-        float originalheight = transform.position.y;
-
-        Sequence sequence = DOTween.Sequence();
-
-         sequence.Append(transform.DOMoveY(height, duration)).SetEase(Ease.InCubic);
-         sequence.AppendInterval(stayTime);
-         sequence.Append(transform.DOMoveY(originalheight, duration)).SetEase(Ease.OutCubic);
-
-        await sequence.Play();
+        
     }
 }
