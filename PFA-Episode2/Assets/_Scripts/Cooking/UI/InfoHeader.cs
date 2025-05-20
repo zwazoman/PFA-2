@@ -7,25 +7,34 @@ public class InfoHeader : MonoBehaviour
     [Header("Scene References")]
     [SerializeField] TMP_Text text;
     [SerializeField] Image image;
-    [SerializeField] CanvasGroup canvasGroup;
 
-
-    public void UpdateVisual(string title = "", Sprite sprite = null)
+    public void UpdateVisualAsIngredient(string title = "", Sprite sprite = null)
     {
-        text.text = title;
-        image.sprite = sprite;
-        image.enabled = sprite != null;
+        if (title == "")
+        {
+            text.text = "...";
+            image.enabled = sprite != null;
+        }
+        else
+        {
+            text.text = title;
+            image.sprite = sprite;
+            image.enabled = sprite != null;
+        }
+            
+        
+        //while(text.textBounds)
     }
 
     public void UpdateVisual(Ingredient ingredient)
     {
         if (ingredient == null)
         {
-            UpdateVisual();
+            UpdateVisualAsIngredient();
         }
         else
         {
-            UpdateVisual(Serializer.GetIngredientEffectString(ingredient), ingredient.sprite);
+            UpdateVisualAsIngredient(Serializer.GetIngredientEffectString(ingredient), ingredient.sprite);
         }
     }
 
@@ -33,11 +42,11 @@ public class InfoHeader : MonoBehaviour
     {
         if (!spellEffect.HasValue)
         {
-            UpdateVisual();
+            UpdateVisualAsIngredient();
         }
         else
         {
-            UpdateVisual(Serializer.GetSpellEffectString(spellEffect.Value), sprite);
+            UpdateVisualAsIngredient(Serializer.GetSpellEffectString(spellEffect.Value), sprite);
         }
     }
 }
