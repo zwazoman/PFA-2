@@ -92,7 +92,7 @@ public class Entity : MonoBehaviour
     }
 
     //spell preview
-    public void previewSpellEffect(BakedSpellEffect e)
+    public void PreviewSpellEffect(BakedSpellEffect e)
     {
         float newShield = stats.shieldAmount + e.shield;
 
