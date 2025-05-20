@@ -61,7 +61,7 @@ public class SaveMapGeneration : MonoBehaviour
                 wrapper.nodes.Add(snode);
             }
         }
-
+        foreach (Image img in MapBuildingTools.Instance._savePath) { if (img == null) { MapBuildingTools.Instance._savePath.Remove(img);} }
         foreach (Image link in MapBuildingTools.Instance._savePath)
         {
             //Image link = image;

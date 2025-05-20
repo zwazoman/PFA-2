@@ -127,12 +127,13 @@ Shader "Unlit/shdr_test_unlit"
                     fog = 1-(1-fog) * (1-fog) * (1-fog) ;
                 #endif
                 
-                
-                shadow = shadow - shadow % (1/_bands); //quatization
-
 #if FOG_ON
                     shadow *= fog;
 #endif
+
+                
+                shadow = shadow - shadow % (1/_bands); //quatization
+
 
                 float4 coloredShadow =  tex2D(_lightGradientMap,float2(shadow,_enviroID)); //gradient mapping
 
@@ -147,7 +148,7 @@ Shader "Unlit/shdr_test_unlit"
                 
                 col =  lerp(col, (coloredShadow > 0.5) * (1 - (1-col) * (1-(coloredShadow-0.5))) + (coloredShadow <= 0.5) * (col * (coloredShadow+0.5)),1); //softlight
                 
-                col = lerp(col,coloredShadow,saturate((1-shadow)*(1-shadow)*(1-shadow))*.8);
+                col = lerp(col,coloredShadow,saturate((1-shadow)*(1-shadow))*.85);
 
                 //color adjustment
                 col *= _lightness;

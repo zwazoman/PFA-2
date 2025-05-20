@@ -136,7 +136,7 @@ public class CookingPanel : AnimatedPanel
 
                 //@revoir
                 //inventory.Add(spell)
-                GameManager.Instance.playerInventory.Spells.Add(spell);
+                //GameManager.Instance.playerInventory.Spells.Add(spell);
 
                 break;
             case false:

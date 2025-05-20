@@ -28,7 +28,7 @@ public class PlayerEntity : Entity
     {
         base.Start();
 
-        stats.Setup(GameManager.Instance.playerInventory.playerHealth.maxHealth);
+        stats.Setup(GameManager.Instance.playerInventory.playerHealth.health);
         CombatManager.Instance.RegisterEntity(this);
 
         _playerUIHandler.SetUp();
