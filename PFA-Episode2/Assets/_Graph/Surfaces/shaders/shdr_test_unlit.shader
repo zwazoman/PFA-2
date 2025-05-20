@@ -124,15 +124,16 @@ Shader "Unlit/shdr_test_unlit"
                 #if FOG_ON
                     float camDist = max(0, distance(i.wsPos, _WorldSpaceCameraPos)-30);
                     float fog = max(0, (_fogRadius - camDist)/_fogRadius);
-                    fog = 1-(1-fog) * (1-fog) * (1-fog) ;
+                    fog = 1-(1-fog) * (1-fog) ;
                 #endif
                 
-                
-                shadow = shadow - shadow % (1/_bands); //quatization
-
 #if FOG_ON
                     shadow *= fog;
 #endif
+
+                
+                shadow = shadow - shadow % (1/_bands); //quatization
+
 
                 float4 coloredShadow =  tex2D(_lightGradientMap,float2(shadow,_enviroID)); //gradient mapping
 
