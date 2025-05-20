@@ -61,20 +61,20 @@ public class SaveMapGeneration : MonoBehaviour
                 wrapper.nodes.Add(snode);
             }
         }
-        foreach (Image img in MapBuildingTools.Instance._savePath) { if (img == null) { MapBuildingTools.Instance._savePath.Remove(img);} }
-        foreach (Image link in MapBuildingTools.Instance._savePath)
+        foreach (GameObject go in MapBuildingTools.Instance._savePath) { if (go == null) { MapBuildingTools.Instance._savePath.Remove(go);} }
+        foreach (GameObject GO in MapBuildingTools.Instance._savePath)
         {
             //Image link = image;
             List<Vector3> list = new()
             {
-                link.transform.localPosition,
-                link.transform.localScale,
+                GO.transform.localPosition,
+                GO.transform.localScale,
             };
 
             SerializableLink linkObj = new()
             {
                 transformLink = list,
-                rotationLink = link.transform.localRotation
+                rotationLink = GO.transform.localRotation
             };
 
             wrapper.links.Add(linkObj);
@@ -142,13 +142,14 @@ public class SaveMapGeneration : MonoBehaviour
             // Load les link
             foreach (SerializableLink item in wrapper.links)
             {
-                Image image = MapBuildingTools.Instance._trailList[_numberLink];
+                GameObject Path = MapBuildingTools.Instance.TrueListPath[0];
+                MapBuildingTools.Instance.TrueListPath.RemoveAt(0);
 
-                image.transform.localPosition = item.transformLink[0];
-                image.transform.localRotation = item.rotationLink;
-                image.transform.localScale = item.transformLink[1];
-                image.gameObject.SetActive(true);
-                MapBuildingTools.Instance._savePath.Add(image);
+                Path.transform.localPosition = item.transformLink[0];
+                Path.transform.localRotation = item.rotationLink;
+                Path.transform.localScale = item.transformLink[1];
+                Path.gameObject.SetActive(true);
+                MapBuildingTools.Instance._savePath.Add(Path);
 
                 _numberLink++;
             }

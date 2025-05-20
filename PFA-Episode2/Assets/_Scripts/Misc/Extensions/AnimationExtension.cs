@@ -6,6 +6,9 @@ public static class AnimationExtension
 {
     public static async UniTask PlayAnimationTrigger(this Animator animator, string trigger)
     {
+        if (animator == null)
+            return;
+
         animator.SetTrigger(trigger);
         await Awaitable.WaitForSecondsAsync(GetAnimationLength(trigger,animator));
         animator.SetTrigger("Idle");
@@ -13,11 +16,17 @@ public static class AnimationExtension
 
     public static void PlayAnimationBool(this Animator animator, string boolos)
     {
+        if (animator == null)
+            return;
+
         animator.SetBool(boolos, true);
     }
 
     public static void EndAnimationBool(this Animator animator, string boolos)
     {
+        if (animator == null)
+            return;
+
         animator.SetBool(boolos, false);
     }
 
