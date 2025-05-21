@@ -10,6 +10,8 @@ public class SpellCaster : MonoBehaviour
 
     public const byte RangeRingThickness = 3;
 
+    public bool attackEventCompleted;
+
     private void Awake()
     {
         if(castingEntity == null)
@@ -277,8 +279,6 @@ public class SpellCaster : MonoBehaviour
         entity.StopPreviewingSpellEffect();
     }
 
-
-
     //spell casting
     public async UniTask<bool> TryCastSpell(Spell spell, WayPoint target, List<WayPoint> rangePoints, SpellCastData zoneData)
     {
@@ -298,9 +298,21 @@ public class SpellCaster : MonoBehaviour
 
                 await entity.visuals.animator.PlayAnimationTrigger(entity.hitTrigger);
 
-                //apply effect
+                //while (!attackEventCompleted)
+                //{
+                //    //apply effect
+                //    BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);
+                //    await entity.ApplySpell(e);
+
+                //    await UniTask.Yield();
+                //}
+
                 BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);
                 await entity.ApplySpell(e);
+
+                attackEventCompleted = false;
+
+
             }
                 
 

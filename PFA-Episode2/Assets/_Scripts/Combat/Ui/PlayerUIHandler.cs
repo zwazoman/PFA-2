@@ -35,7 +35,6 @@ public class PlayerUIHandler : MonoBehaviour
 
     void CreateSpellUI(Spell spellData,int i)
     {
-        Debug.Log("nique sa mere ptn - " + i.ToString());
         DraggableSpell draggableSpellSlot = Instantiate(_uiSpellPrefab, CombatUiManager.Instance.SpellSlots[i]);
         draggableSpellSlot.SetUp(spellData, _player);
 

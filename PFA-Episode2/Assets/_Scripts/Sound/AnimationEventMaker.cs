@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace mup
 {
-    public class SoundEventsMaker : MonoBehaviour
+    public class AnimationEventMaker : MonoBehaviour
     {
         // used for clip events
         [System.Serializable]
@@ -65,11 +65,11 @@ namespace mup
 #if UNITY_EDITOR
 namespace mup
 {
-    [CustomEditor(typeof(SoundEventsMaker), true)]
+    [CustomEditor(typeof(AnimationEventMaker), true)]
     [CanEditMultipleObjects]
     public class SoundEventsEditor : Editor
     {
-        SoundEventsMaker soundEvents = null;
+        AnimationEventMaker soundEvents = null;
 
         string functionName = "";
         float eventTime = 0.0f;
@@ -77,7 +77,7 @@ namespace mup
 
         public override void OnInspectorGUI()
         {
-            soundEvents = (SoundEventsMaker)target;
+            soundEvents = (AnimationEventMaker)target;
 
             if (soundEvents.clip != null && GUILayout.Button("Refresh sound events"))
             {
