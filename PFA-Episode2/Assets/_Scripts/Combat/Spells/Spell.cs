@@ -20,6 +20,8 @@ public class Spell
 
     public int cooling = 0;
 
+    public bool isDamaging = true;
+
     public void StartCooldown()
     {
         cooling = spellData.CoolDown;

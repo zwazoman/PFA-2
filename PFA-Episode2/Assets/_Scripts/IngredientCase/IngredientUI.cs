@@ -11,12 +11,13 @@ public class IngredientUI : MonoBehaviour
     public Image rarityFrame; //Cadre
 
     public Image famillyPanelColorLight; //Panel 1
-    public Image famillyPanelColorMed; //Panel 2
     public List<Image> famillyPanelColorDark = new(); //Panel3
 
     public TextMeshProUGUI effectDescription;
 
     public GameObject SpriteZone;
+    public GameObject Porte;
+    public TextMeshProUGUI PorteTxt;
 
     public TextMeshProUGUI familly;
 }

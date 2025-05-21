@@ -1,17 +1,15 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 using static NodeTypes;
 
 [RequireComponent(typeof(MapMaker2))]
 public class MapBuildingTools : MonoBehaviour
 {
-    [SerializeField][Tooltip("Image qui sera dupliqué pour faire les chemins entre les nodes")] private Image _origineImage;
+    [SerializeField][Tooltip("Image qui sera dupliqué pour faire les chemins entre les nodes")] private List<GameObject> _listRoadPath;
+    public List<GameObject> TrueListPath;
     [SerializeField][Tooltip("GameObject parent des chemins, si null alors c'est le porteur du script le parent")] private GameObject _parent;
-    public List<Image> _trailList = new();
     public bool FirstTimeDraw = true;
-    public List<Image> _savePath = new();
+    public List<GameObject> _savePath = new();
 
     #region Singleton
     public static MapBuildingTools Instance;
@@ -24,9 +22,10 @@ public class MapBuildingTools : MonoBehaviour
         }
         for (int i = 0; i <= 50; i++)
         {
-            Image NewNode = Instantiate(_origineImage, _parent.transform);
-            NewNode.gameObject.SetActive(false);
-            _trailList.Add(NewNode);
+            int index = Random.Range(0, _listRoadPath.Count);
+            GameObject Path = Instantiate(_listRoadPath[index], _parent.transform);
+            Path.SetActive(false);
+            TrueListPath.Add(Path);
         }
     }
     #endregion
@@ -41,25 +40,37 @@ public class MapBuildingTools : MonoBehaviour
     {
         if (FirstTimeDraw)
         {
+            print(TrueListPath.Count);
             // Sprite entre father et current
-            Image CurrentTrail = _trailList[0];
-            _trailList.RemoveAt(0);
-
-            CurrentTrail.gameObject.SetActive(true);
+            GameObject CurrentPath = TrueListPath[0];
+            TrueListPath.RemoveAt(0);
+            CurrentPath.SetActive(true);
 
             Vector3 trailPos = (PointA.transform.localPosition + PointB.transform.localPosition) / 2f; //au milleu des 2
-            CurrentTrail.transform.localPosition = trailPos;
+            CurrentPath.transform.localPosition = trailPos;
 
             // Rotation du sprite
-            Vector3 dir = PointB.transform.localPosition - PointA.transform.localPosition;
-            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-            CurrentTrail.transform.localRotation = Quaternion.Euler(0, 0, angle);
-            _savePath.Add(CurrentTrail);
+            //Vector3 dir = PointB.transform.localPosition - PointA.transform.localPosition;
+            //float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+            if ( PointA.transform.localPosition.y > PointB.transform.localPosition.y)
+            {
+                CurrentPath.transform.localRotation = Quaternion.Euler(25, 90, -90);
+                //CurrentPath.transform.localPosition = new Vector3(CurrentPath.transform.localPosition.x, CurrentPath.transform.localPosition.y - 50, CurrentPath.transform.localPosition.z);
+            }
+
+            else if (PointA.transform.localPosition.y < PointB.transform.localPosition.y) 
+            { 
+                CurrentPath.transform.localRotation = Quaternion.Euler(-25, 90, -90);
+                //CurrentPath.transform.localPosition = new Vector3(CurrentPath.transform.localPosition.x, CurrentPath.transform.localPosition.y + 50, CurrentPath.transform.localPosition.z);
+            }
+
+            else { CurrentPath.transform.localRotation = Quaternion.Euler(0, 90, -90); }
+
+            PointA.PathBetweenNode.Add(CurrentPath);
+            _savePath.Add(CurrentPath);
         }
-        else
-        {
-            FirstTimeDraw = true;
-        }
+        else { FirstTimeDraw = true; }
     }
 
     public bool Intersection(int mapRangeCurrentIndex, int probaIntersection)
@@ -73,10 +84,7 @@ public class MapBuildingTools : MonoBehaviour
             }
             return false;
         }
-        else
-        {
-            return false;
-        }
+        else { return false; }
 
     }
 

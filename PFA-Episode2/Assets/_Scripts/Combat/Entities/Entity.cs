@@ -36,10 +36,10 @@ public class Entity : MonoBehaviour
     public event Action OnSpellPreviewCancel;
 
     #region AnimationTriggers
-    [HideInInspector] public string moveTrigger = "Move";
+    [HideInInspector] public string moveBool = "Move";
     [HideInInspector] public string attackTrigger = "Attack";
     [HideInInspector] public string idleTrigger = "Idle";
-    [HideInInspector] public string pushTrigger = "Push";
+    [HideInInspector] public string pushBool = "Push";
     [HideInInspector] public string hitTrigger = "Hit";
     [HideInInspector] public string deathTrigger = "Death";
 
@@ -57,7 +57,12 @@ public class Entity : MonoBehaviour
     {
         //set up position on graph
         Vector3Int roundedPos = transform.position.SnapOnGrid();
-        currentPoint = GraphMaker.Instance.serializedPointDict[roundedPos];
+        try
+        {
+            currentPoint = GraphMaker.Instance.serializedPointDict[roundedPos];
+        }
+        catch(Exception e) { Debug.LogException(e); }
+
         currentPoint.StepOn(this);
     }
 
@@ -87,7 +92,7 @@ public class Entity : MonoBehaviour
     }
 
     //spell preview
-    public void previewSpellEffect(BakedSpellEffect e)
+    public void PreviewSpellEffect(BakedSpellEffect e)
     {
         float newShield = stats.shieldAmount + e.shield;
 
@@ -144,11 +149,16 @@ public class Entity : MonoBehaviour
     {
         currentPoint.StepOff();
 
-        visuals.StartLoopAnimation(pushTrigger);
+        if(pushTarget != currentPoint)
+        {
+            visuals.animator.PlayAnimationBool(pushBool);
+            await UniTask.Delay(300);
 
-        await StartMoving(pushTarget.transform.position,5);
+            await StartMoving(pushTarget.transform.position,7,-1);
 
-        visuals.EndLoopAnimation();
+            visuals.animator.EndAnimationBool(pushBool);
+        }
+
 
         if (pushDamages > 0)
             await stats.ApplyDamage(pushDamages);
@@ -231,7 +241,7 @@ public class Entity : MonoBehaviour
             p.ChangeTileColor(p._walkedMaterial);
         }
 
-        visuals.StartLoopAnimation(moveTrigger);
+        visuals.animator.PlayAnimationBool(moveBool);
 
         for (int i = 0; i < pathlength; i++)
         {
@@ -249,17 +259,18 @@ public class Entity : MonoBehaviour
             stats.currentMovePoints--;
         }
 
-        visuals.EndLoopAnimation();
+        visuals.animator.EndAnimationBool(moveBool);
         Tools.Flood(currentPoint);
         ClearWalkables();
         ApplyWalkables(showTiles);
     }
 
-    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 3, bool turnsBackward = false)
+    async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 5, float rotmultiplyer = 1)
     {
         targetPos.y = transform.position.y;
         Vector3 offset = targetPos - (Vector3)transform.position;
-        Quaternion targetRotation = Quaternion.Euler(0, Mathf.Atan2(-offset.z, offset.x) * Mathf.Rad2Deg +90, 0);
+        float rotation = 90f * rotmultiplyer;
+        Quaternion targetRotation = Quaternion.Euler(0, Mathf.Atan2(-offset.z, offset.x) * Mathf.Rad2Deg + rotation, 0);
         transform.DORotateQuaternion(targetRotation, 1f / moveSpeed);
         while ((Vector3)transform.position != targetPos)
         {
@@ -275,7 +286,7 @@ public class Entity : MonoBehaviour
     {
         print("Die");
 
-        await visuals.PlayAnimation(deathTrigger);
+        await visuals.animator.PlayAnimationTrigger(deathTrigger);
 
         currentPoint.StepOff();
         isDead = true;
