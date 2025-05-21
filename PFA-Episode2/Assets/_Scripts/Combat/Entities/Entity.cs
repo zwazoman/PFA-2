@@ -21,6 +21,7 @@ public class Entity : MonoBehaviour
     [HideInInspector] public SpellCaster entitySpellCaster;
 
     public EntityVisuals visuals;
+    public Transform eatSocket;
 
     protected Dictionary<WayPoint, int> WaypointDistance = new Dictionary<WayPoint, int>();
     protected List<WayPoint> Walkables = new List<WayPoint>();
