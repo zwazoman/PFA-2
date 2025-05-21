@@ -127,7 +127,7 @@ public class SaveMapGeneration : MonoBehaviour
                 tempDico[item.key] = node;
 
                 foreach (GameObject obj in node.PathBetweenNode) { obj.SetActive(false); }
-                if (node.Position < PlayerMap.Instance.PositionMap + 3 && node.Position > PlayerMap.Instance.PositionMap - 1)
+                if (node.Position < PlayerMap.Instance.PositionMap + 3 && node.Position > PlayerMap.Instance.PositionMap)
                 { 
                     node.gameObject.SetActive(true);
                     /*foreach (GameObject obj in node.PathBetweenNode) { obj.SetActive(true); }*/
