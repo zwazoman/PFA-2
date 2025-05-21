@@ -59,7 +59,6 @@ public class PlayerMap : MonoBehaviour
         await MoveTo(_target); //Attends qu'il soit arrivé
 
         //---------------- Charge une nouvelle scène -------------------------
-
         int positionX = Mathf.RoundToInt((gameObject.transform.localPosition.x) / 10);
         positionX = positionX * 10;
 
@@ -70,11 +69,12 @@ public class PlayerMap : MonoBehaviour
 
         foreach (KeyValuePair<Vector3Int, Node> KeyAndValues in MapMaker2.Instance.DicoNode)
         {
+            print(KeyAndValues);
+            print(position);
             if (KeyAndValues.Key == position)
             {
                 SaveMapGeneration.Instance.SaveMap();
                 GameManager.Instance.playerInventory.Save(GameManager.Instance.playerInventory.NameSave);
-
                 if (KeyAndValues.Value.EventName.ToString() == "Start") { break; }
                 if (KeyAndValues.Value.EventName.ToString() == "Combat")
                 {
