@@ -11,8 +11,9 @@ public static class AnimationExtension
             return;
 
         animator.SetTrigger(trigger);
+        await UniTask.Yield();
+
         await Awaitable.WaitForSecondsAsync(GetAnimationLength(trigger,animator));
-        animator.SetTrigger("Idle");
     }
 
     public static void PlayAnimationBool(this Animator animator, string boolos)

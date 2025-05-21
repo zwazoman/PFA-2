@@ -10,7 +10,7 @@ public class EntityVisuals : MonoBehaviour
 {
     Entity owner;
 
-    [SerializeField] Transform VisualsRoot;
+    [SerializeField] public Transform VisualsRoot;
 
     [SerializeField] public Animator animator;
     [SerializeField] bool _enableAnimations = true;

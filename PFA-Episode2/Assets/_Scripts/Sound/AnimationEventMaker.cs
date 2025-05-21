@@ -35,8 +35,6 @@ namespace mup
         {
             List<AnimationEvent> events = AnimationUtility.GetAnimationEvents(animationCip).ToList();
 
-            
-
             events = events.Where(x => x.functionName != "CallSound").ToList();
 
             soundEvents = soundEvents.OrderBy(a => a.frame).ToList();
