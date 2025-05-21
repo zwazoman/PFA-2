@@ -50,22 +50,22 @@ public class MapBuildingTools : MonoBehaviour
             CurrentPath.transform.localPosition = trailPos;
 
             // Rotation du sprite
-            Vector3 dir = PointB.transform.localPosition - PointA.transform.localPosition;
-            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            //Vector3 dir = PointB.transform.localPosition - PointA.transform.localPosition;
+            //float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
             if ( PointA.transform.localPosition.y > PointB.transform.localPosition.y)
             {
-                CurrentPath.transform.localRotation = Quaternion.Euler(-90 + (-angle), 90, -90);
+                CurrentPath.transform.localRotation = Quaternion.Euler(25, 90, -90);
                 //CurrentPath.transform.localPosition = new Vector3(CurrentPath.transform.localPosition.x, CurrentPath.transform.localPosition.y - 50, CurrentPath.transform.localPosition.z);
             }
 
             else if (PointA.transform.localPosition.y < PointB.transform.localPosition.y) 
             { 
-                CurrentPath.transform.localRotation = Quaternion.Euler(90 + (-angle), 90, -90);
+                CurrentPath.transform.localRotation = Quaternion.Euler(-25, 90, -90);
                 //CurrentPath.transform.localPosition = new Vector3(CurrentPath.transform.localPosition.x, CurrentPath.transform.localPosition.y + 50, CurrentPath.transform.localPosition.z);
             }
 
-            else { CurrentPath.transform.localRotation = Quaternion.Euler(-90, 0, 0); }
+            else { CurrentPath.transform.localRotation = Quaternion.Euler(0, 90, -90); }
 
             PointA.PathBetweenNode.Add(CurrentPath);
             _savePath.Add(CurrentPath);
