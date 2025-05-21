@@ -23,3 +23,14 @@ public static class DeleteSaveUtility
         }
     }
 }
+
+public static class OpenSaveFolder
+{
+    [MenuItem("Save/Open Save Folder")]
+    public static void OuvrirDossier()
+    {
+        string path = Application.persistentDataPath;
+
+        EditorUtility.RevealInFinder(path + $"/PFA-Episode2");
+    }
+}

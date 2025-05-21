@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class DialogueManager : MonoBehaviour
 {
-    [SerializeField] private TextAsset _textData;
+    [SerializeField] private Dialogue _textData;
 
     [SerializeField] TMP_Text _nameCharacter;
     [SerializeField] TMP_Text _text;
@@ -18,13 +18,11 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private GameObject _textBox;
 
     private List<Tweener> _shakeTweeners = new();
-    private bool _textEffect = false;
     private bool _isWriting = false;
     private string _nextDialogueKey;
-    private List<string> _colors = new();
-    private List<string[]> _intsColor = new();
-    private List<string> _styles = new();
-    private List<string[]> _intsStyle = new();
+    private int _numberDialogue = 0;
+    private int _numberSentence = 0;
+
     private bool IsPunctuation(char c) => c is '?' or '.' or '!' or ',';
 
     #region Singleton
@@ -46,127 +44,65 @@ public class DialogueManager : MonoBehaviour
     // Lis quel dialogue suis pour l'activer
     public void NextDialogue()
     {
-        SearchDialogue(_nextDialogueKey);
+        SearchDialogue(_numberDialogue);
     }
 
     // Appelle la clé de fin de dialogue du Excel
     public void Skip()
     {
-        SearchDialogue("Fin");
+        EndDialogue();
     }
 
     // Divise les différents éléments pour les ranger par ligne puis par éléments, ensuite cherche la clé corresspondante
-    public void SearchDialogue(string textKey)
+    public void SearchDialogue(int NumberDialogue)
     {
+        _numberDialogue = NumberDialogue;
         if (_isWriting) return;
 
         StopShakeEffect();
 
         _panel.transform.DOLocalMoveY(0, 0.5f, false);
 
-        string[] lines = _textData.text.Split("\n");
-
-        foreach (string line in lines)
+        for (int i = 0; i < _textData.DialogueData.Count; i++)
         {
-            string[] elements = line.Split(";");
-
-            if (elements.Length >= 7 && elements[0] == textKey)
+            if (i == NumberDialogue)
             {
-                _colors.Clear();
-                _intsColor.Clear();
-
-                if (elements[6].StartsWith("#"))
-                {
-                    string[] color = elements[6].Split("/");
-
-                    foreach (string infocolor in color)
-                    {
-                        if (infocolor.StartsWith("#"))
-                        {
-                            _colors.Add(infocolor);
-                            Debug.Log(infocolor);
-                        }
-                        else if (infocolor.StartsWith(":"))
-                        {
-                            string[] indices = infocolor.Substring(1).Split(":");
-                            _intsColor.Add(indices);
-                            Debug.Log(infocolor);
-                        }
-                    }
-                }
-
-                string[] style = elements[2].Split("/");
-
-                foreach (string infostyle in style)
-                {
-                    if (infostyle.StartsWith(":"))
-                    {
-                        string[] indices = infostyle.Substring(1).Split(":");
-                        _intsStyle.Add(indices);
-                    }
-                    else
-                    {
-                        infostyle.ToLower();
-                        _styles.Add(infostyle);
-                    }
-                }
-
-                _nameCharacter.text = elements[1];
-
-                _nextDialogueKey = elements[5];
-                string dialogue = FontStyle(elements[4]);
-                dialogue = ColorWord(dialogue);
-                _textEffect = TextEffect(elements[3]);
-                TextBoxEffect(dialogue);
-
-                break;
+                Sentence sentence = _textData.DialogueData[i].Sentence[_numberSentence];
+                _nameCharacter.text = sentence.CharacterName;
+                WriteText(sentence.Text, sentence.ShakeTextBox, sentence.ShakeText, sentence.LetterByLetter);
             }
         }
     }
     
     // Interprete les différents élément pour savoir quel effet appliqué
-    private void TextBoxEffect(string dialogue)
+    private void WriteText(string dialogue, bool shakeTextBox, bool shakeText, bool letterByletter)
     {
-        #region Effect
-        if (dialogue.StartsWith("*"))
+        if (shakeTextBox) _textBox.transform.DOShakePosition(0.5f, 50);
+
+        if (letterByletter)
         {
-            LetterByLetter(dialogue, 1).Forget();
-        }
-        else if (dialogue.StartsWith("!*"))
-        {
-            _textBox.transform.DOShakePosition(0.5f, 50);
-            LetterByLetter(dialogue, 2).Forget();
-        }
-        else if (dialogue.StartsWith("!"))
-        {
-            dialogue = dialogue.Substring(1);
-            _textBox.transform.DOShakePosition(0.5f, 50);
-            _text.text = dialogue;
-        }
-        else if (dialogue.StartsWith("-"))
-        {
-            _panel.transform.DOLocalMoveY(-500, 0.5f, false);
+            LetterByLetter(dialogue, shakeText).Forget();
+            _numberSentence++;
         }
         else
         {
+            if (dialogue.StartsWith("-"))
+            {
+                EndDialogue();
+                return;
+            }
             _text.text = dialogue;
+            if (shakeText) StartShakeEffect();
+            _numberSentence++;
         }
-        #endregion
     }
 
     // Affiche lettre par lettre le dialogue
-    private async UniTaskVoid LetterByLetter(string message, byte subtext)
+    private async UniTaskVoid LetterByLetter(string message, bool shakeText)
     {
-        if (message.Length <= subtext)
-        {
-            _text.text = "";
-            return;
-        }
-
         _isWriting = true;
         _text.text = "";
 
-        message = message.Substring(subtext);
         bool insideTag = false;
 
         for (int i = 0; i < message.Length; i++)
@@ -181,18 +117,12 @@ public class DialogueManager : MonoBehaviour
 
             _text.text += currentChar;
 
-            if (_textEffect && !insideTag) StartShakeEffect(); // Évite l'effet sur les balises
+            if (shakeText && !insideTag) StartShakeEffect(); // Évite l'effet sur les balises
 
             if (!insideTag) await UniTask.Delay(System.TimeSpan.FromSeconds(speed));
         }
 
         _isWriting = false;
-    }
-
-    // Regarde s'il faut mettre un effet au texte
-    private bool TextEffect(string effect)
-    {
-        return effect.ToUpper().StartsWith("T");
     }
 
     // Enregistre les différents sommets de chaque lettres du texte pour leur mettre un effet de shake
@@ -247,7 +177,7 @@ public class DialogueManager : MonoBehaviour
     // Arrete l'effet de shake en arretant tout les tween concernant les ShakeEffect
     private void StopShakeEffect()
     {
-        foreach (var tween in _shakeTweeners)
+        foreach (Tweener tween in _shakeTweeners)
         {
             if (tween.IsActive()) tween.Kill();
         }
@@ -255,51 +185,11 @@ public class DialogueManager : MonoBehaviour
         _shakeTweeners.Clear();
     }
 
-    // Lis les différent caractère pour potentielement changer le style de la police
-    private string FontStyle(string dialogue)
+    private void EndDialogue()
     {
-        string[] words = dialogue.Split(' ');
-
-        for (int i = 0; i < _intsStyle.Count; i++)
-        {
-            for (int j = 0; j < _intsStyle[i].Length; j++)
-            {
-                if (int.TryParse(_intsStyle[i][j], out int wordIndex))
-                {
-                    if (wordIndex >= 0 && wordIndex < words.Length)
-                    {
-                        words[wordIndex] = $"<{_styles[i]}>{words[wordIndex]}</{_styles[i]}>";
-                    }
-                }
-            }
-        }
-
-        _styles.Clear();
-        _intsStyle.Clear();
-        return string.Join(" ", words);
-    }
-
-    // Change la couleur des mots désigné avec la/les couleurs mises 
-    private string ColorWord(string dialogue)
-    {
-        string[] words = dialogue.Split(' ');
-
-        for (int i = 0; i < _intsColor.Count; i++)
-        {
-            for (int j = 0; j < _intsColor[i].Length; j++)
-            {
-                if (int.TryParse(_intsColor[i][j], out int wordIndex))
-                {
-                    if (wordIndex >= 0 && wordIndex < words.Length)
-                    {
-                        words[wordIndex] = $"<color={_colors[i]}>{words[wordIndex]}</color>";
-                    }
-                }
-            }
-        }
-
-        _colors.Clear();
-        _intsColor.Clear();
-        return string.Join(" ", words);
+        _panel.transform.DOLocalMoveY(-500, 0.5f, false);
+        _numberSentence = 0;
+        _nameCharacter.text = "";
+        _text.text = "";
     }
 }
