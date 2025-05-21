@@ -61,7 +61,7 @@ public class SaveMapGeneration : MonoBehaviour
                 wrapper.nodes.Add(snode);
             }
         }
-        foreach (GameObject go in MapBuildingTools.Instance._savePath) { if (go == null) { MapBuildingTools.Instance._savePath.Remove(go);} }
+        foreach (GameObject go in MapBuildingTools.Instance._savePath) { if (go == null) { MapBuildingTools.Instance._savePath.Remove(go); } }
         foreach (GameObject GO in MapBuildingTools.Instance._savePath)
         {
             //Image link = image;
@@ -125,7 +125,8 @@ public class SaveMapGeneration : MonoBehaviour
                 node.Intersection = item.Intersection;
 
                 tempDico[item.key] = node;
-                node.gameObject.SetActive(true);
+
+                if (node.Position < PlayerMap.Instance.PositionMap + 3) { node.gameObject.SetActive(true); }
 
                 //Place le joueur sur le bon node
                 if (Vector3Int.Distance(item.key, item.playerPosition) <= 1f)
