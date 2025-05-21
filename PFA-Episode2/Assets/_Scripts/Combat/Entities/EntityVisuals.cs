@@ -21,7 +21,7 @@ public class EntityVisuals : MonoBehaviour
     {
         TryGetComponent(out owner);
 
-        if (animator == null && TryGetComponent<EnemyEntity>(out EnemyEntity enemy))
+        if (animator == null)
             animator = VisualsRoot.GetComponentInChildren<Animator>();
     }
 

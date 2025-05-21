@@ -189,8 +189,6 @@ public class Entity : MonoBehaviour
             return true;
         }
 
-        
-
         await UniTask.Delay(500);
 
         WayPoint moveToPoint;
@@ -279,6 +277,12 @@ public class Entity : MonoBehaviour
             transform.Translate(offset2, Space.World);
             await Task.Yield();
         }
+    }
+
+    public async UniTask LookAt(WayPoint point, float speed = .2f)
+    {
+        Vector3 lookPos = new Vector3(point.transform.position.x, transform.position.y, point.transform.position.z);
+        await transform.DOLookAt(lookPos, speed);
     }
 
     //death
