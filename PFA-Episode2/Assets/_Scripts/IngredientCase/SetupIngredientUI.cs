@@ -14,36 +14,7 @@ public class SetupIngredientUI : MonoBehaviour
 
     public void SetupInfo(IngredientBase IngredientBase, int index) //Attribue tout l'UI au élément
     {
-        _listIngredientUI[index].title.text = IngredientBase.name;                   //Name
-        _listIngredientUI[index].imageLogoRef.sprite = IngredientBase.sprite;        //Sprite
-
-        if (IngredientBase is Sauce Sauce)                                                 //Sauce
-        {
-            _listIngredientUI[index].effectDescription.text = Serializer.GetSauceEffectString(Sauce);
-            if (_listIngredientUI[index].familly != null) { _listIngredientUI[index].familly.text = "Sauce"; }
-            _listIngredientUI[index].rarityFrame.sprite = GameManager.Instance.staticData.itemFramesPerRarity[IngredientBase.rarity];
-            _listIngredientUI[index].famillyPanelColorLight.sprite = GameManager.Instance.staticData.framesPerRarity[IngredientBase.rarity];
-            _listIngredientUI[index].SpriteZone.SetActive(true);
-            _listIngredientUI[index].famillyPanelColorDark[0].rectTransform.sizeDelta = new Vector2(450, 100);
-            _listIngredientUI[index].famillyPanelColorDark[0].rectTransform.localPosition = new Vector3(131, -81, _listIngredientUI[index].famillyPanelColorDark[0].rectTransform.position.z);
-            _listIngredientUI[index].SpriteZone.GetComponent<Image>().sprite = Sauce.areaOfEffect.sprite;
-        }
-        else                                                                                  //Ingrédient
-        {
-            Ingredient Ingredient = (Ingredient)IngredientBase;
-            _listIngredientUI[index].effectDescription.text = Serializer.GetIngredientEffectString(Ingredient);
-            if (_listIngredientUI[index].familly != null) { _listIngredientUI[index].familly.text = Ingredient.Family.ToString(); }
-            _listIngredientUI[index].SpriteZone.SetActive(false);
-            _listIngredientUI[index].famillyPanelColorLight.sprite = GameManager.Instance.staticData.framesPerRarity[IngredientBase.rarity];
-            _listIngredientUI[index].famillyPanelColorDark[0].rectTransform.sizeDelta = new Vector2(655, 100);
-            _listIngredientUI[index].famillyPanelColorDark[0].rectTransform.localPosition = new Vector3(234,-81, _listIngredientUI[index].famillyPanelColorDark[0].rectTransform.position.z);
-            _listIngredientUI[index].rarityFrame.sprite = GameManager.Instance.staticData.itemFramesPerRarity[IngredientBase.rarity];
-            if(Ingredient.Family == IngredientsInfo.Family.Dairys ) //Si laitier
-            {
-                _listIngredientUI[index].Porte.SetActive(true);
-                _listIngredientUI[index].PorteTxt.text = Ingredient.RangeIncrease.ToString();
-            }
-        }
+        _listIngredientUI[index].Setup(IngredientBase);
     }
 
     public async void Next(int index)
