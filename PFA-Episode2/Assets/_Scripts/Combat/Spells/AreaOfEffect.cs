@@ -17,7 +17,7 @@ public class AreaOfEffect : ScriptableObject
         {
             for(int j = 0; j < 7; j++)
             {
-                texture.SetPixel(i,j,AffectedTiles.Contains(new Vector2Int(i-3,j-3)) ? Color.red : Color.white);
+                texture.SetPixel(i,j,AffectedTiles.Contains(new Vector2Int(i-3,j-3)) ? Color.white : new Color(1,0,0,0));
             }
         }
 
