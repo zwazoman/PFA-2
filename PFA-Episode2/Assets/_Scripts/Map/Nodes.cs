@@ -86,7 +86,7 @@ public class Node : MonoBehaviour
         rot.z = -90f;
         transform.eulerAngles = rot;
         if (PathBetweenNode.Count > 1) { if (Hauteur != 3) { Destroy(PathBetweenNode[1]); } }
-        ActiveNode();
+        //ActiveNode();
     }
 
     public void ActiveNode()
