@@ -28,6 +28,7 @@ public class Crafting : MonoBehaviour
         GameStaticData.spellVisualData data = GameManager.Instance.staticData.Visuals[spell.IngredientsCombination];
         spell.Name = data.name;
         spell.Sprite = data.sprite;
+        spell.Mesh = data.mesh;
 
         //remove ingredients from player inventory
         try
