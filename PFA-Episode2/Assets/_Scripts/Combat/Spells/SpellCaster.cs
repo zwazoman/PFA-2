@@ -9,6 +9,8 @@ public class SpellCaster : MonoBehaviour
 
     [SerializeField] LayerMask _obstacleMask;
 
+    [SerializeField] Transform _spellCastingSocket;
+
     public const byte RangeRingThickness = 3;
 
     public bool attackEventCompleted;
@@ -295,25 +297,27 @@ public class SpellCaster : MonoBehaviour
             playerCastingEntity.HideSpellsUI();
 
         await castingEntity.LookAt(target);
-        await castingEntity.visuals.animator.PlayAnimationTrigger(castingEntity.attackTrigger);
+        castingEntity.visuals.animator.SetTrigger(castingEntity.attackTrigger);
+
+        while (!attackEventCompleted)
+        {
+            await UniTask.Yield();
+        }
+
+        SpellProjectile projectile; 
+        PoolManager.Instance.ProjectilePool.PullObjectFromPool(_spellCastingSocket.position).TryGetComponent(out projectile);
+
 
         if (zoneData.hitEntityCTXDict != null && zoneData.hitEntityCTXDict.Keys != null)
             foreach (Entity entity in zoneData.hitEntityCTXDict.Keys)
             {
+                await projectile.Launch(entity);
+
                 //cancel preview
                 StopSpellEffectPreview(entity);
 
                 await entity.LookAt(castingEntity.currentPoint);
                 await entity.visuals.animator.PlayAnimationTrigger(entity.hitTrigger);
-
-                //while (!attackEventCompleted)
-                //{
-                //    //apply effect
-                //    BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);
-                //    await entity.ApplySpell(e);
-
-                //    await UniTask.Yield();
-                //}
 
                 BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);
                 await entity.ApplySpell(e);
