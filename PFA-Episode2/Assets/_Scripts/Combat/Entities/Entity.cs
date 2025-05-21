@@ -21,6 +21,7 @@ public class Entity : MonoBehaviour
     [HideInInspector] public SpellCaster entitySpellCaster;
 
     public EntityVisuals visuals;
+    public Transform eatSocket;
 
     protected Dictionary<WayPoint, int> WaypointDistance = new Dictionary<WayPoint, int>();
     protected List<WayPoint> Walkables = new List<WayPoint>();
@@ -189,8 +190,6 @@ public class Entity : MonoBehaviour
             return true;
         }
 
-        
-
         await UniTask.Delay(500);
 
         WayPoint moveToPoint;
@@ -204,6 +203,7 @@ public class Entity : MonoBehaviour
     /// <summary>
     /// fait se déplcaer l'entité le plus loin possible de l'entité ciblée
     /// </summary>
+    /// 
     /// <param name="targetPoint"></param>
     /// <returns></returns>
     protected async UniTask MoveAwayFrom(WayPoint targetPoint)
@@ -271,7 +271,7 @@ public class Entity : MonoBehaviour
         Vector3 offset = targetPos - (Vector3)transform.position;
         float rotation = 90f * rotmultiplyer;
         Quaternion targetRotation = Quaternion.Euler(0, Mathf.Atan2(-offset.z, offset.x) * Mathf.Rad2Deg + rotation, 0);
-        transform.DORotateQuaternion(targetRotation, 1f / moveSpeed);
+        visuals.VisualsRoot.DORotateQuaternion(targetRotation, 1f / moveSpeed);
         while ((Vector3)transform.position != targetPos)
         {
             Vector3 offset2 = targetPos - (Vector3)transform.position;
@@ -279,6 +279,12 @@ public class Entity : MonoBehaviour
             transform.Translate(offset2, Space.World);
             await Task.Yield();
         }
+    }
+
+    public async UniTask LookAt(WayPoint point, float speed = .2f)
+    {
+        Vector3 lookPos = new Vector3(point.transform.position.x, transform.position.y, point.transform.position.z);
+        await visuals.VisualsRoot.DOLookAt(lookPos, speed);
     }
 
     //death

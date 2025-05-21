@@ -8,13 +8,15 @@ public class SpellCaster : MonoBehaviour
 
     [SerializeField] LayerMask _obstacleMask;
 
+    [SerializeField] Transform _spellCastingSocket;
+
     public const byte RangeRingThickness = 3;
 
     public bool attackEventCompleted;
 
     private void Awake()
     {
-        if(castingEntity == null)
+        if (castingEntity == null)
             TryGetComponent(out castingEntity);
     }
 
@@ -90,27 +92,27 @@ public class SpellCaster : MonoBehaviour
         }
         castData.zonePoints = zonePoints;
 
-        if(showZone)
+        if (showZone)
             foreach (Entity entity in CombatManager.Instance.Entities)
-        {
-            if (hitEntities.Contains(entity))
             {
-                SpellCastingContext context = new();
+                if (hitEntities.Contains(entity))
+                {
+                    SpellCastingContext context = new();
 
-                context = ComputeCTX(spell, entity, hitEntities, targetedPoint);
+                    context = ComputeCTX(spell, entity, hitEntities, targetedPoint);
 
-                hitEntityCTXDict.Add(entity, context);
+                    hitEntityCTXDict.Add(entity, context);
 
-                castData.hitEntityCTXDict = hitEntityCTXDict;
+                    castData.hitEntityCTXDict = hitEntityCTXDict;
 
-                PreviewSpellEffect(spell, entity, ref castData);
+                    PreviewSpellEffect(spell, entity, ref castData);
+                }
+                else
+                {
+                    StopSpellEffectPreview(entity);
+                }
+
             }
-            else
-            {
-                StopSpellEffectPreview(entity);
-            }
-            
-        }
 
         return castData;
     }
@@ -131,8 +133,8 @@ public class SpellCaster : MonoBehaviour
             }
         }
 
-        foreach(Entity entity in CombatManager.Instance.Entities)
-        StopSpellEffectPreview(entity);
+        foreach (Entity entity in CombatManager.Instance.Entities)
+            StopSpellEffectPreview(entity);
 
         zoneData.zonePoints.Clear();
     }
@@ -270,7 +272,7 @@ public class SpellCaster : MonoBehaviour
     //preview spell effect
     void PreviewSpellEffect(Spell spell, Entity entity, ref SpellCastData zoneData)
     {
-        BakedSpellEffect e = ComputeBakedSpellEffect(spell,entity,ref zoneData);
+        BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);
         entity.PreviewSpellEffect(e);
     }
 
@@ -288,33 +290,37 @@ public class SpellCaster : MonoBehaviour
             return false;
         }
 
-        await castingEntity.visuals.animator.PlayAnimationTrigger(castingEntity.attackTrigger);
+        PlayerEntity playerCastingEntity = null;
 
-        if(zoneData.hitEntityCTXDict != null && zoneData.hitEntityCTXDict.Keys != null)
-            foreach(Entity entity in zoneData.hitEntityCTXDict.Keys)
+        if (castingEntity is PlayerEntity)
+        {
+            playerCastingEntity = castingEntity as PlayerEntity;
+            playerCastingEntity.HideSpellsUI();
+        }
+
+        await castingEntity.LookAt(target);
+        castingEntity.visuals.animator.SetTrigger(castingEntity.attackTrigger);
+
+        //while (!attackEventCompleted)
+        //{
+        //    await UniTask.Yield();
+        //}
+
+
+        if (zoneData.hitEntityCTXDict != null && zoneData.hitEntityCTXDict.Keys != null)
+        {
+            List<UniTask> tasks = new();
+            foreach (Entity entity in zoneData.hitEntityCTXDict.Keys)
             {
-                //cancel preview
-                StopSpellEffectPreview(entity);
-
-                await entity.visuals.animator.PlayAnimationTrigger(entity.hitTrigger);
-
-                //while (!attackEventCompleted)
-                //{
-                //    //apply effect
-                //    BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);
-                //    await entity.ApplySpell(e);
-
-                //    await UniTask.Yield();
-                //}
-
-                BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);
-                await entity.ApplySpell(e);
-
-                attackEventCompleted = false;
-
-
+                tasks.Add(HitEntityBehaviour(entity, spell, zoneData));
             }
-                
+
+            await UniTask.WhenAll(tasks);
+        }
+
+
+        if (playerCastingEntity != null)
+            playerCastingEntity.ShowSpellsUI();
 
         spell.StartCooldown();
 
@@ -322,7 +328,28 @@ public class SpellCaster : MonoBehaviour
 
         return true;
     }
+
+    async UniTask HitEntityBehaviour(Entity entity, Spell spell, SpellCastData zoneData)
+    {
+        if (entity != castingEntity)
+            await entity.LookAt(castingEntity.currentPoint);
+
+        SpellProjectile projectile;
+        PoolManager.Instance.ProjectilePool.PullObjectFromPool(_spellCastingSocket.position).TryGetComponent(out projectile);
+        await projectile.Launch(entity);
+
+        //cancel preview
+        StopSpellEffectPreview(entity);
+
+        await entity.visuals.animator.PlayAnimationTrigger(entity.hitTrigger);
+
+        BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);
+        await entity.ApplySpell(e);
+
+        attackEventCompleted = false;
+    }
 }
+
 
 // == data  ==
 

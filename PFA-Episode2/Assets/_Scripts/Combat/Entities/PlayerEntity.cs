@@ -81,7 +81,7 @@ public class PlayerEntity : Entity
         }
     }
 
-    void ShowSpellsUI()
+    public void ShowSpellsUI()
     {
         CombatUiManager.Instance.playerHUD.Show();
 
@@ -91,7 +91,7 @@ public class PlayerEntity : Entity
         }
     }
 
-    void HideSpellsUI()
+    public void HideSpellsUI()
     {
         CombatUiManager.Instance.playerHUD.Hide();
     }
