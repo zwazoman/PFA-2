@@ -86,19 +86,6 @@ public class Node : MonoBehaviour
         rot.z = -90f;
         transform.eulerAngles = rot;
         if (PathBetweenNode.Count > 1) { if (Hauteur != 3) { Destroy(PathBetweenNode[1]); } }
-        ActiveNode();
-    }
-
-    public void ActiveNode()
-    {
-        foreach(Node node in MapMaker2.Instance.AllNodeGood)
-        {
-            if(node.Position > PlayerMap.Instance.PositionMap + 3)
-            { 
-                node.gameObject.SetActive(false);
-                foreach(GameObject obj in node.PathBetweenNode) { obj.SetActive(false); }
-            }
-        }
     }
 
     private void TweenMesh()
