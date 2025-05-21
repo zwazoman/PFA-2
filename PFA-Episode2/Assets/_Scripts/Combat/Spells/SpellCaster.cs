@@ -336,7 +336,7 @@ public class SpellCaster : MonoBehaviour
 
         SpellProjectile projectile;
         PoolManager.Instance.ProjectilePool.PullObjectFromPool(_spellCastingSocket.position).TryGetComponent(out projectile);
-        await projectile.Launch(entity);
+        await projectile.Launch(entity, spell.spellData.Mesh);
 
         //cancel preview
         StopSpellEffectPreview(entity);
