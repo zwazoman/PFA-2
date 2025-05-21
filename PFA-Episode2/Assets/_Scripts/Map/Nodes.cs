@@ -85,14 +85,15 @@ public class Node : MonoBehaviour
         Vector3 rot = transform.eulerAngles;
         rot.z = -90f;
         transform.eulerAngles = rot;
-        CleanUnBug();
+        if (PathBetweenNode.Count > 1) { if (Hauteur != 3) { Destroy(PathBetweenNode[1]); } }
+        ActiveNode();
     }
 
-    private void CleanUnBug()
+    public void ActiveNode()
     {
-        if (PathBetweenNode.Count > 1)
+        foreach(Node node in MapMaker2.Instance.AllNodeGood)
         {
-            if (Hauteur != 3) { Destroy(PathBetweenNode[1]); }
+            if(node.Position > PlayerMap.Instance.PositionMap + 3) { node.gameObject.SetActive(false); }
         }
     }
 
