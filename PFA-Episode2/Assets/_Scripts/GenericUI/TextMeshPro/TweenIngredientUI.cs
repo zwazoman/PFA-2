@@ -39,13 +39,13 @@ public class TweenIngredientUI : MonoBehaviour
             switch (i)
             {
                 case 0:
-                    seq.Join(rect.DOAnchorPos(new Vector2(-1300, -180), TweenDuration).SetEase(Ease.OutBack));
+                    seq.Join(rect.DOAnchorPos(new Vector2(-1300, 0), TweenDuration).SetEase(Ease.OutBack));
                     break;
                 case 1:
-                    seq.Join(rect.DOAnchorPos(new Vector2(0, -180), TweenDuration).SetEase(Ease.OutBack));
+                    seq.Join(rect.DOAnchorPos(new Vector2(0, 0), TweenDuration).SetEase(Ease.OutBack));
                     break;
                 case 2:
-                    seq.Join(rect.DOAnchorPos(new Vector2(1300, -180), TweenDuration).SetEase(Ease.OutBack));
+                    seq.Join(rect.DOAnchorPos(new Vector2(1300,0), TweenDuration).SetEase(Ease.OutBack));
                     break;
             }
 
