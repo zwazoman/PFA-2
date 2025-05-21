@@ -13,7 +13,6 @@ public class MoveCardUI : MonoBehaviour
 
     private void Start() { MoveCard(); }
 
-    //fils de pute mateo
     private async UniTask MoveCard()
     {
         while(isActiveAndEnabled)
