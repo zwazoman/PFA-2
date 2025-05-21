@@ -28,8 +28,6 @@ public class PlayerMap : MonoBehaviour
     {
         Instance = this;
         _target = transform.position;
-
-        
     }
 
     private void Start()
@@ -49,8 +47,7 @@ public class PlayerMap : MonoBehaviour
         Node tmp = clickedNode;
         PositionMap = clickedNode.Position;
         clickedNode = null;
-        return tmp.transform.position;
-        
+        return tmp.transform.position;     
     }
 
     private async void LoadNextScene()
@@ -69,8 +66,6 @@ public class PlayerMap : MonoBehaviour
 
         foreach (KeyValuePair<Vector3Int, Node> KeyAndValues in MapMaker2.Instance.DicoNode)
         {
-            print(KeyAndValues);
-            print(position);
             if (KeyAndValues.Key == position)
             {
                 SaveMapGeneration.Instance.SaveMap();
