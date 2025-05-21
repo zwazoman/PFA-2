@@ -46,7 +46,6 @@ public class CookingPanel : AnimatedPanel
         //--
 #else
             LoadPlayerInventory();
-    
 #endif
 
         
