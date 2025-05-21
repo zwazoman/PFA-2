@@ -152,9 +152,8 @@ public class CombatManager : MonoBehaviour
 
     async UniTask Victory()
     {
-        print("Victory");
         OnWin?.Invoke();
-        //await SceneTransitionManager.Instance.GoToScene("WorldMap");
+        await SceneTransitionManager.Instance.GoToScene("WorldMap");
     }
 
 }

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,23 +41,23 @@ public class WayPoint : MonoBehaviour
 
     [HideInInspector] public float H;
     [HideInInspector] public float G;
-    [HideInInspector] public float F => G + H ;
+    [HideInInspector] public float F => G + H;
     #endregion
 
     private void Awake()
     {
         TryGetComponent(out _mR);
 
-        if(_normalMaterial == null && _mR != null)
+        if (_normalMaterial == null && _mR != null)
             _normalMaterial = _mR.sharedMaterial;
     }
 
     private void Start()
     {
         RaycastHit hit;
-        if(Physics.Raycast(transform.position, Vector3.up, out hit, 1))
+        if (Physics.Raycast(transform.position, Vector3.up, out hit, 1))
         {
-            if(hit.collider.TryGetComponent(out Entity entity))
+            if (hit.collider.TryGetComponent(out Entity entity))
             {
                 State = WaypointState.HasEntity;
             }
@@ -69,7 +70,7 @@ public class WayPoint : MonoBehaviour
 
     public async void StepOn(Entity entity)
     {
-        if(State == WaypointState.Obstructed)
+        if (State == WaypointState.Obstructed)
             await entity.Die();
         else
         {
@@ -89,19 +90,19 @@ public class WayPoint : MonoBehaviour
 
     public void ChangeTileColor(Material material)
     {
-        if(_mR == null || _mR.sharedMaterial == material) return;
+        if (_mR == null || _mR.sharedMaterial == material) return;
 
         _mR.sharedMaterial = material;
     }
 
     #region Astar
-    public void TravelThrough(ref List<WayPoint> openPoints,ref List<WayPoint> closedPoints, ref Stack<WayPoint> shorterPath, WayPoint endPoint, WayPoint startPoint)
+    public void TravelThrough(ref List<WayPoint> openPoints, ref List<WayPoint> closedPoints, ref Stack<WayPoint> shorterPath, WayPoint endPoint, WayPoint startPoint)
     {
-        if(this == endPoint)
+        if (this == endPoint)
         {
             Close(ref openPoints, ref closedPoints);
             WayPoint currentPoint = endPoint;
-            while(currentPoint != startPoint)
+            while (currentPoint != startPoint)
             {
                 shorterPath.Push(currentPoint);
                 currentPoint = currentPoint.FormerPoint;
@@ -111,14 +112,14 @@ public class WayPoint : MonoBehaviour
 
         Close(ref openPoints, ref closedPoints);
 
-        foreach(WayPoint point in Neighbours)
+        foreach (WayPoint point in Neighbours)
         {
             if (point.IsClosed || point.IsOpen || point.State != WaypointState.Free) continue;
 
-            point.Open(this, endPoint,  ref openPoints);
+            point.Open(this, endPoint, ref openPoints);
         }
 
-        if(openPoints.Count == 0)
+        if (openPoints.Count == 0)
         {
             print("Oh cong la target est pas dans le graph cagole");
             return;
@@ -131,7 +132,7 @@ public class WayPoint : MonoBehaviour
             else if (point.F < bestPoint.F) bestPoint = point;
         }
 
-        bestPoint.TravelThrough(ref openPoints,ref closedPoints, ref shorterPath, endPoint, startPoint);
+        bestPoint.TravelThrough(ref openPoints, ref closedPoints, ref shorterPath, endPoint, startPoint);
     }
 
     void Open(WayPoint formerPoint, WayPoint endPoint, ref List<WayPoint> openPoints)
@@ -143,7 +144,7 @@ public class WayPoint : MonoBehaviour
         FormerPoint = formerPoint;
 
         H = Vector3.Distance(transform.position, endPoint.transform.position);
-        G ++;
+        G++;
 
     }
 
@@ -151,7 +152,7 @@ public class WayPoint : MonoBehaviour
     {
         IsClosed = true;
         closedPoints.Add(this);
-        if(openPoints.Contains(this)) openPoints.Remove(this);
+        if (openPoints.Contains(this)) openPoints.Remove(this);
     }
 
     public void ResetState()
@@ -169,9 +170,17 @@ public class WayPoint : MonoBehaviour
         Gizmos.color = Color.blue;
         foreach (WayPoint point in Neighbours) //il dessine 2 fois mais t'inquietes
         {
-            if(point!=null) Gizmos.DrawLine(transform.position, point.transform.position);
+            if (point != null) Gizmos.DrawLine(transform.position, point.transform.position);
         }
     }
 
+    public void Lift(float height, float duration)
+    {
+        transform.DOMoveY(height, duration);
+    }
 
+    public async void Lift(float height, float duration, float stayTime)
+    {
+        
+    }
 }

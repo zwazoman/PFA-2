@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class SpellCaster : MonoBehaviour
 {
@@ -10,9 +11,11 @@ public class SpellCaster : MonoBehaviour
 
     public const byte RangeRingThickness = 3;
 
+    public bool attackEventCompleted;
+
     private void Awake()
     {
-        if(castingEntity == null)
+        if (castingEntity == null)
             TryGetComponent(out castingEntity);
     }
 
@@ -88,27 +91,27 @@ public class SpellCaster : MonoBehaviour
         }
         castData.zonePoints = zonePoints;
 
-        if(showZone)
+        if (showZone)
             foreach (Entity entity in CombatManager.Instance.Entities)
-        {
-            if (hitEntities.Contains(entity))
             {
-                SpellCastingContext context = new();
+                if (hitEntities.Contains(entity))
+                {
+                    SpellCastingContext context = new();
 
-                context = ComputeCTX(spell, entity, hitEntities, targetedPoint);
+                    context = ComputeCTX(spell, entity, hitEntities, targetedPoint);
 
-                hitEntityCTXDict.Add(entity, context);
+                    hitEntityCTXDict.Add(entity, context);
 
-                castData.hitEntityCTXDict = hitEntityCTXDict;
+                    castData.hitEntityCTXDict = hitEntityCTXDict;
 
-                PreviewSpellEffect(spell, entity, ref castData);
+                    PreviewSpellEffect(spell, entity, ref castData);
+                }
+                else
+                {
+                    StopSpellEffectPreview(entity);
+                }
+
             }
-            else
-            {
-                StopSpellEffectPreview(entity);
-            }
-            
-        }
 
         return castData;
     }
@@ -129,8 +132,8 @@ public class SpellCaster : MonoBehaviour
             }
         }
 
-        foreach(Entity entity in CombatManager.Instance.Entities)
-        StopSpellEffectPreview(entity);
+        foreach (Entity entity in CombatManager.Instance.Entities)
+            StopSpellEffectPreview(entity);
 
         zoneData.zonePoints.Clear();
     }
@@ -183,9 +186,6 @@ public class SpellCaster : MonoBehaviour
 
         if (isDiagonal)
         {
-
-            Debug.DrawRay(posWithHeigth, pushDirection * pushForce, Color.red, 20);
-
             RaycastHit hit;
             if (Physics.SphereCast(posWithHeigth, .45f, pushDirection /*+Vector3.up * 0.5f*/, out hit, pushForce * Mathf.Sqrt(2)))
             {
@@ -193,33 +193,23 @@ public class SpellCaster : MonoBehaviour
                 pushDamages = pushForce;
                 Vector3 hitPos = hit.point/*.SnapOnGrid()*/;
 
-                Debug.DrawLine(hitPos, (hitPos - pushDirection * .25f).SnapOnGrid(), Color.blue, 20);
-
                 pushDamages -= Mathf.FloorToInt(hit.distance);
                 choosenPoint = GraphMaker.Instance.serializedPointDict[(hitPos - pushDirection * .3f).SnapOnGrid()];
             }
             else
             {
-                Debug.DrawLine(posWithHeigth, posWithHeigth + (pushDirection * pushForce), Color.black, 20);
                 Vector3Int choosenPos = (posWithHeigth + (pushDirection * pushForce)).SnapOnGrid();
                 choosenPoint = GraphMaker.Instance.serializedPointDict[choosenPos];
             }
         }
         else
         {
-            Debug.DrawLine(posWithHeigth, posWithHeigth + pushDirection * pushForce, Color.red, 20);
-
-
             RaycastHit hit;
             if (Physics.Raycast(posWithHeigth, pushDirection, out hit, pushForce))
             {
                 pushDamages = pushForce;
 
-                Debug.DrawLine(posWithHeigth, hit.point, Color.black, 20);
-
                 Vector3 hitPos = hit.point;
-
-                Debug.DrawLine(hitPos, hitPos - pushDirection * .3f, Color.blue, 20);
 
                 pushDamages -= Mathf.FloorToInt(hit.distance);
                 choosenPoint = GraphMaker.Instance.serializedPointDict[(hitPos - pushDirection * .3f).SnapOnGrid()];
@@ -281,16 +271,14 @@ public class SpellCaster : MonoBehaviour
     //preview spell effect
     void PreviewSpellEffect(Spell spell, Entity entity, ref SpellCastData zoneData)
     {
-        BakedSpellEffect e = ComputeBakedSpellEffect(spell,entity,ref zoneData);
-        entity.previewSpellEffect(e);
+        BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);
+        entity.PreviewSpellEffect(e);
     }
 
     void StopSpellEffectPreview(Entity entity)
     {
         entity.StopPreviewingSpellEffect();
     }
-
-
 
     //spell casting
     public async UniTask<bool> TryCastSpell(Spell spell, WayPoint target, List<WayPoint> rangePoints, SpellCastData zoneData)
@@ -301,21 +289,40 @@ public class SpellCaster : MonoBehaviour
             return false;
         }
 
-        await castingEntity.visuals.PlayAnimation(castingEntity.attackTrigger);
+        PlayerEntity playerCastingEntity = null;
 
-        if(zoneData.hitEntityCTXDict != null && zoneData.hitEntityCTXDict.Keys != null)
-            foreach(Entity entity in zoneData.hitEntityCTXDict.Keys)
+        if (castingEntity is PlayerEntity)
+            playerCastingEntity.HideSpellsUI();
+
+        await castingEntity.LookAt(target);
+        await castingEntity.visuals.animator.PlayAnimationTrigger(castingEntity.attackTrigger);
+
+        if (zoneData.hitEntityCTXDict != null && zoneData.hitEntityCTXDict.Keys != null)
+            foreach (Entity entity in zoneData.hitEntityCTXDict.Keys)
             {
                 //cancel preview
                 StopSpellEffectPreview(entity);
 
-                await entity.visuals.PlayAnimation(entity.hitTrigger);
+                await entity.LookAt(castingEntity.currentPoint);
+                await entity.visuals.animator.PlayAnimationTrigger(entity.hitTrigger);
 
-                //apply effect
+                //while (!attackEventCompleted)
+                //{
+                //    //apply effect
+                //    BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);
+                //    await entity.ApplySpell(e);
+
+                //    await UniTask.Yield();
+                //}
+
                 BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);
                 await entity.ApplySpell(e);
+
+                attackEventCompleted = false;
             }
-                
+
+        if (playerCastingEntity != null)
+            playerCastingEntity.ShowSpellsUI();
 
         spell.StartCooldown();
 

@@ -9,7 +9,6 @@ public class CookingPanel : AnimatedPanel
     [Header("Scene References")]
     [SerializeField] GridLayoutGroup _ingredientsParent;
     [SerializeField] Transform _saucesParent;
-    [SerializeField] Transform _ustencilsParent;
     [SerializeField] CookingPot _pot;
     [SerializeField] DishInfoPanel _dishInfoPanel;
 
@@ -78,9 +77,17 @@ public class CookingPanel : AnimatedPanel
 
         //content height
         float height = _ingredientsParent.cellSize.y + _ingredientsParent.spacing.y;
+        if (_ingredientsParent.TryGetComponent(out RectTransform IngredientsGrid))
+        {
+            IngredientsGrid.sizeDelta = new Vector2(IngredientsGrid.sizeDelta.x, height * Mathf.Ceil( (inv.Ingredients.Count) / 3f));
+        }
+        if (_saucesParent.transform.parent.parent.TryGetComponent(out RectTransform SauceGrid))
+        {
+            SauceGrid.sizeDelta = new Vector2(SauceGrid.sizeDelta.x, height * Mathf.Ceil((inv.Ingredients.Count + inv.Sauces.Count) / 3f ));
+        }
         if (_ingredientsParent.transform.parent.parent.TryGetComponent(out RectTransform ScrollbarContent))
         {
-            ScrollbarContent.sizeDelta = new Vector2(ScrollbarContent.sizeDelta.x, height * (3 + (inv.Ingredients.Count + inv.Sauces.Count) / 3 * 2));
+            ScrollbarContent.sizeDelta = new Vector2(ScrollbarContent.sizeDelta.x, height * Mathf.Ceil(3 + (inv.Ingredients.Count + inv.Sauces.Count) / 3f * 2f));
         }
 
         //spawn inventory slots prefabs
@@ -93,6 +100,8 @@ public class CookingPanel : AnimatedPanel
                 .GetComponentInChildren<DraggableIngredientContainer>()
                 .SetUp(inv.Ingredients[i]);
         }
+
+
 
         //sauces
         for (byte i = 0; i < inv.Sauces.Count; ++i)
@@ -126,7 +135,7 @@ public class CookingPanel : AnimatedPanel
 
                 //@revoir
                 //inventory.Add(spell)
-                GameManager.Instance.playerInventory.Spells.Add(spell);
+                //GameManager.Instance.playerInventory.Spells.Add(spell);
 
                 break;
             case false:

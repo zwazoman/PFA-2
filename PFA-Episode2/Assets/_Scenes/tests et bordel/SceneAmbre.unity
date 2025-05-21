@@ -298,6 +298,9 @@ MonoBehaviour:
   _bands: 5
   _stippling: {fileID: 0}
   _stipplingTiling: 1
+  _fogOn: 0
+  _fogRadius: 0
+  _fogIntensity: 0
 --- !u!4 &463335390
 Transform:
   m_ObjectHideFlags: 0
@@ -1715,13 +1718,25 @@ PrefabInstance:
       value: DialogueManager
       objectReference: {fileID: 0}
     - target: {fileID: 7570838622813282551, guid: 663ffa0f8a59b634788a6f12672e21b4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7570838622813282551, guid: 663ffa0f8a59b634788a6f12672e21b4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: DialogueManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7570838622813282551, guid: 663ffa0f8a59b634788a6f12672e21b4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7570838622813282551, guid: 663ffa0f8a59b634788a6f12672e21b4, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
-      value: 42
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7631349076840838211, guid: 663ffa0f8a59b634788a6f12672e21b4, type: 3}
       propertyPath: _textData
       value: 
-      objectReference: {fileID: 4900000, guid: ef2bad329f5c9a54a903caba77400405, type: 3}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

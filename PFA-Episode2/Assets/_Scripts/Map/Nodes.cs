@@ -19,12 +19,9 @@ public class Node : MonoBehaviour
     private GameObject _mesh;
     public bool Visited;
     public bool Intersection;
-    public List<Image> PathBetweenNode = new();
+    public List<GameObject> PathBetweenNode = new();
 
-    public static void TriggerMapCompleted()
-    {
-        OnMapCompleted?.Invoke();
-    }
+    public static void TriggerMapCompleted() { OnMapCompleted?.Invoke(); }
 
     public void InteractPlayer()
     {
@@ -33,15 +30,9 @@ public class Node : MonoBehaviour
         TweenMesh();
     }
 
-    private void OnEnable()
-    {
-        OnMapCompleted += SetupSprite;
-    }
+    private void OnEnable() { OnMapCompleted += SetupSprite; }
 
-    private void OnDisable()
-    {
-        OnMapCompleted -= SetupSprite;
-    }
+    private void OnDisable() { OnMapCompleted -= SetupSprite; }
 
     /// <summary>
     /// Fonction qui peut setup un sprite pour le node selon son rôle
@@ -89,24 +80,16 @@ public class Node : MonoBehaviour
             case NodesEventTypes.Start:
                 break;
         }
-        if((PlayerMap.Instance.PositionMap == Position - 1 && PlayerMap.Instance.Y == gameObject.transform.localPosition.y) || (PlayerMap.Instance.PositionMap == Position - 1 && Intersection)) { _button.interactable = true; }
+        if ((PlayerMap.Instance.PositionMap == Position - 1 && PlayerMap.Instance.Y == gameObject.transform.localPosition.y) || (PlayerMap.Instance.PositionMap == Position - 1 && Intersection)) { _button.interactable = true; }
         else { _button.interactable = false; }
         Vector3 rot = transform.eulerAngles;
         rot.z = -90f;
         transform.eulerAngles = rot;
-        CleanUnBug();
-    }
-
-    private void CleanUnBug()
-    {
-        if (PathBetweenNode.Count > 1)
-        {
-            if (Hauteur != 3) { Destroy(PathBetweenNode[1]); }
-        }
+        if (PathBetweenNode.Count > 1) { if (Hauteur != 3) { Destroy(PathBetweenNode[1]); } }
     }
 
     private void TweenMesh()
     {
-        _mesh.transform.DOScale(new Vector3(0,0,0), 0.3f).SetEase(Ease.InBack);
+        _mesh.transform.DOScale(new Vector3(0,0,0), 0.5f).SetEase(Ease.InBack);
     }
 }
