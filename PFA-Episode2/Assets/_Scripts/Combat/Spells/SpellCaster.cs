@@ -1,9 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using static UnityEngine.EventSystems.EventTrigger;
-using UnityEditor.Experimental.GraphView;
-using UnityEngine.UI;
 
 public class SpellCaster : MonoBehaviour
 {
