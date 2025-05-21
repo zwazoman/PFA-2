@@ -4,19 +4,22 @@ using UnityEngine;
 
 public class SpellProjectile : MonoBehaviour
 {
-    [HideInInspector] public Entity target;
-
-    [HideInInspector] public Mesh mesh;
+    PooledObject _pool;
 
     [SerializeField] MeshFilter _filter;
 
-    private void Start()
+    public void OnInstantiatedByPool()
     {
-        _filter.mesh = mesh;
+        TryGetComponent(out _pool);
     }
 
-    public async UniTask FlyToward(Entity target)
+    public async UniTask Launch(Entity target, Mesh spellMesh = null)
     {
-        await transform.DOMove(target.transform.position, .7f);
+        if(spellMesh != null)
+            _filter.mesh = spellMesh;
+
+        await transform.DOMove(target.eatSocket.position, .7f);
+
+        _pool.GoBackIntoPool();
     }
 }
