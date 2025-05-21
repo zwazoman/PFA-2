@@ -4008,7 +4008,7 @@ GameObject:
   m_Component:
   - component: {fileID: 611620546}
   - component: {fileID: 611620545}
-  - component: {fileID: 611620544}
+  - component: {fileID: 611620547}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -4016,26 +4016,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &611620544
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 611620543}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6df00e5ef7d1445499bf7dd917a215ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _gradientMap: {fileID: 2800000, guid: d859f14269d938b49bc499feae0b2ab2, type: 3}
-  _enviroID: 0.22
-  _bands: 6.1
-  _stippling: {fileID: 2800000, guid: db3db9f7456bb0d47959944a96756c0b, type: 3}
-  _stipplingTiling: 1
-  _fogOn: 1
-  _fogRadius: 133.7
-  _fogIntensity: 0
 --- !u!108 &611620545
 Light:
   m_ObjectHideFlags: 0
@@ -4116,6 +4096,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 1245.021, y: -450.115, z: -540.04}
+--- !u!114 &611620547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 611620543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6df00e5ef7d1445499bf7dd917a215ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gradientMap: {fileID: 2800000, guid: d859f14269d938b49bc499feae0b2ab2, type: 3}
+  _enviroID: 0
+  _bands: 6.1
+  _stippling: {fileID: 2800000, guid: db3db9f7456bb0d47959944a96756c0b, type: 3}
+  _stipplingTiling: 1
+  _fogOn: 1
+  _fogRadius: 133.7
+  _fogIntensity: 0
 --- !u!1 &643958998
 GameObject:
   m_ObjectHideFlags: 0

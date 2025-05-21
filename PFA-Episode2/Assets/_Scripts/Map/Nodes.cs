@@ -93,7 +93,11 @@ public class Node : MonoBehaviour
     {
         foreach(Node node in MapMaker2.Instance.AllNodeGood)
         {
-            if(node.Position > PlayerMap.Instance.PositionMap + 3) { node.gameObject.SetActive(false); }
+            if(node.Position > PlayerMap.Instance.PositionMap + 3)
+            { 
+                node.gameObject.SetActive(false);
+                foreach(GameObject obj in node.PathBetweenNode) { obj.SetActive(false); }
+            }
         }
     }
 
