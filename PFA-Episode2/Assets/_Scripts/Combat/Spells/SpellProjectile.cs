@@ -17,6 +17,6 @@ public class SpellProjectile : MonoBehaviour
 
     public async UniTask FlyToward(Entity target)
     {
-        await transform.DOMove(target.transform.position, .7f); REPARE NESTOR
+        await transform.DOMove(target.transform.position, .7f);
     }
 }
