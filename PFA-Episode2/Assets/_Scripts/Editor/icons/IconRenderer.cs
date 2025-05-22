@@ -140,8 +140,10 @@ public class IconRenderer : MonoBehaviour
                 RenderCurrentImage(source,result, child.name, child.name) ;
                 child.SetActive(false);
             }
-        } catch ( Exception e) { RenderTexture.active = null; Debug.LogException(e); } 
+        } catch ( Exception e) { RenderTexture.active = null; Debug.LogException(e); }
 
+
+        _renderCamera.targetTexture = null;
 
         //release render texture 
         result.Release();

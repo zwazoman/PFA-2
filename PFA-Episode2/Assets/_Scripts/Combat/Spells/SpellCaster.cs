@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class SpellCaster : MonoBehaviour
 {
@@ -294,36 +293,31 @@ public class SpellCaster : MonoBehaviour
         PlayerEntity playerCastingEntity = null;
 
         if (castingEntity is PlayerEntity)
+        {
+            playerCastingEntity = castingEntity as PlayerEntity;
             playerCastingEntity.HideSpellsUI();
+        }
 
         await castingEntity.LookAt(target);
         castingEntity.visuals.animator.SetTrigger(castingEntity.attackTrigger);
 
-        while (!attackEventCompleted)
-        {
-            await UniTask.Yield();
-        }
-
-        SpellProjectile projectile; 
-        PoolManager.Instance.ProjectilePool.PullObjectFromPool(_spellCastingSocket.position).TryGetComponent(out projectile);
+        //while (!attackEventCompleted)
+        //{
+        //    await UniTask.Yield();
+        //}
 
 
         if (zoneData.hitEntityCTXDict != null && zoneData.hitEntityCTXDict.Keys != null)
+        {
+            List<UniTask> tasks = new();
             foreach (Entity entity in zoneData.hitEntityCTXDict.Keys)
             {
-                await projectile.Launch(entity);
-
-                //cancel preview
-                StopSpellEffectPreview(entity);
-
-                await entity.LookAt(castingEntity.currentPoint);
-                await entity.visuals.animator.PlayAnimationTrigger(entity.hitTrigger);
-
-                BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);
-                await entity.ApplySpell(e);
-
-                attackEventCompleted = false;
+                tasks.Add(HitEntityBehaviour(entity, spell, zoneData));
             }
+
+            await UniTask.WhenAll(tasks);
+        }
+
 
         if (playerCastingEntity != null)
             playerCastingEntity.ShowSpellsUI();
@@ -334,7 +328,28 @@ public class SpellCaster : MonoBehaviour
 
         return true;
     }
+
+    async UniTask HitEntityBehaviour(Entity entity, Spell spell, SpellCastData zoneData)
+    {
+        if (entity != castingEntity)
+            await entity.LookAt(castingEntity.currentPoint);
+
+        SpellProjectile projectile;
+        PoolManager.Instance.ProjectilePool.PullObjectFromPool(_spellCastingSocket.position).TryGetComponent(out projectile);
+        await projectile.Launch(entity, spell.spellData.Mesh);
+
+        //cancel preview
+        StopSpellEffectPreview(entity);
+
+        await entity.visuals.animator.PlayAnimationTrigger(entity.hitTrigger);
+
+        BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);
+        await entity.ApplySpell(e);
+
+        attackEventCompleted = false;
+    }
 }
+
 
 // == data  ==
 

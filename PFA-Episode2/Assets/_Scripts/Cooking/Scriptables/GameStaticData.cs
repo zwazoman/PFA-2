@@ -27,5 +27,6 @@ public class GameStaticData : ScriptableObject
     {
         public Sprite sprite;
         public string name;
+        public Mesh mesh;
     }
 }
