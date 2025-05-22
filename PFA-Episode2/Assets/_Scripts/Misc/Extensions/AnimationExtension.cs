@@ -11,8 +11,8 @@ public static class AnimationExtension
             return;
 
         animator.SetTrigger(trigger);
-        await UniTask.Yield();
-
+        await UniTask.Delay(275);
+        
         await Awaitable.WaitForSecondsAsync(GetAnimationLength(trigger,animator));
     }
 
@@ -34,21 +34,7 @@ public static class AnimationExtension
 
     public static float GetAnimationLength(string trigger, Animator animator)
     {
-        //float time = 0;
-        //RuntimeAnimatorController ac = animator.runtimeAnimatorController;
-
-        //for (int i = 0; i < ac.animationClips.Length; i++) 
-        //{
-        //    Debug.Log(ac.animationClips[i].name);
-        //    if (ac.animationClips[i].name == animator.GetCurrentAnimatorClipInfo(0).)
-        //    {
-        //        time = ac.animationClips[i].length;
-        //        Debug.Log(time);
-        //    }
-        //}
-
         AnimatorClipInfo clipInfo = animator.GetCurrentAnimatorClipInfo(0)[0];
-        Debug.Log(clipInfo.clip.name);
 
         return clipInfo.clip.length;
     }

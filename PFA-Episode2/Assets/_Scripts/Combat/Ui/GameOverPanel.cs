@@ -10,6 +10,6 @@ public class GameOverPanel : AnimatedPanel
     public void GoBack()
     {
         Time.timeScale = 1.0f;
-        SceneTransitionManager.Instance.LoadScence("Menu");
+        SceneTransitionManager.Instance.LoadScence("MainMenu");
     }
 }
