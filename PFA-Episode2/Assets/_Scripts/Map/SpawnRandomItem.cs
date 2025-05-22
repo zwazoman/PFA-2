@@ -35,7 +35,7 @@ public class SpawnRandomItem : MonoBehaviour
                 GameObject item = Instantiate(_spawnItems[randomIndex], _parent);
                 item.transform.position = point.position;
                 //item.SetActive(false); // Désactivé au départ
-                _spawnedItems.Add(item); // Tu dois garder une référence à ces objets
+                _spawnedItems.Add(item);
             }
         }
     }
