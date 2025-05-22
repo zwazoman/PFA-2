@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
-using UnityEngine.UI;
 
 /// <summary>
 /// Script qui gère la sauvegarde la map
@@ -125,13 +124,14 @@ public class SaveMapGeneration : MonoBehaviour
                 node.Intersection = item.Intersection;
 
                 tempDico[item.key] = node;
+                node.gameObject.SetActive(true);
 
-                foreach (GameObject obj in node.PathBetweenNode) { obj.SetActive(false); }  // ICIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
-                if (node.Position <= PlayerMap.Instance.PositionMap + 3)
+                /*foreach (GameObject obj in node.PathBetweenNode) { obj.SetActive(false); }  // ICIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+                if (node.Position <= PlayerMap.Instance.PositionMap + 3 //&& node.Position >= PlayerMap.Instance.PositionMap)
                 { 
                     node.gameObject.SetActive(true);
-                    /*foreach (GameObject obj in node.PathBetweenNode) { obj.SetActive(true); }*/
-                }
+                    //foreach (GameObject obj in node.PathBetweenNode) { obj.SetActive(true); }
+                }*/
 
                 //Place le joueur sur le bon node
                 if (Vector3Int.Distance(item.key, item.playerPosition) <= 1f)

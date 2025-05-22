@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,7 +15,11 @@ public class SetupIngredientUI : MonoBehaviour
 
     public void SetupInfo(IngredientBase IngredientBase, int index) //Attribue tout l'UI au élément
     {
-        _listIngredientUI[index].Setup(IngredientBase);
+        try
+        {
+            _listIngredientUI[index].Setup(IngredientBase);
+        }
+        catch (Exception e){ Debug.LogException(e); }
     }
 
     public async void Next(int index)
