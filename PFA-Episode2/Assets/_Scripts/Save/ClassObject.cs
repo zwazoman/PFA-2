@@ -13,6 +13,7 @@ public class SerializableNode
     public bool onYReviendra;
     public bool Intersection;
     public bool Visited;
+    public List<SerializableLink> paths = new();
 
     //référence au créateur
     public Vector3Int creatorKey;
@@ -40,7 +41,6 @@ public class MapWrapper
 {
     public SerialzablePlayer player;
     public List<SerializableNode> nodes = new();
-    public List<SerializableLink> links = new();
 }
 
 [Serializable]
