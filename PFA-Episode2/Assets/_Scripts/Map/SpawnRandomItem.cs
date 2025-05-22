@@ -31,7 +31,8 @@ public class SpawnRandomItem : MonoBehaviour
             if (chance <= _spawnProbability)
             {
                 int randomIndex = Random.Range(0, _spawnItems.Count);
-                GameObject item = Instantiate(_spawnItems[randomIndex], point.position, point.rotation);
+                GameObject item = Instantiate(_spawnItems[randomIndex]);
+                item.transform.position = point.position;
                 //item.SetActive(false); // Désactivé au départ
                 _spawnedItems.Add(item); // Tu dois garder une référence à ces objets
             }
