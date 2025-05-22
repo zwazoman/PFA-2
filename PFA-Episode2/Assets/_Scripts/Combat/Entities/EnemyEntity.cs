@@ -15,7 +15,7 @@ public class EnemyEntity : Entity
 
     WayPoint targetPlayerPoint;
 
-    const int ThinkDelayMilis = 300;
+    const int ThinkDelayMilis = 150;
 
     protected override void Awake()
     {
@@ -51,7 +51,7 @@ public class EnemyEntity : Entity
 
         targetPlayerPoint = FindClosestPlayerPoint();
 
-        Spell choosenSpell = ChooseSpell(0);
+        Spell choosenSpell = ChooseRandomSpell();
         bool attacked;
 
         if (choosenSpell != null)

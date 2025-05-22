@@ -167,7 +167,6 @@ public class Entity : MonoBehaviour
             visuals.animator.EndAnimationBool(pushBool);
         }
 
-
         if (pushDamages > 0)
             await stats.ApplyDamage(pushDamages);
 

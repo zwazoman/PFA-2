@@ -299,7 +299,7 @@ public class SpellCaster : MonoBehaviour
         }
 
         await castingEntity.LookAt(target);
-
+        
         attackEventCompleted = false;
         castingEntity.visuals.animator.SetTrigger(castingEntity.attackTrigger);
 
