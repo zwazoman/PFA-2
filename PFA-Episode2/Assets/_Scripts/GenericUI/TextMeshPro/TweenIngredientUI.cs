@@ -2,12 +2,14 @@ using UnityEngine;
 using DG.Tweening;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using UnityEngine.UI;
 
 /// <summary>
 /// Script qui Tween les panels liées aux ingredients
 /// </summary>
 public class TweenIngredientUI : MonoBehaviour
 {
+    [SerializeField] private List<Button> _buttonList;
     [SerializeField] private RectTransform _tmpRect;
     public List<RectTransform> PanelToTween = new();
     public static TweenIngredientUI Instance;
@@ -35,7 +37,7 @@ public class TweenIngredientUI : MonoBehaviour
         {
             RectTransform rect = PanelToTween[i];
             Sequence seq = DOTween.Sequence();
-
+            _buttonList[i].interactable = true;
             switch (i)
             {
                 case 0:
