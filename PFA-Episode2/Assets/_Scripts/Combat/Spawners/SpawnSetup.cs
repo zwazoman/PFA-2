@@ -2,10 +2,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-[Serializable]
-public class SpawnSetup
+public class SpawnSetup : MonoBehaviour
 {
     public Spawner playerSpawner;
 
-    public List<EnemySpawnerGroup> enemySpawnerGroups = new();
+    public List<Spawner> Spawners;
 }

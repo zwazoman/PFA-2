@@ -10,8 +10,10 @@ public class AnimationEventReceiver : MonoBehaviour
             _entity = GetComponentInParent<Entity>();
     }
 
-    public void Attack()
+    public void AttackEvent(/*string connard*/)
     {
+        print("attack good");
+
         _entity.entitySpellCaster.attackEventCompleted = true;
     }
 }
