@@ -51,7 +51,7 @@ public class EnemyEntity : Entity
 
         targetPlayerPoint = FindClosestPlayerPoint();
 
-        Spell choosenSpell = ChooseSpell(0);
+        Spell choosenSpell = ChooseRandomSpell();
         bool attacked;
 
         if (choosenSpell != null)
