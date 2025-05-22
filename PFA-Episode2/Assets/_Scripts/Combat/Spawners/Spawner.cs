@@ -23,10 +23,13 @@ public class Spawner : MonoBehaviour
 
     public void SummonEntity()
     {
-        if(entitiesProba.Count == 1)
-            foreach(GameObject entity in entitiesProba.Keys)
-                Instantiate(entity, transform);
-            
+        //if(entitiesProba.Count == 1)
+        //    foreach(GameObject entity in entitiesProba.Keys)
+        //    {
+        //        Instantiate(entity, transform);
+        //        print("connard");
+        //    }
+
         float randomProba = Random.Range(0, totalProba);
 
         List<float> probas = new();

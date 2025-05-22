@@ -4629,17 +4629,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5840de3ee85f1841adcf2fcd5b23ee4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &757248992 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8313054891194807582, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-  m_PrefabInstance: {fileID: 3873860791376428934}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c95b865e9b31b2459018503c37202b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &762557937 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1988056190232641498, guid: badbef620f177c34fab249762a82ea43, type: 3}
@@ -13657,6 +13646,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: CombatMapSetUp
       objectReference: {fileID: 0}
+    - target: {fileID: 470731278507536469, guid: badbef620f177c34fab249762a82ea43, type: 3}
+      propertyPath: entitiesProba._serializedList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 470731278507536469, guid: badbef620f177c34fab249762a82ea43, type: 3}
+      propertyPath: entitiesProba._serializedList.Array.data[0].Key
+      value: 
+      objectReference: {fileID: 279633862603933050, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
+    - target: {fileID: 899884384342711586, guid: badbef620f177c34fab249762a82ea43, type: 3}
+      propertyPath: entitiesProba._serializedList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 899884384342711586, guid: badbef620f177c34fab249762a82ea43, type: 3}
+      propertyPath: entitiesProba._serializedList.Array.data[0].Key
+      value: 
+      objectReference: {fileID: 279633862603933050, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
     - target: {fileID: 1149695905980586757, guid: badbef620f177c34fab249762a82ea43, type: 3}
       propertyPath: entitiesProba._serializedList.Array.size
       value: 3
@@ -13961,6 +13966,14 @@ PrefabInstance:
       propertyPath: entitiesProba._serializedList.Array.data[2].Value
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 8767477048869129217, guid: badbef620f177c34fab249762a82ea43, type: 3}
+      propertyPath: entitiesProba._serializedList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8767477048869129217, guid: badbef620f177c34fab249762a82ea43, type: 3}
+      propertyPath: entitiesProba._serializedList.Array.data[0].Key
+      value: 
+      objectReference: {fileID: 279633862603933050, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 7736615169540799316, guid: badbef620f177c34fab249762a82ea43, type: 3}
@@ -15001,10 +15014,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4044161242484165700}
     - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: _summonEntities
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
       propertyPath: 'Setups.Array.data[0]'
       value: 
       objectReference: {fileID: 1489499040}
@@ -15016,106 +15025,6 @@ PrefabInstance:
       propertyPath: 'Setups.Array.data[2]'
       value: 
       objectReference: {fileID: 93819589}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: _startGameOnSceneStart
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: Setups.Array.data[0].playerSpawner
-      value: 
-      objectReference: {fileID: 1693069724}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: Setups.Array.data[1].playerSpawner
-      value: 
-      objectReference: {fileID: 464894819}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: Setups.Array.data[2].playerSpawner
-      value: 
-      objectReference: {fileID: 737553006}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: Setups.Array.data[0].enemySpawnerGroups.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: Setups.Array.data[1].enemySpawnerGroups.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: Setups.Array.data[0].enemySpawnerGroups.Array.data[2].spawners.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: Setups.Array.data[1].enemySpawnerGroups.Array.data[1].spawners.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: Setups.Array.data[1].enemySpawnerGroups.Array.data[2].spawners.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: 'Setups.Array.data[0].enemySpawnerGroups.Array.data[0].spawners.Array.data[0]'
-      value: 
-      objectReference: {fileID: 1137671212}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: 'Setups.Array.data[0].enemySpawnerGroups.Array.data[0].spawners.Array.data[1]'
-      value: 
-      objectReference: {fileID: 378096480}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: 'Setups.Array.data[0].enemySpawnerGroups.Array.data[1].spawners.Array.data[0]'
-      value: 
-      objectReference: {fileID: 542213215}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: 'Setups.Array.data[0].enemySpawnerGroups.Array.data[1].spawners.Array.data[1]'
-      value: 
-      objectReference: {fileID: 575349581}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: 'Setups.Array.data[0].enemySpawnerGroups.Array.data[2].spawners.Array.data[0]'
-      value: 
-      objectReference: {fileID: 542213215}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: 'Setups.Array.data[0].enemySpawnerGroups.Array.data[2].spawners.Array.data[1]'
-      value: 
-      objectReference: {fileID: 575349581}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: 'Setups.Array.data[1].enemySpawnerGroups.Array.data[0].spawners.Array.data[0]'
-      value: 
-      objectReference: {fileID: 551234090}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: 'Setups.Array.data[1].enemySpawnerGroups.Array.data[0].spawners.Array.data[1]'
-      value: 
-      objectReference: {fileID: 1826084768}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: 'Setups.Array.data[1].enemySpawnerGroups.Array.data[1].spawners.Array.data[0]'
-      value: 
-      objectReference: {fileID: 1870693792}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: 'Setups.Array.data[1].enemySpawnerGroups.Array.data[1].spawners.Array.data[1]'
-      value: 
-      objectReference: {fileID: 1967088673}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: 'Setups.Array.data[1].enemySpawnerGroups.Array.data[2].spawners.Array.data[0]'
-      value: 
-      objectReference: {fileID: 1967088673}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: 'Setups.Array.data[1].enemySpawnerGroups.Array.data[2].spawners.Array.data[1]'
-      value: 
-      objectReference: {fileID: 1870693792}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: 'Setups.Array.data[2].enemySpawnerGroups.Array.data[0].spawners.Array.data[0]'
-      value: 
-      objectReference: {fileID: 1087579091}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: 'Setups.Array.data[2].enemySpawnerGroups.Array.data[0].spawners.Array.data[1]'
-      value: 
-      objectReference: {fileID: 1968502768}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: 'Setups.Array.data[2].enemySpawnerGroups.Array.data[0].spawners.Array.data[2]'
-      value: 
-      objectReference: {fileID: 17418197}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: 'Setups.Array.data[2].enemySpawnerGroups.Array.data[1].spawners.Array.data[0]'
-      value: 
-      objectReference: {fileID: 523725265}
     - target: {fileID: 2196221221674026780, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
       propertyPath: '_allWaypoints.Array.data[0]'
       value: 
@@ -16268,10 +16177,6 @@ PrefabInstance:
       propertyPath: serializedPointDict._serializedList.Array.data[143].Value
       value: 
       objectReference: {fileID: 2063651699}
-    - target: {fileID: 3293547413607182688, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: ProjectilePool
-      value: 
-      objectReference: {fileID: 757248992}
     - target: {fileID: 4144835364260791156, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1573.4178

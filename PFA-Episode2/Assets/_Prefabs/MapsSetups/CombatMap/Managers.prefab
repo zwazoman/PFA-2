@@ -137,31 +137,11 @@ MonoBehaviour:
   PlayerEntities: []
   EnemyEntities: []
   Setups:
-  - playerSpawner: {fileID: 0}
-    enemySpawnerGroups:
-    - spawners:
-      - {fileID: 0}
-      - {fileID: 0}
-    - spawners:
-      - {fileID: 0}
-      - {fileID: 0}
-  - playerSpawner: {fileID: 0}
-    enemySpawnerGroups:
-    - spawners:
-      - {fileID: 0}
-      - {fileID: 0}
-    - spawners:
-      - {fileID: 0}
-    - spawners:
-      - {fileID: 0}
-  - playerSpawner: {fileID: 0}
-    enemySpawnerGroups:
-    - spawners:
-      - {fileID: 0}
-      - {fileID: 0}
-      - {fileID: 0}
-    - spawners:
-      - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _minEnnemiesCount: 1
+  _excendentSpawnProba: 0.3
   _summonEntities: 1
   _startGameOnSceneStart: 0
   _gameOverPanel: {fileID: 0}
@@ -837,6 +817,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ArrowPool: {fileID: 4157884094158148823}
+  ProjectilePool: {fileID: 8313054891194807582}
 --- !u!1001 &4856462147327887237
 PrefabInstance:
   m_ObjectHideFlags: 0
