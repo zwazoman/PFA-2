@@ -138,6 +138,10 @@ public class CombatManager : MonoBehaviour
 
         //mélanger les spawners ?
 
+        //check si _min ennemies > spawners
+        if (_minEnnemiesCount > spawners.Count)
+            throw new Exception("pas assez de spawners");
+
         for (int i = 0; i < _minEnnemiesCount; i++)
         {
             spawners[i].SummonEntity();

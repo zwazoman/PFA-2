@@ -116,9 +116,16 @@ public class Entity : MonoBehaviour
     //spell effect
     public async UniTask ApplySpell(BakedSpellEffect effect)
     {
-        if(effect.shield != 0) await stats.ApplyShield(effect.shield);
-        if (effect.damage != 0) await stats.ApplyDamage(effect.damage);
-        if (effect.pushPoint != null) await Push(Mathf.RoundToInt(effect.pushDamage), effect.pushPoint);
+        try
+        {
+            if (effect.shield != 0) await stats.ApplyShield(effect.shield);
+            if (effect.damage != 0) await stats.ApplyDamage(effect.damage);
+            if (effect.pushPoint != null) await Push(Mathf.RoundToInt(effect.pushDamage), effect.pushPoint);
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
     }
 
     //walkable tiles
