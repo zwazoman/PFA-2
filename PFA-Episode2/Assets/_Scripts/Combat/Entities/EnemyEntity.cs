@@ -15,7 +15,7 @@ public class EnemyEntity : Entity
 
     WayPoint targetPlayerPoint;
 
-    const int ThinkDelayMilis = 300;
+    const int ThinkDelayMilis = 150;
 
     protected override void Awake()
     {
