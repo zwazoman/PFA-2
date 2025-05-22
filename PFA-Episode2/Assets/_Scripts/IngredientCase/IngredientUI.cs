@@ -15,7 +15,7 @@ public class IngredientUI : MonoBehaviour
 
     public void Setup(IngredientBase ing)
     {
-        txt_title.text = ing.name;                   //Name
+        txt_title.text = ing.name;           //Name
         img_Icon.sprite = ing.sprite;        //Sprite
 
         //frame.sprite = GameManager.Instance.staticData.itemFramesPerRarity[ing.rarity];
@@ -23,14 +23,14 @@ public class IngredientUI : MonoBehaviour
         if (ing is Sauce)                                                 //Sauce
         {
             Sauce s = (Sauce)ing;
-            txt_title.text = Serializer.GetSauceEffectString(s);
+            txt_effect.text = Serializer.GetSauceEffectString(s);
             img_SauceArea.sprite = s.areaOfEffect.sprite;
             img_SauceArea.transform.parent.gameObject.SetActive(true);
         }
         else                                                                                  //Ingrédient
         {
             Ingredient Ingredient = (Ingredient)ing;
-            txt_title.text = Serializer.GetIngredientEffectString(Ingredient);
+            txt_effect.text = Serializer.GetIngredientEffectString(Ingredient);
             img_SauceArea.transform.parent.gameObject.SetActive(false);
 
         }
