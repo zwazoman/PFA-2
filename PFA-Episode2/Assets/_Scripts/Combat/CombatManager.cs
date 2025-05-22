@@ -1,8 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using System.Linq;
 using System;
+using System.Linq;
 
 public class CombatManager : MonoBehaviour
 {
@@ -32,6 +32,8 @@ public class CombatManager : MonoBehaviour
     [HideInInspector] public List<EnemyEntity> EnemyEntities = new();
 
     [SerializeField] public List<SpawnSetup> Setups = new();
+    [SerializeField] int _minEnnemiesCount;
+    [SerializeField] float _excendentSpawnProba = .3f;
 
     public List<Entity> Entities { get; private set; } = new();
 
@@ -79,7 +81,7 @@ public class CombatManager : MonoBehaviour
     private async void Start()
     {
         await UniTask.Yield();
-        if(_startGameOnSceneStart)
+        if (_startGameOnSceneStart)
             await StartGame();
     }
 
@@ -125,22 +127,26 @@ public class CombatManager : MonoBehaviour
 
     void SummonEntities()
     {
-        if (!_summonEntities)
-            return;
+        SpawnSetup choosenSetup = Setups.PickRandom();
 
-        if (Setups.Count == 0)
+        choosenSetup.playerSpawner.SummonEntity();
+
+        List<Spawner> spawners = new();
+
+        foreach (Spawner spawner in choosenSetup.Spawners)
+            spawners.Add(spawner);
+
+        //mélanger les spawners ?
+
+        for (int i = 0; i < _minEnnemiesCount; i++)
         {
-            throw new Exception("T'as pas setup les entitï¿½s mon frï¿½re");
+            spawners[i].SummonEntity();
+            spawners.Remove(spawners[i]);
         }
 
-        SpawnSetup setup = Setups[UnityEngine.Random.Range(0, Setups.Count)];
-        setup.playerSpawner.SummonSingleEntity();
-        foreach (EnemySpawnerGroup enemySpawnerGroup in setup.enemySpawnerGroups)
-        {
-            Spawner choosenSpawner = enemySpawnerGroup.spawners[UnityEngine.Random.Range(0, enemySpawnerGroup.spawners.Count)];
-            choosenSpawner.SummonRandomEntity();
-        }
-        
+        foreach (Spawner spawner in spawners)
+            if (UnityEngine.Random.value <= _excendentSpawnProba)
+                spawner.SummonEntity();
     }
 
     async UniTask GameOver()

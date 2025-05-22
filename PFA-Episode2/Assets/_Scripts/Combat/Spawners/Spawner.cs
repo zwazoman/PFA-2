@@ -7,11 +7,6 @@ public class Spawner : MonoBehaviour
 {
     [SerializeField] SerializedDictionary<GameObject, float> entitiesProba = new();
 
-    [Space(20)]
-    [Header("Single Entity")]
-
-    [SerializeField] GameObject singleEntity;
-
     WayPoint spawnPoint;
     float totalProba;
 
@@ -26,11 +21,12 @@ public class Spawner : MonoBehaviour
             print("spawner linked");
     }
 
-    public void SummonRandomEntity()
+    public void SummonEntity()
     {
-        if(entitiesProba.Count == 0)
-            SummonSingleEntity();
-
+        if(entitiesProba.Count == 1)
+            foreach(GameObject entity in entitiesProba.Keys)
+                Instantiate(entity, transform);
+            
         float randomProba = Random.Range(0, totalProba);
 
         List<float> probas = new();
@@ -53,16 +49,5 @@ public class Spawner : MonoBehaviour
         }
 
         Instantiate(choosenEntity, transform);
-    }
-
-    public void SummonSingleEntity()
-    {
-        if (singleEntity == null)
-            throw new System.Exception("pas d'entity");
-        else
-        {
-            Instantiate(singleEntity, transform);
-            print("connard player spawn");
-        }
     }
 }
