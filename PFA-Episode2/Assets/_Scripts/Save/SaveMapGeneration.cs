@@ -34,6 +34,15 @@ public class SaveMapGeneration : MonoBehaviour
     {
         MapWrapper wrapper = new();
 
+        SerialzablePlayer player = new()
+        {
+            playerPosition = Vector3Int.RoundToInt(PlayerMap.Instance.transform.localPosition),
+            PositionMap = PlayerMap.Instance.PositionMap,
+            Y = PlayerMap.Instance.Y
+        };
+
+        wrapper.player = player;
+
         foreach (KeyValuePair<Vector3Int, Node> kvp in MapMaker2.Instance.DicoNode)
         {
             Node node = kvp.Value;
@@ -49,9 +58,7 @@ public class SaveMapGeneration : MonoBehaviour
                     eventName = node.EventName,
                     onYReviendra = node.OnYReviendra,
                     Intersection = node.Intersection,
-                    Y = PlayerMap.Instance.Y,
-                    playerPosition = Vector3Int.RoundToInt(PlayerMap.Instance.transform.localPosition),
-                    PositionMap = PlayerMap.Instance.PositionMap,
+                    Visited = node.Visited,
 
                     // Sauvegarde la clé du créateur ou Vector3Int.zero si null
                     creatorKey = node.Creator != null ? MapBuildingTools.Instance.GetKeyFromNode(node.Creator) : Vector3Int.zero
@@ -109,6 +116,11 @@ public class SaveMapGeneration : MonoBehaviour
             }
 
             MapWrapper wrapper = JsonUtility.FromJson<MapWrapper>(json);
+
+            PlayerMap.Instance.transform.localPosition = wrapper.player.playerPosition;
+            PlayerMap.Instance.PositionMap = wrapper.player.PositionMap;
+            PlayerMap.Instance.Y = wrapper.player.Y;
+
             MapMaker2.Instance.DicoNode.Clear();
 
             Dictionary<Vector3Int, Node> tempDico = new();
@@ -122,26 +134,15 @@ public class SaveMapGeneration : MonoBehaviour
                 node.EventName = item.eventName;
                 node.OnYReviendra = item.onYReviendra;
                 node.Intersection = item.Intersection;
+                node.Visited = item.Visited;
 
                 tempDico[item.key] = node;
-                node.gameObject.SetActive(true);
 
-                /*foreach (GameObject obj in node.PathBetweenNode) { obj.SetActive(false); }  // ICIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
-                if (node.Position <= PlayerMap.Instance.PositionMap + 3 //&& node.Position >= PlayerMap.Instance.PositionMap)
+                foreach (GameObject obj in node.PathBetweenNode) { obj.SetActive(false); }  // ICIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+                if (node.Position <= PlayerMap.Instance.PositionMap + 3 && node.Position >= PlayerMap.Instance.PositionMap)
                 { 
                     node.gameObject.SetActive(true);
                     //foreach (GameObject obj in node.PathBetweenNode) { obj.SetActive(true); }
-                }*/
-
-                //Place le joueur sur le bon node
-                if (Vector3Int.Distance(item.key, item.playerPosition) <= 1f)
-                {
-                    //PlayerMap.Instance.SetupTarget(node.transform.position);
-                    PlayerMap.Instance.transform.localPosition = item.playerPosition;
-                    PlayerMap.Instance.PositionMap = item.PositionMap;
-                    PlayerMap.Instance.Y = item.Y;
-                    PositionMap = item.PositionMap;
-
                 }
             }
 

@@ -11,7 +11,7 @@ public class OptiMap : MonoBehaviour
 
     public void ActiveNode()
     {
-        foreach (Node node in MapMaker2.Instance.AllNodeGood)
+        foreach (Node node in MapMaker2.Instance.DicoNode.Values)
         {
             if (node.Position > PlayerMap.Instance.PositionMap + 3)
             {

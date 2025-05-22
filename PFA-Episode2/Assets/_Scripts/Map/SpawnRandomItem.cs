@@ -7,9 +7,10 @@ public class SpawnRandomItem : MonoBehaviour
     [SerializeField] private List<GameObject> _spawnItems = new();
     [SerializeField] private List<Transform> _spawnPoints = new();
     [SerializeField][Range(0f, 1f)] private float _spawnProbability = 0.5f;
-    [SerializeField] private List<GameObject> _spawnedItems = new();
+    private List<GameObject> _spawnedItems = new();
 
     [Header("Others")]
+    [SerializeField] private Transform _parent;
     [SerializeField] private Transform _player;
 
     void Start()
@@ -31,7 +32,7 @@ public class SpawnRandomItem : MonoBehaviour
             if (chance <= _spawnProbability)
             {
                 int randomIndex = Random.Range(0, _spawnItems.Count);
-                GameObject item = Instantiate(_spawnItems[randomIndex]);
+                GameObject item = Instantiate(_spawnItems[randomIndex], _parent);
                 item.transform.position = point.position;
                 //item.SetActive(false); // Désactivé au départ
                 _spawnedItems.Add(item); // Tu dois garder une référence à ces objets

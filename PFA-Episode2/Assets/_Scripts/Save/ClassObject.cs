@@ -12,14 +12,10 @@ public class SerializableNode
     public NodesEventTypes eventName;
     public bool onYReviendra;
     public bool Intersection;
+    public bool Visited;
 
     //référence au créateur
     public Vector3Int creatorKey;
-
-    //information Player
-    public Vector3Int playerPosition;
-    public int PositionMap;
-    public int Y;
 }
 
 [Serializable]
@@ -31,8 +27,18 @@ public class SerializableLink
 }
 
 [Serializable]
+public class SerialzablePlayer
+{
+    //information Player
+    public Vector3Int playerPosition;
+    public int PositionMap;
+    public int Y;
+}
+
+[Serializable]
 public class MapWrapper
 {
+    public SerialzablePlayer player;
     public List<SerializableNode> nodes = new();
     public List<SerializableLink> links = new();
 }
