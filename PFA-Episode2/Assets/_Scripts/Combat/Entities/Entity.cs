@@ -298,7 +298,7 @@ public class Entity : MonoBehaviour
     {
         print("Die");
 
-        await visuals.animator.PlayAnimationTrigger(deathTrigger);
+        visuals.animator.PlayAnimationTrigger(deathTrigger);
 
         currentPoint.StepOff();
         isDead = true;
