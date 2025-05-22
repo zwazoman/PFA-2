@@ -158,7 +158,7 @@ public class MapAttributeEvent : MonoBehaviour
     private int CalculProba(int Cuisine, int Ingredient, int Combat, int Heal)
     {
         int Total = Cuisine + Ingredient + Combat + Heal;
-        int result = UnityEngine.Random.Range(1, Total + 1);
+        int result = Random.Range(1, Total + 1);
         return result;
     }
 }
