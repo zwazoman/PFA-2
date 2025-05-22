@@ -299,12 +299,12 @@ public class SpellCaster : MonoBehaviour
         }
 
         await castingEntity.LookAt(target);
+
+        attackEventCompleted = false;
         castingEntity.visuals.animator.SetTrigger(castingEntity.attackTrigger);
 
-        //while (!attackEventCompleted)
-        //{
-        //    await UniTask.Yield();
-        //}
+        while (!attackEventCompleted)
+            await UniTask.Yield();
 
 
         if (zoneData.hitEntityCTXDict != null && zoneData.hitEntityCTXDict.Keys != null)
@@ -336,7 +336,7 @@ public class SpellCaster : MonoBehaviour
 
         SpellProjectile projectile;
         PoolManager.Instance.ProjectilePool.PullObjectFromPool(_spellCastingSocket.position).TryGetComponent(out projectile);
-        await projectile.Launch(entity, spell.spellData.Mesh);
+        await projectile.Launch(castingEntity, entity, spell.spellData.Mesh);
 
         //cancel preview
         StopSpellEffectPreview(entity);

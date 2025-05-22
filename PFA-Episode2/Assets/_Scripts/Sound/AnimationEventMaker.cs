@@ -12,16 +12,14 @@ namespace mup
     {
         // used for clip events
         [System.Serializable]
-        public class SoundEvent
+        public class AnimationEvent
         {
 #if UNITY_EDITOR
-            public AnimationEvent animationEvent;
+            public UnityEngine.AnimationEvent animationEvent;
 #endif
             public int frame = 0;
-            //public float time = 0.0f;
-            public Sounds sound = 0; //<- ici l'enum en question
         }
-        public List<SoundEvent> soundEvents;
+        public List<AnimationEvent> animationEvents;
 
         //méthode de l'event appelée dans "SoundEventsReceiver"ooio
 
@@ -33,21 +31,20 @@ namespace mup
 #if UNITY_EDITOR
         public void RefreshEventsOfClip(AnimationClip animationCip)
         {
-            List<AnimationEvent> events = AnimationUtility.GetAnimationEvents(animationCip).ToList();
+            List<UnityEngine.AnimationEvent> events = AnimationUtility.GetAnimationEvents(animationCip).ToList();
 
-            events = events.Where(x => x.functionName != "CallSound").ToList();
+            events = events.Where(x => x.functionName != "AttackEvent").ToList();
 
-            soundEvents = soundEvents.OrderBy(a => a.frame).ToList();
-            foreach (SoundEvent a in soundEvents)
+            animationEvents = animationEvents.OrderBy(a => a.frame).ToList();
+            foreach (AnimationEvent a in animationEvents)
             {
                 if (a.animationEvent == null || a.animationEvent.time != a.frame * (1.0f / animationCip.frameRate))
                 {
-                    a.animationEvent = new AnimationEvent();
+                    a.animationEvent = new UnityEngine.AnimationEvent();
                     a.animationEvent.time = (float)a.frame * (1.0f/animationCip.frameRate);
                 }
 
-                a.animationEvent.functionName = "CallSound";
-                a.animationEvent.stringParameter = ((int)a.sound).ToString();
+                a.animationEvent.functionName = "AttackEvent";
 
                 events.Add(a.animationEvent);
             }
