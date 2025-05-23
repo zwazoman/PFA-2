@@ -277,9 +277,6 @@ public class SpellCaster : MonoBehaviour
                     e.damage *= (1+zoneData.hitEntityCTXDict[entity].distanceToHitEnemy*.2f);
                     break;
 
-                case SpellEffectType.Fire:
-                    throw new NotImplementedException("y'a pas le feu dans le jeu");
-                    break;
             }
 
             e.damage = Mathf.Ceil(e.damage);

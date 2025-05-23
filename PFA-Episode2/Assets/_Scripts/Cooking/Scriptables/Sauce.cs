@@ -23,9 +23,7 @@ public class Sauce : IngredientBase
             case SauceEffectType.DamageIncreasePercentageByDistanceToCaster:
                 Spell.Effects.Add(new(SpellEffectType.DamageIncreasePercentageByDistanceToCaster, StatType.Multiplier, 1.1f));
                 break;
-            case SauceEffectType.Fire:
-                throw new NotImplementedException("Le feu est pas codé dans le jeu encore");
-                break;
+
         }
 
         Spell.AreaOfEffect = areaOfEffect;
