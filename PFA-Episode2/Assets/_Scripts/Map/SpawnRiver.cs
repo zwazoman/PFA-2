@@ -37,7 +37,7 @@ public class SpawnRiver : MonoBehaviour
 
             if (NodeA.Hauteur != NodeB.Hauteur || NumberOfNodeA != 1 || NumberOfNodeB != 1) //Ground
             {
-                GameObject item = Instantiate(_spawnGround, _parent);
+                GameObject item = Instantiate(_spawnGround, point.position, point.rotation, _parent);
                 SetupObject(item, point, false);
             }
             else
