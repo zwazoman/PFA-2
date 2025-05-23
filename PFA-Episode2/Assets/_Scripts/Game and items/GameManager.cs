@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     [Header("Data")]
     public GameStaticData staticData;
 
-    List<string> combatScenesName = new();
+    [SerializeField] List<string> combatScenesName = new();
 
 #if UNITY_EDITOR
 
