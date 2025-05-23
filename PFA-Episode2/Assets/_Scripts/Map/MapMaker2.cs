@@ -264,6 +264,6 @@ public class MapMaker2 : MonoBehaviour
         }
         MapBuildingTools.Instance.AttributeEvent(MapRange);
         MapAttributeEvent3.Instance.SetupEventNode();
-        //SpawnRiver.Instance.StartSpawnRiver();
+        SpawnRiver.Instance.StartSpawnRiver();
     }
 }
