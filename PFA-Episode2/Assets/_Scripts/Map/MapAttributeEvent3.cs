@@ -5,7 +5,8 @@ using static NodeTypes;
 public class MapAttributeEvent3 : MonoBehaviour
 {
     private NodesEventTypes _previousNodeSetup;
-    private int NumberOfConsecutiveHeal;
+    private int NumberBeforeHeal;
+    private int NumberHeal;
 
     [Header ("Probability Section")]
     [SerializeField] private int _probaCuisine = 17;
@@ -52,36 +53,21 @@ public class MapAttributeEvent3 : MonoBehaviour
         }
         else if (_previousNodeSetup != NodesEventTypes.Heal && SamePositionNode.Creator.EventName != NodesEventTypes.Heal)
         {
-            if (NumberOfConsecutiveHeal < NumberOfConsecutiveHealMax)
+            if (NumberBeforeHeal < NumberOfConsecutiveHealMax)
             {
                 SamePositionNode.EventName = NodesEventTypes.Combat;
                 _previousNodeSetup = NodesEventTypes.Combat;
-                NumberOfConsecutiveHeal++;
+                NumberBeforeHeal++;
                 print("Combat");
             }
-            else
+            else if (NumberHeal <= 2)
             {
                 SamePositionNode.EventName = NodesEventTypes.Heal;
                 _previousNodeSetup = NodesEventTypes.Heal;
+                NumberHeal++;
             }
+            else { AttributeEventNode(SamePositionNode); }
         }
         else { AttributeEventNode(SamePositionNode); }  //Je relance car j'ai un tirage pas possible
-    }
-
-    /// <summary>
-    /// Fonction qui va set les nodes pour leur attribué un event de case entre "Cuisine et Combat" 
-    /// </summary>
-    public void MapMakingEventBeforeBoss()
-    {
-        if (MapMaker2.Instance.CurrentNode.Creator.EventName == NodesEventTypes.Cuisine) //Dans le cas ou une cuisine était juste avant
-        {
-            MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Heal;
-            return;
-        }
-
-        int result = Random.Range(1, 3);
-
-        if (result == 1) { MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Cuisine; }
-        else { MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Heal; }
     }
 }

@@ -183,7 +183,7 @@ public class SpellCaster : MonoBehaviour
             pushDirection = new Vector3(xPushDirection, 0, zPushDirection);
         }
 
-        bool isDiagonal = pushDirection.x != 0 && pushDirection.z != 0;
+        bool isDiagonal = Mathf.RoundToInt(pushDirection.x) != 0 && Mathf.RoundToInt(pushDirection.z) != 0;
 
         if (isDiagonal)
         {

@@ -53,7 +53,8 @@ public class SpawnRiver : MonoBehaviour
                 }
                 else
                 {
-                    GameObject item = Instantiate(_spawnGround, _parent);
+                    GameObject item = Instantiate(_spawnGround, point.position, point.rotation, _parent);
+                    item.transform.localScale = new Vector3(4, 4, 4);
                     SetupObject(item, point, false);
                 }
 

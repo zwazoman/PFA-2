@@ -296,14 +296,15 @@ public class Entity : MonoBehaviour
     //death
     public async UniTask Die()
     {
-        print("Die");
+        visuals.DeathAnimation();
 
-        visuals.animator.PlayAnimationTrigger(deathTrigger);
+        if (this is PlayerEntity player)
+            await visuals.DeathAnimation();
 
         currentPoint.StepOff();
         isDead = true;
         OnDead?.Invoke();
-        gameObject.SetActive(false);
+
         await CombatManager.Instance.UnRegisterEntity(this);
 
         EndTurn();

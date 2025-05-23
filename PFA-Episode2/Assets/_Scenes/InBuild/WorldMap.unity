@@ -7139,10 +7139,9 @@ MonoBehaviour:
   - {fileID: 320003896}
   - {fileID: 441482115}
   _spawnSpecialGround:
-  - {fileID: 919132149155446097, guid: 6aae21c0386c1e349a48e7b003331998, type: 3}
   - {fileID: 919132149155446097, guid: 03ea37a1c4593ae4e9d5eb5bb55fb62c, type: 3}
   _spawnGround: {fileID: 919132149155446097, guid: 6aae21c0386c1e349a48e7b003331998, type: 3}
-  _spawnProbability: 1
+  _spawnProbability: 0.3
   _groundList: []
   _parent: {fileID: 2102021084}
 --- !u!4 &1215817174
@@ -9412,11 +9411,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1648153d73338df44a233ddeed1916f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _probaCuisine: 22
-  _probaIngredient: 21
+  _probaCuisine: 32
+  _probaIngredient: 8
   _probaCombat: 50
-  _probaHeal: 1
-  NumberOfConsecutiveHealMax: 3
+  _probaHeal: 4
+  NumberOfConsecutiveHealMax: 2
 --- !u!1 &1528082961
 GameObject:
   m_ObjectHideFlags: 0
