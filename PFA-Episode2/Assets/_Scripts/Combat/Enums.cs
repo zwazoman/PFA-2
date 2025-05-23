@@ -20,6 +20,7 @@ public enum IngredientEffectType
     Damage,
     Recoil,
     Shield,
+    Range
 }
 
 public enum SpellEffectType

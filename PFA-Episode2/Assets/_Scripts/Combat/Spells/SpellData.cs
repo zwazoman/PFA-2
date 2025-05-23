@@ -45,24 +45,43 @@ public struct SpellEffect
     #region spellCollapse
     public static void CollapseSimilarSpellEffects(ref SpellEffect[] Effects)
     {
-        bool collapsedBontoA = TryCollapseBontoA(ref Effects[0], Effects[1]); 
-        bool collapsedContoA = TryCollapseBontoA(ref Effects[0], Effects[2]);
+        if (Effects.Length ==3) 
+        {
+            bool collapsedBontoA = TryCollapseBontoA(ref Effects[0], Effects[1]);
+            bool collapsedContoA = TryCollapseBontoA(ref Effects[0], Effects[2]);
 
-        if (collapsedBontoA && collapsedContoA) Effects = new SpellEffect[] { Effects[0]};
-        else if (collapsedBontoA && !collapsedContoA)
-        {
-            Effects = new SpellEffect[] { Effects[0], Effects[2] };
+            if (collapsedBontoA && collapsedContoA) Effects = new SpellEffect[] { Effects[0] };
+            else if (collapsedBontoA && !collapsedContoA)
+            {
+                Effects = new SpellEffect[] { Effects[0], Effects[2] };
+            }
+            else if (!collapsedBontoA && collapsedContoA)
+            {
+                Effects = new SpellEffect[] { Effects[0], Effects[1] };
+            }
+            else if (!(collapsedBontoA || collapsedContoA))
+            {
+                bool collapsedCOntoB = TryCollapseBontoA(ref Effects[1], Effects[2]);
+                if (collapsedCOntoB) Effects = new SpellEffect[] { Effects[0], Effects[2] };
+                else return;
+            }
         }
-        else if (!collapsedBontoA && collapsedContoA)
+        else if(Effects.Length == 2)
         {
-            Effects = new SpellEffect[] { Effects[0], Effects[1] };
+            bool collapsedBontoA = TryCollapseBontoA(ref Effects[0], Effects[1]);
+            
+            if (collapsedBontoA) Effects = new SpellEffect[] { Effects[0] };
+            else Effects = new SpellEffect[] { Effects[0], Effects[1] };
         }
-        else if (!(collapsedBontoA || collapsedContoA))
+        else if(Effects.Length ==1)
         {
-            bool collapsedCOntoB = TryCollapseBontoA(ref Effects[1], Effects[2]);
-            if (collapsedCOntoB) Effects = new SpellEffect[] { Effects[0], Effects[2] };
-            else return;
+            Effects = new SpellEffect[] { Effects[0] };
         }
+        else
+        {
+            Effects = new SpellEffect[] { new SpellEffect(SpellEffectType.Damage,StatType.FlatIncrease,2)};
+        }
+       
     }
 
     static bool TryCollapseBontoA(ref SpellEffect a, SpellEffect b)
