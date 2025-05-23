@@ -18,6 +18,7 @@ public class Crafting : MonoBehaviour
 
         //collapse similar effects
         SpellEffect[] effects = spell.Effects.ToArray();
+        Debug.Log(effects.Length);
         SpellEffect.CollapseSimilarSpellEffects(ref effects);
         spell.Effects = effects.ToList();
 
