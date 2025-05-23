@@ -338,10 +338,12 @@ public class SpellCaster : MonoBehaviour
         PoolManager.Instance.ProjectilePool.PullObjectFromPool(_spellCastingSocket.position).TryGetComponent(out projectile);
         await projectile.Launch(castingEntity, entity, spell.spellData.Mesh);
 
+        
+        //wait for animations to play
+        await entity.visuals.animator.PlayAnimationTrigger(entity.hitTrigger);
+
         //cancel preview
         StopSpellEffectPreview(entity);
-
-        await entity.visuals.animator.PlayAnimationTrigger(entity.hitTrigger);
 
         BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);
         await entity.ApplySpell(e);
