@@ -156,6 +156,7 @@ public class SaveMapGeneration : MonoBehaviour
                 if (node.Position <= PlayerMap.Instance.PositionMap + 3 && node.Position >= PlayerMap.Instance.PositionMap - 1)
                 { 
                     node.gameObject.SetActive(true);
+                    node.SetupSprite();
                     for (int i = 0; i < node.PathBetweenNode.Count; i++)
                     {
                         node.PathBetweenNode[i].gameObject.SetActive(true);
