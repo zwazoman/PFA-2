@@ -30,7 +30,6 @@ public class EntityStats
     {
         this.maxHealth = maxHP;
         currentHealth = maxHP+1;
-        Debug.Log(maxHealth);
 
         ApplyHealth(-1);
         owner.gameObject.GetComponent<EntityUI>().Setup(owner);

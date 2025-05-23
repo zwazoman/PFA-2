@@ -20,6 +20,8 @@ public class Node : MonoBehaviour
     public bool Visited;
     public bool Intersection;
     public List<GameObject> PathBetweenNode = new();
+    [SerializeField] private MeshRenderer _meshRend;
+    [SerializeField] private Material _mat;
 
     public static void TriggerMapCompleted() { OnMapCompleted?.Invoke(); }
 
@@ -55,6 +57,7 @@ public class Node : MonoBehaviour
                 CombatPrefab.transform.SetParent(gameObject.transform);
                 CombatPrefab.SetActive(true);
                 _mesh = CombatPrefab;
+                _meshRend.material = _mat;
                 break;
             case NodesEventTypes.Ingredient:
                 GameObject IngredientPrefab = PoolObject.Instance.IngredientList.Dequeue();
@@ -85,15 +88,7 @@ public class Node : MonoBehaviour
         Vector3 rot = transform.eulerAngles;
         rot.z = -90f;
         transform.eulerAngles = rot;
-        CleanUnBug();
-    }
-
-    private void CleanUnBug()
-    {
-        if (PathBetweenNode.Count > 1)
-        {
-            if (Hauteur != 3) { Destroy(PathBetweenNode[1]); }
-        }
+        if (PathBetweenNode.Count > 1) { if (Hauteur != 3) { Destroy(PathBetweenNode[1]); } }
     }
 
     private void TweenMesh()

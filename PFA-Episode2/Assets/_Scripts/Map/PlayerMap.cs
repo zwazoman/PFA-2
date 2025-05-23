@@ -28,8 +28,6 @@ public class PlayerMap : MonoBehaviour
     {
         Instance = this;
         _target = transform.position;
-
-        
     }
 
     private void Start()
@@ -49,8 +47,7 @@ public class PlayerMap : MonoBehaviour
         Node tmp = clickedNode;
         PositionMap = clickedNode.Position;
         clickedNode = null;
-        return tmp.transform.position;
-        
+        return tmp.transform.position;     
     }
 
     private async void LoadNextScene()
@@ -59,7 +56,6 @@ public class PlayerMap : MonoBehaviour
         await MoveTo(_target); //Attends qu'il soit arrivé
 
         //---------------- Charge une nouvelle scène -------------------------
-
         int positionX = Mathf.RoundToInt((gameObject.transform.localPosition.x) / 10);
         positionX = positionX * 10;
 
@@ -74,7 +70,6 @@ public class PlayerMap : MonoBehaviour
             {
                 SaveMapGeneration.Instance.SaveMap();
                 GameManager.Instance.playerInventory.Save(GameManager.Instance.playerInventory.NameSave);
-
                 if (KeyAndValues.Value.EventName.ToString() == "Start") { break; }
                 if (KeyAndValues.Value.EventName.ToString() == "Combat")
                 {

@@ -39,7 +39,6 @@ public class DraggableSpellContainer : DraggableItemContainer
         EventSystem.current.RaycastAll(eventData, a);
         if (a.Count > 0 && a[0].gameObject.layer == 8)
         {
-            print("gg");
             backGroundImage.gameObject.SetActive(true);
             gameObject.transform.SetParent(a[0].gameObject.transform);
             gameObject.transform.localPosition = Vector3.zero;

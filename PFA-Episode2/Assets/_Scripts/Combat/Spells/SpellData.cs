@@ -11,6 +11,7 @@ public class SpellData
     /// </summary>
     public string Name;
     public Sprite Sprite;
+    public Mesh Mesh;
 
     public string IngredientsCombination;
 

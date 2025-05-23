@@ -36,11 +36,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: rig_chara_eggplant|Anim_attack_eggplant
-      takeName: rig_chara_eggplant|Anim_attack_eggplant
+      name: rig_chara_eggplant|Anim_attackcac_eggplant
+      takeName: rig_chara_eggplant|Anim_attackcac_eggplant
       internalID: -6612706549597308185
       firstFrame: 0
-      lastFrame: 50
+      lastFrame: 40
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -59,7 +59,14 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.2698275
+        functionName: AttackEvent
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -127,7 +134,7 @@ ModelImporter:
       takeName: rig_chara_eggplant|Anim_idle_eggplant
       internalID: -4391075614022846158
       firstFrame: 0
-      lastFrame: 39
+      lastFrame: 60
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

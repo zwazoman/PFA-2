@@ -11,13 +11,13 @@ public class Dialogue : ScriptableObject
 [Serializable]
 public class SceneText
 {
-    public List<DialogueData> DialogueDatas;
+    public List<DialogueData> DialogueDatas = new();
 }
 
 [Serializable]
 public class DialogueData
 {
-    public List<Sentence> Sentence;
+    public List<Sentence> Sentence = new();
 }
 
 [Serializable]
@@ -25,6 +25,8 @@ public class Sentence
 {
     public string CharacterName;
     public string Text;
+    public string Key;
+    public string NextKey;
     public bool ShakeTextBox;
     public bool ShakeText;
     public bool LetterByLetter;

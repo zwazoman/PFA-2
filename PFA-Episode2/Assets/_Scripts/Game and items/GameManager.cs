@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
             
             //load data
             staticData = Resources.Load<GameStaticData>("GameStaticData");
-            LoadOrCreateSave();
+            //LoadOrCreateSave();
 
 #if UNITY_EDITOR
             Debug.Log("Filling inventory with test Items and spells");
@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
         
     }
 
-    void LoadOrCreateSave()
+    public void LoadOrCreateSave()
     {
         playerInventory = SaveManager.Load<Inventory>(playerInventory.NameSave, false);
     }
@@ -103,6 +103,4 @@ public class GameManager : MonoBehaviour
         int index = Random.Range(0, combatScenesName.Count);
         return combatScenesName[index];
     }
-
-
 }
