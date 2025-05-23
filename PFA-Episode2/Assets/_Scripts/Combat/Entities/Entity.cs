@@ -100,7 +100,7 @@ public class Entity : MonoBehaviour
         newShield = Mathf.Max(0, newShield - e.damage);
 
         float tankedDamage = Mathf.Abs(newShield - stats.shieldAmount);
-        float damage = Mathf.Max(e.damage - tankedDamage, 0);
+        float damage = Mathf.Max(e.damage + e.pushDamage - tankedDamage, 0);
 
         float newHP = stats.currentHealth - damage;
         

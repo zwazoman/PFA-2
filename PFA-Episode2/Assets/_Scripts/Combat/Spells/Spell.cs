@@ -30,7 +30,6 @@ public class Spell
     public void TickSpellCooldown(int value = 1)
     {
         cooling = Mathf.Max(0,cooling - value);
-        Debug.Log("Cooled : " + spellData.Name + " " + cooling.ToString()) ;
         if (cooling == 0)
             //cooling = spellData.CoolDown;
             

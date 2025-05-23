@@ -25,7 +25,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         isDragging = true;
 
         originalParent = transform.parent;
-        Debug.Log("Original parent : " + originalParent);
+
         siblingIndex = transform.GetSiblingIndex();
         canvasGroup.blocksRaycasts = false;
         transform.parent = transform.root;
@@ -43,7 +43,6 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     public virtual void Reset()
     {
-        Debug.Log("Reset");
         gameObject.SetActive(true);
         canvasGroup.blocksRaycasts = true;
         transform.parent = originalParent;
