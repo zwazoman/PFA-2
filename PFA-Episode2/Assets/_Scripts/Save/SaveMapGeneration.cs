@@ -10,7 +10,6 @@ public class SaveMapGeneration : MonoBehaviour
     [Tooltip("Sauvegarde crypter ou non")] public bool Encrypt;
     [Tooltip("Numéro de fichier de sauvegarde")] public byte SaveID;
     const string ENCRYPT_KEY = "Tr0mp1ne7te";
-    private int _numberLink = 0;
     public int PositionMap { get; private set; }
 
     #region Singleton
@@ -90,25 +89,6 @@ public class SaveMapGeneration : MonoBehaviour
             }
         }
 
-        /*foreach (GameObject go in MapBuildingTools.Instance._savePath) { if (go == null) { MapBuildingTools.Instance._savePath.Remove(go); } }
-        foreach (GameObject GO in MapBuildingTools.Instance._savePath)
-        {
-            //Image link = image;
-            List<Vector3> list = new()
-            {
-                GO.transform.localPosition,
-                GO.transform.localScale,
-            };
-
-            SerializableLink linkObj = new()
-            {
-                transformLink = list,
-                rotationLink = GO.transform.localRotation
-            };
-
-            wrapper.links.Add(linkObj);
-        }*/
-
         string json = JsonUtility.ToJson(wrapper, true);
         string path = Application.persistentDataPath + $"/MapSave{SaveID}.json";
 
@@ -121,8 +101,6 @@ public class SaveMapGeneration : MonoBehaviour
         {
             File.WriteAllText(path, json);
         }
-
-        _numberLink = 0;
     }
 
     // Fonction pour lire les information contenu dans le fichier json de sauvegarde
@@ -172,7 +150,6 @@ public class SaveMapGeneration : MonoBehaviour
                     MapBuildingTools.Instance._savePath.Add(Path);
 
                     node.PathBetweenNode.Add(Path);
-                    _numberLink++;
                 }
 
                 foreach (GameObject obj in node.PathBetweenNode) { obj.SetActive(false); }
@@ -186,23 +163,6 @@ public class SaveMapGeneration : MonoBehaviour
                     //foreach (GameObject obj in node.PathBetweenNode) { obj.SetActive(true); }
                 }
             }
-
-            /*// Load les link
-            foreach (SerializableLink item in wrapper.links)
-            {
-                GameObject Path = MapBuildingTools.Instance.TrueListPath[0];
-                MapBuildingTools.Instance.TrueListPath.RemoveAt(0);
-
-                Path.transform.localPosition = item.transformLink[0];
-                Path.transform.localRotation = item.rotationLink;
-                Path.transform.localScale = item.transformLink[1];
-                Path.gameObject.SetActive(true);
-                MapBuildingTools.Instance._savePath.Add(Path);
-
-                _numberLink++;
-            }*/
-
-            _numberLink = 0;
 
             // Relie les créateurs une fois que tous les nodes sont instanciés
             foreach (SerializableNode item in wrapper.nodes)
@@ -225,8 +185,6 @@ public class SaveMapGeneration : MonoBehaviour
 
             MapMaker2.Instance.DicoNode = tempDico;
             Node.TriggerMapCompleted(); // Redéclenche l'affichage des sprites
-
-            _numberLink = 0;
         }
         else
         {
