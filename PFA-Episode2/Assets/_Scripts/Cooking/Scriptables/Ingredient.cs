@@ -14,14 +14,13 @@ public class Ingredient : IngredientBase
 
     [Header("Stats")]
     public byte CoolDownIncrease;
-    public byte RangeIncrease;
 
     public override void ModifySpellEffect(SpellData Spell)
     {
         switch (EffectType)
         {
             case IngredientEffectType.Damage:
-                Spell.Effects.Add(new(SpellEffectType.Damage,EffectStatType, EffectValue));
+                Spell.Effects.Add(new(SpellEffectType.Damage, EffectStatType, EffectValue));
                 break;
             case IngredientEffectType.Recoil:
                 Spell.Effects.Add(new(SpellEffectType.Recoil, EffectStatType, EffectValue));
@@ -29,10 +28,12 @@ public class Ingredient : IngredientBase
             case IngredientEffectType.Shield:
                 Spell.Effects.Add(new(SpellEffectType.Shield, EffectStatType, EffectValue));
                 break;
+            case IngredientEffectType.Range:
+                Spell.Range += (byte)Mathf.Max(1, Spell.Range + EffectValue);
+                break;
         }
 
         Spell.CoolDown += CoolDownIncrease;
-        Spell.Range = (byte)Mathf.Max(1,Spell.Range + RangeIncrease);
 
     }
 
