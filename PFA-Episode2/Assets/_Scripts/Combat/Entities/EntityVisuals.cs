@@ -79,6 +79,15 @@ public class EntityVisuals : MonoBehaviour
         };
     }
 
+    public async UniTask DeathAnimation()
+    {
+        await animator.PlayAnimationTrigger(owner.deathTrigger);
+
+        print("connard");
+
+        gameObject.SetActive(false);
+    }
+
     async UniTask OnHealthUpdated(float delta, float newValue)
     {
         if (Time.timeSinceLevelLoad < 1) return;
@@ -91,4 +100,6 @@ public class EntityVisuals : MonoBehaviour
             await VisualsRoot.DOPunchScale(Vector3.one * .2f, .5f, 5).AsyncWaitForCompletion().AsUniTask(); ;
         }
     }
+
+
 }
