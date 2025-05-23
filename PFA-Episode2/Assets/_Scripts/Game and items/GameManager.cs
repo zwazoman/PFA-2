@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
             //singleton
             Debug.Log("Initializing game manager",this);
             instance = this;
-            DontDestroyOnLoad(this);
+            DontDestroyOnLoad(gameObject);
             
             //load data
             staticData = Resources.Load<GameStaticData>("GameStaticData");
