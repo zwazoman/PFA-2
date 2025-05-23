@@ -54,7 +54,18 @@ public class SaveMapGeneration : MonoBehaviour
                 System.Collections.IList link = node.PathBetweenNode;
                 for (int i = 0; i < node.PathBetweenNode.Count; i++)
                 {
-                    List<Vector3> list = new()
+                    List<Vector3> list = new() /*MissingReferenceException: The object of type 'UnityEngine.GameObject' has been destroyed but you are still trying to access it.
+Your script should either check if it is null or you should not destroy the object.
+UnityEngine.Object + MarshalledUnityObject.TryThrowEditorNullExceptionObject(UnityEngine.Object unityObj, System.String parameterName)(at<fc22648a2f8c48a38d6136ea0e187002>:0)
+UnityEngine.Bindings.ThrowHelper.ThrowNullReferenceException(System.Object obj)(at<fc22648a2f8c48a38d6136ea0e187002>:0)
+UnityEngine.GameObject.get_transform()(at<fc22648a2f8c48a38d6136ea0e187002>:0)
+SaveMapGeneration.SaveMap()(at Assets / _Scripts / Save / SaveMapGeneration.cs:57)
+PlayerMap.LoadNextScene()(at Assets / _Scripts / Map / PlayerMap.cs:72)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore +<> c.< ThrowAsync > b__7_0(System.Object state)(at < 314938d17f3848e8ac683e11b27f62ee >:0)
+UnityEngine.UnitySynchronizationContext + WorkRequest.Invoke()(at<fc22648a2f8c48a38d6136ea0e187002>:0)
+UnityEngine.UnitySynchronizationContext.Exec()(at<fc22648a2f8c48a38d6136ea0e187002>:0)
+UnityEngine.UnitySynchronizationContext.ExecuteTasks()(at<fc22648a2f8c48a38d6136ea0e187002>:0)*/
+                    
                     {
                         node.PathBetweenNode[i].transform.localPosition,
                         node.PathBetweenNode[i].transform.localScale
