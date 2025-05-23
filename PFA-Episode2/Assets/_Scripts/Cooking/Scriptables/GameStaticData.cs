@@ -28,4 +28,9 @@ public class GameStaticData : ScriptableObject
         public Sprite sprite;
         public string name;
     }
+
+    [Header("Tile materials")]
+    public Material _mat_movementPreview;
+    public Material _mat_spellAoePreview;
+    public Material _mat_spellCastZonePreview;
 }

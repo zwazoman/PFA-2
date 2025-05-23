@@ -18,7 +18,9 @@ public class LightningManager : MonoBehaviour
     [SerializeField] float _fogRadius;
     [SerializeField] float _fogIntensity;
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    [SerializeField] RenderTexture douille;
+
+   [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     public static void onSceneLoad()
     {
         try
@@ -35,6 +37,7 @@ public class LightningManager : MonoBehaviour
     public void UpdateLightningInfo()
     {
         Shader.SetGlobalTexture("_lightGradientMap", _gradientMap);
+        Shader.SetGlobalTexture("_lightGradientMap", _gradientMap);
         Shader.SetGlobalTexture("_stippling", _stippling);
         Shader.SetGlobalFloat("_enviroID", _enviroID);
         Shader.SetGlobalFloat("_bands", _bands);
@@ -43,6 +46,9 @@ public class LightningManager : MonoBehaviour
         Shader.SetGlobalFloat("_fogRadius", _fogRadius);
         //Shader.SetGlobalFloat("_bands", _bands);
         Shader.SetKeyword(GlobalKeyword.Create("FOG"), _fogOn);
+
+        Shader.SetGlobalTexture("tex",douille);
+
     }
 
     private void OnValidate()
@@ -53,6 +59,11 @@ public class LightningManager : MonoBehaviour
     private void Start()
     {
         UpdateLightningInfo();
+    }
+
+    private void OnDestroy()
+    {
+        douille.Release();
     }
 
 

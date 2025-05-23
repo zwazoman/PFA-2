@@ -222,7 +222,7 @@ public class EnemyEntity : Entity
             await UniTask.Yield();
         }
 
-        choosenTargetPoint.ChangeTileColor(choosenTargetPoint._zoneMaterial);
+        choosenTargetPoint.SetPreviewState(WayPoint.PreviewState.SpellCastZone);
 
         // possibilité pour pas qu'elle se tire dessus ? ça serait rigolo n la stock qq part si ça se touche et on réésaie. si pas de solution on utilise celle qui touche
 
