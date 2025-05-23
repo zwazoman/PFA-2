@@ -33,7 +33,7 @@ public class SaveMapGeneration : MonoBehaviour
     {
         MapWrapper wrapper = new();
 
-        SerialzablePlayer player = new()
+        SerializablePlayer player = new()
         {
             playerPosition = Vector3Int.RoundToInt(PlayerMap.Instance.transform.localPosition),
             PositionMap = PlayerMap.Instance.PositionMap,
@@ -88,6 +88,8 @@ public class SaveMapGeneration : MonoBehaviour
                 wrapper.nodes.Add(snode);
             }
         }
+
+        //for (int i = 0; i < SpawnRiver.Instance.)
 
         string json = JsonUtility.ToJson(wrapper, true);
         string path = Application.persistentDataPath + $"/MapSave{SaveID}.json";
