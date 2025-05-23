@@ -21,6 +21,7 @@ public class Entity : MonoBehaviour
     [HideInInspector] public SpellCaster entitySpellCaster;
 
     public EntityVisuals visuals;
+    public Transform eatSocket;
 
     protected Dictionary<WayPoint, int> WaypointDistance = new Dictionary<WayPoint, int>();
     protected List<WayPoint> Walkables = new List<WayPoint>();
@@ -99,7 +100,7 @@ public class Entity : MonoBehaviour
         newShield = Mathf.Max(0, newShield - e.damage);
 
         float tankedDamage = Mathf.Abs(newShield - stats.shieldAmount);
-        float damage = Mathf.Max(e.damage - tankedDamage, 0);
+        float damage = Mathf.Max(e.damage + e.pushDamage - tankedDamage, 0);
 
         float newHP = stats.currentHealth - damage;
         
@@ -115,9 +116,16 @@ public class Entity : MonoBehaviour
     //spell effect
     public async UniTask ApplySpell(BakedSpellEffect effect)
     {
-        if(effect.shield != 0) await stats.ApplyShield(effect.shield);
-        if (effect.damage != 0) await stats.ApplyDamage(effect.damage);
-        if (effect.pushPoint != null) await Push(Mathf.RoundToInt(effect.pushDamage), effect.pushPoint);
+        try
+        {
+            if (effect.shield != 0) await stats.ApplyShield(effect.shield);
+            if (effect.damage != 0) await stats.ApplyDamage(effect.damage);
+            if (effect.pushPoint != null) await Push(Mathf.RoundToInt(effect.pushDamage), effect.pushPoint);
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
     }
 
     //walkable tiles
@@ -159,7 +167,6 @@ public class Entity : MonoBehaviour
             visuals.animator.EndAnimationBool(pushBool);
         }
 
-
         if (pushDamages > 0)
             await stats.ApplyDamage(pushDamages);
 
@@ -189,8 +196,6 @@ public class Entity : MonoBehaviour
             return true;
         }
 
-        
-
         await UniTask.Delay(500);
 
         WayPoint moveToPoint;
@@ -204,6 +209,7 @@ public class Entity : MonoBehaviour
     /// <summary>
     /// fait se déplcaer l'entité le plus loin possible de l'entité ciblée
     /// </summary>
+    /// 
     /// <param name="targetPoint"></param>
     /// <returns></returns>
     protected async UniTask MoveAwayFrom(WayPoint targetPoint)
@@ -271,7 +277,7 @@ public class Entity : MonoBehaviour
         Vector3 offset = targetPos - (Vector3)transform.position;
         float rotation = 90f * rotmultiplyer;
         Quaternion targetRotation = Quaternion.Euler(0, Mathf.Atan2(-offset.z, offset.x) * Mathf.Rad2Deg + rotation, 0);
-        transform.DORotateQuaternion(targetRotation, 1f / moveSpeed);
+        visuals.VisualsRoot.DORotateQuaternion(targetRotation, 1f / moveSpeed);
         while ((Vector3)transform.position != targetPos)
         {
             Vector3 offset2 = targetPos - (Vector3)transform.position;
@@ -281,12 +287,18 @@ public class Entity : MonoBehaviour
         }
     }
 
+    public async UniTask LookAt(WayPoint point, float speed = .2f)
+    {
+        Vector3 lookPos = new Vector3(point.transform.position.x, transform.position.y, point.transform.position.z);
+        await visuals.VisualsRoot.DOLookAt(lookPos, speed);
+    }
+
     //death
     public async UniTask Die()
     {
         print("Die");
 
-        await visuals.animator.PlayAnimationTrigger(deathTrigger);
+        visuals.animator.PlayAnimationTrigger(deathTrigger);
 
         currentPoint.StepOff();
         isDead = true;

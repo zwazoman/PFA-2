@@ -15,7 +15,7 @@ public class EnemyEntity : Entity
 
     WayPoint targetPlayerPoint;
 
-    const int ThinkDelayMilis = 300;
+    const int ThinkDelayMilis = 150;
 
     protected override void Awake()
     {
@@ -51,7 +51,7 @@ public class EnemyEntity : Entity
 
         targetPlayerPoint = FindClosestPlayerPoint();
 
-        Spell choosenSpell = ChooseSpell(0);
+        Spell choosenSpell = ChooseRandomSpell();
         bool attacked;
 
         if (choosenSpell != null)
@@ -172,8 +172,6 @@ public class EnemyEntity : Entity
     /// <returns></returns>
     protected async UniTask<bool> TryAttack(Spell choosenSpell, WayPoint targetPoint)
     {
-        //print(targetPoint.Content.gameObject.name);
-
         if (targetPoint == null)
             return false;
 
@@ -224,11 +222,11 @@ public class EnemyEntity : Entity
 
         choosenTargetPoint.SetPreviewState(WayPoint.PreviewState.SpellCastZone);
 
-        // possibilité pour pas qu'elle se tire dessus ? ça serait rigolo n la stock qq part si ça se touche et on réésaie. si pas de solution on utilise celle qui touche
+        // possibilitï¿½ pour pas qu'elle se tire dessus ? ï¿½a serait rigolo n la stock qq part si ï¿½a se touche et on rï¿½ï¿½saie. si pas de solution on utilise celle qui touche
 
         await UniTask.Delay(ThinkDelayMilis);
 
-        bool targetReached = await MoveToward(choosenTargetPoint); // le point le plus proche de lancé de sort
+        bool targetReached = await MoveToward(choosenTargetPoint); // le point le plus proche de lancï¿½ de sort
 
         if (targetReached)
         {

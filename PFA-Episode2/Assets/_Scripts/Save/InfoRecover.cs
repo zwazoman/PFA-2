@@ -36,7 +36,7 @@ public class InfoRecover : MonoBehaviour
 
             foreach (var item in wrapper.nodes)
             {
-                if (Vector3Int.Distance(item.key, item.playerPosition) <= 1f)
+                if (Vector3Int.Distance(item.key, wrapper.player.playerPosition) <= 1f)
                 {
                     info = $"Save {id}\nNode : {item.position}";
                     Debug.Log(info);

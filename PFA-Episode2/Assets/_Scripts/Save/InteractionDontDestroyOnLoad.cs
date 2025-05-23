@@ -52,4 +52,9 @@ public class InteractDontDestroyOnLoad : MonoBehaviour
     {
         GameManager.Instance.playerInventory.Ingredients.Add(ingredient);
     }
+
+    public void LoadSave()
+    {
+        GameManager.Instance.LoadOrCreateSave();
+    }
 }

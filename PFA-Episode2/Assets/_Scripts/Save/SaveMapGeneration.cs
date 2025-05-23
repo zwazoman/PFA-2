@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
-using UnityEngine.UI;
 
 /// <summary>
 /// Script qui gère la sauvegarde la map
@@ -35,6 +34,15 @@ public class SaveMapGeneration : MonoBehaviour
     {
         MapWrapper wrapper = new();
 
+        SerialzablePlayer player = new()
+        {
+            playerPosition = Vector3Int.RoundToInt(PlayerMap.Instance.transform.localPosition),
+            PositionMap = PlayerMap.Instance.PositionMap,
+            Y = PlayerMap.Instance.Y
+        };
+
+        wrapper.player = player;
+
         foreach (KeyValuePair<Vector3Int, Node> kvp in MapMaker2.Instance.DicoNode)
         {
             Node node = kvp.Value;
@@ -42,6 +50,26 @@ public class SaveMapGeneration : MonoBehaviour
             // Ne sauvegarde pas le Startnode
             if (node.Position != 0)
             {
+                List<SerializableLink> links = new();
+
+                System.Collections.IList link = node.PathBetweenNode;
+                for (int i = 0; i < node.PathBetweenNode.Count; i++)
+                {
+                    List<Vector3> list = new()
+                    {
+                        node.PathBetweenNode[i].transform.localPosition,
+                        node.PathBetweenNode[i].transform.localScale
+                    };
+
+                    SerializableLink linkObj = new()
+                    {
+                        transformLink = list,
+                        rotationLink = node.PathBetweenNode[i].transform.localRotation
+                    };
+
+                    links.Add(linkObj);
+                }
+
                 SerializableNode snode = new()
                 {
                     key = kvp.Key,
@@ -50,18 +78,19 @@ public class SaveMapGeneration : MonoBehaviour
                     eventName = node.EventName,
                     onYReviendra = node.OnYReviendra,
                     Intersection = node.Intersection,
-                    Y = PlayerMap.Instance.Y,
-                    playerPosition = Vector3Int.RoundToInt(PlayerMap.Instance.transform.localPosition),
-                    PositionMap = PlayerMap.Instance.PositionMap,
+                    Visited = node.Visited,
 
                     // Sauvegarde la clé du créateur ou Vector3Int.zero si null
-                    creatorKey = node.Creator != null ? MapBuildingTools.Instance.GetKeyFromNode(node.Creator) : Vector3Int.zero
+                    creatorKey = node.Creator != null ? MapBuildingTools.Instance.GetKeyFromNode(node.Creator) : Vector3Int.zero,
+
+                    paths = links
                 };
 
                 wrapper.nodes.Add(snode);
             }
         }
-        foreach (GameObject go in MapBuildingTools.Instance._savePath) { if (go == null) { MapBuildingTools.Instance._savePath.Remove(go);} }
+
+        /*foreach (GameObject go in MapBuildingTools.Instance._savePath) { if (go == null) { MapBuildingTools.Instance._savePath.Remove(go); } }
         foreach (GameObject GO in MapBuildingTools.Instance._savePath)
         {
             //Image link = image;
@@ -78,7 +107,7 @@ public class SaveMapGeneration : MonoBehaviour
             };
 
             wrapper.links.Add(linkObj);
-        }
+        }*/
 
         string json = JsonUtility.ToJson(wrapper, true);
         string path = Application.persistentDataPath + $"/MapSave{SaveID}.json";
@@ -110,6 +139,11 @@ public class SaveMapGeneration : MonoBehaviour
             }
 
             MapWrapper wrapper = JsonUtility.FromJson<MapWrapper>(json);
+
+            PlayerMap.Instance.transform.localPosition = wrapper.player.playerPosition;
+            PlayerMap.Instance.PositionMap = wrapper.player.PositionMap;
+            PlayerMap.Instance.Y = wrapper.player.Y;
+
             MapMaker2.Instance.DicoNode.Clear();
 
             Dictionary<Vector3Int, Node> tempDico = new();
@@ -123,23 +157,37 @@ public class SaveMapGeneration : MonoBehaviour
                 node.EventName = item.eventName;
                 node.OnYReviendra = item.onYReviendra;
                 node.Intersection = item.Intersection;
+                node.Visited = item.Visited;
 
                 tempDico[item.key] = node;
-                node.gameObject.SetActive(true);
 
-                //Place le joueur sur le bon node
-                if (Vector3Int.Distance(item.key, item.playerPosition) <= 1f)
+                foreach (SerializableLink subItem in item.paths)
                 {
-                    //PlayerMap.Instance.SetupTarget(node.transform.position);
-                    PlayerMap.Instance.transform.localPosition = item.playerPosition;
-                    PlayerMap.Instance.PositionMap = item.PositionMap;
-                    PlayerMap.Instance.Y = item.Y;
-                    PositionMap = item.PositionMap;
+                    GameObject Path = MapBuildingTools.Instance.TrueListPath[0];
+                    MapBuildingTools.Instance.TrueListPath.RemoveAt(0);
 
+                    Path.transform.localPosition = subItem.transformLink[0];
+                    Path.transform.localRotation = subItem.rotationLink;
+                    Path.transform.localScale = subItem.transformLink[1];
+                    MapBuildingTools.Instance._savePath.Add(Path);
+
+                    node.PathBetweenNode.Add(Path);
+                    _numberLink++;
+                }
+
+                foreach (GameObject obj in node.PathBetweenNode) { obj.SetActive(false); }
+                if (node.Position <= PlayerMap.Instance.PositionMap + 3 && node.Position >= PlayerMap.Instance.PositionMap - 1)
+                { 
+                    node.gameObject.SetActive(true);
+                    for (int i = 0; i < node.PathBetweenNode.Count; i++)
+                    {
+                        node.PathBetweenNode[i].gameObject.SetActive(true);
+                    }
+                    //foreach (GameObject obj in node.PathBetweenNode) { obj.SetActive(true); }
                 }
             }
 
-            // Load les link
+            /*// Load les link
             foreach (SerializableLink item in wrapper.links)
             {
                 GameObject Path = MapBuildingTools.Instance.TrueListPath[0];
@@ -152,7 +200,7 @@ public class SaveMapGeneration : MonoBehaviour
                 MapBuildingTools.Instance._savePath.Add(Path);
 
                 _numberLink++;
-            }
+            }*/
 
             _numberLink = 0;
 

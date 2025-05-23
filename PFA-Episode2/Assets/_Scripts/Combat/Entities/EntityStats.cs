@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 [Serializable]
@@ -30,12 +31,9 @@ public class EntityStats
     {
         this.maxHealth = maxHP;
         currentHealth = maxHP+1;
-        Debug.Log(maxHealth);
 
         ApplyHealth(-1);
         owner.gameObject.GetComponent<EntityUI>().Setup(owner);
-        ApplyShield(10);
-
     }
 
     public async UniTask ApplyDamage(float damage)

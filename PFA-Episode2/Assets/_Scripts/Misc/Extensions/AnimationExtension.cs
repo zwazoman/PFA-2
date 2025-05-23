@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Unity.VisualScripting;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public static class AnimationExtension
@@ -10,8 +11,9 @@ public static class AnimationExtension
             return;
 
         animator.SetTrigger(trigger);
+        await UniTask.Delay(275);
+        
         await Awaitable.WaitForSecondsAsync(GetAnimationLength(trigger,animator));
-        animator.SetTrigger("Idle");
     }
 
     public static void PlayAnimationBool(this Animator animator, string boolos)
@@ -32,7 +34,8 @@ public static class AnimationExtension
 
     public static float GetAnimationLength(string trigger, Animator animator)
     {
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        return stateInfo.length;
+        AnimatorClipInfo clipInfo = animator.GetCurrentAnimatorClipInfo(0)[0];
+
+        return clipInfo.clip.length;
     }
 }

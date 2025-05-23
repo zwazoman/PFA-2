@@ -33,7 +33,7 @@ public class SetupSpellInventory : MonoBehaviour
             for (int index = 0; index < SpellChoose.Effects.Count; index++) //Effets
             {
                 SpellEffect spellEffect = SpellChoose.Effects[index];
-                _refInfoVariant.Effect.text = spellEffect.ToString();
+                _refInfoVariant.Effect.text = Serializer.GetSpellEffectString(spellEffect);
             }
 
             if (_refInfoVariant.SpellZoneEffect.sprite != null) //Sécurité

@@ -13,13 +13,15 @@ public class Node : MonoBehaviour
     public Node Creator;
     public NodesEventTypes EventName;
     public bool OnYReviendra;
-    [SerializeField] private GameObject _parentGO;
-    [SerializeField] private GameObject _prefabBoss;
-    [SerializeField] private Button _button;
     private GameObject _mesh;
     public bool Visited;
     public bool Intersection;
     public List<GameObject> PathBetweenNode = new();
+    [SerializeField] private GameObject _parentGO;
+    [SerializeField] private GameObject _prefabBoss;
+    [SerializeField] private Button _button;
+    [SerializeField] private MeshRenderer _meshRend;
+    [SerializeField] private Material _mat;
 
     public static void TriggerMapCompleted() { OnMapCompleted?.Invoke(); }
 
@@ -30,14 +32,10 @@ public class Node : MonoBehaviour
         TweenMesh();
     }
 
-    private void OnEnable() { OnMapCompleted += SetupSprite; }
-
-    private void OnDisable() { OnMapCompleted -= SetupSprite; }
-
     /// <summary>
     /// Fonction qui peut setup un sprite pour le node selon son rôle
     /// </summary>
-    private void SetupSprite()
+    public void SetupSprite()
     {
         if (PlayerMap.Instance.PositionMap == Position) { return; }
         switch (EventName)
@@ -55,6 +53,7 @@ public class Node : MonoBehaviour
                 CombatPrefab.transform.SetParent(gameObject.transform);
                 CombatPrefab.SetActive(true);
                 _mesh = CombatPrefab;
+                _meshRend.material = _mat;
                 break;
             case NodesEventTypes.Ingredient:
                 GameObject IngredientPrefab = PoolObject.Instance.IngredientList.Dequeue();
@@ -85,15 +84,7 @@ public class Node : MonoBehaviour
         Vector3 rot = transform.eulerAngles;
         rot.z = -90f;
         transform.eulerAngles = rot;
-        CleanUnBug();
-    }
-
-    private void CleanUnBug()
-    {
-        if (PathBetweenNode.Count > 1)
-        {
-            if (Hauteur != 3) { Destroy(PathBetweenNode[1]); }
-        }
+        if (PathBetweenNode.Count > 1) { if (Hauteur != 3) { Destroy(PathBetweenNode[1]); } }
     }
 
     private void TweenMesh()
