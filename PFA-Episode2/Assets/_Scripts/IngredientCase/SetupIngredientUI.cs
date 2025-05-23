@@ -7,7 +7,6 @@ public class SetupIngredientUI : MonoBehaviour
 {
     [SerializeField] private List<IngredientUI> _listIngredientUI = new();
     public List<List<IngredientBase>> ListListIngredient = new();
-    private bool _firstTime;
 
     public static SetupIngredientUI Instance;
 
@@ -29,9 +28,8 @@ public class SetupIngredientUI : MonoBehaviour
             if (ing is Sauce Sauce) { GameManager.Instance.playerInventory.Sauces.Add(Sauce); }
             else if (ing is Ingredient Ingredient) { GameManager.Instance.playerInventory.Ingredients.Add(Ingredient); }
         }
-        if (SaveMapGeneration.Instance.PositionMap == 0 && !_firstTime)
+        if (PlayerMap.Instance.PositionMap == 1)
         {
-            _firstTime = true;
             ListListIngredient.Clear();
             await TweenIngredientUI.Instance.Monte(TweenIngredientUI.Instance.PanelToTween[index]);
             await TweenIngredientUI.Instance.TweenUIDespawn();
