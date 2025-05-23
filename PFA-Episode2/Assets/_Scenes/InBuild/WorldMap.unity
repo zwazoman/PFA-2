@@ -8800,9 +8800,9 @@ GameObject:
   - component: {fileID: 1487401232}
   - component: {fileID: 1487401234}
   - component: {fileID: 1487401233}
-  - component: {fileID: 1487401237}
   - component: {fileID: 1487401236}
   - component: {fileID: 1487401235}
+  - component: {fileID: 1487401237}
   m_Layer: 5
   m_Name: Carte
   m_TagString: Untagged
@@ -8918,13 +8918,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1487401231}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e799f16afeb22f84f8e5b05f2c60500f, type: 3}
+  m_Script: {fileID: 11500000, guid: 1648153d73338df44a233ddeed1916f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _probaCuisine: 24
-  _probaIngredient: 10
-  _probaCombat: 65
+  _probaCuisine: 22
+  _probaIngredient: 21
+  _probaCombat: 50
   _probaHeal: 1
+  NumberOfConsecutiveHealMax: 4
 --- !u!1 &1528082961
 GameObject:
   m_ObjectHideFlags: 0
@@ -13286,12 +13287,12 @@ MonoBehaviour:
   Creator: {fileID: 0}
   EventName: 4
   OnYReviendra: 0
-  _parentGO: {fileID: 0}
-  _prefabBoss: {fileID: 5916207004038825499, guid: 83f0988568ab6e643a2d160c2d085b1c, type: 3}
-  _button: {fileID: 9109090549128005209}
   Visited: 0
   Intersection: 0
   PathBetweenNode: []
+  _parentGO: {fileID: 0}
+  _prefabBoss: {fileID: 5916207004038825499, guid: 83f0988568ab6e643a2d160c2d085b1c, type: 3}
+  _button: {fileID: 9109090549128005209}
   _meshRend: {fileID: 0}
   _mat: {fileID: 0}
 --- !u!114 &9109090549128005209

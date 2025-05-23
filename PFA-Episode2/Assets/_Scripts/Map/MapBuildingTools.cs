@@ -90,9 +90,8 @@ public class MapBuildingTools : MonoBehaviour
 
     public void AttributeEvent(int _mapRange)
     {
-        if (MapMaker2.Instance.CurrentNode.Position + 1 == _mapRange) { MapAttributeEvent.Instance.MapMakingEventBeforeBoss(); }
+        if (MapMaker2.Instance.CurrentNode.Position + 1 == _mapRange) { MapAttributeEvent3.Instance.MapMakingEventBeforeBoss(); }
         if (MapMaker2.Instance.CurrentNode.Position == _mapRange) { MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Boss; }
-        else { MapAttributeEvent.Instance.MapMakingEvent(); }
         switch (MapMaker2.Instance.CurrentNode.Position)
         {
             case 1:
@@ -100,7 +99,6 @@ public class MapBuildingTools : MonoBehaviour
                 break;
             case 2:
                 MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Cuisine;
-                MapAttributeEvent.Instance.SetCuisineProbaToNull();
                 break;
             case 3:
                 MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Combat;

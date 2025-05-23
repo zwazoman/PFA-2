@@ -22,7 +22,7 @@ public class SpawnRiver : MonoBehaviour
     private void Awake() { Instance = this; }
     #endregion
 
-    public void StartSpawnRiver()
+    public void StartSpawnRiver() //Dans MapMaker2
     {
         for (int index = 0; index < _spawnPoints.Count; index++) //On doit trié
         {
