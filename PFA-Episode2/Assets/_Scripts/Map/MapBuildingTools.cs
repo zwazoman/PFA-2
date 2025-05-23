@@ -9,8 +9,8 @@ public class MapBuildingTools : MonoBehaviour
     public List<GameObject> TrueListPath;
     [SerializeField][Tooltip("GameObject parent des chemins, si null alors c'est le porteur du script le parent")] private GameObject _parent;
     public bool FirstTimeDraw = true;
-    private bool _tkt;
     public List<GameObject> _savePath = new();
+    private List<Vector3> _pathPos = new();
 
     #region Singleton
     public static MapBuildingTools Instance;
@@ -53,11 +53,8 @@ public class MapBuildingTools : MonoBehaviour
             //Vector3 dir = PointB.transform.localPosition - PointA.transform.localPosition;
             //float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
-            if (CurrentPath.transform.localPosition == new Vector3(-2000,0,0))
-            { 
-                if (!_tkt) { _tkt = true; }
-                else { Destroy(CurrentPath); print("connard"); return; }
-            }
+            if (_pathPos.Contains(CurrentPath.transform.localPosition)) { Destroy(CurrentPath); return; }
+            else { _pathPos.Add(CurrentPath.transform.localPosition); }
 
             if (PointA.transform.localPosition.y > PointB.transform.localPosition.y)
             {
@@ -96,7 +93,7 @@ public class MapBuildingTools : MonoBehaviour
 
     public void AttributeEvent(int _mapRange)
     {
-        if (MapMaker2.Instance.CurrentNode.Position + 1 == _mapRange) { MapAttributeEvent3.Instance.MapMakingEventBeforeBoss(); }
+        if (MapMaker2.Instance.CurrentNode.Position + 1 == _mapRange) { MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Combat; }
         if (MapMaker2.Instance.CurrentNode.Position == _mapRange) { MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Boss; }
         switch (MapMaker2.Instance.CurrentNode.Position)
         {
