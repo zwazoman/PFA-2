@@ -172,7 +172,7 @@ public class EnemyEntity : Entity
     /// <returns></returns>
     protected async UniTask<bool> TryAttack(Spell choosenSpell, WayPoint targetPoint)
     {
-        print(targetPoint.Content.gameObject.name);
+        //print(targetPoint.Content.gameObject.name);
 
         if (targetPoint == null)
             return false;

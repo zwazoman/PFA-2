@@ -35,7 +35,7 @@ public class WayPoint : MonoBehaviour
     public WaypointState State;
 
     [Header("Tile preview")]
-    [SerializeField] private MeshRenderer _previewVisuals;
+    [SerializeField] public MeshRenderer _previewVisuals;
     [SerializeField] public float heightOffset;
 
     
@@ -53,11 +53,7 @@ public class WayPoint : MonoBehaviour
     [HideInInspector] public float F => G + H;
     #endregion
 
-    private void Awake()
-    {
-        TryGetComponent(out _previewVisuals);
 
-    }
 
     private void Start()
     {
