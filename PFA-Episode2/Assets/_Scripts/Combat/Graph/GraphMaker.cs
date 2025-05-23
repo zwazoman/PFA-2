@@ -1,8 +1,8 @@
 using AYellowpaper.SerializedCollections;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEditor;
 using UnityEngine;
+
 
 public class GraphMaker : MonoBehaviour
 {
@@ -47,6 +47,7 @@ public class GraphMaker : MonoBehaviour
         instance = this;
     }
 
+#if UNITY_EDITOR
     void GenerateGraph()
     {
         int xPos = StartPos.x;
@@ -100,8 +101,6 @@ public class GraphMaker : MonoBehaviour
                     if (hit.collider.TryGetComponent(out WayPoint wayPoint) && !point.Neighbours.Contains(wayPoint))
                         point.Neighbours.Add(wayPoint);
             }
-
-            
         }
     }
 
@@ -153,7 +152,7 @@ public class GraphMaker : MonoBehaviour
     }
 }
 
-#if UNITY_EDITOR
+
 [CustomEditor(typeof(GraphMaker))]
 public class GraphMakerEditor : Editor
 {
@@ -179,5 +178,6 @@ public class GraphMakerEditor : Editor
             graphMaker.SetUpVisuals();
 
     }
-}
 #endif
+
+}
