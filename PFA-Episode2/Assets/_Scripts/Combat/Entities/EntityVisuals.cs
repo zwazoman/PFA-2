@@ -40,14 +40,11 @@ public class EntityVisuals : MonoBehaviour
             }
             Arrows.Clear();
 
-            bool diagonal = direction.x != 0 && direction.z != 0;
+            bool diagonal = Mathf.RoundToInt(direction.x) != 0 && Mathf.RoundToInt(direction.z) != 0;
 
             int arrowNumber = Mathf.RoundToInt(direction.magnitude);
             if (diagonal)
                 arrowNumber = Mathf.RoundToInt(direction.magnitude / (float)Math.Sqrt(2));
-
-            print(direction);
-            print(diagonal);
 
             for (int i = 1; i < arrowNumber + 1; i++)
             {
@@ -82,6 +79,15 @@ public class EntityVisuals : MonoBehaviour
         };
     }
 
+    public async UniTask DeathAnimation()
+    {
+        await animator.PlayAnimationTrigger(owner.deathTrigger);
+
+        print("connard");
+
+        gameObject.SetActive(false);
+    }
+
     async UniTask OnHealthUpdated(float delta, float newValue)
     {
         if (Time.timeSinceLevelLoad < 1) return;
@@ -94,4 +100,6 @@ public class EntityVisuals : MonoBehaviour
             await VisualsRoot.DOPunchScale(Vector3.one * .2f, .5f, 5).AsyncWaitForCompletion().AsUniTask(); ;
         }
     }
+
+
 }

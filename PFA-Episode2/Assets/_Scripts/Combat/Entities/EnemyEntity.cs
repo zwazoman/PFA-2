@@ -237,6 +237,7 @@ public class EnemyEntity : Entity
 
     async UniTask<bool> CastSpell(Spell choosenSpell, WayPoint choosenTargetPoint, WayPoint pointToSelect, WayPoint target)
     {
+        ClearWalkables();
         List<WayPoint> rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint);
         await UniTask.Delay(ThinkDelayMilis);
         SpellCastData castData = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints);
