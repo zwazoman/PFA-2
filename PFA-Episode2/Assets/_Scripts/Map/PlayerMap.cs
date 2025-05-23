@@ -10,6 +10,7 @@ public class PlayerMap : MonoBehaviour
     public static PlayerMap Instance;
     public int PositionMap = 0;
     public int Y;
+    [SerializeField] private Animator _animator;
 
     [HideInInspector] public Node clickedNode;
 
@@ -82,9 +83,11 @@ public class PlayerMap : MonoBehaviour
 
     async UniTask MoveTo(Vector3 targetPos) //Faut pas qu'il se lance au start
     {
+        _animator.PlayAnimationBool("Move");
         Vector3 p = targetPos + camOffset;
         p.z = 100;
         _camera.transform.DOMove(p, 1f / speed).SetEase(Ease.InOutSine);
         await transform.DOMove(targetPos,1f/speed).SetEase(Ease.InOutCubic).AsyncWaitForCompletion().AsUniTask();
+        _animator.EndAnimationBool("Move");
     }
 }
