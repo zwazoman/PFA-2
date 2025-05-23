@@ -46,7 +46,7 @@ public class SpawnRiver : MonoBehaviour
                 if (chance <= _spawnProbability)
                 {
                     int randomIndex = Random.Range(0, _spawnSpecialGround.Count);
-                    GameObject item = Instantiate(_spawnSpecialGround[randomIndex], _parent);
+                    GameObject item = Instantiate(_spawnSpecialGround[randomIndex], point.position, point.rotation, _parent);
                     SetupObject(item, point, true);
                 }
                 else
