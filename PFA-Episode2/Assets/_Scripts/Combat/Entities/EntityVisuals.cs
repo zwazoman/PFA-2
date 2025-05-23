@@ -40,14 +40,11 @@ public class EntityVisuals : MonoBehaviour
             }
             Arrows.Clear();
 
-            bool diagonal = direction.x != 0 && direction.z != 0;
+            bool diagonal = Mathf.RoundToInt(direction.x) != 0 && Mathf.RoundToInt(direction.z) != 0;
 
             int arrowNumber = Mathf.RoundToInt(direction.magnitude);
             if (diagonal)
                 arrowNumber = Mathf.RoundToInt(direction.magnitude / (float)Math.Sqrt(2));
-
-            print(direction);
-            print(diagonal);
 
             for (int i = 1; i < arrowNumber + 1; i++)
             {
