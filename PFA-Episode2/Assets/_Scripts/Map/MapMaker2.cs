@@ -4,7 +4,6 @@ using UnityEngine;
 /// <summary>
 /// Script qui construit la carte du jeu
 /// </summary>
-[RequireComponent(typeof(MapAttributeEvent))]
 [RequireComponent(typeof(MapBuildingTools))]
 public class MapMaker2 : MonoBehaviour
 {
@@ -264,6 +263,7 @@ public class MapMaker2 : MonoBehaviour
             }
         }
         MapBuildingTools.Instance.AttributeEvent(MapRange);
-        //SpawnRiver.Instance.StartSpawnRiver();
+        MapAttributeEvent3.Instance.SetupEventNode();
+        SpawnRiver.Instance.StartSpawnRiver();
     }
 }

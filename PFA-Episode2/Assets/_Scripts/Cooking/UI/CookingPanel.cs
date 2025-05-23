@@ -100,8 +100,6 @@ public class CookingPanel : AnimatedPanel
                 .SetUp(inv.Ingredients[i]);
         }
 
-
-
         //sauces
         for (byte i = 0; i < inv.Sauces.Count; ++i)
         {
@@ -117,6 +115,12 @@ public class CookingPanel : AnimatedPanel
         for (int i = 0; i < _ingredientsParent.transform.childCount; i++)
         {
             Destroy(_ingredientsParent.transform.GetChild(i).gameObject);
+        }
+
+        //sauces
+        for (int i = 0; i < _saucesParent.transform.childCount; i++)
+        {
+            Destroy(_saucesParent.transform.GetChild(i).gameObject);
         }
     }
 

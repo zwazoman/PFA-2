@@ -36,7 +36,7 @@ public class SpellCaster : MonoBehaviour
             if ((!ignoreTerrain && (spell.spellData.IsOccludedByWalls && Tools.CheckWallsBetween(center, point) || point.State == WaypointState.Obstructed)) || spell.spellData.Range > RangeRingThickness && (floodDict[point] - RangeRingThickness) < 0)
                 continue;
             else if (showZone)
-                point.ChangeTileColor(point._rangeMaterial);
+                point.SetPreviewState(WayPoint.PreviewState.SpellAreaOfEffect);
 
             rangePoints.Add(point);
         }
@@ -47,7 +47,7 @@ public class SpellCaster : MonoBehaviour
     {
         foreach (WayPoint point in rangePoints)
         {
-            point.ChangeTileColor(point._normalMaterial);
+            point.SetPreviewState(WayPoint.PreviewState.NoPreview);
         }
 
         rangePoints.Clear();
@@ -82,7 +82,7 @@ public class SpellCaster : MonoBehaviour
                 WayPoint choosenWaypoint = GraphMaker.Instance.serializedPointDict[newPos];
 
                 if (showZone)
-                    choosenWaypoint.ChangeTileColor(choosenWaypoint._zoneMaterial);
+                    choosenWaypoint.SetPreviewState(WayPoint.PreviewState.SpellCastZone); 
 
                 zonePoints.Add(choosenWaypoint);
 
@@ -125,11 +125,11 @@ public class SpellCaster : MonoBehaviour
         {
             if (rangePoints.Count != 0 && rangePoints.Contains(point) && showZone)
             {
-                point.ChangeTileColor(point._rangeMaterial);
+                point.SetPreviewState(WayPoint.PreviewState.SpellAreaOfEffect);
             }
             else
             {
-                point.ChangeTileColor(point._normalMaterial);
+                point.SetPreviewState(WayPoint.PreviewState.NoPreview);
             }
         }
 
