@@ -22,13 +22,12 @@ public class SerializableNode
 [Serializable]
 public class SerializableLink
 {
-    // pour la poc mais vaut mieux changer pour après avec des ref au parent directement
     public List<Vector3> transformLink;
     public Quaternion rotationLink;
 }
 
 [Serializable]
-public class SerialzablePlayer
+public class SerializablePlayer
 {
     //information Player
     public Vector3Int playerPosition;
@@ -37,10 +36,18 @@ public class SerialzablePlayer
 }
 
 [Serializable]
+public class SerializableGround
+{
+    public GameObject groundObject;
+    public Transform groundTransform;
+}
+
+[Serializable]
 public class MapWrapper
 {
-    public SerialzablePlayer player;
+    public SerializablePlayer player;
     public List<SerializableNode> nodes = new();
+    public List<SerializableGround> grounds = new();
 }
 
 [Serializable]

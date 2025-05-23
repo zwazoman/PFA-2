@@ -9,7 +9,7 @@ public class SpawnRiver : MonoBehaviour
     [SerializeField] private List<GameObject> _spawnSpecialGround = new();
     [SerializeField] private GameObject _spawnGround;
     [SerializeField][Range(0f, 1f)] private float _spawnProbability = 0.5f;
-    [SerializeField] private List<GameObject> _groundList = new();
+    public List<GameObject> GroundList = new();
 
     [Header("Others")]
 
@@ -65,7 +65,7 @@ public class SpawnRiver : MonoBehaviour
     public void SetupObject(GameObject obj, Transform point, bool IsSpecial)
     {
         obj.transform.position = point.position;
-        _groundList.Add(obj);
+        GroundList.Add(obj);
         if (IsSpecial)
         {
             if (_imposibleGround != null) { _spawnSpecialGround.Add(_imposibleGround); }
