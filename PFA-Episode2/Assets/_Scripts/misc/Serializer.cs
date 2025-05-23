@@ -30,7 +30,7 @@ public static class Serializer
     //ingredient effect
     static readonly string[] IngredientEffectTypeToString =
     {
-        "Damage","Recoil","Shield"
+        "Damage","Recoil","Shield","Range"
     };
 
     public static string GetIngredientEffectString(Ingredient e)

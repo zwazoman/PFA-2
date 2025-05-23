@@ -33,7 +33,6 @@ public class DraggableIngredientContainer : DraggableItemContainer
         else if (i is Ingredient Ing) { _descriptionText.text = Serializer.GetIngredientEffectString(Ing); }
 
         DeleteIcon.SetActive(false);
-        print("fdp");
     }
 
     public void SetUp(Item i)
