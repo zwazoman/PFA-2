@@ -9,6 +9,7 @@ public class MapBuildingTools : MonoBehaviour
     public List<GameObject> TrueListPath;
     [SerializeField][Tooltip("GameObject parent des chemins, si null alors c'est le porteur du script le parent")] private GameObject _parent;
     public bool FirstTimeDraw = true;
+    private bool _tkt;
     public List<GameObject> _savePath = new();
 
     #region Singleton
@@ -40,7 +41,6 @@ public class MapBuildingTools : MonoBehaviour
     {
         if (FirstTimeDraw)
         {
-            print(TrueListPath.Count);
             // Sprite entre father et current
             GameObject CurrentPath = TrueListPath[0];
             TrueListPath.RemoveAt(0);
@@ -53,14 +53,20 @@ public class MapBuildingTools : MonoBehaviour
             //Vector3 dir = PointB.transform.localPosition - PointA.transform.localPosition;
             //float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
-            if ( PointA.transform.localPosition.y > PointB.transform.localPosition.y)
+            if (CurrentPath.transform.localPosition == new Vector3(-2000,0,0))
+            { 
+                if (!_tkt) { _tkt = true; }
+                else { Destroy(CurrentPath); print("connard"); return; }
+            }
+
+            if (PointA.transform.localPosition.y > PointB.transform.localPosition.y)
             {
                 CurrentPath.transform.localRotation = Quaternion.Euler(25, 90, -90);
                 //CurrentPath.transform.localPosition = new Vector3(CurrentPath.transform.localPosition.x, CurrentPath.transform.localPosition.y - 50, CurrentPath.transform.localPosition.z);
             }
 
-            else if (PointA.transform.localPosition.y < PointB.transform.localPosition.y) 
-            { 
+            else if (PointA.transform.localPosition.y < PointB.transform.localPosition.y)
+            {
                 CurrentPath.transform.localRotation = Quaternion.Euler(-25, 90, -90);
                 //CurrentPath.transform.localPosition = new Vector3(CurrentPath.transform.localPosition.x, CurrentPath.transform.localPosition.y + 50, CurrentPath.transform.localPosition.z);
             }
