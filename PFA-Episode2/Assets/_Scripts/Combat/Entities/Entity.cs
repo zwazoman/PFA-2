@@ -143,6 +143,14 @@ public class Entity : MonoBehaviour
         }
     }
 
+    public void HideWalkables()
+    {
+        foreach (WayPoint point in Walkables)
+        {
+            point.SetPreviewState(WayPoint.PreviewState.NoPreview);
+        }
+    }
+
     public void ClearWalkables()
     {
         foreach (WayPoint point in Walkables)
