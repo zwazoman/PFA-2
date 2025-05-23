@@ -38,6 +38,7 @@ public class SpawnRiver : MonoBehaviour
             if (NodeA.Hauteur != NodeB.Hauteur || NumberOfNodeA != 1 || NumberOfNodeB != 1) //Ground
             {
                 GameObject item = Instantiate(_spawnGround, point.position, point.rotation, _parent);
+                item.transform.localScale = new Vector3(4, 4, 4);
                 SetupObject(item, point, false);
             }
             else
@@ -47,6 +48,7 @@ public class SpawnRiver : MonoBehaviour
                 {
                     int randomIndex = Random.Range(0, _spawnSpecialGround.Count);
                     GameObject item = Instantiate(_spawnSpecialGround[randomIndex], point.position, point.rotation, _parent);
+                    item.transform.localScale = new Vector3(4, 4, 4);
                     SetupObject(item, point, true);
                 }
                 else
