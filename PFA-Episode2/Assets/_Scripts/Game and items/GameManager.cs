@@ -27,11 +27,11 @@ public class GameManager : MonoBehaviour
     [Header("Data")]
     public GameStaticData staticData;
 
-    public List<string> combatScenesName = new();
+    List<string> combatScenesName = new();
 
 #if UNITY_EDITOR
 
-    [SerializeField] List<SceneAsset> _combatScenes = new();
+    [SerializeField] List<SceneAsset> _combatScenes;
 
     //@temp
     [Header("Tests")]
