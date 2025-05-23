@@ -28,9 +28,9 @@ public class DraggableIngredientContainer : DraggableItemContainer
         image.sprite = i.sprite;
         backGroundImage.sprite = i.sprite;
         _descriptionTitle.text = i.name;
-        _descriptionSprite.sprite = i.sprite;
-        if (i is Sauce Sauce) { _descriptionText.text = Serializer.GetSauceEffectString(Sauce); }
-        else if (i is Ingredient Ing) { _descriptionText.text = Serializer.GetIngredientEffectString(Ing); }
+        
+        if (i is Sauce Sauce) { _descriptionText.text = Serializer.GetSauceEffectString(Sauce); _descriptionSprite.sprite = ((Sauce)i).areaOfEffect.sprite; }
+        else if (i is Ingredient Ing) { _descriptionText.text = Serializer.GetIngredientEffectString(Ing); _descriptionSprite.sprite = i.sprite; }
 
         DeleteIcon.SetActive(false);
     }

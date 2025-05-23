@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Assertions.Comparers;
 
 public class Crafting : MonoBehaviour
 {
@@ -21,6 +23,9 @@ public class Crafting : MonoBehaviour
         Debug.Log(effects.Length);
         SpellEffect.CollapseSimilarSpellEffects(ref effects);
         spell.Effects = effects.ToList();
+
+        //apply multipliers
+        SortSpellEffects(spell.Effects);
 
         //compute family combination
         spell.IngredientsCombination = ComputeFamilyCombinaison(ingredients[0], ingredients[1], ingredients[2]);
@@ -47,6 +52,16 @@ public class Crafting : MonoBehaviour
 
 
         return spell;
+    }
+
+    public static void SortSpellEffects(List<SpellEffect> effects) //@todo
+    {
+
+        effects.Sort(new SpellComparer());
+        foreach(SpellEffect effect in effects)
+        {
+            Debug.Log(effect.statType);
+        }
     }
 
     #region combinations
@@ -101,3 +116,12 @@ public class Crafting : MonoBehaviour
 
     #endregion
 }
+
+public class SpellComparer : IComparer<SpellEffect>
+{
+    public int Compare(SpellEffect x, SpellEffect y)
+    {
+        return ((int)x.statType).CompareTo((int)y.statType);
+    }
+}
+

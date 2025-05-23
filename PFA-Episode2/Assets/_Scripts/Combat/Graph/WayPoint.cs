@@ -20,7 +20,8 @@ public class WayPoint : MonoBehaviour
         NoPreview,
         Movement,
         SpellAreaOfEffect,
-        SpellCastZone
+        SpellCastZone_Agressive,
+        SpellCastZone_Shield
     }
 
     public event Action OnSteppedOn;
@@ -105,7 +106,7 @@ public class WayPoint : MonoBehaviour
             case PreviewState.SpellAreaOfEffect:
                 _previewVisuals.sharedMaterial = GameManager.Instance.staticData._mat_spellAoePreview;
                 break;
-            case PreviewState.SpellCastZone:
+            case PreviewState.SpellCastZone_Agressive:
                 _previewVisuals.sharedMaterial = GameManager.Instance.staticData._mat_spellCastZonePreview;
                 break;
         }

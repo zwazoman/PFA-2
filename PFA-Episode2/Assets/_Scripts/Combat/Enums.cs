@@ -45,7 +45,6 @@ public enum StatType
 {
     FlatIncrease,
     Multiplier,
-    PercentageIncrease
 }
 
 public static class IngredientsInfo

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "newSauce", menuName = "Cooking/Sauce")]
@@ -20,10 +21,10 @@ public class Sauce : IngredientBase
                 Spell.Effects.Add(new(SpellEffectType.DamageIncreaseForEachHitEnnemy,StatType.FlatIncrease,-1));
                 break;
             case SauceEffectType.DamageIncreasePercentageByDistanceToCaster:
-                Spell.Effects.Add(new(SpellEffectType.DamageIncreasePercentageByDistanceToCaster, StatType.PercentageIncrease, -1));
+                Spell.Effects.Add(new(SpellEffectType.DamageIncreasePercentageByDistanceToCaster, StatType.Multiplier, 1.1f));
                 break;
             case SauceEffectType.Fire:
-                Spell.Effects.Add(new(SpellEffectType.Fire, StatType.PercentageIncrease, -1));
+                throw new NotImplementedException("Le feu est pas codé dans le jeu encore");
                 break;
         }
 
