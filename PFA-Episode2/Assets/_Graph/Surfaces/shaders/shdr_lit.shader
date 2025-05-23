@@ -1,7 +1,8 @@
-Shader "Unlit/shdr_test_unlit"
+Shader "Unlit/shdr_lit"
 {
     Properties
     {
+
         _Palette ("Texture", 2D) = "grey" {}
         _lightness ("Lighness", Float) = 1
         [KeywordEnum(MAP0,MAP1,MAP2)] _SECONDUV ("use second uv map", Float) = 0
@@ -73,6 +74,7 @@ Shader "Unlit/shdr_test_unlit"
             sampler2D _Palette;
             float _lightness;
 	        float _bands;
+            
 
             //lightning
             sampler2D _lightGradientMap;
@@ -156,15 +158,12 @@ Shader "Unlit/shdr_test_unlit"
                 //vignette (mettre dans post process plutot si y en a)
                 float vignette =  1-saturate((distance(float2(0.5,0.5),i.pos.xy/_ScreenParams.xy)-.4)*1);
                 col *= vignette;
-                
-                return col;
+                return col; 
             }
             ENDCG
         }
 
-
         UsePass "Legacy Shaders/VertexLit/SHADOWCASTER"
 
-        
     }
 }

@@ -155,15 +155,17 @@ public class CombatManager : MonoBehaviour
 
     async UniTask GameOver()
     {
-        print("Game Over");
+        await UniTask.Delay(1000);
+
         SaveManager.DeleteAll();
         _gameOverPanel?.Show();
     }
 
     async UniTask Victory()
     {
+        await UniTask.Delay(1000);
+
         OnWin?.Invoke();
         await SceneTransitionManager.Instance.GoToScene("WorldMap");
     }
-
 }

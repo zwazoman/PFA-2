@@ -1,5 +1,6 @@
 using AYellowpaper.SerializedCollections;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEditor;
 using UnityEngine;
 
@@ -38,6 +39,8 @@ public class GraphMaker : MonoBehaviour
 
     public SerializedDictionary<Vector3Int, WayPoint> serializedPointDict = new();
 
+    [Header("Visuals")]
+    [SerializeField] GameObject _tileVisualsPrefab;
 
     private void Awake()
     {
@@ -72,6 +75,8 @@ public class GraphMaker : MonoBehaviour
                     point.Neighbours.Add(serializedPointDict[left]);
                     serializedPointDict[left].Neighbours.Add(point);
                 }
+
+
             }
         }
     }
@@ -94,6 +99,43 @@ public class GraphMaker : MonoBehaviour
                 if (Physics.Raycast(point.transform.position /*+ Vector3.up * 0.5f*/, flatDirection, out hit, 1, LayerMask.GetMask("Waypoint")))
                     if (hit.collider.TryGetComponent(out WayPoint wayPoint) && !point.Neighbours.Contains(wayPoint))
                         point.Neighbours.Add(wayPoint);
+            }
+
+            
+        }
+    }
+
+    public void SetUpVisuals()
+    {
+        foreach (WayPoint point in _allWaypoints)
+        {
+            //setup visuals
+            if (point.State != WaypointState.Obstructed)
+            {
+                for (int i = 0; i < point.gameObject.transform.childCount; i++)
+                {
+                    DestroyImmediate(point.transform.GetChild(0).gameObject);
+                    Debug.Log(i);
+                }
+
+
+                Vector3 pose = point.transform.position + Vector3.up * .6f;
+                Vector3 rayOrigin = point.transform.position + Vector3.up * 10;
+                if (Physics.SphereCast(rayOrigin, .4f, Vector3.down,out RaycastHit hit,20))
+                {
+                    Vector3 toPoint = hit.point - rayOrigin;
+                    pose = rayOrigin + Vector3.Project(toPoint, Vector3.down) + Vector3.up*.05f;
+                }
+
+                Transform t = ((GameObject)PrefabUtility.InstantiatePrefab(_tileVisualsPrefab, point.transform)).transform;
+                t.transform.position = pose;
+                t.localScale = Vector3.zero;
+                t.rotation = Quaternion.Euler(-90, 0, 0);
+                t.gameObject.SetActive(false);
+                
+
+                point._previewVisuals = t.gameObject.GetComponent<MeshRenderer>();
+                EditorUtility.SetDirty(point);
             }
 
         }
@@ -130,6 +172,11 @@ public class GraphMakerEditor : Editor
 
         if(GUILayout.Button("Reset le Graph"))
             graphMaker.ResetGraph();
+        
+        GUILayout.Space(20);
+
+        if(GUILayout.Button("generer les visuels de preview"))
+            graphMaker.SetUpVisuals();
 
     }
 }

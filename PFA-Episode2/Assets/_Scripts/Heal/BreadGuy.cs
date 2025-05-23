@@ -7,6 +7,8 @@ public class BreadGuy : MonoBehaviour
 
     [SerializeField] Animator _animator;
 
+    bool healed = false;
+
     #region AnimationParameters
     string _isSpeaking = "IsSpeaking";
     string _give = "Give";
@@ -21,6 +23,8 @@ public class BreadGuy : MonoBehaviour
 
     public async void StartHealing()
     {
+        if (healed) return;
+        healed = true;
         await _animator.PlayAnimationTrigger(_give);
         GameManager.Instance.playerInventory.playerHealth.health = Mathf.Clamp(GameManager.Instance.playerInventory.playerHealth.health += HealAmount, 0, GameManager.Instance.playerInventory.playerHealth.maxHealth);
         print(GameManager.Instance.playerInventory.playerHealth.health);

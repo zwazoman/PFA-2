@@ -3,32 +3,73 @@ using UnityEngine;
 
 public class SpawnRiver : MonoBehaviour
 {
+    [Header("Spawn Settings")]
+
     [SerializeField] private List<Transform> _spawnPoints = new();
-    [SerializeField] private Transform _parent;
-    [SerializeField] private GameObject _spawnGround = new();
     [SerializeField] private List<GameObject> _spawnSpecialGround = new();
-    private GameObject _imposibleGround;
-    [SerializeField] private List<GameObject> _groundList = new();
+    [SerializeField] private GameObject _spawnGround;
     [SerializeField][Range(0f, 1f)] private float _spawnProbability = 0.5f;
+    [SerializeField] private List<GameObject> _groundList = new();
 
-    public void StartSpawnRiver()
+    [Header("Others")]
+
+    [SerializeField] private Transform _parent;
+    private GameObject _imposibleGround;
+
+    #region Singleton
+    public static SpawnRiver Instance;
+
+    private void Awake() { Instance = this; }
+    #endregion
+
+    public void StartSpawnRiver() //Dans MapMaker2
     {
-        if (_spawnSpecialGround.Count == 0)
+        for (int index = 0; index < _spawnPoints.Count; index++) //On doit trié
         {
-            print("Pas d’objets ou de points.");
-            return;
-        }
+            Transform point = _spawnPoints[index];
 
-        foreach (Transform point in _spawnPoints) //On doit trié
-        {
-            float chance = Random.value;
-            if (chance <= _spawnProbability)
+            List<Node> ListNodeA = MapBuildingTools.Instance.ReturnListOfNodeFromNodePosition(index);
+            List<Node> ListNodeB = MapBuildingTools.Instance.ReturnListOfNodeFromNodePosition(index + 1);
+            Node NodeA = ListNodeA[0];
+            Node NodeB = ListNodeB[0];
+            int NumberOfNodeA = ListNodeA.Count;
+            int NumberOfNodeB = ListNodeB.Count;
+
+            if (NodeA.Hauteur != NodeB.Hauteur || NumberOfNodeA != 1 || NumberOfNodeB != 1) //Ground
             {
-                int randomIndex = Random.Range(0, _spawnSpecialGround.Count);
-                GameObject item = Instantiate(_spawnSpecialGround[randomIndex], _parent);
-                item.transform.position = point.position;
-                _groundList.Add(item);
+                GameObject item = Instantiate(_spawnGround, point.position, point.rotation, _parent);
+                item.transform.localScale = new Vector3(4, 4, 4);
+                SetupObject(item, point, false);
             }
+            else
+            {
+                float chance = Random.value;
+                if (chance <= _spawnProbability)
+                {
+                    int randomIndex = Random.Range(0, _spawnSpecialGround.Count);
+                    GameObject item = Instantiate(_spawnSpecialGround[randomIndex], point.position, point.rotation, _parent);
+                    item.transform.localScale = new Vector3(4, 4, 4);
+                    SetupObject(item, point, true);
+                }
+                else
+                {
+                    GameObject item = Instantiate(_spawnGround, _parent);
+                    SetupObject(item, point, false);
+                }
+
+            }
+        }
+    }
+
+    public void SetupObject(GameObject obj, Transform point, bool IsSpecial)
+    {
+        obj.transform.position = point.position;
+        _groundList.Add(obj);
+        if (IsSpecial)
+        {
+            if (_imposibleGround != null) { _spawnSpecialGround.Add(_imposibleGround); }
+            _spawnSpecialGround.Remove(obj);
+            _imposibleGround = obj;
         }
     }
 }
