@@ -52,5 +52,6 @@ public class Spawner : MonoBehaviour
         }
 
         Instantiate(choosenEntity, transform);
+
     }
 }

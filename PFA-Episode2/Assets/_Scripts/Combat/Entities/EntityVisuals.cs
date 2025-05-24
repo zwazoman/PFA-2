@@ -40,35 +40,52 @@ public class EntityVisuals : MonoBehaviour
             }
             Arrows.Clear();
 
-            for (int i = 1; i < Mathf.RoundToInt(direction.magnitude) + 1; i++)
-                {
-                    Vector3 pose = transform.position + direction.normalized * i;
-                    pose.y = 0.7f;    
+            bool diagonal = Mathf.RoundToInt(direction.x) != 0 && Mathf.RoundToInt(direction.z) != 0;
 
-                    PooledObject o = PoolManager.Instance.ArrowPool
-                        .PullObjectFromPool(pose, transform)
-                        .GetComponent<PooledObject>();
-                    
+            int arrowNumber = Mathf.RoundToInt(direction.magnitude);
+            if (diagonal)
+                arrowNumber = Mathf.RoundToInt(direction.magnitude / (float)Math.Sqrt(2));
 
-                    float angle = Mathf.Atan2(direction.z, -direction.x) * Mathf.Rad2Deg;
-                    o.transform.rotation = Quaternion.Euler(-90, angle , 0);
-                    Arrows.Add(o);
-                    o.transform.position = pose;
-                }
-                //if(direction!=Vector3.zero)EditorApplication.isPaused = true;
-           // }catch(Exception ex) { Debug.LogException(ex); }
-            
+            for (int i = 1; i < arrowNumber + 1; i++)
+            {
+                Vector3 pose = transform.position + direction.normalized * i;
+                if (diagonal)
+                    pose = transform.position + direction.normalized * i * Mathf.Sqrt(2);
+                pose.y = 0.7f;
+
+                PooledObject o = PoolManager.Instance.ArrowPool
+                    .PullObjectFromPool(pose, transform)
+                    .GetComponent<PooledObject>();
+
+
+                float angle = Mathf.Atan2(direction.z, -direction.x) * Mathf.Rad2Deg;
+                o.transform.rotation = Quaternion.Euler(-90, angle, 0);
+                Arrows.Add(o);
+                o.transform.position = pose;
+            }
+            //if(direction!=Vector3.zero)EditorApplication.isPaused = true;
+            // }catch(Exception ex) { Debug.LogException(ex); }
+
         };
 
         owner.OnSpellPreviewCancel += () =>
         {
-            foreach(PooledObject obj in Arrows)
+            foreach (PooledObject obj in Arrows)
             {
                 obj.GoBackIntoPool();
             }
             Arrows.Clear();
 
         };
+    }
+
+    public async UniTask DeathAnimation()
+    {
+        await animator.PlayAnimationTrigger(owner.deathTrigger);
+
+        print("connard");
+
+        gameObject.SetActive(false);
     }
 
     async UniTask OnHealthUpdated(float delta, float newValue)
@@ -83,4 +100,6 @@ public class EntityVisuals : MonoBehaviour
             await VisualsRoot.DOPunchScale(Vector3.one * .2f, .5f, 5).AsyncWaitForCompletion().AsUniTask(); ;
         }
     }
+
+
 }

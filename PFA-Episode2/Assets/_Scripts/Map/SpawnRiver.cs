@@ -9,7 +9,7 @@ public class SpawnRiver : MonoBehaviour
     [SerializeField] private List<GameObject> _spawnSpecialGround = new();
     [SerializeField] private GameObject _spawnGround;
     [SerializeField][Range(0f, 1f)] private float _spawnProbability = 0.5f;
-    [SerializeField] private List<GameObject> _groundList = new();
+    public List<GameObject> GroundList = new();
 
     [Header("Others")]
 
@@ -22,7 +22,7 @@ public class SpawnRiver : MonoBehaviour
     private void Awake() { Instance = this; }
     #endregion
 
-    public void StartSpawnRiver()
+    public void StartSpawnRiver() //Dans MapMaker2
     {
         for (int index = 0; index < _spawnPoints.Count; index++) //On doit trié
         {
@@ -37,7 +37,8 @@ public class SpawnRiver : MonoBehaviour
 
             if (NodeA.Hauteur != NodeB.Hauteur || NumberOfNodeA != 1 || NumberOfNodeB != 1) //Ground
             {
-                GameObject item = Instantiate(_spawnGround, _parent);
+                GameObject item = Instantiate(_spawnGround, point.position, point.rotation, _parent);
+                item.transform.localScale = new Vector3(4, 4, 4);
                 SetupObject(item, point, false);
             }
             else
@@ -46,12 +47,14 @@ public class SpawnRiver : MonoBehaviour
                 if (chance <= _spawnProbability)
                 {
                     int randomIndex = Random.Range(0, _spawnSpecialGround.Count);
-                    GameObject item = Instantiate(_spawnSpecialGround[randomIndex], _parent);
+                    GameObject item = Instantiate(_spawnSpecialGround[randomIndex], point.position, point.rotation, _parent);
+                    item.transform.localScale = new Vector3(4, 4, 4);
                     SetupObject(item, point, true);
                 }
                 else
                 {
-                    GameObject item = Instantiate(_spawnGround, _parent);
+                    GameObject item = Instantiate(_spawnGround, point.position, point.rotation, _parent);
+                    item.transform.localScale = new Vector3(4, 4, 4);
                     SetupObject(item, point, false);
                 }
 
@@ -62,7 +65,7 @@ public class SpawnRiver : MonoBehaviour
     public void SetupObject(GameObject obj, Transform point, bool IsSpecial)
     {
         obj.transform.position = point.position;
-        _groundList.Add(obj);
+        GroundList.Add(obj);
         if (IsSpecial)
         {
             if (_imposibleGround != null) { _spawnSpecialGround.Add(_imposibleGround); }

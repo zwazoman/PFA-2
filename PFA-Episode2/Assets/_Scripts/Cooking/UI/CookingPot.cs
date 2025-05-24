@@ -29,16 +29,15 @@ public class CookingPot : MonoBehaviour
     [SerializeField] Sauce _defaultSauce;
 
     #region Display
+
     private void UpdateCooldownAndRangeDisplay()
     {
         byte cd = 0, range = 0;
         foreach(Ingredient ing in ingredients)
         {
             cd += ing.CoolDownIncrease;
-            range += ing.RangeIncrease;
         }
         _txt_cooldown.text = Serializer.GetCoolDownString(cd);
-        _txt_range.text = Serializer.GetRangeString(range);
     }
 
     void UpdateIngredientsStatsDisplay()
@@ -55,21 +54,36 @@ public class CookingPot : MonoBehaviour
         txt_sauceName.text = s.name;
         txt_sauceEffect.text = Serializer.GetSauceEffectString(s);
         _sauceAreaImage.sprite = s.areaOfEffect.sprite;
-        
-        
+
     }
 
-    private void Start()
+    void UpdateDisplay()
     {
         UpdateSauceDisplay();
         UpdateIngredientsStatsDisplay();
         UpdateCooldownAndRangeDisplay();
     }
 
+    private void Start()
+    {
+        UpdateDisplay();
+    }
+
     #endregion
 
     #region logic
-    public void RemoveIngredient(DraggableIngredientContainer container)
+
+    public void RemoveAllIngredients()
+    {
+        foreach (DraggableIngredientContainer item in items) 
+        {
+            if(item!=null) RemoveIngredient(item,false);
+        }
+
+        UpdateDisplay();
+    }
+
+    public void RemoveIngredient(DraggableIngredientContainer container , bool shake = true)
     {
         bool removed = false;
         //ingredient
@@ -92,7 +106,7 @@ public class CookingPot : MonoBehaviour
             UpdateSauceDisplay();
         }
 
-        if (removed) transform.DOShakeRotation(.2f,Vector3.forward*90,randomnessMode : ShakeRandomnessMode.Harmonic);
+        if (removed && shake) transform.DOShakeRotation(.2f,Vector3.forward*90,randomnessMode : ShakeRandomnessMode.Harmonic);
         
     }
 

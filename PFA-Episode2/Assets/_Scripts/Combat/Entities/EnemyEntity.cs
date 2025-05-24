@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -172,8 +173,6 @@ public class EnemyEntity : Entity
     /// <returns></returns>
     protected async UniTask<bool> TryAttack(Spell choosenSpell, WayPoint targetPoint)
     {
-        print(targetPoint.Content.gameObject.name);
-
         if (targetPoint == null)
             return false;
 
@@ -222,13 +221,13 @@ public class EnemyEntity : Entity
             await UniTask.Yield();
         }
 
-        choosenTargetPoint.ChangeTileColor(choosenTargetPoint._zoneMaterial);
-
-        // possibilité pour pas qu'elle se tire dessus ? ça serait rigolo n la stock qq part si ça se touche et on réésaie. si pas de solution on utilise celle qui touche
+        
+        choosenTargetPoint.SetPreviewState(entitySpellCaster.ComputeShieldVsDamageDiff(choosenSpell) < 0 ? WayPoint.PreviewState.SpellCastZone_Agressive : WayPoint.PreviewState.SpellCastZone_Shield); //@todo
+        // possibilitï¿½ pour pas qu'elle se tire dessus ? ï¿½a serait rigolo n la stock qq part si ï¿½a se touche et on rï¿½ï¿½saie. si pas de solution on utilise celle qui touche
 
         await UniTask.Delay(ThinkDelayMilis);
 
-        bool targetReached = await MoveToward(choosenTargetPoint); // le point le plus proche de lancé de sort
+        bool targetReached = await MoveToward(choosenTargetPoint); // le point le plus proche de lancï¿½ de sort
 
         if (targetReached)
         {
@@ -239,6 +238,7 @@ public class EnemyEntity : Entity
 
     async UniTask<bool> CastSpell(Spell choosenSpell, WayPoint choosenTargetPoint, WayPoint pointToSelect, WayPoint target)
     {
+        HideWalkables();
         List<WayPoint> rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint);
         await UniTask.Delay(ThinkDelayMilis);
         SpellCastData castData = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints);

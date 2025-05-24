@@ -10,8 +10,20 @@ public enum WaypointState
     HasEntity
 }
 
+
+
 public class WayPoint : MonoBehaviour
 {
+    const float TweenDuration = .2f;
+    public enum PreviewState
+    {
+        NoPreview,
+        Movement,
+        SpellAreaOfEffect,
+        SpellCastZone_Agressive,
+        SpellCastZone_Shield
+    }
+
     public event Action OnSteppedOn;
     public event Action OnSteppedOff;
 
@@ -23,15 +35,13 @@ public class WayPoint : MonoBehaviour
 
     public WaypointState State;
 
-    [Header("Materials")]
+    [Header("Tile preview")]
+    [SerializeField] public MeshRenderer _previewVisuals;
+    [SerializeField] public float heightOffset;
 
-    [SerializeField] public Material _walkableMaterial;
-    [SerializeField] public Material _rangeMaterial;
-    [SerializeField] public Material _zoneMaterial;
-    [SerializeField] public Material _normalMaterial;
-    [SerializeField] public Material _walkedMaterial;
+    
+    PreviewState _currentPreviewState;
 
-    MeshRenderer _mR;
 
     #region Astar Fields
     [HideInInspector] public WayPoint FormerPoint;
@@ -44,13 +54,7 @@ public class WayPoint : MonoBehaviour
     [HideInInspector] public float F => G + H;
     #endregion
 
-    private void Awake()
-    {
-        TryGetComponent(out _mR);
 
-        if (_normalMaterial == null && _mR != null)
-            _normalMaterial = _mR.sharedMaterial;
-    }
 
     private void Start()
     {
@@ -88,11 +92,39 @@ public class WayPoint : MonoBehaviour
         State = WaypointState.Free;
     }
 
-    public void ChangeTileColor(Material material)
+    public void SetPreviewState(PreviewState state)
     {
-        if (_mR == null || _mR.sharedMaterial == material) return;
+        if (state == _currentPreviewState || _previewVisuals==null) return;
 
-        _mR.sharedMaterial = material;
+        _currentPreviewState = state;
+        // material
+        switch (state)
+        {
+            case PreviewState.Movement:
+                _previewVisuals.sharedMaterial = GameManager.Instance.staticData._mat_movementPreview;
+                break;
+            case PreviewState.SpellAreaOfEffect:
+                _previewVisuals.sharedMaterial = GameManager.Instance.staticData._mat_spellAoePreview;
+                break;
+            case PreviewState.SpellCastZone_Agressive:
+                _previewVisuals.sharedMaterial = GameManager.Instance.staticData._mat_spellCastZonePreview;
+                break;
+        }
+
+        //dotween & activation
+        if(state == PreviewState.NoPreview)
+        {
+            _previewVisuals.transform.DOScale(0, TweenDuration)
+                .OnComplete(() => {
+                    if (_currentPreviewState == PreviewState.NoPreview)
+                        _previewVisuals.gameObject.SetActive(false); 
+                });
+        }
+        else
+        {
+            _previewVisuals.gameObject.SetActive(true);
+            _previewVisuals.transform.DOScale(1, TweenDuration);
+        }
     }
 
     #region Astar
@@ -174,13 +206,4 @@ public class WayPoint : MonoBehaviour
         }
     }
 
-    public void Lift(float height, float duration)
-    {
-        transform.DOMoveY(height, duration);
-    }
-
-    public async void Lift(float height, float duration, float stayTime)
-    {
-        
-    }
 }

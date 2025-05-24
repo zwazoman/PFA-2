@@ -168,5 +168,4 @@ public class CombatManager : MonoBehaviour
         OnWin?.Invoke();
         await SceneTransitionManager.Instance.GoToScene("WorldMap");
     }
-
 }

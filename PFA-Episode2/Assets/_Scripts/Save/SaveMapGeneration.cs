@@ -10,7 +10,6 @@ public class SaveMapGeneration : MonoBehaviour
     [Tooltip("Sauvegarde crypter ou non")] public bool Encrypt;
     [Tooltip("Numéro de fichier de sauvegarde")] public byte SaveID;
     const string ENCRYPT_KEY = "Tr0mp1ne7te";
-    private int _numberLink = 0;
     public int PositionMap { get; private set; }
 
     #region Singleton
@@ -34,7 +33,7 @@ public class SaveMapGeneration : MonoBehaviour
     {
         MapWrapper wrapper = new();
 
-        SerialzablePlayer player = new()
+        SerializablePlayer player = new()
         {
             playerPosition = Vector3Int.RoundToInt(PlayerMap.Instance.transform.localPosition),
             PositionMap = PlayerMap.Instance.PositionMap,
@@ -55,7 +54,18 @@ public class SaveMapGeneration : MonoBehaviour
                 System.Collections.IList link = node.PathBetweenNode;
                 for (int i = 0; i < node.PathBetweenNode.Count; i++)
                 {
-                    List<Vector3> list = new()
+                    List<Vector3> list = new() /*MissingReferenceException: The object of type 'UnityEngine.GameObject' has been destroyed but you are still trying to access it.
+Your script should either check if it is null or you should not destroy the object.
+UnityEngine.Object + MarshalledUnityObject.TryThrowEditorNullExceptionObject(UnityEngine.Object unityObj, System.String parameterName)(at<fc22648a2f8c48a38d6136ea0e187002>:0)
+UnityEngine.Bindings.ThrowHelper.ThrowNullReferenceException(System.Object obj)(at<fc22648a2f8c48a38d6136ea0e187002>:0)
+UnityEngine.GameObject.get_transform()(at<fc22648a2f8c48a38d6136ea0e187002>:0)
+SaveMapGeneration.SaveMap()(at Assets / _Scripts / Save / SaveMapGeneration.cs:57)
+PlayerMap.LoadNextScene()(at Assets / _Scripts / Map / PlayerMap.cs:72)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore +<> c.< ThrowAsync > b__7_0(System.Object state)(at < 314938d17f3848e8ac683e11b27f62ee >:0)
+UnityEngine.UnitySynchronizationContext + WorkRequest.Invoke()(at<fc22648a2f8c48a38d6136ea0e187002>:0)
+UnityEngine.UnitySynchronizationContext.Exec()(at<fc22648a2f8c48a38d6136ea0e187002>:0)
+UnityEngine.UnitySynchronizationContext.ExecuteTasks()(at<fc22648a2f8c48a38d6136ea0e187002>:0)*/
+                    
                     {
                         node.PathBetweenNode[i].transform.localPosition,
                         node.PathBetweenNode[i].transform.localScale
@@ -90,24 +100,7 @@ public class SaveMapGeneration : MonoBehaviour
             }
         }
 
-        /*foreach (GameObject go in MapBuildingTools.Instance._savePath) { if (go == null) { MapBuildingTools.Instance._savePath.Remove(go); } }
-        foreach (GameObject GO in MapBuildingTools.Instance._savePath)
-        {
-            //Image link = image;
-            List<Vector3> list = new()
-            {
-                GO.transform.localPosition,
-                GO.transform.localScale,
-            };
-
-            SerializableLink linkObj = new()
-            {
-                transformLink = list,
-                rotationLink = GO.transform.localRotation
-            };
-
-            wrapper.links.Add(linkObj);
-        }*/
+        //for (int i = 0; i < SpawnRiver.Instance.)
 
         string json = JsonUtility.ToJson(wrapper, true);
         string path = Application.persistentDataPath + $"/MapSave{SaveID}.json";
@@ -121,8 +114,6 @@ public class SaveMapGeneration : MonoBehaviour
         {
             File.WriteAllText(path, json);
         }
-
-        _numberLink = 0;
     }
 
     // Fonction pour lire les information contenu dans le fichier json de sauvegarde
@@ -172,13 +163,13 @@ public class SaveMapGeneration : MonoBehaviour
                     MapBuildingTools.Instance._savePath.Add(Path);
 
                     node.PathBetweenNode.Add(Path);
-                    _numberLink++;
                 }
 
                 foreach (GameObject obj in node.PathBetweenNode) { obj.SetActive(false); }
                 if (node.Position <= PlayerMap.Instance.PositionMap + 3 && node.Position >= PlayerMap.Instance.PositionMap - 1)
                 { 
                     node.gameObject.SetActive(true);
+                    node.SetupSprite();
                     for (int i = 0; i < node.PathBetweenNode.Count; i++)
                     {
                         node.PathBetweenNode[i].gameObject.SetActive(true);
@@ -186,23 +177,6 @@ public class SaveMapGeneration : MonoBehaviour
                     //foreach (GameObject obj in node.PathBetweenNode) { obj.SetActive(true); }
                 }
             }
-
-            /*// Load les link
-            foreach (SerializableLink item in wrapper.links)
-            {
-                GameObject Path = MapBuildingTools.Instance.TrueListPath[0];
-                MapBuildingTools.Instance.TrueListPath.RemoveAt(0);
-
-                Path.transform.localPosition = item.transformLink[0];
-                Path.transform.localRotation = item.rotationLink;
-                Path.transform.localScale = item.transformLink[1];
-                Path.gameObject.SetActive(true);
-                MapBuildingTools.Instance._savePath.Add(Path);
-
-                _numberLink++;
-            }*/
-
-            _numberLink = 0;
 
             // Relie les créateurs une fois que tous les nodes sont instanciés
             foreach (SerializableNode item in wrapper.nodes)
@@ -225,8 +199,6 @@ public class SaveMapGeneration : MonoBehaviour
 
             MapMaker2.Instance.DicoNode = tempDico;
             Node.TriggerMapCompleted(); // Redéclenche l'affichage des sprites
-
-            _numberLink = 0;
         }
         else
         {
