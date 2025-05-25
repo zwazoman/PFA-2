@@ -87,7 +87,8 @@ public class CombatManager : MonoBehaviour
 
     public async UniTask StartGame()
     {
-        SummonEntities();
+        if(_summonEntities)
+            SummonEntities();
 
         for (; ; )
         {

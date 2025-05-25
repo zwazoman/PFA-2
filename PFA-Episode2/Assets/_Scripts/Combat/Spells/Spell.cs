@@ -20,7 +20,7 @@ public class Spell
 
     public int cooling = 0;
 
-    public bool isDamaging = true;
+    public SpellType spellType = SpellType.Attack;
 
     public void StartCooldown()
     {
