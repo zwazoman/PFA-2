@@ -76,7 +76,8 @@ public class Entity : MonoBehaviour
         stats.currentMovePoints = stats.maxMovePoints;
         await stats.ApplyShield(-1);
 
-        Debug.Log("== about to tick CD ==",gameObject);
+        print(gameObject.name);
+        
         TickCooldown();
     }
 
