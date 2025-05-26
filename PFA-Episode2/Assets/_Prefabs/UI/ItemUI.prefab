@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 3425028207653446568}
   - component: {fileID: 2632077452072635154}
   - component: {fileID: 4083922220237342402}
-  - component: {fileID: 8605501000144407576}
+  - component: {fileID: 2287626697131754}
   m_Layer: 5
-  m_Name: SauceUI
+  m_Name: ItemUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76,7 +76,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8605501000144407576
+--- !u!114 &2287626697131754
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -88,7 +88,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab2fbe4df4772fb4c909bb75402d9610, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SauceIcon: {fileID: 4083922220237342402}
+  Icon: {fileID: 4083922220237342402}
+  IngredientName: {fileID: 0}
+  IngredientEffect: {fileID: 0}
   SauceName: {fileID: 0}
-  Effect: {fileID: 0}
-  AoE: {fileID: 0}
+  SauceEffect: {fileID: 0}
+  SauceAoE: {fileID: 0}
+  SpellName: {fileID: 0}
+  SpellEffect: {fileID: 0}
+  SpellAoE: {fileID: 0}

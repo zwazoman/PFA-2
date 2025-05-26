@@ -1686,6 +1686,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 4795127879247798164}
+        m_TargetAssemblyTypeName: SetupWorldMapInventory, Assembly-CSharp
+        m_MethodName: SetupSauce
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &9179829142632147110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1699,7 +1711,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _activeColor: {r: 0.18039216, g: 0.19607845, b: 0.2784314, a: 1}
-  _desactiveColor: {r: 0.10980393, g: 0.13333334, b: 0.19607845, a: 1}
+  _desactiveColor: {r: 0.12156863, g: 0.13333334, b: 0.2, a: 1}
   _goEnable:
   - {fileID: 4906493447622941588}
   _goDisable:
@@ -2095,6 +2107,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 4795127879247798164}
+        m_TargetAssemblyTypeName: SetupWorldMapInventory, Assembly-CSharp
+        m_MethodName: SetupSpell
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &5253294720450326260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2419,8 +2443,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: -0.000015258789}
+  m_AnchoredPosition: {x: 0, y: 80.00003}
+  m_SizeDelta: {x: 0, y: 160.0001}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5061408777902509142
 CanvasRenderer:
@@ -3822,6 +3846,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 4795127879247798164}
+        m_TargetAssemblyTypeName: SetupWorldMapInventory, Assembly-CSharp
+        m_MethodName: SetupIngredient
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &7670499073496118728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3834,7 +3870,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbfaf4bd744e3364581e64e2e61666a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _activeColor: {r: 0.18039216, g: 0.19607845, b: 0.2784314, a: 1}
+  _activeColor: {r: 0.18039216, g: 0.19215687, b: 0.27450982, a: 1}
   _desactiveColor: {r: 0.10980393, g: 0.13333334, b: 0.19607845, a: 1}
   _goEnable:
   - {fileID: 8225049584726360157}
@@ -9052,7 +9088,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8928499542011884151}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
@@ -9147,8 +9183,35 @@ MonoBehaviour:
   - {fileID: 5039727176001567234}
   - {fileID: 5839215216620293902}
   - {fileID: 2786544530499813716}
+  _spellSlot:
+  - {fileID: 1381613601387634805}
+  - {fileID: 3154449167781322112}
+  - {fileID: 2056599588210288286}
+  - {fileID: 8827014065816804931}
+  - {fileID: 1823219665826633166}
+  - {fileID: 8835268257024845394}
+  - {fileID: 8169365299346143350}
+  - {fileID: 6553548982906680666}
+  - {fileID: 7246530628838407711}
+  - {fileID: 2542808958504509483}
+  - {fileID: 3903783233491591610}
+  - {fileID: 2543243465679570322}
+  - {fileID: 4044932345818766283}
+  - {fileID: 5154691206025135163}
+  - {fileID: 2908757585536323046}
+  - {fileID: 8955665986720236456}
+  - {fileID: 526048104822300419}
+  - {fileID: 7511151479538533569}
+  - {fileID: 7127617909599318152}
+  - {fileID: 3955165769205537825}
+  - {fileID: 2805500058464320235}
+  - {fileID: 7831122091673031063}
+  - {fileID: 2860547499703813568}
+  - {fileID: 8258979489773155508}
+  - {fileID: 6488659988353294666}
+  - {fileID: 4648432141956093032}
+  - {fileID: 611596572854460237}
   _prefabItem: {fileID: 4971722895929832787, guid: fd753413ac6106f439d97d861dcff142, type: 3}
-  _infoIngredientUI: {fileID: 0}
 --- !u!1 &9050950117557584891
 GameObject:
   m_ObjectHideFlags: 0

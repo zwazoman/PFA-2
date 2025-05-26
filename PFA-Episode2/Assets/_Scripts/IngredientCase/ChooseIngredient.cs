@@ -158,8 +158,8 @@ public class ChooseIngredient : MonoBehaviour
     }
     private bool IsSauce()
     {
-        int numberChoose = Random.Range(0, 101);
-        if (numberChoose > _probaSauce) { return false; }
+        float numberChoose = Random.value;
+        if (numberChoose >= _probaSauce) { return false; }
         else { return true; }
     }
     public async Task ResetIngredient()
