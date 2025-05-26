@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEditor;
+using System.IO;
 
 public class ChooseIngredient : MonoBehaviour
 {
@@ -171,4 +173,67 @@ public class ChooseIngredient : MonoBehaviour
     {
         return biais * (2 * (float)tirageActuel / (float)nombreTotalTirage - 1) + probaRef;
     }
+
+    public void GenerateLists()
+    {
+        _listIngredientCommon.Clear();
+        _listIngredientSavoureux.Clear();
+        _listIngredientDivin.Clear();
+        
+        _listSauceCommon.Clear();
+        _listSauceSavoureux.Clear();
+        _listSauceDivin.Clear();
+
+        string[] files = Directory.GetFiles("Assets/_Data/Ingredients/ingredients", "*.asset", SearchOption.TopDirectoryOnly);
+        foreach (string path in files)
+        {
+            Ingredient asset = (Ingredient)AssetDatabase.LoadAssetAtPath(path, typeof(Ingredient));
+            switch (asset.rarity)
+            {
+                case Rarity.Ordinaire:
+                    _listIngredientCommon.Add(asset);
+                    break;
+                case Rarity.Savoureux:
+                    _listIngredientSavoureux.Add(asset);
+                    break;
+                case Rarity.Divin:
+                    _listIngredientDivin.Add(asset);
+                    break; 
+            }
+        }
+
+        files = Directory.GetFiles("Assets/_Data/Ingredients/Sauce", "*.asset", SearchOption.TopDirectoryOnly);
+        foreach (string path in files)
+        {
+            Sauce asset = (Sauce)AssetDatabase.LoadAssetAtPath(path, typeof(Sauce));
+            switch (asset.rarity)
+            {
+                case Rarity.Ordinaire:
+                    _listSauceCommon.Add(asset);
+                    break;
+                case Rarity.Savoureux:
+                    _listSauceSavoureux.Add(asset);
+                    break;
+                case Rarity.Divin:
+                    _listSauceDivin.Add(asset);
+                    break;
+            }
+        }
+
+    }
 }
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(ChooseIngredient))]
+class ChooseIngredientEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+        if(GUILayout.Button("générer les listes connard"))
+        {
+            ((ChooseIngredient)target).GenerateLists();
+        }
+    }
+}
+#endif
