@@ -34,7 +34,6 @@ class SceneWatcher
             await client.GetAsync(request);
         };
 
-        Debug.Log("Edited scene : " + scene.name);
     }
 
     static async void OnSceneClosed(Scene scene)
@@ -53,6 +52,5 @@ class SceneWatcher
             await client.GetAsync(request);
         };
 
-        Debug.Log("closed scene : " + scene.name);
     }
 }
