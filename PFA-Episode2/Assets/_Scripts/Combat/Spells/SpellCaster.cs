@@ -279,12 +279,9 @@ public class SpellCaster : MonoBehaviour
     BakedTargetedSpellEffect ComputeTargetedSpellEffect(Spell spell, ref SpellCastData zoneData, Entity entity)
     {
         BakedTargetedSpellEffect e = new();
-        Debug.Log("default damage : " + e.damage);
-        Debug.Log("default push damage : " + e.pushDamage);
 
         foreach (SpellEffect effect in spell.spellData.Effects)
         {
-            Debug.Log(effect.effectType.ToString());
             switch (effect.effectType)
             {
                 case SpellEffectType.Damage:
@@ -294,9 +291,6 @@ public class SpellCaster : MonoBehaviour
 
                     break;
                 case SpellEffectType.Recoil:
-                    Debug.Log(" - Recoil effect -");
-                    Debug.Log("push direction : "+ zoneData.hitEntityCTXDict[entity].pushDirection);
-                    Debug.Log("push force : "+ (int)effect.value);
 
                     WayPoint pushPoint = ComputePushPoint(
                         zoneData.hitEntityCTXDict[entity].pushDirection,
@@ -304,13 +298,11 @@ public class SpellCaster : MonoBehaviour
                         (int)effect.value,
                         out int pushDamages);
 
-                    Debug.Log("computed push damages : " + pushDamages);
                     zoneData.hitEntityCTXDict[entity].PushDamage = pushDamages;
                     zoneData.hitEntityCTXDict[entity].PushPoint = pushPoint;
 
                     e.pushDamage = pushDamages;
                     e.pushPoint = zoneData.hitEntityCTXDict[entity].PushPoint;
-                    Debug.Log("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
                     break;
                 case SpellEffectType.Shield:
                     if (effect.statType == StatType.FlatIncrease) e.shield += effect.value;
@@ -332,8 +324,6 @@ public class SpellCaster : MonoBehaviour
         e.damage = Mathf.Ceil(e.damage);
         e.shield = Mathf.Ceil(e.shield);
         e.pushDamage = Mathf.Ceil(e.pushDamage);
-        Debug.Log("computed push damage : " + e.pushDamage);
-        Debug.Log("-");
 
         return e;
     }

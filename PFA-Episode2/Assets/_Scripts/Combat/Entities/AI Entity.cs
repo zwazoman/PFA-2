@@ -158,6 +158,8 @@ public class AIEntity : Entity
         WayPoint result;
         points.FindClosestFloodPoint(out result);
 
+        print(result.Content);
+
         return result;
     }
 
