@@ -1,4 +1,10 @@
 
+public enum Team
+{
+    Player,
+    Enemy
+}
+
 public enum SpellType
 {
     Attack,
@@ -46,6 +52,8 @@ public enum SpellEffectType
     /// degat = degat * (1+SpellCastingContext.DistanceToPlayer * DamageIncreaseByDistanceToCaster / 100f)
     /// </summary>
     DamageIncreasePercentageByDistanceToCaster,
+
+    EntitySummon,
 }
 
 public enum StatType

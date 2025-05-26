@@ -40,7 +40,7 @@ public class CombatUiManager : MonoBehaviour
 
     public void RegisterEntity(Entity e)
     {
-        if(e is EnemyEntity)
+        if(e is AIEntity)
         {
             EntityInfoFrame frame = (EntityInfoFrame)Instantiate(_ennemyInfoFramePrefab, _entityFramesGroup.transform);
             frame.Setup(e);

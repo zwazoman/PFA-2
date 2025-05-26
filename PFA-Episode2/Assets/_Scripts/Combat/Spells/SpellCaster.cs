@@ -228,6 +228,17 @@ public class SpellCaster : MonoBehaviour
         return choosenPoint;
     }
 
+    void SummonEntityAtPoint(WayPoint point)
+    {
+        GameObject kamikaze = Instantiate(GameManager.Instance.staticData.kamikaze, new Vector3(point.transform.position.x, .5f, point.transform.position.z), Quaternion.identity);
+        Entity entity = kamikaze.GetComponent<Entity>();
+
+        if(castingEntity.team == Team.Player)
+            entity.team = Team.Player;
+        else if(castingEntity.team == Team.Enemy)
+            entity.team = Team.Enemy;
+    }
+
     /// <summary>
     /// bake tous les effets du spell en fonction du contexte
     /// </summary>
@@ -276,7 +287,22 @@ public class SpellCaster : MonoBehaviour
                 case SpellEffectType.DamageIncreasePercentageByDistanceToCaster:
                     e.damage *= (1+zoneData.hitEntityCTXDict[entity].distanceToHitEnemy*.2f);
                     break;
-
+                case SpellEffectType.EntitySummon:
+                    if (zoneData.zonePoints[0].State == WaypointState.Free)
+                        zoneData.summonPoint = zoneData.zonePoints[0];
+                    else
+                    {
+                        List<WayPoint> wayPoints = new List<WayPoint>();
+                        foreach (WayPoint point in zoneData.zonePoints)
+                        {
+                            if(point.State == WaypointState.Free)
+                                wayPoints.Add(point);
+                        }
+                        if (wayPoints.Count == 0)
+                            break;
+                        zoneData.summonPoint = wayPoints.PickRandom();
+                    }
+                    break;
             }
 
             e.damage = Mathf.Ceil(e.damage);
@@ -369,6 +395,10 @@ public class SpellCaster : MonoBehaviour
             await UniTask.WhenAll(tasks);
         }
 
+        if(zoneData.summonPoint != null)
+        {
+
+        }
 
         if (playerCastingEntity != null)
             playerCastingEntity.ShowSpellsUI();
@@ -389,7 +419,6 @@ public class SpellCaster : MonoBehaviour
         PoolManager.Instance.ProjectilePool.PullObjectFromPool(_spellCastingSocket.position).TryGetComponent(out projectile);
         await projectile.Launch(castingEntity, entity, spell.spellData.Mesh);
 
-        
         //wait for animations to play
         await entity.visuals.animator.PlayAnimationTrigger(entity.hitTrigger);
 
@@ -418,6 +447,8 @@ public struct SpellCastData
 {
     public List<WayPoint> zonePoints;
     public Dictionary<Entity, SpellCastingContext> hitEntityCTXDict;
+
+    public WayPoint summonPoint;
 }
 
 /// <summary>
