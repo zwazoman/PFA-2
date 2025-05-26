@@ -31,15 +31,21 @@ public static class IgnoreFolderSelection
         }
     }
 
-    [MenuItem("Tools/Ignore Folders")]
+    [MenuItem("Tools/Ignore Folders", false)]
     public static void ToggleActivation()
     {
         Active = !Active;
     }
 
+    [MenuItem("Tools/Ignore Folders", true)]
+    public static bool ToggleActivationValidate()
+    {
+        Menu.SetChecked("Tools/Ignore Folders", Active);
+        return true;
+    }
+
     static IgnoreFolderSelection()
     {
-        // Pour initialiser à false sans déclencher l’abonnement inutilement
         _active = false;
     }
 
