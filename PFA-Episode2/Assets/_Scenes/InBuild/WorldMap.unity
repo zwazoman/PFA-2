@@ -202,7 +202,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1842507577}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: InventoryMap, Assembly-CSharp
         m_MethodName: EnableColor
         m_Mode: 2
@@ -214,7 +214,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1842507577}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: InventoryMap, Assembly-CSharp
         m_MethodName: DisableColor
         m_Mode: 2
@@ -226,7 +226,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1842507577}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: InventoryMap, Assembly-CSharp
         m_MethodName: DisableColor
         m_Mode: 2
@@ -4510,7 +4510,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1842507577}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: InventoryMap, Assembly-CSharp
         m_MethodName: EnableColor
         m_Mode: 2
@@ -4522,7 +4522,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1842507577}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: InventoryMap, Assembly-CSharp
         m_MethodName: DisableColor
         m_Mode: 2
@@ -4534,7 +4534,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1842507577}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: InventoryMap, Assembly-CSharp
         m_MethodName: DisableColor
         m_Mode: 2
@@ -5870,7 +5870,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1842507577}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: InventoryMap, Assembly-CSharp
         m_MethodName: EnableColor
         m_Mode: 2
@@ -5882,7 +5882,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1842507577}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: InventoryMap, Assembly-CSharp
         m_MethodName: DisableColor
         m_Mode: 2
@@ -5894,7 +5894,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1842507577}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: InventoryMap, Assembly-CSharp
         m_MethodName: DisableColor
         m_Mode: 2
@@ -18265,52 +18265,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1833242693}
   m_CullTransparentMesh: 1
---- !u!1 &1842507576
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1842507578}
-  - component: {fileID: 1842507577}
-  m_Layer: 0
-  m_Name: Color
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1842507577
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1842507576}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a26e366660c81c54cb754f9b5ae87edc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _activeColor: {r: 0.18039216, g: 0.19215687, b: 0.27450982, a: 1}
-  _desactiveColor: {r: 0.12156863, g: 0.13333334, b: 0.2, a: 1}
---- !u!4 &1842507578
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1842507576}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1848131238
 GameObject:
   m_ObjectHideFlags: 0
@@ -24014,4 +23968,3 @@ SceneRoots:
   - {fileID: 2117179955}
   - {fileID: 1448847258}
   - {fileID: 1215817174}
-  - {fileID: 1842507578}
