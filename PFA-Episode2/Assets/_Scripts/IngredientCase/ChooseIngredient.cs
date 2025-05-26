@@ -30,6 +30,10 @@ public class ChooseIngredient : MonoBehaviour
     private int _totalTirage;
     private int _moyenneTirage;
 
+    [Header("Others")]
+    [SerializeField] private bool _sceneCombat;
+    private int _maxIngredientRef;
+
     public List<IngredientBase> IngredientBaseChooseBySac { get; private set; } = new();
     private List<IngredientBase> _completeListIngredientChoose = new();
 
@@ -48,17 +52,19 @@ public class ChooseIngredient : MonoBehaviour
 
         for (int sacIndex = 0; sacIndex <= 2; sacIndex++)
         {
-            for (int tagIngredient = 0; tagIngredient <= 2; tagIngredient++)
-            {
-                if (IsSauce())
+            if (_sceneCombat == true) { _maxIngredientRef = 0; }
+            else { _maxIngredientRef = 2; }
+                for (int tagIngredient = 0; tagIngredient <= _maxIngredientRef; tagIngredient++)
                 {
-                    IngredientBaseChooseBySac.Add(ReturnSauceChoose());
+                    if (IsSauce())
+                    {
+                        IngredientBaseChooseBySac.Add(ReturnSauceChoose());
+                    }
+                    else
+                    {
+                        IngredientBaseChooseBySac.Add(ReturnIngredientChoose());
+                    }
                 }
-                else
-                {
-                    IngredientBaseChooseBySac.Add(ReturnIngredientChoose());
-                }
-            }
             foreach (IngredientBase ing in IngredientBaseChooseBySac) { _completeListIngredientChoose.Add(ing); }
             List<IngredientBase> tempo = new();
             tempo.AddRange(IngredientBaseChooseBySac);
