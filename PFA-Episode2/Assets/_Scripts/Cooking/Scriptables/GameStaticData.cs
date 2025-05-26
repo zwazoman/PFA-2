@@ -30,6 +30,9 @@ public class GameStaticData : ScriptableObject
         public Mesh mesh;
     }
 
+    [Header("Spawnable Entities")]
+    public GameObject kamikaze;
+
     [Header("Tile materials")]
     public Material _mat_movementPreview;
     public Material _mat_spellAoePreview;

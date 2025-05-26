@@ -12,6 +12,8 @@ using Cysharp.Threading.Tasks.Triggers;
 [RequireComponent(typeof(SpellCaster))]
 public class Entity : MonoBehaviour
 {
+    public Team team = Team.Enemy;
+
     public bool isDead { get; private set; }
 
     public EntityStats stats = new();
@@ -179,6 +181,34 @@ public class Entity : MonoBehaviour
             await stats.ApplyDamage(pushDamages);
 
         pushTarget.StepOn(this);
+    }
+
+    public List<Entity> GetEnemyList()
+    {
+        List<Entity> enemyEntities = new List<Entity>();
+
+        if (team == Team.Enemy)
+            foreach (Entity entity in CombatManager.Instance.PlayerEntities)
+                enemyEntities.Add(entity);
+        else if(team == Team.Player)
+            foreach (Entity entity in CombatManager.Instance.EnemyEntities)
+                enemyEntities.Add(entity);
+
+        return enemyEntities;
+    }
+
+    public List<Entity> GetAllyEntities()
+    {
+        List<Entity> enemyEntities = new List<Entity>();
+
+        if (team == Team.Player)
+            foreach (Entity entity in CombatManager.Instance.PlayerEntities)
+                enemyEntities.Add(entity);
+        else if (team == Team.Enemy)
+            foreach (Entity entity in CombatManager.Instance.EnemyEntities)
+                enemyEntities.Add(entity);
+
+        return enemyEntities;
     }
 
     //movement

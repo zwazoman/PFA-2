@@ -28,8 +28,8 @@ public class CombatManager : MonoBehaviour
     }
     #endregion
 
-    [HideInInspector] public List<PlayerEntity> PlayerEntities = new();
-    [HideInInspector] public List<EnemyEntity> EnemyEntities = new();
+    [HideInInspector] public List<Entity> PlayerEntities = new();
+    [HideInInspector] public List<Entity> EnemyEntities = new();
 
     [SerializeField] public List<SpawnSetup> Setups = new();
     [SerializeField] int _minEnnemiesCount;
@@ -41,6 +41,7 @@ public class CombatManager : MonoBehaviour
     [SerializeField] bool _startGameOnSceneStart = false;
 
     [SerializeField] GameOverPanel _gameOverPanel;
+    [SerializeField] RewardBundle _rewardPanel;
 
     public event Action<Entity> OnNewTurn;
     public event Action OnWin;
@@ -50,30 +51,30 @@ public class CombatManager : MonoBehaviour
     public void RegisterEntity(Entity entity)
     {
         Entities.Add(entity);
-        if (entity is PlayerEntity)
+        if (entity.team == Team.Player)
         {
             PlayerEntities.Add((PlayerEntity)entity);
         }
-        else if (entity is EnemyEntity)
+        else if (entity.team == Team.Enemy)
         {
-            EnemyEntities.Add((EnemyEntity)entity);
+            EnemyEntities.Add((AIEntity)entity);
         }
     }
 
     public async UniTask UnRegisterEntity(Entity entity)
     {
         Entities.Remove(entity);
-        if (entity is PlayerEntity && PlayerEntities.Contains(entity))
+        if (entity.team == Team.Player && PlayerEntities.Contains(entity))
+            PlayerEntities.Remove(entity);
+        else if (entity.team == Team.Enemy && EnemyEntities.Contains(entity))
         {
-            PlayerEntities.Remove((PlayerEntity)entity);
-            await GameOver();
-        }
-        else if (entity is EnemyEntity && EnemyEntities.Contains(entity))
-        {
-            EnemyEntities.Remove((EnemyEntity)entity);
+            EnemyEntities.Remove(entity);
             if (EnemyEntities.Count == 0)
                 await Victory();
         }
+
+        if(entity is PlayerEntity)
+            await GameOver();
     }
 
     #endregion
@@ -95,7 +96,7 @@ public class CombatManager : MonoBehaviour
             //player entities
             for (int i = 0; i < PlayerEntities.Count; i++)
             {
-                PlayerEntity player = PlayerEntities[i];
+                Entity player = PlayerEntities[i];
                 if (player == null) continue;
 
                 foreach (Entity e in Entities) e.StopPreviewingSpellEffect();
@@ -109,7 +110,7 @@ public class CombatManager : MonoBehaviour
             //enemy entities
             for (int i = 0; i < EnemyEntities.Count; i++)
             {
-                EnemyEntity enemy = EnemyEntities[i];
+                Entity enemy = EnemyEntities[i];
                 if (enemy == null) continue;
 
                 foreach (Entity e in Entities) e.StopPreviewingSpellEffect();
@@ -120,7 +121,7 @@ public class CombatManager : MonoBehaviour
 
             //cleanup corpses
             foreach (PlayerEntity player in PlayerEntities) if (player.isDead) Destroy(player);
-            foreach (EnemyEntity e in EnemyEntities) if (e.isDead) Destroy(e);
+            foreach (AIEntity e in EnemyEntities) if (e.isDead) Destroy(e);
 
             await UniTask.Yield();
         }
@@ -166,7 +167,7 @@ public class CombatManager : MonoBehaviour
     {
         await UniTask.Delay(1000);
 
-        OnWin?.Invoke();
-        await SceneTransitionManager.Instance.GoToScene("WorldMap");
+        _rewardPanel?.Show();
+        //await SceneTransitionManager.Instance.GoToScene("WorldMap");
     }
 }

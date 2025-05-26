@@ -1,4 +1,10 @@
 
+public enum Team
+{
+    Player,
+    Enemy
+}
+
 public enum SpellType
 {
     Attack,
@@ -46,6 +52,8 @@ public enum SpellEffectType
     /// degat = degat * (1+SpellCastingContext.DistanceToPlayer * DamageIncreaseByDistanceToCaster / 100f)
     /// </summary>
     DamageIncreasePercentageByDistanceToCaster,
+
+    EntitySummon,
 }
 
 public enum StatType
@@ -61,7 +69,7 @@ public static class IngredientsInfo
         Meat,
         Vegetables,
         Starchys,//feculent
-        Dairies,
+        Dairys,
     }
     public const byte FamilyCount = 4;
 
@@ -70,7 +78,7 @@ public static class IngredientsInfo
         IngredientsInfo.Family.Meat,
         IngredientsInfo.Family.Vegetables,
         IngredientsInfo.Family.Starchys,
-        IngredientsInfo.Family.Dairies
+        IngredientsInfo.Family.Dairys
     };
 }
 
