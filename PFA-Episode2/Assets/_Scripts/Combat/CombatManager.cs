@@ -53,11 +53,11 @@ public class CombatManager : MonoBehaviour
         Entities.Add(entity);
         if (entity.team == Team.Player)
         {
-            PlayerEntities.Add((PlayerEntity)entity);
+            PlayerEntities.Add(entity);
         }
         else if (entity.team == Team.Enemy)
         {
-            EnemyEntities.Add((AIEntity)entity);
+            EnemyEntities.Add(entity);
         }
     }
 
