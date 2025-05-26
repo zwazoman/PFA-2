@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using System;
 
 public class SpellCaster : MonoBehaviour
 {
@@ -82,7 +83,10 @@ public class SpellCaster : MonoBehaviour
                 WayPoint choosenWaypoint = GraphMaker.Instance.serializedPointDict[newPos];
 
                 if (showZone)
-                    choosenWaypoint.SetPreviewState(WayPoint.PreviewState.SpellCastZone); 
+                {
+                    //bleu si + de shield que de degats
+                    choosenWaypoint.SetPreviewState(ComputeShieldVsDamageDiff(spell) < 0 ? WayPoint.PreviewState.SpellCastZone_Agressive : WayPoint.PreviewState.SpellCastZone_Shield);
+                }
 
                 zonePoints.Add(choosenWaypoint);
 
@@ -224,6 +228,13 @@ public class SpellCaster : MonoBehaviour
         return choosenPoint;
     }
 
+    /// <summary>
+    /// bake tous les effets du spell en fonction du contexte
+    /// </summary>
+    /// <param name="spell"></param>
+    /// <param name="entity"></param>
+    /// <param name="zoneData"></param>
+    /// <returns></returns>
     BakedSpellEffect ComputeBakedSpellEffect(Spell spell, Entity entity, ref SpellCastData zoneData)
     {
         BakedSpellEffect e = new();
@@ -233,7 +244,10 @@ public class SpellCaster : MonoBehaviour
             switch (effect.effectType)
             {
                 case SpellEffectType.Damage:
-                    e.damage += effect.value;
+                    if (effect.statType == StatType.FlatIncrease) e.damage += effect.value;
+                    else if(effect.statType == StatType.Multiplier) e.damage *= effect.value;
+                    else throw new System.Exception("y'a un pb là");
+
                     break;
                 case SpellEffectType.Recoil:
 
@@ -251,22 +265,59 @@ public class SpellCaster : MonoBehaviour
 
                     break;
                 case SpellEffectType.Shield:
-                    e.shield += effect.value;
+                    if (effect.statType == StatType.FlatIncrease) e.shield += effect.value;
+                    else if (effect.statType == StatType.Multiplier) e.shield *= effect.value;
+                    else throw new System.Exception("y'a un pb là");
                     break;
 
                 case SpellEffectType.DamageIncreaseForEachHitEnnemy:
                     e.damage += 8 * (zoneData.hitEntityCTXDict[entity].numberOfHitEnnemies - 1);
                     break;
                 case SpellEffectType.DamageIncreasePercentageByDistanceToCaster:
-                    e.damage += 5 * zoneData.hitEntityCTXDict[entity].distanceToHitEnemy;
+                    e.damage *= (1+zoneData.hitEntityCTXDict[entity].distanceToHitEnemy*.2f);
                     break;
 
-                case SpellEffectType.Fire:
+            }
+
+            e.damage = Mathf.Ceil(e.damage);
+            e.shield = Mathf.Ceil(e.damage);
+            e.pushDamage = Mathf.Ceil(e.damage);
+        }
+
+        return e;
+    }
+
+    /// <summary>
+    ///  calcul la difference entre les degats et le shield du spell. négatif si le spell fait des dégats, positif si il donne du shield
+    /// </summary>
+    /// <param name="spell"></param>
+    /// <returns></returns>
+    public float ComputeShieldVsDamageDiff(Spell spell)
+    {
+        float shield =0;
+        float damage =0;
+
+        foreach (SpellEffect effect in spell.spellData.Effects)
+        {
+            switch (effect.effectType)
+            {
+                case SpellEffectType.Damage:
+                    if(effect.statType == StatType.FlatIncrease)
+                        damage += effect.value;
+                    else if(effect.statType == StatType.Multiplier)
+                        damage *= effect.value;
+                    break;
+                
+                case SpellEffectType.Shield:
+                    if (effect.statType == StatType.FlatIncrease)
+                        shield += effect.value;
+                    else if (effect.statType == StatType.Multiplier)
+                        shield *= effect.value;
                     break;
             }
         }
 
-        return e;
+        return shield-damage;
     }
 
     //preview spell effect

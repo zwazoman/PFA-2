@@ -109,7 +109,7 @@ public class GraphMaker : MonoBehaviour
         foreach (WayPoint point in _allWaypoints)
         {
             //setup visuals
-            if (point.State != WaypointState.Obstructed)
+            if (point.State != WaypointState.Obstructed ||true)
             {
                 for (int i = 0; i < point.gameObject.transform.childCount; i++)
                 {
@@ -120,7 +120,7 @@ public class GraphMaker : MonoBehaviour
 
                 Vector3 pose = point.transform.position + Vector3.up * .6f;
                 Vector3 rayOrigin = point.transform.position + Vector3.up * 10;
-                if (Physics.SphereCast(rayOrigin, .4f, Vector3.down,out RaycastHit hit,20))
+                if (Physics.SphereCast(rayOrigin, .4f, Vector3.down,out RaycastHit hit,20,~LayerMask.GetMask("Wall")))
                 {
                     Vector3 toPoint = hit.point - rayOrigin;
                     pose = rayOrigin + Vector3.Project(toPoint, Vector3.down) + Vector3.up*.05f;

@@ -1,3 +1,11 @@
+
+public enum SpellType
+{
+    Attack,
+    Defense,
+    Utilitary
+}
+
 public enum SauceEffectType
 {
     None,
@@ -12,7 +20,7 @@ public enum SauceEffectType
     /// degat = degat * (1+SpellCastingContext.DistanceToPlayer * DamageIncreaseByDistanceToCaster / 100f)
     /// </summary>
     DamageIncreasePercentageByDistanceToCaster,
-    Fire
+    
 }
 
 public enum IngredientEffectType
@@ -38,14 +46,12 @@ public enum SpellEffectType
     /// degat = degat * (1+SpellCastingContext.DistanceToPlayer * DamageIncreaseByDistanceToCaster / 100f)
     /// </summary>
     DamageIncreasePercentageByDistanceToCaster,
-    Fire
 }
 
 public enum StatType
 {
     FlatIncrease,
     Multiplier,
-    PercentageIncrease
 }
 
 public static class IngredientsInfo
@@ -55,7 +61,7 @@ public static class IngredientsInfo
         Meat,
         Vegetables,
         Starchys,//feculent
-        Dairys,
+        Dairies,
     }
     public const byte FamilyCount = 4;
 
@@ -64,7 +70,7 @@ public static class IngredientsInfo
         IngredientsInfo.Family.Meat,
         IngredientsInfo.Family.Vegetables,
         IngredientsInfo.Family.Starchys,
-        IngredientsInfo.Family.Dairys
+        IngredientsInfo.Family.Dairies
     };
 }
 

@@ -95,17 +95,16 @@ public struct SpellEffect
                     break;
                 case StatType.Multiplier:
                     a.value *= b.value;
+                    Debug.Log("Multiplier Collapsed !!!!!!");
                     break;
-                case StatType.PercentageIncrease:
-                    float m1 = a.value * .01f + 1;
-                    float m2 = b.value * .01f + 1;
-                    a.value = (m1 * m2 - 1f) * 100f;
-                    break;
+
             }
             return true;
         }
         return (false);
     }
+
+    
 
     #endregion
 }
