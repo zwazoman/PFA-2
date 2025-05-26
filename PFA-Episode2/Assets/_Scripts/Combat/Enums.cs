@@ -69,7 +69,7 @@ public static class IngredientsInfo
         Meat,
         Vegetables,
         Starchys,//feculent
-        Dairies,
+        Dairys,
     }
     public const byte FamilyCount = 4;
 
@@ -78,7 +78,7 @@ public static class IngredientsInfo
         IngredientsInfo.Family.Meat,
         IngredientsInfo.Family.Vegetables,
         IngredientsInfo.Family.Starchys,
-        IngredientsInfo.Family.Dairies
+        IngredientsInfo.Family.Dairys
     };
 }
 
