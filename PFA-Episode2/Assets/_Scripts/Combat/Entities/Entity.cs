@@ -76,7 +76,6 @@ public class Entity : MonoBehaviour
         stats.currentMovePoints = stats.maxMovePoints;
         await stats.ApplyShield(-1);
 
-        Debug.Log("== about to tick CD ==",gameObject);
         TickCooldown();
     }
 
@@ -105,7 +104,7 @@ public class Entity : MonoBehaviour
         float damage = Mathf.Max(e.damage + e.pushDamage - tankedDamage, 0);
 
         float newHP = stats.currentHealth - damage;
-        
+
 
         OnPreviewSpell?.Invoke(newShield, newHP,e.pushPoint != null ? e.pushPoint.transform.position-transform.position : Vector3.zero);
     }

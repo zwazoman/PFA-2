@@ -14,6 +14,7 @@ class SceneWatcher
     static SceneWatcher()
     {
         EditorSceneManager.sceneDirtied += OnSceneEdited;
+        EditorSceneManager.sceneSaved += OnSceneEdited;
         EditorSceneManager.sceneClosed += OnSceneClosed;
     }
 
