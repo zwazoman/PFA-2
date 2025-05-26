@@ -29,7 +29,7 @@ public class SetupIngredientUI : MonoBehaviour
             if (ing is Sauce Sauce) { GameManager.Instance.playerInventory.Sauces.Add(Sauce); }
             else if (ing is Ingredient Ingredient) { GameManager.Instance.playerInventory.Ingredients.Add(Ingredient); }
         }
-        if (SaveMapGeneration.Instance.PositionMap == 0 && !_firstTime)
+        if (PlayerMap.Instance.PositionMap == 1 && !_firstTime)
         {
             _firstTime = true;
             ListListIngredient.Clear();

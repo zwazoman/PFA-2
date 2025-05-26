@@ -123,7 +123,6 @@ public class MapMaker2 : MonoBehaviour
             Intersection.Add(CurrentNode);
             ToutDroit(tourboucle, ParentNode);
             CurrentNode.Hauteur = _currentHeight + 1;
-            print(CurrentNode.Hauteur);
 
             CurrentNode = NodeList.Dequeue();
             CurrentNode.Intersection = true;

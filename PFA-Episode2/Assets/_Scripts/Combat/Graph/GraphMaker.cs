@@ -1,8 +1,8 @@
 using AYellowpaper.SerializedCollections;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEditor;
 using UnityEngine;
+
 
 public class GraphMaker : MonoBehaviour
 {
@@ -47,6 +47,7 @@ public class GraphMaker : MonoBehaviour
         instance = this;
     }
 
+#if UNITY_EDITOR
     void GenerateGraph()
     {
         int xPos = StartPos.x;
@@ -100,8 +101,6 @@ public class GraphMaker : MonoBehaviour
                     if (hit.collider.TryGetComponent(out WayPoint wayPoint) && !point.Neighbours.Contains(wayPoint))
                         point.Neighbours.Add(wayPoint);
             }
-
-            
         }
     }
 
@@ -110,7 +109,7 @@ public class GraphMaker : MonoBehaviour
         foreach (WayPoint point in _allWaypoints)
         {
             //setup visuals
-            if (point.State != WaypointState.Obstructed)
+            if (point.State != WaypointState.Obstructed ||true)
             {
                 for (int i = 0; i < point.gameObject.transform.childCount; i++)
                 {
@@ -121,7 +120,7 @@ public class GraphMaker : MonoBehaviour
 
                 Vector3 pose = point.transform.position + Vector3.up * .6f;
                 Vector3 rayOrigin = point.transform.position + Vector3.up * 10;
-                if (Physics.SphereCast(rayOrigin, .4f, Vector3.down,out RaycastHit hit,20))
+                if (Physics.SphereCast(rayOrigin, .4f, Vector3.down,out RaycastHit hit,20,~LayerMask.GetMask("Wall")))
                 {
                     Vector3 toPoint = hit.point - rayOrigin;
                     pose = rayOrigin + Vector3.Project(toPoint, Vector3.down) + Vector3.up*.05f;
@@ -153,7 +152,7 @@ public class GraphMaker : MonoBehaviour
     }
 }
 
-#if UNITY_EDITOR
+
 [CustomEditor(typeof(GraphMaker))]
 public class GraphMakerEditor : Editor
 {
@@ -179,5 +178,6 @@ public class GraphMakerEditor : Editor
             graphMaker.SetUpVisuals();
 
     }
-}
 #endif
+
+}

@@ -4032,6 +4032,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dd4f9ba9d59613d47acf0dc75e7f3b36, type: 2}
   - {fileID: 11400000, guid: be6b759c2da798c458ba5b207443976c, type: 2}
   - {fileID: 11400000, guid: 77335c933e1686f4081a372818c5917d, type: 2}
+  - {fileID: 11400000, guid: 7ff9cb789646db647a66246c8e945073, type: 2}
+  - {fileID: 11400000, guid: 7ff9cb789646db647a66246c8e945073, type: 2}
+  - {fileID: 11400000, guid: 7ff9cb789646db647a66246c8e945073, type: 2}
   _listIngredientSavoureux:
   - {fileID: 11400000, guid: d0ea9bb491d34a647b42e43baac8dcfb, type: 2}
   - {fileID: 11400000, guid: 457adb04d41d98945ae78604df554e2b, type: 2}
@@ -4042,10 +4045,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8a8f526e43683064896caeeea2530b94, type: 2}
   - {fileID: 11400000, guid: 0f0b821449e54d14f9a4069061d81197, type: 2}
   - {fileID: 11400000, guid: 4face9cc5d6ad534fa99ee2d36600d16, type: 2}
-  _probaSauce: 25
-  _probaCommon: 70
-  _probaSavoureux: 28
-  _probaDivin: 2
+  _probaSauce: 0.25
+  _probaCommon: 0.7
+  _probaSavoureux: 0.28
+  _probaDivin: 0.02
+  _biaisCommon: -0.35
+  _biaisSavoureux: 0.25
+  _biaisDivin: 0.1
 --- !u!114 &584230124
 MonoBehaviour:
   m_ObjectHideFlags: 0

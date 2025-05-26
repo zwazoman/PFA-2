@@ -36,10 +36,8 @@ public class CookingPot : MonoBehaviour
         foreach(Ingredient ing in ingredients)
         {
             cd += ing.CoolDownIncrease;
-            range += ing.RangeIncrease;
         }
         _txt_cooldown.text = Serializer.GetCoolDownString(cd);
-        _txt_range.text = Serializer.GetRangeString(range);
     }
 
     void UpdateIngredientsStatsDisplay()
@@ -56,8 +54,7 @@ public class CookingPot : MonoBehaviour
         txt_sauceName.text = s.name;
         txt_sauceEffect.text = Serializer.GetSauceEffectString(s);
         _sauceAreaImage.sprite = s.areaOfEffect.sprite;
-        
-        
+
     }
 
     void UpdateDisplay()
@@ -80,7 +77,7 @@ public class CookingPot : MonoBehaviour
     {
         foreach (DraggableIngredientContainer item in items) 
         {
-            RemoveIngredient(item,false);
+            if(item!=null) RemoveIngredient(item,false);
         }
 
         UpdateDisplay();

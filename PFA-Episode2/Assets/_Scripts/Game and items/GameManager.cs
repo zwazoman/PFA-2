@@ -27,11 +27,11 @@ public class GameManager : MonoBehaviour
     [Header("Data")]
     public GameStaticData staticData;
 
-    public List<string> combatScenesName = new();
+    [SerializeField] List<string> combatScenesName = new();
 
 #if UNITY_EDITOR
 
-    [SerializeField] List<SceneAsset> _combatScenes = new();
+    [SerializeField] List<SceneAsset> _combatScenes;
 
     //@temp
     [Header("Tests")]
@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
             //singleton
             Debug.Log("Initializing game manager",this);
             instance = this;
-            DontDestroyOnLoad(this);
+            DontDestroyOnLoad(gameObject);
             
             //load data
             staticData = Resources.Load<GameStaticData>("GameStaticData");
