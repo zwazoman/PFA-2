@@ -1,8 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.UIElements;
 using System.Threading.Tasks;
-using DG.Tweening;
 
 public class ChooseIngredient : MonoBehaviour
 {
@@ -25,6 +23,7 @@ public class ChooseIngredient : MonoBehaviour
     [SerializeField][Range(0, 1)] private float _probaCommon;
     [SerializeField][Range(0, 1)] private float _probaSavoureux;
     [SerializeField][Range(0, 1)] private float _probaDivin;
+
     [SerializeField][Range(-1, 1)] private float _biaisCommon;
     [SerializeField][Range(-1, 1)] private float _biaisSavoureux;
     [SerializeField][Range(-1, 1)] private float _biaisDivin;
