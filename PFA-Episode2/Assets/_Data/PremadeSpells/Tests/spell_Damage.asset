@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c346ecbdd44d67468abc4e569bf79f9, type: 3}
   m_Name: spell_Damage
   m_EditorClassIdentifier: Assembly-CSharp::PremadeSpell
-  isDamaging: 1
+  spellType: 0
   SpellData:
     Name: Damage
     Sprite: {fileID: 21300000, guid: ee3b4f07916c38149b8601229f1b1592, type: 2}
@@ -20,7 +20,7 @@ MonoBehaviour:
     IngredientsCombination: 
     IsOccludedByWalls: 1
     Range: 2
-    CoolDown: 1
+    CoolDown: 3
     Effects:
     - effectType: 0
       statType: 0

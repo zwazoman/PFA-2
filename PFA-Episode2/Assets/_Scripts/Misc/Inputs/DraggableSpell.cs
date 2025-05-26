@@ -15,8 +15,10 @@ public class DraggableSpell : Draggable
 
     [Header("scene references")]
     [SerializeField] private Image _spellImage;
-    [SerializeField] private Image _cooldownImage;
 
+    
+    [SerializeField] private Image _cooldownOverlay;
+    [SerializeField] private Image _cooldownImage;
     [SerializeField] private TMP_Text _cooldownText;
 
     bool _canUse = true;
@@ -25,7 +27,7 @@ public class DraggableSpell : Draggable
     {
         if(spell.spellData.Sprite != null)
         { 
-            _spellImage.sprite = _cooldownImage.sprite = spell.spellData.Sprite; 
+            _spellImage.sprite = _cooldownImage.sprite = _cooldownOverlay.sprite = spell.spellData.Sprite; 
         }
 
         this.spell = spell;
@@ -89,13 +91,15 @@ public class DraggableSpell : Draggable
 
         _spellImage.enabled = true;
 
-        _cooldownImage.enabled = false;
+        _cooldownImage.gameObject.SetActive( false);
         //_cooldownText.enabled = false;
     }
 
     public void TickCooldownUI()
     {
-        _cooldownImage.DOFillAmount(spell.cooling / spell.spellData.CoolDown,0.2f).SetEase(Ease.OutBack);
+        Debug.Log("Fill amount : " + (float)spell.cooling / (float)spell.spellData.CoolDown);
+        _cooldownOverlay.DOFillAmount((float)spell.cooling / (float)spell.spellData.CoolDown,0.2f).SetEase(Ease.OutBack);
+        _cooldownText.text = (spell.spellData.CoolDown-spell.cooling).ToString() + "/" + spell.spellData.CoolDown.ToString();
         //_cooldownText.text = spell.cooling.ToString();
     }
 
@@ -104,7 +108,7 @@ public class DraggableSpell : Draggable
         _canUse = false;
         enabled = false;
 
-        _cooldownImage.enabled = true;
+        _cooldownImage.gameObject.SetActive(true);
         //_cooldownText.enabled = true;
         TickCooldownUI();
 
