@@ -1,8 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.UI;
 
 public enum AIBehaviour
 {
