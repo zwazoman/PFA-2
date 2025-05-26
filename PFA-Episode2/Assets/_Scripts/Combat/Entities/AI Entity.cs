@@ -261,7 +261,7 @@ public class AIEntity : Entity
         }
 
         
-        choosenTargetPoint.SetPreviewState(entitySpellCaster.ComputeShieldVsDamageDiff(choosenSpell) < 0 ? WayPoint.PreviewState.SpellCastZone_Agressive : WayPoint.PreviewState.SpellCastZone_Shield); //@todo
+        choosenTargetPoint.SetPreviewState(entitySpellCaster.ComputeShieldVsDamageDiff(choosenSpell) <= 0 ? WayPoint.PreviewState.SpellCastZone_Agressive : WayPoint.PreviewState.SpellCastZone_Shield); //@todo
         // possibilit� pour pas qu'elle se tire dessus ? �a serait rigolo n la stock qq part si �a se touche et on r��saie. si pas de solution on utilise celle qui touche
 
         await UniTask.Delay(ThinkDelayMilis);

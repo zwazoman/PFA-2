@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using System;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class SpellCaster : MonoBehaviour
 {
@@ -86,7 +85,7 @@ public class SpellCaster : MonoBehaviour
                 if (showZone)
                 {
                     //bleu si + de shield que de degats
-                    choosenWaypoint.SetPreviewState(ComputeShieldVsDamageDiff(spell) < 0 ? WayPoint.PreviewState.SpellCastZone_Agressive : WayPoint.PreviewState.SpellCastZone_Shield);
+                    choosenWaypoint.SetPreviewState(ComputeShieldVsDamageDiff(spell) <= 0 ? WayPoint.PreviewState.SpellCastZone_Agressive : WayPoint.PreviewState.SpellCastZone_Shield);
                 }
 
                 zonePoints.Add(choosenWaypoint);
@@ -280,18 +279,24 @@ public class SpellCaster : MonoBehaviour
     BakedTargetedSpellEffect ComputeTargetedSpellEffect(Spell spell, ref SpellCastData zoneData, Entity entity)
     {
         BakedTargetedSpellEffect e = new();
+        Debug.Log("default damage : " + e.damage);
+        Debug.Log("default push damage : " + e.pushDamage);
 
         foreach (SpellEffect effect in spell.spellData.Effects)
         {
+            Debug.Log(effect.effectType.ToString());
             switch (effect.effectType)
             {
                 case SpellEffectType.Damage:
                     if (effect.statType == StatType.FlatIncrease) e.damage += effect.value;
                     else if (effect.statType == StatType.Multiplier) e.damage *= effect.value;
-                    else throw new System.Exception("y'a un pb là");
+                    else throw new System.Exception("y'a un pb lÃ ");
 
                     break;
                 case SpellEffectType.Recoil:
+                    Debug.Log(" - Recoil effect -");
+                    Debug.Log("push direction : "+ zoneData.hitEntityCTXDict[entity].pushDirection);
+                    Debug.Log("push force : "+ (int)effect.value);
 
                     WayPoint pushPoint = ComputePushPoint(
                         zoneData.hitEntityCTXDict[entity].pushDirection,
@@ -299,17 +304,18 @@ public class SpellCaster : MonoBehaviour
                         (int)effect.value,
                         out int pushDamages);
 
+                    Debug.Log("computed push damages : " + pushDamages);
                     zoneData.hitEntityCTXDict[entity].PushDamage = pushDamages;
                     zoneData.hitEntityCTXDict[entity].PushPoint = pushPoint;
 
                     e.pushDamage = pushDamages;
                     e.pushPoint = zoneData.hitEntityCTXDict[entity].PushPoint;
-
+                    Debug.Log("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
                     break;
                 case SpellEffectType.Shield:
                     if (effect.statType == StatType.FlatIncrease) e.shield += effect.value;
                     else if (effect.statType == StatType.Multiplier) e.shield *= effect.value;
-                    else throw new System.Exception("y'a un pb là");
+                    else throw new System.Exception("y'a un pb lï¿½");
                     break;
 
                 case SpellEffectType.DamageIncreaseForEachHitEnnemy:
@@ -320,16 +326,20 @@ public class SpellCaster : MonoBehaviour
                     break;
             }
 
-            e.damage = Mathf.Ceil(e.damage);
-            e.shield = Mathf.Ceil(e.damage);
-            e.pushDamage = Mathf.Ceil(e.damage);
+            
         }
+
+        e.damage = Mathf.Ceil(e.damage);
+        e.shield = Mathf.Ceil(e.shield);
+        e.pushDamage = Mathf.Ceil(e.pushDamage);
+        Debug.Log("computed push damage : " + e.pushDamage);
+        Debug.Log("-");
 
         return e;
     }
 
     /// <summary>
-    ///  calcul la difference entre les degats et le shield du spell. négatif si le spell fait des dégats, positif si il donne du shield
+    ///  calcul la difference entre les degats et le shield du spell. nï¿½gatif si le spell fait des dï¿½gats, positif si il donne du shield
     /// </summary>
     /// <param name="spell"></param>
     /// <returns></returns>
@@ -511,7 +521,7 @@ public struct SpellCastData
 }
 
 /// <summary>
-/// utilisé pour appliquer des effets en plus
+/// utilisï¿½ pour appliquer des effets en plus
 /// au moment de lancer un sort.
 /// </summary>
 public class SpellCastingContext

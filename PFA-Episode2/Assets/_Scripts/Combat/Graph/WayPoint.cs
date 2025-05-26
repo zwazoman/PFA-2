@@ -109,10 +109,16 @@ public class WayPoint : MonoBehaviour
             case PreviewState.SpellCastZone_Agressive:
                 _previewVisuals.sharedMaterial = GameManager.Instance.staticData._mat_spellCastZonePreview;
                 break;
+            case PreviewState.SpellCastZone_Shield:
+                _previewVisuals.sharedMaterial = GameManager.Instance.staticData._mat_spellAoePreview_shield;
+                break;
+            case PreviewState.NoPreview:
+                break;
+            
         }
 
         //dotween & activation
-        if(state == PreviewState.NoPreview)
+        if (state == PreviewState.NoPreview)
         {
             _previewVisuals.transform.DOScale(0, TweenDuration)
                 .OnComplete(() => {
