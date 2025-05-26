@@ -38,6 +38,7 @@ public class EntityStats
 
     public async UniTask ApplyDamage(float damage)
     {
+
         float newShield = Mathf.Max(0, shieldAmount - damage);
         float tankedDamage = Mathf.Abs( newShield - shieldAmount);
         damage = Mathf.Max(damage - tankedDamage,0);
@@ -51,7 +52,7 @@ public class EntityStats
         //Debug.Log("apply health : " + delta.ToString());
         currentHealth += delta;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-
+        
         //feedbacks
         UniTask[] tasks = new UniTask[healthFeedbackTasks.Count];
         for (int i = 0; i < healthFeedbackTasks.Count; i++)

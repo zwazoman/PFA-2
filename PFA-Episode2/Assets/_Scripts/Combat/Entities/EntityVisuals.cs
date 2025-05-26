@@ -32,8 +32,7 @@ public class EntityVisuals : MonoBehaviour
         //spell preview
         owner.OnPreviewSpell += (float newShield, float newHP, Vector3 direction) =>
         {
-            //try
-            //{
+            //arrows
             foreach (PooledObject obj in Arrows)
             {
                 obj.GoBackIntoPool();

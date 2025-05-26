@@ -12,6 +12,8 @@ using Cysharp.Threading.Tasks.Triggers;
 [RequireComponent(typeof(SpellCaster))]
 public class Entity : MonoBehaviour
 {
+    public Team team = Team.Enemy;
+
     public bool isDead { get; private set; }
 
     public EntityStats stats = new();
@@ -73,8 +75,7 @@ public class Entity : MonoBehaviour
         Tools.Flood(currentPoint);
         stats.currentMovePoints = stats.maxMovePoints;
         await stats.ApplyShield(-1);
-
-        Debug.Log("== about to tick CD ==",gameObject);
+        
         TickCooldown();
     }
 
@@ -103,7 +104,7 @@ public class Entity : MonoBehaviour
         float damage = Mathf.Max(e.damage + e.pushDamage - tankedDamage, 0);
 
         float newHP = stats.currentHealth - damage;
-        
+
 
         OnPreviewSpell?.Invoke(newShield, newHP,e.pushPoint != null ? e.pushPoint.transform.position-transform.position : Vector3.zero);
     }
@@ -181,10 +182,38 @@ public class Entity : MonoBehaviour
         pushTarget.StepOn(this);
     }
 
+    public List<Entity> GetEnemyList()
+    {
+        List<Entity> enemyEntities = new List<Entity>();
+
+        if (team == Team.Enemy)
+            foreach (Entity entity in CombatManager.Instance.PlayerEntities)
+                enemyEntities.Add(entity);
+        else if(team == Team.Player)
+            foreach (Entity entity in CombatManager.Instance.EnemyEntities)
+                enemyEntities.Add(entity);
+
+        return enemyEntities;
+    }
+
+    public List<Entity> GetAllyEntities()
+    {
+        List<Entity> enemyEntities = new List<Entity>();
+
+        if (team == Team.Player)
+            foreach (Entity entity in CombatManager.Instance.PlayerEntities)
+                enemyEntities.Add(entity);
+        else if (team == Team.Enemy)
+            foreach (Entity entity in CombatManager.Instance.EnemyEntities)
+                enemyEntities.Add(entity);
+
+        return enemyEntities;
+    }
+
     //movement
 
     /// <summary>
-    /// fait se déplacer l'entité vers la case la plus proche de la target
+    /// fait se dï¿½placer l'entitï¿½ vers la case la plus proche de la target
     /// </summary>
     /// <param name="targetPoint"></param>
     /// <returns></returns>
@@ -215,7 +244,7 @@ public class Entity : MonoBehaviour
     }
 
     /// <summary>
-    /// fait se déplcaer l'entité le plus loin possible de l'entité ciblée
+    /// fait se dï¿½plcaer l'entitï¿½ le plus loin possible de l'entitï¿½ ciblï¿½e
     /// </summary>
     /// 
     /// <param name="targetPoint"></param>

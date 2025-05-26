@@ -77,6 +77,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5207839571026480074, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
+      propertyPath: _spellCastingSocket
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5207839571026480074, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
       propertyPath: _obstacleMask.m_Bits
       value: 183
       objectReference: {fileID: 0}
@@ -119,6 +123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae3a4480272969c41bafb12d3cecf0d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  team: 1
   stats:
     owner: {fileID: 0}
     maxHealth: 0
@@ -130,6 +135,7 @@ MonoBehaviour:
   currentPoint: {fileID: 0}
   entitySpellCaster: {fileID: 0}
   visuals: {fileID: 0}
+  eatSocket: {fileID: 0}
   moveBool: Move
   attackTrigger: Attack
   idleTrigger: Idle

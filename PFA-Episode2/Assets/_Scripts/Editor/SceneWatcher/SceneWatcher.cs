@@ -14,6 +14,7 @@ class SceneWatcher
     static SceneWatcher()
     {
         EditorSceneManager.sceneDirtied += OnSceneEdited;
+        EditorSceneManager.sceneSaved += OnSceneEdited;
         EditorSceneManager.sceneClosed += OnSceneClosed;
     }
 
@@ -33,7 +34,6 @@ class SceneWatcher
             await client.GetAsync(request);
         };
 
-        Debug.Log("Edited scene : " + scene.name);
     }
 
     static async void OnSceneClosed(Scene scene)
@@ -52,6 +52,5 @@ class SceneWatcher
             await client.GetAsync(request);
         };
 
-        Debug.Log("closed scene : " + scene.name);
     }
 }
