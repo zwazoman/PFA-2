@@ -75,7 +75,7 @@ public class Entity : MonoBehaviour
         Tools.Flood(currentPoint);
         stats.currentMovePoints = stats.maxMovePoints;
         await stats.ApplyShield(-1);
-
+        
         TickCooldown();
     }
 
@@ -213,7 +213,7 @@ public class Entity : MonoBehaviour
     //movement
 
     /// <summary>
-    /// fait se déplacer l'entité vers la case la plus proche de la target
+    /// fait se dï¿½placer l'entitï¿½ vers la case la plus proche de la target
     /// </summary>
     /// <param name="targetPoint"></param>
     /// <returns></returns>
@@ -244,7 +244,7 @@ public class Entity : MonoBehaviour
     }
 
     /// <summary>
-    /// fait se déplcaer l'entité le plus loin possible de l'entité ciblée
+    /// fait se dï¿½plcaer l'entitï¿½ le plus loin possible de l'entitï¿½ ciblï¿½e
     /// </summary>
     /// 
     /// <param name="targetPoint"></param>
