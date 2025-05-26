@@ -88,11 +88,12 @@ public class GameManager : MonoBehaviour
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        if (_combatScenes.Count == 0)
+
+        if (_combatScenes.Count == 0 || _combatScenes == null)
             return;
         foreach(SceneAsset scene in _combatScenes)
         {
-            if (!combatScenesName.Contains(scene.name))
+            if (!combatScenesName.Contains(scene.name) && combatScenesName!=null)
                 combatScenesName.Add(scene.name);
         }
     }
