@@ -27,10 +27,10 @@ public static class DeleteSaveUtility
 public static class OpenSaveFolder
 {
     [MenuItem("Save/Open Save Folder")]
-    public static void OuvrirDossier()
+    public static void OpenFolder()
     {
-        string path = Application.persistentDataPath;
+        string Path = Application.persistentDataPath + "/";
 
-        EditorUtility.RevealInFinder(path + $"/PFA-Episode2");
+        EditorUtility.RevealInFinder(Path);
     }
 }
