@@ -57,7 +57,7 @@ public class AIEntity : Entity
         else
             attacked = true;
 
-        if (attacked && stats.currentMovePoints > 0)
+        if (attacked && stats.currentMovePoints > 0 && isDead == false)
         {
             switch (Data.aiBehaviour)
             {
@@ -158,8 +158,6 @@ public class AIEntity : Entity
         WayPoint result;
         points.FindClosestFloodPoint(out result);
 
-        print(result.Content);
-
         return result;
     }
 
@@ -214,6 +212,8 @@ public class AIEntity : Entity
     /// <returns></returns>
     protected async UniTask<bool> CastSpellAtPoint(Spell choosenSpell, WayPoint targetPoint)
     {
+        print(targetEntityPoint.Content.gameObject.name);
+
         if (targetPoint == null)
             return false;
 
