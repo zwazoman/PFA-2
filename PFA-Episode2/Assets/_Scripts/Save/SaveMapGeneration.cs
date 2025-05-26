@@ -29,9 +29,16 @@ public class SaveMapGeneration : MonoBehaviour
     #endregion
 
     // Fonction qui sauvegarde toutes les infos relatives au nodes
+    // Fonction qui sauvegarde toutes les infos relatives au nodes
     public void SaveMap()
     {
         MapWrapper wrapper = new();
+
+        if (PlayerMap.Instance == null)
+        {
+            Debug.LogWarning("PlayerMap.Instance est null, impossible de sauvegarder la position du joueur.");
+            return;
+        }
 
         SerializablePlayer player = new()
         {
@@ -46,50 +53,50 @@ public class SaveMapGeneration : MonoBehaviour
         {
             Node node = kvp.Value;
 
-            // Ne sauvegarde pas le Startnode
-            if (node.Position != 0)
+            List<SerializableTransform> links = new();
+
+            for (int i = 0; i < node.PathBetweenNode.Count; i++)
             {
-                List<SerializableLink> links = new();
+                if (node.PathBetweenNode[i] == null) continue;
 
-                System.Collections.IList link = node.PathBetweenNode;
-                for (int i = 0; i < node.PathBetweenNode.Count; i++)
+                List<Vector3> list = new()
                 {
-                    List<Vector3> list = new()
-                    {
-                        node.PathBetweenNode[i].transform.localPosition,
-                        node.PathBetweenNode[i].transform.localScale
-                    };
-
-                    SerializableLink linkObj = new()
-                    {
-                        transformLink = list,
-                        rotationLink = node.PathBetweenNode[i].transform.localRotation
-                    };
-
-                    links.Add(linkObj);
-                }
-
-                SerializableNode snode = new()
-                {
-                    key = kvp.Key,
-                    position = node.Position,
-                    hauteur = node.Hauteur,
-                    eventName = node.EventName,
-                    onYReviendra = node.OnYReviendra,
-                    Intersection = node.Intersection,
-                    Visited = node.Visited,
-
-                    // Sauvegarde la clé du créateur ou Vector3Int.zero si null
-                    creatorKey = node.Creator != null ? MapBuildingTools.Instance.GetKeyFromNode(node.Creator) : Vector3Int.zero,
-
-                    paths = links
+                    node.PathBetweenNode[i].transform.localPosition,
+                    node.PathBetweenNode[i].transform.localScale
                 };
 
-                wrapper.nodes.Add(snode);
+                SerializableTransform linkObj = new()
+                {
+                    PosiScale = list,
+                    rotation = node.PathBetweenNode[i].transform.localRotation
+                };
+
+                links.Add(linkObj);
             }
+
+            SerializableNode snode = new()
+            {
+                key = kvp.Key,
+                position = node.Position,
+                hauteur = node.Hauteur,
+                eventName = node.EventName,
+                onYReviendra = node.OnYReviendra,
+                Intersection = node.Intersection,
+                Visited = node.Visited,
+                creatorKey = node.Creator != null ? MapBuildingTools.Instance.GetKeyFromNode(node.Creator) : Vector3Int.zero,
+                paths = links
+            };
+
+            wrapper.nodes.Add(snode);
         }
 
-        //for (int i = 0; i < SpawnRiver.Instance.)
+        SerializableSeed seed = new()
+        {
+            useSeed = SpawnRiver.Instance._useSeed,
+            seed = SpawnRiver.Instance._seed
+        };
+
+        wrapper.seed = seed;
 
         string json = JsonUtility.ToJson(wrapper, true);
         string path = Application.persistentDataPath + $"/MapSave{SaveID}.json";
@@ -104,6 +111,7 @@ public class SaveMapGeneration : MonoBehaviour
             File.WriteAllText(path, json);
         }
     }
+
 
     // Fonction pour lire les information contenu dans le fichier json de sauvegarde
     public void LoadMap()
@@ -141,14 +149,14 @@ public class SaveMapGeneration : MonoBehaviour
 
                 tempDico[item.key] = node;
 
-                foreach (SerializableLink subItem in item.paths)
+                foreach (SerializableTransform subItem in item.paths)
                 {
                     GameObject Path = MapBuildingTools.Instance.TrueListPath[0];
                     MapBuildingTools.Instance.TrueListPath.RemoveAt(0);
 
-                    Path.transform.localPosition = subItem.transformLink[0];
-                    Path.transform.localRotation = subItem.rotationLink;
-                    Path.transform.localScale = subItem.transformLink[1];
+                    Path.transform.localPosition = subItem.PosiScale[0];
+                    Path.transform.localRotation = subItem.rotation;
+                    Path.transform.localScale = subItem.PosiScale[1];
                     MapBuildingTools.Instance._savePath.Add(Path);
 
                     node.PathBetweenNode.Add(Path);
@@ -166,6 +174,22 @@ public class SaveMapGeneration : MonoBehaviour
                     //foreach (GameObject obj in node.PathBetweenNode) { obj.SetActive(true); }
                 }
             }
+
+            SpawnRiver.Instance._useSeed = wrapper.seed.useSeed;
+            SpawnRiver.Instance._seed = wrapper.seed.seed;
+
+            /*for (int i = 0; i < wrapper.grounds.Count; i++)
+            {
+                SerializableGround ground = wrapper.grounds[i];
+                //GameObject prefab = SpawnRiver.Instance.GetPrefabByName(ground.groundObject);
+                //GameObject gameObject = Instantiate(prefab);
+                SpawnRiver.Instance.GroundList.Add(gameObject);
+
+                //SpawnRiver.Instance.GroundList[i] = ground.groundObject;
+                SpawnRiver.Instance.GroundList[i].transform.position = ground.groundTransform.PosiScale[0];
+                SpawnRiver.Instance.GroundList[i].transform.rotation = ground.groundTransform.rotation;
+                SpawnRiver.Instance.GroundList[i].transform.localScale = ground.groundTransform.PosiScale[1];
+            }*/
 
             // Relie les créateurs une fois que tous les nodes sont instanciés
             foreach (SerializableNode item in wrapper.nodes)
@@ -187,6 +211,8 @@ public class SaveMapGeneration : MonoBehaviour
             }
 
             MapMaker2.Instance.DicoNode = tempDico;
+            MapMaker2.Instance.AllNodeGood = new List<Node>(tempDico.Values);
+            SpawnRiver.Instance.StartSpawnRiver();
             Node.TriggerMapCompleted(); // Redéclenche l'affichage des sprites
         }
         else
