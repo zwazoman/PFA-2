@@ -97,7 +97,6 @@ public class DraggableSpell : Draggable
 
     public void TickCooldownUI()
     {
-        Debug.Log("Fill amount : " + (float)spell.cooling / (float)spell.spellData.CoolDown);
         _cooldownOverlay.DOFillAmount((float)spell.cooling / (float)spell.spellData.CoolDown,0.2f).SetEase(Ease.OutBack);
         _cooldownText.text = (spell.spellData.CoolDown-spell.cooling).ToString() + "/" + spell.spellData.CoolDown.ToString();
         //_cooldownText.text = spell.cooling.ToString();

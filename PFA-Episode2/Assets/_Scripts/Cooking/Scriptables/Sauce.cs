@@ -23,6 +23,9 @@ public class Sauce : IngredientBase
             case SauceEffectType.DamageIncreasePercentageByDistanceToCaster:
                 Spell.Effects.Add(new(SpellEffectType.DamageIncreasePercentageByDistanceToCaster, StatType.Multiplier, 1.1f));
                 break;
+            case SauceEffectType.SummonEntity:
+                Spell.Effects.Add(new(SpellEffectType.EntitySummon, StatType.FlatIncrease, 1));
+                break;
 
         }
 
