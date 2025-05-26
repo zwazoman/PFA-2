@@ -10,20 +10,19 @@ public enum AIBehaviour
     Coward
 }
 
-public class EnemyEntity : Entity
+public class AIEntity : Entity
 {
     [SerializeField] EnemyData Data;
 
-    WayPoint targetPlayerPoint;
+    WayPoint targetEntityPoint;
 
     const int ThinkDelayMilis = 150;
 
     protected override void Awake()
     {
         base.Awake();
-
-        
         stats.maxMovePoints = Data.MaxMovePoints;
+        team = Team.Enemy;
     }
 
     protected override void Start()
@@ -50,7 +49,7 @@ public class EnemyEntity : Entity
 
         ApplyWalkables(true);
 
-        targetPlayerPoint = FindClosestPlayerPoint();
+        targetEntityPoint = FindClosestEnemyEntityPoint();
 
         Spell choosenSpell = ChooseRandomSpell();
         bool attacked;
@@ -66,10 +65,10 @@ public class EnemyEntity : Entity
             {
                 case AIBehaviour.Intrepid:
                     //check si les walkables contiennent le joueur (si oui le retirer)
-                    await MoveToward(targetPlayerPoint);
+                    await MoveToward(targetEntityPoint);
                     break;
                 case AIBehaviour.Coward:
-                    await MoveAwayFrom(targetPlayerPoint);
+                    await MoveAwayFrom(targetEntityPoint);
                     break;
             }
         }
@@ -126,7 +125,7 @@ public class EnemyEntity : Entity
 
     protected Spell ChooseSpellWithRange()
     {
-        int targetDistance = Tools.FloodDict[targetPlayerPoint];
+        int targetDistance = Tools.FloodDict[targetEntityPoint];
 
         int offset = int.MaxValue;
         Spell choosenSpell = null;
@@ -146,19 +145,19 @@ public class EnemyEntity : Entity
     }
     #endregion
 
-    protected WayPoint FindClosestPlayerPoint()
+    protected WayPoint FindClosestEnemyEntityPoint()
     {
-        if (CombatManager.Instance.PlayerEntities.Count == 0)
+        List<Entity> enemyEntities = GetEnemyList();
+
+        if (enemyEntities.Count == 0)
             return null;
 
         List<WayPoint> points = new List<WayPoint>();
 
-        foreach (PlayerEntity player in CombatManager.Instance.PlayerEntities)
-        {
-            points.Add(player.currentPoint);
-        }
+        foreach (Entity entity in enemyEntities)
+            points.Add(entity.currentPoint);
 
-        WayPoint result; 
+        WayPoint result;
         points.FindClosestFloodPoint(out result);
 
         return result;
@@ -166,7 +165,7 @@ public class EnemyEntity : Entity
 
     protected async UniTask<bool> ComputeSpellTarget(Spell choosenSpell)
     {
-        WayPoint choosenTargetPoint = targetPlayerPoint;
+        WayPoint choosenTargetPoint = targetEntityPoint;
 
         switch (choosenSpell.spellType)
         {
@@ -175,12 +174,12 @@ public class EnemyEntity : Entity
             case SpellType.Defense:
                 List<WayPoint> enemyPoints = new();
 
-                foreach (EnemyEntity enemy in CombatManager.Instance.EnemyEntities)
+                foreach (Entity entity in GetAllyEntities())
                 {
-                    enemyPoints.Add(enemy.currentPoint);
+                    enemyPoints.Add(entity.currentPoint);
                 }
 
-                enemyPoints.FindClosestFloodPoint(out choosenTargetPoint, Tools.SmallFlood(targetPlayerPoint, 6, false, true));
+                enemyPoints.FindClosestFloodPoint(out choosenTargetPoint, Tools.SmallFlood(targetEntityPoint, 6, false, true));
                 break;
             case SpellType.Utilitary:
                 //cast le sort le plus proche possible du joueur
@@ -197,7 +196,7 @@ public class EnemyEntity : Entity
 
                 WayPoint choosenPoint;
 
-                targetPoints.FindClosestFloodPoint(out choosenPoint, Tools.SmallFlood(targetPlayerPoint, Tools.FloodDict[targetPlayerPoint]));
+                targetPoints.FindClosestFloodPoint(out choosenPoint, Tools.SmallFlood(targetEntityPoint, Tools.FloodDict[targetEntityPoint]));
 
                 await CastSpell(choosenSpell, choosenPoint, choosenPoint);
 

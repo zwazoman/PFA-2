@@ -19,9 +19,8 @@ public class PlayerEntity : Entity
     {
         base.Awake();
 
-        //edit les valeurs du entityspell avec celles de l'inventaire
-
         stats.maxMovePoints = maxMovePoints;
+        team = Team.Player;
     }
 
     protected override void Start()
