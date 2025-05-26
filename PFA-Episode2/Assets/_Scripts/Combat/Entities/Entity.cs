@@ -100,7 +100,7 @@ public class Entity : MonoBehaviour
         newShield = Mathf.Max(0, newShield - e.damage);
 
         float tankedDamage = Mathf.Abs(newShield - stats.shieldAmount);
-        float damage = Mathf.Max(e.damage - tankedDamage, 0);
+        float damage = Mathf.Max(e.damage + e.pushDamage - tankedDamage, 0);
 
         float newHP = stats.currentHealth - damage;
         
@@ -138,8 +138,16 @@ public class Entity : MonoBehaviour
         {
             if (point.State == WaypointState.Free)
             {
-                point.ChangeTileColor(point._walkableMaterial);
+                point.SetPreviewState(WayPoint.PreviewState.Movement);
             }
+        }
+    }
+
+    public void HideWalkables()
+    {
+        foreach (WayPoint point in Walkables)
+        {
+            point.SetPreviewState(WayPoint.PreviewState.NoPreview);
         }
     }
 
@@ -147,7 +155,7 @@ public class Entity : MonoBehaviour
     {
         foreach (WayPoint point in Walkables)
         {
-            point.ChangeTileColor(point._normalMaterial);
+            point.SetPreviewState(WayPoint.PreviewState.NoPreview);
         }
         Walkables.Clear();
     }
@@ -244,7 +252,7 @@ public class Entity : MonoBehaviour
 
         foreach (WayPoint p in path)
         {
-            p.ChangeTileColor(p._walkedMaterial);
+            p.SetPreviewState(WayPoint.PreviewState.Movement);
         }
 
         visuals.animator.PlayAnimationBool(moveBool);
@@ -260,7 +268,7 @@ public class Entity : MonoBehaviour
             currentPoint = steppedOnPoint;
             steppedOnPoint.StepOn(this);
 
-            steppedOnPoint.ChangeTileColor(steppedOnPoint._normalMaterial);
+            steppedOnPoint.SetPreviewState(WayPoint.PreviewState.NoPreview);
 
             stats.currentMovePoints--;
         }
@@ -296,14 +304,15 @@ public class Entity : MonoBehaviour
     //death
     public async UniTask Die()
     {
-        print("Die");
+        visuals.DeathAnimation();
 
-        visuals.animator.PlayAnimationTrigger(deathTrigger);
+        if (this is PlayerEntity player)
+            await visuals.DeathAnimation();
 
         currentPoint.StepOff();
         isDead = true;
         OnDead?.Invoke();
-        gameObject.SetActive(false);
+
         await CombatManager.Instance.UnRegisterEntity(this);
 
         EndTurn();

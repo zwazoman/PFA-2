@@ -41,6 +41,7 @@ public class CombatManager : MonoBehaviour
     [SerializeField] bool _startGameOnSceneStart = false;
 
     [SerializeField] GameOverPanel _gameOverPanel;
+    [SerializeField] RewardBundle _rewardPanel;
 
     public event Action<Entity> OnNewTurn;
     public event Action OnWin;
@@ -87,7 +88,8 @@ public class CombatManager : MonoBehaviour
 
     public async UniTask StartGame()
     {
-        SummonEntities();
+        if(_summonEntities)
+            SummonEntities();
 
         for (; ; )
         {
@@ -165,8 +167,7 @@ public class CombatManager : MonoBehaviour
     {
         await UniTask.Delay(1000);
 
-        OnWin?.Invoke();
-        await SceneTransitionManager.Instance.GoToScene("WorldMap");
+        _rewardPanel?.Show();
+        //await SceneTransitionManager.Instance.GoToScene("WorldMap");
     }
-
 }

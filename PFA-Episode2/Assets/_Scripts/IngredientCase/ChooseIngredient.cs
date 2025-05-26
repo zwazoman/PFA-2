@@ -1,8 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.UIElements;
 using System.Threading.Tasks;
-using DG.Tweening;
+using UnityEditor;
+using System.IO;
 
 public class ChooseIngredient : MonoBehaviour
 {
@@ -20,10 +20,21 @@ public class ChooseIngredient : MonoBehaviour
 
     [Header("Probability")]
 
-    [SerializeField][Range(0, 100)] private int _probaSauce;
-    [SerializeField][Range(0, 100)] private int _probaCommon;
-    [SerializeField][Range(0, 100)] private int _probaSavoureux;
-    [SerializeField][Range(0, 100)] private int _probaDivin;
+    [SerializeField][Range(0, 1)] private float _probaSauce;
+
+    [SerializeField][Range(0, 1)] private float _probaCommon;
+    [SerializeField][Range(0, 1)] private float _probaSavoureux;
+    [SerializeField][Range(0, 1)] private float _probaDivin;
+
+    [SerializeField][Range(-1, 1)] private float _biaisCommon;
+    [SerializeField][Range(-1, 1)] private float _biaisSavoureux;
+    [SerializeField][Range(-1, 1)] private float _biaisDivin;
+    private int _totalTirage;
+    private int _moyenneTirage;
+
+    [Header("Others")]
+    [SerializeField] private bool _sceneCombat;
+    private int _maxIngredientRef;
 
     public List<IngredientBase> IngredientBaseChooseBySac { get; private set; } = new();
     private List<IngredientBase> _completeListIngredientChoose = new();
@@ -39,23 +50,23 @@ public class ChooseIngredient : MonoBehaviour
 
     private void ChooseRandomIngredient()
     {
-        int TempoProbaSavoureux = _probaSavoureux;
-        int TempoProbaDivin = _probaDivin;
-        int TempoProbaSauce = _probaSauce;
+        float TempoProbaSauce = _probaSauce;
 
         for (int sacIndex = 0; sacIndex <= 2; sacIndex++)
         {
-            for (int tagIngredient = 0; tagIngredient <= 2; tagIngredient++)
-            {
-                if (IsSauce())
+            if (_sceneCombat == true) { _maxIngredientRef = 0; }
+            else { _maxIngredientRef = 2; }
+                for (int tagIngredient = 0; tagIngredient <= _maxIngredientRef; tagIngredient++)
                 {
-                    IngredientBaseChooseBySac.Add(ReturnSauceChoose());
+                    if (IsSauce())
+                    {
+                        IngredientBaseChooseBySac.Add(ReturnSauceChoose());
+                    }
+                    else
+                    {
+                        IngredientBaseChooseBySac.Add(ReturnIngredientChoose());
+                    }
                 }
-                else
-                {
-                    IngredientBaseChooseBySac.Add(ReturnIngredientChoose());
-                }
-            }
             foreach (IngredientBase ing in IngredientBaseChooseBySac) { _completeListIngredientChoose.Add(ing); }
             List<IngredientBase> tempo = new();
             tempo.AddRange(IngredientBaseChooseBySac);
@@ -72,7 +83,6 @@ public class ChooseIngredient : MonoBehaviour
         }
 
     }
-
     /// <summary>
     /// Retourne un ingrédient au hasard selon les proba des ingrédients
     /// </summary>
@@ -83,14 +93,15 @@ public class ChooseIngredient : MonoBehaviour
         List<Ingredient> SavoureuxIng = _listIngredientSavoureux;
         List<Ingredient> DivinIng = _listIngredientDivin;
 
-        int total = _probaCommon + _probaSavoureux + _probaDivin;
-        int result = Random.Range(1, total + 1);
-
+        float total = _probaCommon + _probaSavoureux + _probaDivin;
+        float result = Random.Range(1, total + 1);
+        _totalTirage++;
         if (result <= _probaDivin && DivinIng.Count != 0) //Divin
         {
             //_probaDivin = 0;
             Ingredient ing = DivinIng[Random.Range(0, DivinIng.Count)];
             DivinIng.Remove(ing);
+            SetupValueIngredient();
             return ing;
         }
         else if (result <= _probaDivin + _probaSavoureux && SavoureuxIng.Count != 0) //Savoureux
@@ -98,15 +109,16 @@ public class ChooseIngredient : MonoBehaviour
             //_probaSavoureux = 0;
             Ingredient ing = SavoureuxIng[Random.Range(0, SavoureuxIng.Count)];
             SavoureuxIng.Remove(ing);
+            SetupValueIngredient();
             return ing;
         }
         else //Common
         {
             Ingredient ing = CommonIng[Random.Range(0, CommonIng.Count)];
+            SetupValueIngredient();
             return ing;
         }
     }
-
     /// <summary>
     /// Retourne une sauce au hasard selon les proba des sauces
     /// </summary>
@@ -118,14 +130,15 @@ public class ChooseIngredient : MonoBehaviour
         List<Sauce> DivinSauce = _listSauceDivin;
 
         _probaSauce = 0;
-        int total = _probaCommon + _probaSavoureux + _probaDivin;
-        int result = Random.Range(1, total + 1);
-
+        float total = _probaCommon + _probaSavoureux + _probaDivin;
+        float result = Random.Range(1, total + 1);
+        _totalTirage++;
         if (result <= _probaDivin && DivinSauce.Count != 0) //Divin
         {
             //_probaDivin = 0;
             Sauce sauce = DivinSauce[Random.Range(0, DivinSauce.Count - 1)];
             DivinSauce.Remove(sauce);
+            SetupValueIngredient();
             return sauce;
         }
         else if (result <= _probaDivin + _probaSavoureux && SavoureuxSauce.Count != 0)  //Savoureux
@@ -133,23 +146,22 @@ public class ChooseIngredient : MonoBehaviour
             //_probaSavoureux = 0;
             Sauce sauce = SavoureuxSauce[Random.Range(0, SavoureuxSauce.Count - 1)];
             SavoureuxSauce.Remove(sauce);
+            SetupValueIngredient();
             return sauce;
         }
         else //Common
         {
             Sauce sauce = CommonSauce[Random.Range(0, CommonSauce.Count - 1)];
+            SetupValueIngredient();
             return sauce;
-
         }
     }
-
     private bool IsSauce()
     {
         int numberChoose = Random.Range(0, 101);
         if (numberChoose > _probaSauce) { return false; }
         else { return true; }
     }
-
     public async Task ResetIngredient()
     {
         IngredientBaseChooseBySac.Clear();
@@ -157,4 +169,77 @@ public class ChooseIngredient : MonoBehaviour
         ChooseRandomIngredient();
         await TweenIngredientUI.Instance.TweenUISpawn();
     }
+    private void SetupValueIngredient()
+    {
+        _probaCommon = FormuleRandom(_probaCommon, _biaisCommon, _totalTirage, _moyenneTirage);
+        _probaSavoureux = FormuleRandom(_probaSavoureux, _biaisSavoureux, _totalTirage, _moyenneTirage);
+        _probaDivin = FormuleRandom(_probaDivin, _biaisDivin, _totalTirage, _moyenneTirage);
+    }
+    private float FormuleRandom(float probaRef, float biais, int nombreTotalTirage, int tirageActuel)
+    {
+        return biais * (2 * (float)tirageActuel / (float)nombreTotalTirage - 1) + probaRef;
+    }
+
+    public void GenerateLists()
+    {
+        _listIngredientCommon.Clear();
+        _listIngredientSavoureux.Clear();
+        _listIngredientDivin.Clear();
+        
+        _listSauceCommon.Clear();
+        _listSauceSavoureux.Clear();
+        _listSauceDivin.Clear();
+
+        string[] files = Directory.GetFiles("Assets/_Data/Ingredients/ingredients", "*.asset", SearchOption.TopDirectoryOnly);
+        foreach (string path in files)
+        {
+            Ingredient asset = (Ingredient)AssetDatabase.LoadAssetAtPath(path, typeof(Ingredient));
+            switch (asset.rarity)
+            {
+                case Rarity.Ordinaire:
+                    _listIngredientCommon.Add(asset);
+                    break;
+                case Rarity.Savoureux:
+                    _listIngredientSavoureux.Add(asset);
+                    break;
+                case Rarity.Divin:
+                    _listIngredientDivin.Add(asset);
+                    break; 
+            }
+        }
+
+        files = Directory.GetFiles("Assets/_Data/Ingredients/Sauce", "*.asset", SearchOption.TopDirectoryOnly);
+        foreach (string path in files)
+        {
+            Sauce asset = (Sauce)AssetDatabase.LoadAssetAtPath(path, typeof(Sauce));
+            switch (asset.rarity)
+            {
+                case Rarity.Ordinaire:
+                    _listSauceCommon.Add(asset);
+                    break;
+                case Rarity.Savoureux:
+                    _listSauceSavoureux.Add(asset);
+                    break;
+                case Rarity.Divin:
+                    _listSauceDivin.Add(asset);
+                    break;
+            }
+        }
+
+    }
 }
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(ChooseIngredient))]
+class ChooseIngredientEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+        if(GUILayout.Button("générer les listes connard"))
+        {
+            ((ChooseIngredient)target).GenerateLists();
+        }
+    }
+}
+#endif

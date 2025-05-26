@@ -1,7 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public enum AIBehaviour
 {
@@ -36,7 +35,7 @@ public class EnemyEntity : Entity
         {
             Spell spell = new();
             spell.spellData = premadeSpell.SpellData;
-            spell.isDamaging = premadeSpell.isDamaging;
+            spell.spellType = premadeSpell.spellType;
             spells.Add(spell);
         }
     }
@@ -55,7 +54,7 @@ public class EnemyEntity : Entity
         bool attacked;
 
         if (choosenSpell != null)
-            attacked = await ChooseTarget(choosenSpell, choosenSpell.isDamaging);
+            attacked = await ComputeSpellTarget(choosenSpell);
         else
             attacked = true;
 
@@ -78,7 +77,6 @@ public class EnemyEntity : Entity
     public override async UniTask EndTurn()
     {
         await base.EndTurn();
-
     }
 
     List<Spell> ComputeCastableSpells(List<Spell> spells)
@@ -94,7 +92,8 @@ public class EnemyEntity : Entity
         return castableSpells;
     }
 
-    protected Spell ChooseSpell(int spellIndex)
+    #region Spell Selection Methods
+    protected Spell ChooseSpellWithIndex(int spellIndex)
     {
         return ComputeCastableSpells(spells)[spellIndex];
     }
@@ -102,6 +101,25 @@ public class EnemyEntity : Entity
     protected Spell ChooseRandomSpell()
     {
         return ComputeCastableSpells(spells).PickRandom();
+    }
+
+    protected Spell ChooseSpellWithCooldown()
+    {
+        List<Spell> castableSpells = ComputeCastableSpells(spells);
+
+        int maxCooldown = -1;
+        Spell choosenSpell = castableSpells[0];
+
+        foreach (Spell spell in castableSpells)
+        {
+            if(choosenSpell.spellData.CoolDown > maxCooldown)
+            {
+                choosenSpell = spell;
+                maxCooldown = choosenSpell.spellData.CoolDown;
+            }
+        }
+
+        return choosenSpell;
     }
 
     protected Spell ChooseSpellWithRange()
@@ -124,6 +142,7 @@ public class EnemyEntity : Entity
 
         return choosenSpell;
     }
+    #endregion
 
     protected WayPoint FindClosestPlayerPoint()
     {
@@ -143,25 +162,47 @@ public class EnemyEntity : Entity
         return result;
     }
 
-    protected async UniTask<bool> ChooseTarget(Spell choosenSpell, bool damageSpell)
+    protected async UniTask<bool> ComputeSpellTarget(Spell choosenSpell)
     {
-        WayPoint choosenTargetPoint;
+        WayPoint choosenTargetPoint = targetPlayerPoint;
 
-        if (damageSpell)
-            choosenTargetPoint = targetPlayerPoint;
-        else
+        switch (choosenSpell.spellType)
         {
-            List<WayPoint> enemyPoints = new();
+            case SpellType.Attack:
+                break;
+            case SpellType.Defense:
+                List<WayPoint> enemyPoints = new();
 
-            foreach (EnemyEntity enemy in CombatManager.Instance.EnemyEntities)
-            {
-                enemyPoints.Add(enemy.currentPoint);
-            }
+                foreach (EnemyEntity enemy in CombatManager.Instance.EnemyEntities)
+                {
+                    enemyPoints.Add(enemy.currentPoint);
+                }
 
-            enemyPoints.FindClosestFloodPoint(out choosenTargetPoint, Tools.SmallFlood(targetPlayerPoint, 6, false, true));
+                enemyPoints.FindClosestFloodPoint(out choosenTargetPoint, Tools.SmallFlood(targetPlayerPoint, 6, false, true));
+                break;
+            case SpellType.Utilitary:
+                //cast le sort le plus proche possible du joueur
+
+                List<WayPoint> targetPoints = new();
+
+                List<WayPoint> rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, currentPoint, false);
+
+                foreach (WayPoint point in rangePoints)
+                {
+                    if(point.State != WaypointState.HasEntity)
+                        targetPoints.Add(point);
+                }
+
+                WayPoint choosenPoint;
+
+                targetPoints.FindClosestFloodPoint(out choosenPoint, Tools.SmallFlood(targetPlayerPoint, Tools.FloodDict[targetPlayerPoint]));
+
+                await CastSpell(choosenSpell, choosenPoint, choosenPoint);
+
+                break;
         }
 
-        return await TryAttack(choosenSpell, choosenTargetPoint);
+        return await CastSpellAtPoint(choosenSpell, choosenTargetPoint);
 
     }
 
@@ -170,16 +211,14 @@ public class EnemyEntity : Entity
     /// </summary>
     /// <param name="choosenSpell"></param>
     /// <returns></returns>
-    protected async UniTask<bool> TryAttack(Spell choosenSpell, WayPoint targetPoint)
+    protected async UniTask<bool> CastSpellAtPoint(Spell choosenSpell, WayPoint targetPoint)
     {
-        print(targetPoint.Content.gameObject.name);
-
         if (targetPoint == null)
             return false;
 
         if(targetPoint == currentPoint)
         {
-            return await CastSpell(choosenSpell, currentPoint, currentPoint, currentPoint);
+            return await CastSpell(choosenSpell, currentPoint, currentPoint);
         }
 
         Dictionary<WayPoint, List<WayPoint>> targetPointsDict = new();
@@ -222,24 +261,25 @@ public class EnemyEntity : Entity
             await UniTask.Yield();
         }
 
-        choosenTargetPoint.ChangeTileColor(choosenTargetPoint._zoneMaterial);
-
-        // possibilité pour pas qu'elle se tire dessus ? ça serait rigolo n la stock qq part si ça se touche et on réésaie. si pas de solution on utilise celle qui touche
+        
+        choosenTargetPoint.SetPreviewState(entitySpellCaster.ComputeShieldVsDamageDiff(choosenSpell) < 0 ? WayPoint.PreviewState.SpellCastZone_Agressive : WayPoint.PreviewState.SpellCastZone_Shield); //@todo
+        // possibilitï¿½ pour pas qu'elle se tire dessus ? ï¿½a serait rigolo n la stock qq part si ï¿½a se touche et on rï¿½ï¿½saie. si pas de solution on utilise celle qui touche
 
         await UniTask.Delay(ThinkDelayMilis);
 
-        bool targetReached = await MoveToward(choosenTargetPoint); // le point le plus proche de lancé de sort
+        bool targetReached = await MoveToward(choosenTargetPoint); // le point le plus proche de lancï¿½ de sort
 
         if (targetReached)
         {
-            return await CastSpell(choosenSpell,choosenTargetPoint,pointToSelect, targetPoint);
+            return await CastSpell(choosenSpell,pointToSelect, targetPoint);
         }
         return false;
     }
 
-    async UniTask<bool> CastSpell(Spell choosenSpell, WayPoint choosenTargetPoint, WayPoint pointToSelect, WayPoint target)
+    async UniTask<bool> CastSpell(Spell choosenSpell, WayPoint pointToSelect, WayPoint target)
     {
-        List<WayPoint> rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint);
+        HideWalkables();
+        List<WayPoint> rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, currentPoint);
         await UniTask.Delay(ThinkDelayMilis);
         SpellCastData castData = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints);
         await UniTask.Delay(ThinkDelayMilis);

@@ -13,22 +13,21 @@ public class SerializableNode
     public bool onYReviendra;
     public bool Intersection;
     public bool Visited;
-    public List<SerializableLink> paths = new();
+    public List<SerializableTransform> paths = new();
 
     //référence au créateur
     public Vector3Int creatorKey;
 }
 
 [Serializable]
-public class SerializableLink
+public class SerializableTransform
 {
-    // pour la poc mais vaut mieux changer pour après avec des ref au parent directement
-    public List<Vector3> transformLink;
-    public Quaternion rotationLink;
+    public List<Vector3> PosiScale;
+    public Quaternion rotation;
 }
 
 [Serializable]
-public class SerialzablePlayer
+public class SerializablePlayer
 {
     //information Player
     public Vector3Int playerPosition;
@@ -37,10 +36,18 @@ public class SerialzablePlayer
 }
 
 [Serializable]
+public class SerializableSeed
+{
+    public bool useSeed;
+    public int seed;
+}
+
+[Serializable]
 public class MapWrapper
 {
-    public SerialzablePlayer player;
+    public SerializablePlayer player;
     public List<SerializableNode> nodes = new();
+    public SerializableSeed seed;
 }
 
 [Serializable]

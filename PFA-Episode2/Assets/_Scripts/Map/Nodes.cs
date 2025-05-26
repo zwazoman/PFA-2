@@ -13,13 +13,13 @@ public class Node : MonoBehaviour
     public Node Creator;
     public NodesEventTypes EventName;
     public bool OnYReviendra;
-    [SerializeField] private GameObject _parentGO;
-    [SerializeField] private GameObject _prefabBoss;
-    [SerializeField] private Button _button;
     private GameObject _mesh;
     public bool Visited;
     public bool Intersection;
     public List<GameObject> PathBetweenNode = new();
+    [SerializeField] private GameObject _parentGO;
+    [SerializeField] private GameObject _prefabBoss;
+    [SerializeField] private Button _button;
     [SerializeField] private MeshRenderer _meshRend;
     [SerializeField] private Material _mat;
 
@@ -32,14 +32,10 @@ public class Node : MonoBehaviour
         TweenMesh();
     }
 
-    private void OnEnable() { OnMapCompleted += SetupSprite; }
-
-    private void OnDisable() { OnMapCompleted -= SetupSprite; }
-
     /// <summary>
     /// Fonction qui peut setup un sprite pour le node selon son rôle
     /// </summary>
-    private void SetupSprite()
+    public void SetupSprite()
     {
         if (PlayerMap.Instance.PositionMap == Position) { return; }
         switch (EventName)

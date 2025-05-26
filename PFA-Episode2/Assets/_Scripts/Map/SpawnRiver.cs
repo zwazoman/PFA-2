@@ -4,17 +4,19 @@ using UnityEngine;
 public class SpawnRiver : MonoBehaviour
 {
     [Header("Spawn Settings")]
-
     [SerializeField] private List<Transform> _spawnPoints = new();
     [SerializeField] private List<GameObject> _spawnSpecialGround = new();
     [SerializeField] private GameObject _spawnGround;
     [SerializeField][Range(0f, 1f)] private float _spawnProbability = 0.5f;
-    [SerializeField] private List<GameObject> _groundList = new();
+    public List<GameObject> GroundList = new();
 
     [Header("Others")]
-
     [SerializeField] private Transform _parent;
     private GameObject _imposibleGround;
+
+    // Seed
+    public bool _useSeed = false;
+    public int _seed = 0;
 
     #region Singleton
     public static SpawnRiver Instance;
@@ -22,22 +24,37 @@ public class SpawnRiver : MonoBehaviour
     private void Awake() { Instance = this; }
     #endregion
 
-    public void StartSpawnRiver()
+    public void StartSpawnRiver() //Dans MapMaker2 et SaveMapGeneration
     {
-        for (int index = 0; index < _spawnPoints.Count; index++) //On doit trié
+        if (_useSeed)
+        {
+            Random.InitState(_seed);
+        }
+        else
+        {
+            _seed = Random.Range(0, int.MaxValue);
+            Random.InitState(_seed);
+            _useSeed = true;
+        }
+
+        List<GameObject> spawnSpecialGroundClone = new List<GameObject>(_spawnSpecialGround);
+
+        for (int index = 0; index < _spawnPoints.Count; index++)
         {
             Transform point = _spawnPoints[index];
 
             List<Node> ListNodeA = MapBuildingTools.Instance.ReturnListOfNodeFromNodePosition(index);
             List<Node> ListNodeB = MapBuildingTools.Instance.ReturnListOfNodeFromNodePosition(index + 1);
+            if (ListNodeA.Count == 0 || ListNodeB.Count == 0)
+                continue;
+
             Node NodeA = ListNodeA[0];
             Node NodeB = ListNodeB[0];
-            int NumberOfNodeA = ListNodeA.Count;
-            int NumberOfNodeB = ListNodeB.Count;
 
-            if (NodeA.Hauteur != NodeB.Hauteur || NumberOfNodeA != 1 || NumberOfNodeB != 1) //Ground
+            if (NodeA.Hauteur != NodeB.Hauteur || ListNodeA.Count != 1 || ListNodeB.Count != 1)
             {
-                GameObject item = Instantiate(_spawnGround, _parent);
+                GameObject item = Instantiate(_spawnGround, point.position, point.rotation, _parent);
+                item.transform.localScale = new Vector3(4, 4, 4);
                 SetupObject(item, point, false);
             }
             else
@@ -45,16 +62,17 @@ public class SpawnRiver : MonoBehaviour
                 float chance = Random.value;
                 if (chance <= _spawnProbability)
                 {
-                    int randomIndex = Random.Range(0, _spawnSpecialGround.Count);
-                    GameObject item = Instantiate(_spawnSpecialGround[randomIndex], _parent);
+                    int randomIndex = Random.Range(0, spawnSpecialGroundClone.Count);
+                    GameObject item = Instantiate(spawnSpecialGroundClone[randomIndex], point.position, point.rotation, _parent);
+                    item.transform.localScale = new Vector3(4, 4, 4);
                     SetupObject(item, point, true);
                 }
                 else
                 {
-                    GameObject item = Instantiate(_spawnGround, _parent);
+                    GameObject item = Instantiate(_spawnGround, point.position, point.rotation, _parent);
+                    item.transform.localScale = new Vector3(4, 4, 4);
                     SetupObject(item, point, false);
                 }
-
             }
         }
     }
@@ -62,11 +80,9 @@ public class SpawnRiver : MonoBehaviour
     public void SetupObject(GameObject obj, Transform point, bool IsSpecial)
     {
         obj.transform.position = point.position;
-        _groundList.Add(obj);
+        GroundList.Add(obj);
         if (IsSpecial)
         {
-            if (_imposibleGround != null) { _spawnSpecialGround.Add(_imposibleGround); }
-            _spawnSpecialGround.Remove(obj);
             _imposibleGround = obj;
         }
     }

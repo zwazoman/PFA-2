@@ -20,7 +20,7 @@ public class Spell
 
     public int cooling = 0;
 
-    public bool isDamaging = true;
+    public SpellType spellType = SpellType.Attack;
 
     public void StartCooldown()
     {
@@ -30,7 +30,6 @@ public class Spell
     public void TickSpellCooldown(int value = 1)
     {
         cooling = Mathf.Max(0,cooling - value);
-        Debug.Log("Cooled : " + spellData.Name + " " + cooling.ToString()) ;
         if (cooling == 0)
             //cooling = spellData.CoolDown;
             

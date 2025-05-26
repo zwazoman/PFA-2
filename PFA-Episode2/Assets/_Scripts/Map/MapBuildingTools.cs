@@ -10,6 +10,7 @@ public class MapBuildingTools : MonoBehaviour
     [SerializeField][Tooltip("GameObject parent des chemins, si null alors c'est le porteur du script le parent")] private GameObject _parent;
     public bool FirstTimeDraw = true;
     public List<GameObject> _savePath = new();
+    private List<Vector3> _pathPos = new();
 
     #region Singleton
     public static MapBuildingTools Instance;
@@ -40,7 +41,6 @@ public class MapBuildingTools : MonoBehaviour
     {
         if (FirstTimeDraw)
         {
-            print(TrueListPath.Count);
             // Sprite entre father et current
             GameObject CurrentPath = TrueListPath[0];
             TrueListPath.RemoveAt(0);
@@ -53,14 +53,17 @@ public class MapBuildingTools : MonoBehaviour
             //Vector3 dir = PointB.transform.localPosition - PointA.transform.localPosition;
             //float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
-            if ( PointA.transform.localPosition.y > PointB.transform.localPosition.y)
+            if (_pathPos.Contains(CurrentPath.transform.localPosition)) { Destroy(CurrentPath); return; }
+            else { _pathPos.Add(CurrentPath.transform.localPosition); }
+
+            if (PointA.transform.localPosition.y > PointB.transform.localPosition.y)
             {
                 CurrentPath.transform.localRotation = Quaternion.Euler(25, 90, -90);
                 //CurrentPath.transform.localPosition = new Vector3(CurrentPath.transform.localPosition.x, CurrentPath.transform.localPosition.y - 50, CurrentPath.transform.localPosition.z);
             }
 
-            else if (PointA.transform.localPosition.y < PointB.transform.localPosition.y) 
-            { 
+            else if (PointA.transform.localPosition.y < PointB.transform.localPosition.y)
+            {
                 CurrentPath.transform.localRotation = Quaternion.Euler(-25, 90, -90);
                 //CurrentPath.transform.localPosition = new Vector3(CurrentPath.transform.localPosition.x, CurrentPath.transform.localPosition.y + 50, CurrentPath.transform.localPosition.z);
             }
@@ -90,9 +93,8 @@ public class MapBuildingTools : MonoBehaviour
 
     public void AttributeEvent(int _mapRange)
     {
-        if (MapMaker2.Instance.CurrentNode.Position + 1 == _mapRange) { MapAttributeEvent.Instance.MapMakingEventBeforeBoss(); }
+        if (MapMaker2.Instance.CurrentNode.Position + 1 == _mapRange) { MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Combat; }
         if (MapMaker2.Instance.CurrentNode.Position == _mapRange) { MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Boss; }
-        else { MapAttributeEvent.Instance.MapMakingEvent(); }
         switch (MapMaker2.Instance.CurrentNode.Position)
         {
             case 1:
@@ -100,7 +102,6 @@ public class MapBuildingTools : MonoBehaviour
                 break;
             case 2:
                 MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Cuisine;
-                MapAttributeEvent.Instance.SetCuisineProbaToNull();
                 break;
             case 3:
                 MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Combat;
