@@ -81,9 +81,10 @@ public class EntityVisuals : MonoBehaviour
 
     public async UniTask DeathAnimation()
     {
-        await animator.PlayAnimationTrigger(owner.deathTrigger);
-
-        print("connard");
+        try
+        {
+            await animator.PlayAnimationTrigger(owner.deathTrigger);
+        } catch (Exception e) { Debug.LogException(e); }
 
         gameObject.SetActive(false);
     }

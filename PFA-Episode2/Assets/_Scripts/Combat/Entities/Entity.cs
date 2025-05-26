@@ -96,7 +96,7 @@ public class Entity : MonoBehaviour
     }
 
     //spell preview
-    public void PreviewSpellEffect(BakedSpellEffect e)
+    public void PreviewSpellEffect(BakedTargetedSpellEffect e)
     {
         float newShield = stats.shieldAmount + e.shield;
 
@@ -117,7 +117,7 @@ public class Entity : MonoBehaviour
     }
 
     //spell effect
-    public async UniTask ApplySpell(BakedSpellEffect effect)
+    public async UniTask ApplySpell(BakedTargetedSpellEffect effect)
     {
         try
         {

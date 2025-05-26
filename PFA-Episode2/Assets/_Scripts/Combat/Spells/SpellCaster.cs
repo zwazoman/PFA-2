@@ -119,6 +119,8 @@ public class SpellCaster : MonoBehaviour
 
             }
 
+        castData.target = targetedPoint;
+
         return castData;
     }
 
@@ -231,15 +233,41 @@ public class SpellCaster : MonoBehaviour
 
     void SummonEntityAtPoint(WayPoint point)
     {
-        print("SUMMON TA GRAND MERE");
-
         GameObject kamikaze = Instantiate(GameManager.Instance.staticData.kamikaze, new Vector3(point.transform.position.x, .5f, point.transform.position.z), Quaternion.identity);
         Entity entity = kamikaze.GetComponent<Entity>();
 
-        if(castingEntity.team == Team.Player)
+        if (castingEntity.team == Team.Player)
             entity.team = Team.Player;
-        else if(castingEntity.team == Team.Enemy)
+        else if (castingEntity.team == Team.Enemy)
             entity.team = Team.Enemy;
+    }
+
+    BakedUtilitarySpellEffect ComputeUtilitarySpellEffect(Spell spell, ref SpellCastData zoneData)
+    {
+        BakedUtilitarySpellEffect e = new();
+
+        foreach (SpellEffect effect in spell.spellData.Effects)
+            switch (effect.effectType)
+            {
+                case SpellEffectType.EntitySummon:
+                    if (zoneData.target.State == WaypointState.Free)
+                        e.summonPoint = zoneData.target;
+                    else
+                    {
+                        List<WayPoint> wayPoints = new List<WayPoint>();
+                        foreach (WayPoint point in zoneData.zonePoints)
+                        {
+                            if (point.State == WaypointState.Free)
+                                wayPoints.Add(point);
+                        }
+                        if (wayPoints.Count == 0)
+                            break;
+                        e.summonPoint = wayPoints.PickRandom();
+                    }
+                    break;
+            }
+
+        return e;
     }
 
     /// <summary>
@@ -249,9 +277,9 @@ public class SpellCaster : MonoBehaviour
     /// <param name="entity"></param>
     /// <param name="zoneData"></param>
     /// <returns></returns>
-    BakedSpellEffect ComputeBakedSpellEffect(Spell spell, Entity entity, ref SpellCastData zoneData)
+    BakedTargetedSpellEffect ComputeTargetedSpellEffect(Spell spell, ref SpellCastData zoneData, Entity entity)
     {
-        BakedSpellEffect e = new();
+        BakedTargetedSpellEffect e = new();
 
         foreach (SpellEffect effect in spell.spellData.Effects)
         {
@@ -259,7 +287,7 @@ public class SpellCaster : MonoBehaviour
             {
                 case SpellEffectType.Damage:
                     if (effect.statType == StatType.FlatIncrease) e.damage += effect.value;
-                    else if(effect.statType == StatType.Multiplier) e.damage *= effect.value;
+                    else if (effect.statType == StatType.Multiplier) e.damage *= effect.value;
                     else throw new System.Exception("y'a un pb là");
 
                     break;
@@ -288,25 +316,7 @@ public class SpellCaster : MonoBehaviour
                     e.damage += 8 * (zoneData.hitEntityCTXDict[entity].numberOfHitEnnemies - 1);
                     break;
                 case SpellEffectType.DamageIncreasePercentageByDistanceToCaster:
-                    e.damage *= (1+zoneData.hitEntityCTXDict[entity].distanceToHitEnemy*.2f);
-                    break;
-                case SpellEffectType.EntitySummon:
-                    print("allez summon");
-                    print(zoneData.zonePoints[0].State);
-                    if (zoneData.zonePoints[0].State == WaypointState.Free)
-                        zoneData.summonPoint = zoneData.zonePoints[0];
-                    else
-                    {
-                        List<WayPoint> wayPoints = new List<WayPoint>();
-                        foreach (WayPoint point in zoneData.zonePoints)
-                        {
-                            if(point.State == WaypointState.Free)
-                                wayPoints.Add(point);
-                        }
-                        if (wayPoints.Count == 0)
-                            break;
-                        zoneData.summonPoint = wayPoints.PickRandom();
-                    }
+                    e.damage *= (1 + zoneData.hitEntityCTXDict[entity].distanceToHitEnemy * .2f);
                     break;
             }
 
@@ -325,20 +335,20 @@ public class SpellCaster : MonoBehaviour
     /// <returns></returns>
     public float ComputeShieldVsDamageDiff(Spell spell)
     {
-        float shield =0;
-        float damage =0;
+        float shield = 0;
+        float damage = 0;
 
         foreach (SpellEffect effect in spell.spellData.Effects)
         {
             switch (effect.effectType)
             {
                 case SpellEffectType.Damage:
-                    if(effect.statType == StatType.FlatIncrease)
+                    if (effect.statType == StatType.FlatIncrease)
                         damage += effect.value;
-                    else if(effect.statType == StatType.Multiplier)
+                    else if (effect.statType == StatType.Multiplier)
                         damage *= effect.value;
                     break;
-                
+
                 case SpellEffectType.Shield:
                     if (effect.statType == StatType.FlatIncrease)
                         shield += effect.value;
@@ -348,13 +358,13 @@ public class SpellCaster : MonoBehaviour
             }
         }
 
-        return shield-damage;
+        return shield - damage;
     }
 
     //preview spell effect
     void PreviewSpellEffect(Spell spell, Entity entity, ref SpellCastData zoneData)
     {
-        BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);
+        BakedTargetedSpellEffect e = ComputeTargetedSpellEffect(spell, ref zoneData, entity);
         entity.PreviewSpellEffect(e);
     }
 
@@ -381,43 +391,35 @@ public class SpellCaster : MonoBehaviour
         }
 
         await castingEntity.LookAt(target);
-        
+
         attackEventCompleted = false;
         try
         {
             castingEntity.visuals.animator.SetTrigger(castingEntity.attackTrigger);
-        }catch (Exception ex) { Debug.LogException(ex); }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogException(ex);
+            attackEventCompleted = true;
+        }
 
         while (!attackEventCompleted)
             await UniTask.Yield();
 
+        List<UniTask> tasks = new();
 
         if (zoneData.hitEntityCTXDict != null && zoneData.hitEntityCTXDict.Keys != null)
         {
-            if(zoneData.hitEntityCTXDict.Count >= 1)
+            foreach (Entity entity in zoneData.hitEntityCTXDict.Keys)
             {
-                List<UniTask> tasks = new();
-                foreach (Entity entity in zoneData.hitEntityCTXDict.Keys)
-                {
-                    tasks.Add(HitEntityBehaviour(entity, spell, zoneData));
-                }
-
-                await UniTask.WhenAll(tasks);
-            }
-            else
-            {
-                SpellProjectile projectile;
-                PoolManager.Instance.ProjectilePool.PullObjectFromPool(_spellCastingSocket.position).TryGetComponent(out projectile);
-                await projectile.Launch(castingEntity, target, spell.spellData.Mesh);
+                tasks.Add(HitEntityBehaviour(entity, spell, zoneData));
             }
         }
 
-        print(zoneData.summonPoint);
+        tasks.Add(UtilitaryBehaviour(spell, zoneData, target));
 
-        if(zoneData.summonPoint != null)
-        {
-            SummonEntityAtPoint(zoneData.summonPoint);
-        }
+        await UniTask.WhenAll(tasks);
+
 
         if (playerCastingEntity != null)
             playerCastingEntity.ShowSpellsUI();
@@ -429,35 +431,65 @@ public class SpellCaster : MonoBehaviour
         return true;
     }
 
+    async UniTask UtilitaryBehaviour(Spell spell, SpellCastData zoneData, WayPoint target)
+    {
+        SpellProjectile projectile;
+        Vector3 spawnPos;
+        if (_spellCastingSocket != null)
+            spawnPos = _spellCastingSocket.position;
+        else
+            spawnPos = transform.position;
+
+        PoolManager.Instance.ProjectilePool.PullObjectFromPool(spawnPos).TryGetComponent(out projectile);
+        await projectile.Launch(castingEntity, target, spell.spellData.Mesh);
+
+
+        BakedUtilitarySpellEffect e = ComputeUtilitarySpellEffect(spell, ref zoneData);
+        await ApplyUtilitarySpell(e);
+    }
+
     async UniTask HitEntityBehaviour(Entity entity, Spell spell, SpellCastData zoneData)
     {
         if (entity != castingEntity)
             await entity.LookAt(castingEntity.currentPoint);
 
         SpellProjectile projectile;
-        PoolManager.Instance.ProjectilePool.PullObjectFromPool(_spellCastingSocket.position).TryGetComponent(out projectile);
+        Vector3 spawnPos;
+        if (_spellCastingSocket != null)
+            spawnPos = _spellCastingSocket.position;
+        else
+            spawnPos = transform.position;
+
+        PoolManager.Instance.ProjectilePool.PullObjectFromPool(spawnPos).TryGetComponent(out projectile);
         await projectile.Launch(castingEntity, entity, spell.spellData.Mesh);
 
         //wait for animations to play
         try
         {
             await entity.visuals.animator.PlayAnimationTrigger(entity.hitTrigger);
-        } catch(Exception ex) { Debug.LogException(ex); }
+        }
+        catch (Exception ex) { Debug.LogException(ex); }
 
         //cancel preview
         StopSpellEffectPreview(entity);
 
-        BakedSpellEffect e = ComputeBakedSpellEffect(spell, entity, ref zoneData);
+        BakedTargetedSpellEffect e = ComputeTargetedSpellEffect(spell, ref zoneData, entity);
         await entity.ApplySpell(e);
 
         attackEventCompleted = false;
     }
+
+    async UniTask ApplyUtilitarySpell(BakedUtilitarySpellEffect effect)
+    {
+        if (effect.summonPoint != null)
+            SummonEntityAtPoint(effect.summonPoint);
+    }
 }
 
 
-// == data  ==
+// == data ==
 
-public struct BakedSpellEffect
+public struct BakedTargetedSpellEffect
 {
     public float damage;
     public float shield;
@@ -465,12 +497,17 @@ public struct BakedSpellEffect
     public WayPoint pushPoint;
 }
 
+public struct BakedUtilitarySpellEffect
+{
+    public WayPoint summonPoint;
+}
+
 public struct SpellCastData
 {
     public List<WayPoint> zonePoints;
     public Dictionary<Entity, SpellCastingContext> hitEntityCTXDict;
 
-    public WayPoint summonPoint;
+    public WayPoint target;
 }
 
 /// <summary>
