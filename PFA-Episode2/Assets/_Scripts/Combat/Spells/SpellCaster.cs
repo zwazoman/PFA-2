@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using System;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class SpellCaster : MonoBehaviour
 {
@@ -230,6 +231,8 @@ public class SpellCaster : MonoBehaviour
 
     void SummonEntityAtPoint(WayPoint point)
     {
+        print("SUMMON TA GRAND MERE");
+
         GameObject kamikaze = Instantiate(GameManager.Instance.staticData.kamikaze, new Vector3(point.transform.position.x, .5f, point.transform.position.z), Quaternion.identity);
         Entity entity = kamikaze.GetComponent<Entity>();
 
@@ -288,6 +291,8 @@ public class SpellCaster : MonoBehaviour
                     e.damage *= (1+zoneData.hitEntityCTXDict[entity].distanceToHitEnemy*.2f);
                     break;
                 case SpellEffectType.EntitySummon:
+                    print("allez summon");
+                    print(zoneData.zonePoints[0].State);
                     if (zoneData.zonePoints[0].State == WaypointState.Free)
                         zoneData.summonPoint = zoneData.zonePoints[0];
                     else
@@ -378,7 +383,10 @@ public class SpellCaster : MonoBehaviour
         await castingEntity.LookAt(target);
         
         attackEventCompleted = false;
-        castingEntity.visuals.animator.SetTrigger(castingEntity.attackTrigger);
+        try
+        {
+            castingEntity.visuals.animator.SetTrigger(castingEntity.attackTrigger);
+        }catch (Exception ex) { Debug.LogException(ex); }
 
         while (!attackEventCompleted)
             await UniTask.Yield();
@@ -386,18 +394,29 @@ public class SpellCaster : MonoBehaviour
 
         if (zoneData.hitEntityCTXDict != null && zoneData.hitEntityCTXDict.Keys != null)
         {
-            List<UniTask> tasks = new();
-            foreach (Entity entity in zoneData.hitEntityCTXDict.Keys)
+            if(zoneData.hitEntityCTXDict.Count >= 1)
             {
-                tasks.Add(HitEntityBehaviour(entity, spell, zoneData));
-            }
+                List<UniTask> tasks = new();
+                foreach (Entity entity in zoneData.hitEntityCTXDict.Keys)
+                {
+                    tasks.Add(HitEntityBehaviour(entity, spell, zoneData));
+                }
 
-            await UniTask.WhenAll(tasks);
+                await UniTask.WhenAll(tasks);
+            }
+            else
+            {
+                SpellProjectile projectile;
+                PoolManager.Instance.ProjectilePool.PullObjectFromPool(_spellCastingSocket.position).TryGetComponent(out projectile);
+                await projectile.Launch(castingEntity, target, spell.spellData.Mesh);
+            }
         }
+
+        print(zoneData.summonPoint);
 
         if(zoneData.summonPoint != null)
         {
-
+            SummonEntityAtPoint(zoneData.summonPoint);
         }
 
         if (playerCastingEntity != null)
@@ -420,7 +439,10 @@ public class SpellCaster : MonoBehaviour
         await projectile.Launch(castingEntity, entity, spell.spellData.Mesh);
 
         //wait for animations to play
-        await entity.visuals.animator.PlayAnimationTrigger(entity.hitTrigger);
+        try
+        {
+            await entity.visuals.animator.PlayAnimationTrigger(entity.hitTrigger);
+        } catch(Exception ex) { Debug.LogException(ex); }
 
         //cancel preview
         StopSpellEffectPreview(entity);
