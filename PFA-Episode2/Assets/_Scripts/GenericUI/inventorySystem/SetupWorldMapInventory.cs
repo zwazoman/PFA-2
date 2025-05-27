@@ -1,143 +1,115 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
-using UnityEditor.Experimental.GraphView;
 
+/// <summary>
+/// Script qui setup l'UI dans l'inventaire du joueur (Ingredient et Sauce)
+/// </summary>
 public class SetupWorldMapInventory : MonoBehaviour
 {
+    [Header("Inventory Slots")]
     [SerializeField] private List<Transform> _ingredientSlot = new();
     [SerializeField] private List<Transform> _sauceSlot = new();
-    [SerializeField] private List<Transform> _spellSlot = new();
 
     [Header("Prefab")]
     [SerializeField] private GameObject _prefabItem;
 
-    private Dictionary<Ingredient, GameObject> _ingredientItemDico = new();
-    private Dictionary<Sauce, GameObject> _sauceItemDico = new();
-    private Dictionary<SpellData, GameObject> _spellItemDico = new();
+    private readonly Dictionary<Ingredient, GameObject> _ingredientItemDico = new();
+    private readonly Dictionary<Sauce, GameObject> _sauceItemDico = new();
 
-    public List<GameObject> PanelToDisable = new();
-
-    private GetInfoItem _infoItemUI;
-    private Ingredient _ingredientChoose;
-    private Sauce _sauceChoose;
+    public List<GameObject> PanelToDisable = new(); //Panel info des ingredients
 
     public static SetupWorldMapInventory Instance;
     private void Awake() { Instance = this; }
 
     public async void SetupIngredient()
     {
-        foreach (GameObject obj in PanelToDisable) { obj.SetActive(false); }
-        if (_ingredientItemDico.Count == 0)
+        if (_ingredientItemDico.Count != 0) { return; }
+
+        int indexSpawn = 0;
+        for (int i = 0; i < GameManager.Instance.playerInventory.Ingredients.Count; i++)
         {
-            int indexSpawn = 0;
-            for (int i = 0; i < GameManager.Instance.playerInventory.Ingredients.Count; i++)
+            Ingredient IngredientChoose = GameManager.Instance.playerInventory.Ingredients[i];
+            if (_ingredientItemDico.ContainsKey(IngredientChoose)) //Si j'ai deja cree un ingredient de ce type
             {
-                _ingredientChoose = GameManager.Instance.playerInventory.Ingredients[i];
-                if(_ingredientItemDico.ContainsKey(_ingredientChoose))
-                {
-                    GameObject go = IngGetValueFromKey(_ingredientChoose);
-                    _infoItemUI = go.GetComponent<GetInfoItem>();
-                    _infoItemUI.NumberItem++;
-                    _infoItemUI.IngredientDoubleTxt.text = "x " + _infoItemUI.NumberItem.ToString();
-                    indexSpawn--;
-                }
-                else
-                {
-                    GameObject go = Instantiate(_prefabItem, _ingredientSlot[indexSpawn]); //Création 
-                    _infoItemUI = go.GetComponent<GetInfoItem>();
-                    _infoItemUI.Icon.sprite = _ingredientChoose.sprite;
-                    _infoItemUI.IngredientName.text = _ingredientChoose.name;
-                    _infoItemUI.IngredientEffect.text = Serializer.GetIngredientEffectString(_ingredientChoose);
-                    _infoItemUI.IngBase = _ingredientChoose;
-                    go.transform.GetChild(0).parent = gameObject.transform;
-                    _ingredientItemDico.Add(_ingredientChoose, go);
-                    await SpawnTween(go);
-                }
-                indexSpawn++;
+                GameObject go = GetValueFromKey(_ingredientItemDico,IngredientChoose);
+                GetInfoItem InfoItemUI = go.GetComponent<GetInfoItem>();
+                InfoItemUI.NumberItem++;
+                InfoItemUI.IngredientDoubleTxt.text = "x " + InfoItemUI.NumberItem.ToString(); //Nombre de double
+                indexSpawn--; //On evite de sauter une case dans l'inventaire
             }
+            else
+            {
+                GameObject go = Instantiate(_prefabItem, _ingredientSlot[indexSpawn]); //Création 
+                GetInfoItem InfoItemUI = go.GetComponent<GetInfoItem>();
+                InfoItemUI.Icon.sprite = IngredientChoose.sprite;
+                InfoItemUI.IngredientName.text = IngredientChoose.name;
+                InfoItemUI.IngredientEffect.text = Serializer.GetIngredientEffectString(IngredientChoose); //effet
+                InfoItemUI.IngBase = IngredientChoose;
+                go.transform.GetChild(0).SetParent(gameObject.transform); //On place l'enfant
+                go.transform.localScale = Vector3.zero;
+                _ingredientItemDico.Add(IngredientChoose, go);
+            }
+            indexSpawn++;
         }
+        List<GameObject> list = new();
+        foreach (GameObject go in _ingredientItemDico.Values) { list.Add(go); }
+        await SpawnTween(list);
     }
 
     public async void SetupSauce()
     {
-        foreach (GameObject obj in PanelToDisable) { obj.SetActive(false); }
-        if (_sauceItemDico.Count == 0)
+        if (_sauceItemDico.Count != 0) { return; }
+
+        int indexSpawn = 0;
+        for (int i = 0; i < GameManager.Instance.playerInventory.Sauces.Count; i++)
         {
-            int indexSpawn = 0;
-            for (int i = 0; i < GameManager.Instance.playerInventory.Sauces.Count; i++)
+            Sauce SauceChoose = GameManager.Instance.playerInventory.Sauces[i];
+            if (_sauceItemDico.ContainsKey(SauceChoose))
             {
-                _sauceChoose = GameManager.Instance.playerInventory.Sauces[i];
-                if (_sauceItemDico.ContainsKey(_sauceChoose))
-                {
-                    GameObject go = SauceGetValueFromKey(_sauceChoose);
-                    _infoItemUI = go.GetComponent<GetInfoItem>();
-                    _infoItemUI.NumberItem++;
-                    _infoItemUI.IngredientDoubleTxt.text = "x " + _infoItemUI.NumberItem.ToString();
-                    indexSpawn--;
-                }
-                else
-                {
-                    GameObject go = Instantiate(_prefabItem, _sauceSlot[i]); //Création 
-                    _infoItemUI = go.GetComponent<GetInfoItem>();
-                    _infoItemUI.Icon.sprite = _sauceChoose.sprite;
-                    _infoItemUI.SauceName.text = _sauceChoose.name;
-                    _infoItemUI.SauceEffect.text = Serializer.GetSauceEffectString(_sauceChoose);
-                    _infoItemUI.SauceAoE.sprite = _sauceChoose.areaOfEffect.sprite;
-                    _infoItemUI.IngBase = _sauceChoose;
-                    go.transform.GetChild(1).parent = gameObject.transform;
-                    _sauceItemDico.Add(_sauceChoose, go);
-                    await SpawnTween(go);
-                }
-                indexSpawn++;
+                GameObject go = GetValueFromKey(_sauceItemDico,SauceChoose);
+                GetInfoItem InfoItemUI = go.GetComponent<GetInfoItem>();
+                InfoItemUI.NumberItem++;
+                InfoItemUI.IngredientDoubleTxt.text = "x " + InfoItemUI.NumberItem.ToString();
+                indexSpawn--;
             }
-        }
-    }
-
-    public async void SetupSpell()
-    {
-        foreach (GameObject obj in PanelToDisable) { obj.SetActive(false); }
-        if (_spellItemDico.Count == 0)
-        {
-            for (int i = 0; i < GameManager.Instance.playerInventory.Spells.Count; i++)
+            else
             {
-                SpellData SpellChoose = GameManager.Instance.playerInventory.Spells[i];
-                GameObject go = Instantiate(_prefabItem, _spellSlot[i]); //Création 
-                _infoItemUI = go.GetComponent<GetInfoItem>();
-                _infoItemUI.Icon.sprite = SpellChoose.Sprite;
-                _spellItemDico.Add(SpellChoose, go);
-                go.transform.GetChild(0).parent = gameObject.transform;
-                await SpawnTween(go);
-                //_infoItemUI.IngredientName.text = SpellChoose.name;
-                //_infoItemUI.Effect.text = Serializer.GetIngredientEffectString(SpellChoose);
+                GameObject go = Instantiate(_prefabItem, _sauceSlot[indexSpawn]); //Création 
+                GetInfoItem InfoItemUI = go.GetComponent<GetInfoItem>();
+                InfoItemUI.Icon.sprite = SauceChoose.sprite;
+                InfoItemUI.SauceName.text = SauceChoose.name;
+                InfoItemUI.SauceEffect.text = Serializer.GetSauceEffectString(SauceChoose);
+                InfoItemUI.SauceAoE.sprite = SauceChoose.areaOfEffect.sprite;
+                InfoItemUI.IngBase = SauceChoose;
+                go.transform.GetChild(1).SetParent(gameObject.transform);
+                go.transform.localScale = Vector3.zero; 
+                _sauceItemDico.Add(SauceChoose, go);
             }
+            indexSpawn++;
         }
+        List<GameObject> list = new();
+        foreach (GameObject go in _sauceItemDico.Values) { list.Add(go); }
+        await SpawnTween(list);
     }
 
-    private async UniTask SpawnTween(GameObject go)
+    private async UniTask SpawnTween(List<GameObject> list)
     {
-        await go.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.2f).SetEase(Ease.InOutBack);
+        foreach (GameObject go in list) { await go.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.2f).SetEase(Ease.InOutBack); }
     }
 
-    private GameObject IngGetValueFromKey(IngredientBase ing)
+    #region Tools
+    public void Clean() { foreach (GameObject obj in PanelToDisable) { obj.SetActive(false); } }
+
+    private GameObject GetValueFromKey<T>(Dictionary<T, GameObject> dico, IngredientBase key) where T : IngredientBase
     {
-        foreach (var kvp in _ingredientItemDico)
+        foreach (var kvp in dico)
         {
-            if (kvp.Key == ing)
+            if (kvp.Key == key)
                 return kvp.Value;
         }
         return null;
     }
-
-    private GameObject SauceGetValueFromKey(IngredientBase ing)
-    {
-        foreach (var kvp in _sauceItemDico)
-        {
-            if (kvp.Key == ing)
-                return kvp.Value;
-        }
-        return null;
-    }
+    #endregion
 }
