@@ -1564,6 +1564,7 @@ GameObject:
   - component: {fileID: 6537151919790488073}
   - component: {fileID: 3993865462500284680}
   - component: {fileID: 5956161451818040998}
+  - component: {fileID: 9179829142632147110}
   m_Layer: 5
   m_Name: Sauce
   m_TagString: Untagged
@@ -1673,42 +1674,52 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InventoryMap, Assembly-CSharp
-        m_MethodName: EnableColor
-        m_Mode: 2
+      - m_Target: {fileID: 9179829142632147110}
+        m_TargetAssemblyTypeName: WorldMapInventory, Assembly-CSharp
+        m_MethodName: EnablePanel
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 3993865462500284680}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Image, UnityEngine.UI
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InventoryMap, Assembly-CSharp
-        m_MethodName: DisableColor
-        m_Mode: 2
+      - m_Target: {fileID: 4795127879247798164}
+        m_TargetAssemblyTypeName: SetupWorldMapInventory, Assembly-CSharp
+        m_MethodName: SetupSauce
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 4977252783472265330}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Image, UnityEngine.UI
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InventoryMap, Assembly-CSharp
-        m_MethodName: DisableColor
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 7772881473465608085}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Image, UnityEngine.UI
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+--- !u!114 &9179829142632147110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1397320893840793743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbfaf4bd744e3364581e64e2e61666a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _activeColor: {r: 0.18039216, g: 0.19607845, b: 0.2784314, a: 1}
+  _desactiveColor: {r: 0.12156863, g: 0.13333334, b: 0.2, a: 1}
+  _goEnable:
+  - {fileID: 4906493447622941588}
+  _goDisable:
+  - {fileID: 8225049584726360157}
+  - {fileID: 482549728639023689}
+  _disableButton:
+  - {fileID: 7772881473465608085}
+  - {fileID: 4977252783472265330}
 --- !u!1 &1422217962623676505
 GameObject:
   m_ObjectHideFlags: 0
@@ -1974,6 +1985,7 @@ GameObject:
   - component: {fileID: 2456176689574252310}
   - component: {fileID: 7772881473465608085}
   - component: {fileID: 1267819581835857323}
+  - component: {fileID: 5253294720450326260}
   m_Layer: 5
   m_Name: Spell
   m_TagString: Untagged
@@ -2083,42 +2095,52 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InventoryMap, Assembly-CSharp
-        m_MethodName: EnableColor
-        m_Mode: 2
+      - m_Target: {fileID: 5253294720450326260}
+        m_TargetAssemblyTypeName: WorldMapInventory, Assembly-CSharp
+        m_MethodName: EnablePanel
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 7772881473465608085}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Image, UnityEngine.UI
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InventoryMap, Assembly-CSharp
-        m_MethodName: DisableColor
-        m_Mode: 2
+      - m_Target: {fileID: 4795127879247798164}
+        m_TargetAssemblyTypeName: SetupWorldMapInventory, Assembly-CSharp
+        m_MethodName: SetupSpell
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 4977252783472265330}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Image, UnityEngine.UI
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InventoryMap, Assembly-CSharp
-        m_MethodName: DisableColor
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 3993865462500284680}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Image, UnityEngine.UI
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+--- !u!114 &5253294720450326260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1681718387861070951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbfaf4bd744e3364581e64e2e61666a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _activeColor: {r: 0.18039216, g: 0.19607845, b: 0.2784314, a: 1}
+  _desactiveColor: {r: 0.10980393, g: 0.13333334, b: 0.19607845, a: 1}
+  _goEnable:
+  - {fileID: 482549728639023689}
+  _goDisable:
+  - {fileID: 4906493447622941588}
+  - {fileID: 8225049584726360157}
+  _disableButton:
+  - {fileID: 3993865462500284680}
+  - {fileID: 4977252783472265330}
 --- !u!1 &1695171188096272698
 GameObject:
   m_ObjectHideFlags: 0
@@ -2421,8 +2443,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: -0.000015258789}
+  m_AnchoredPosition: {x: 0, y: 80.00003}
+  m_SizeDelta: {x: 0, y: 160.0001}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5061408777902509142
 CanvasRenderer:
@@ -3702,6 +3724,7 @@ GameObject:
   - component: {fileID: 5971843836020898751}
   - component: {fileID: 4977252783472265330}
   - component: {fileID: 7242434989824409388}
+  - component: {fileID: 7670499073496118728}
   m_Layer: 5
   m_Name: Ingredients
   m_TagString: Untagged
@@ -3724,10 +3747,10 @@ RectTransform:
   - {fileID: 6795215472256179714}
   m_Father: {fileID: 3812243781851560360}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -452.125, y: 225}
-  m_SizeDelta: {x: -1840, y: -890}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -454, y: 225}
+  m_SizeDelta: {x: 500, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5971843836020898751
 CanvasRenderer:
@@ -3811,42 +3834,52 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InventoryMap, Assembly-CSharp
-        m_MethodName: EnableColor
-        m_Mode: 2
+      - m_Target: {fileID: 7670499073496118728}
+        m_TargetAssemblyTypeName: WorldMapInventory, Assembly-CSharp
+        m_MethodName: EnablePanel
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 4977252783472265330}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Image, UnityEngine.UI
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InventoryMap, Assembly-CSharp
-        m_MethodName: DisableColor
-        m_Mode: 2
+      - m_Target: {fileID: 4795127879247798164}
+        m_TargetAssemblyTypeName: SetupWorldMapInventory, Assembly-CSharp
+        m_MethodName: SetupIngredient
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 3993865462500284680}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Image, UnityEngine.UI
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InventoryMap, Assembly-CSharp
-        m_MethodName: DisableColor
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 7772881473465608085}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Image, UnityEngine.UI
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+--- !u!114 &7670499073496118728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3433462365155282673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbfaf4bd744e3364581e64e2e61666a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _activeColor: {r: 0.18039216, g: 0.19215687, b: 0.27450982, a: 1}
+  _desactiveColor: {r: 0.10980393, g: 0.13333334, b: 0.19607845, a: 1}
+  _goEnable:
+  - {fileID: 8225049584726360157}
+  _goDisable:
+  - {fileID: 4906493447622941588}
+  - {fileID: 482549728639023689}
+  _disableButton:
+  - {fileID: 3993865462500284680}
+  - {fileID: 7772881473465608085}
 --- !u!1 &3664563931471642277
 GameObject:
   m_ObjectHideFlags: 0
@@ -9040,6 +9073,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3812243781851560360}
   - component: {fileID: 5052116558574740224}
+  - component: {fileID: 4795127879247798164}
   m_Layer: 5
   m_Name: Inventaire
   m_TagString: Untagged
@@ -9054,7 +9088,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8928499542011884151}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
@@ -9081,6 +9115,103 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8928499542011884151}
   m_CullTransparentMesh: 1
+--- !u!114 &4795127879247798164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8928499542011884151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f703851b32cae4742a57418e39a85084, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ingredientSlot:
+  - {fileID: 9192813702843776306}
+  - {fileID: 412696230903918240}
+  - {fileID: 7741830386957893573}
+  - {fileID: 8528472396178890594}
+  - {fileID: 6214999061937509628}
+  - {fileID: 8649697433752263860}
+  - {fileID: 5099900351909344660}
+  - {fileID: 552978752949921156}
+  - {fileID: 5485219328670646913}
+  - {fileID: 6798921912823848392}
+  - {fileID: 9061073649541984584}
+  - {fileID: 1825328668442416699}
+  - {fileID: 120961934990334256}
+  - {fileID: 468311864848916141}
+  - {fileID: 8945579969030785442}
+  - {fileID: 8656771782958746793}
+  - {fileID: 7050829947645180725}
+  - {fileID: 7819327291077383150}
+  - {fileID: 3210709872464246100}
+  - {fileID: 3018103985960819892}
+  - {fileID: 4952980836739643945}
+  - {fileID: 5709924023299105758}
+  - {fileID: 8091872882479028202}
+  - {fileID: 78680306501375898}
+  - {fileID: 2562876677436827886}
+  - {fileID: 4181454500101554879}
+  - {fileID: 1704196677790314604}
+  _sauceSlot:
+  - {fileID: 9279933536943030}
+  - {fileID: 2245917380423892445}
+  - {fileID: 6718424835957554603}
+  - {fileID: 4155786155855337096}
+  - {fileID: 6126316945718256561}
+  - {fileID: 4261017303752456479}
+  - {fileID: 526262138117565028}
+  - {fileID: 3437379185701178565}
+  - {fileID: 5011929301103935918}
+  - {fileID: 3782073694752034305}
+  - {fileID: 1422405578408590878}
+  - {fileID: 5550854522053970532}
+  - {fileID: 2669008704450311461}
+  - {fileID: 7252317826335399956}
+  - {fileID: 2314743244677910405}
+  - {fileID: 6678227188459705214}
+  - {fileID: 826409720763610599}
+  - {fileID: 8636680815804360185}
+  - {fileID: 3004247963132052653}
+  - {fileID: 4273780412383628784}
+  - {fileID: 9033492619517793307}
+  - {fileID: 2402632852328317546}
+  - {fileID: 2758852133144571618}
+  - {fileID: 1794253542719794519}
+  - {fileID: 5039727176001567234}
+  - {fileID: 5839215216620293902}
+  - {fileID: 2786544530499813716}
+  _spellSlot:
+  - {fileID: 1381613601387634805}
+  - {fileID: 3154449167781322112}
+  - {fileID: 2056599588210288286}
+  - {fileID: 8827014065816804931}
+  - {fileID: 1823219665826633166}
+  - {fileID: 8835268257024845394}
+  - {fileID: 8169365299346143350}
+  - {fileID: 6553548982906680666}
+  - {fileID: 7246530628838407711}
+  - {fileID: 2542808958504509483}
+  - {fileID: 3903783233491591610}
+  - {fileID: 2543243465679570322}
+  - {fileID: 4044932345818766283}
+  - {fileID: 5154691206025135163}
+  - {fileID: 2908757585536323046}
+  - {fileID: 8955665986720236456}
+  - {fileID: 526048104822300419}
+  - {fileID: 7511151479538533569}
+  - {fileID: 7127617909599318152}
+  - {fileID: 3955165769205537825}
+  - {fileID: 2805500058464320235}
+  - {fileID: 7831122091673031063}
+  - {fileID: 2860547499703813568}
+  - {fileID: 8258979489773155508}
+  - {fileID: 6488659988353294666}
+  - {fileID: 4648432141956093032}
+  - {fileID: 611596572854460237}
+  _prefabItem: {fileID: 4971722895929832787, guid: fd753413ac6106f439d97d861dcff142, type: 3}
 --- !u!1 &9050950117557584891
 GameObject:
   m_ObjectHideFlags: 0

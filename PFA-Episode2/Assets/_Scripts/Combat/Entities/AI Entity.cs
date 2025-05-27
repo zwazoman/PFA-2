@@ -49,7 +49,7 @@ public class AIEntity : Entity
 
         targetEntityPoint = FindClosestEnemyEntityPoint();
 
-        Spell choosenSpell = ChooseRandomSpell();
+        Spell choosenSpell = ChooseSpellWithCooldown();
         bool attacked;
 
         if (choosenSpell != null)
@@ -57,7 +57,7 @@ public class AIEntity : Entity
         else
             attacked = true;
 
-        if (attacked && stats.currentMovePoints > 0)
+        if (attacked && stats.currentMovePoints > 0 && isDead == false)
         {
             switch (Data.aiBehaviour)
             {
@@ -107,11 +107,11 @@ public class AIEntity : Entity
         List<Spell> castableSpells = ComputeCastableSpells(spells);
 
         int maxCooldown = -1;
-        Spell choosenSpell = castableSpells[0];
+        Spell choosenSpell = null;
 
         foreach (Spell spell in castableSpells)
         {
-            if(choosenSpell.spellData.CoolDown > maxCooldown)
+            if(choosenSpell.spellData.CoolDown > maxCooldown || choosenSpell == null)
             {
                 choosenSpell = spell;
                 maxCooldown = choosenSpell.spellData.CoolDown;
@@ -212,6 +212,8 @@ public class AIEntity : Entity
     /// <returns></returns>
     protected async UniTask<bool> CastSpellAtPoint(Spell choosenSpell, WayPoint targetPoint)
     {
+        print(targetEntityPoint.Content.gameObject.name);
+
         if (targetPoint == null)
             return false;
 

@@ -48,6 +48,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInventory:
+    playerHealth:
+      maxHealth: 50
+      health: 50
     Spells: []
     Ingredients: []
     Sauces: []
@@ -55,6 +58,9 @@ MonoBehaviour:
     playerEquipedSpell: []
     NameSave: InventorySave
   staticData: {fileID: 11400000, guid: 66a493f66f77dc74e9960868ba638afc, type: 2}
+  combatScenesName:
+  - Forest_Combat_1
+  - Forest_Combat_2
   _combatScenes:
   - {fileID: 102900000, guid: a12bbd682e5d49241beb28fb7e0d344c, type: 3}
   - {fileID: 102900000, guid: edf93524f3eb9d441992efda3d40cb27, type: 3}

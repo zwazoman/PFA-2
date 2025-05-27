@@ -120,8 +120,8 @@ public class CombatManager : MonoBehaviour
             }
 
             //cleanup corpses
-            foreach (PlayerEntity player in PlayerEntities) if (player.isDead) Destroy(player);
-            foreach (AIEntity e in EnemyEntities) if (e.isDead) Destroy(e);
+            foreach (Entity player in PlayerEntities) if (player.isDead) Destroy(player);
+            foreach (Entity e in EnemyEntities) if (e.isDead) Destroy(e);
 
             await UniTask.Yield();
         }

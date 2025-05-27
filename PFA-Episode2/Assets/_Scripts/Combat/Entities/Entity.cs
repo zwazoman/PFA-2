@@ -72,6 +72,8 @@ public class Entity : MonoBehaviour
     // game management
     public virtual async UniTask PlayTurn()
     {
+        print(gameObject.name);
+
         Tools.Flood(currentPoint);
         stats.currentMovePoints = stats.maxMovePoints;
         await stats.ApplyShield(-1);
@@ -94,7 +96,7 @@ public class Entity : MonoBehaviour
     }
 
     //spell preview
-    public void PreviewSpellEffect(BakedSpellEffect e)
+    public void PreviewSpellEffect(BakedTargetedSpellEffect e)
     {
         float newShield = stats.shieldAmount + e.shield;
 
@@ -115,7 +117,7 @@ public class Entity : MonoBehaviour
     }
 
     //spell effect
-    public async UniTask ApplySpell(BakedSpellEffect effect)
+    public async UniTask ApplySpell(BakedTargetedSpellEffect effect)
     {
         try
         {
@@ -335,7 +337,7 @@ public class Entity : MonoBehaviour
     {
         visuals.DeathAnimation();
 
-        if (this is PlayerEntity player)
+        if (this is PlayerEntity player || team == Team.Enemy && CombatManager.Instance.EnemyEntities.Count == 1)
             await visuals.DeathAnimation();
 
         currentPoint.StepOff();

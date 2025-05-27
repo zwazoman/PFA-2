@@ -26,7 +26,7 @@ public enum SauceEffectType
     /// degat = degat * (1+SpellCastingContext.DistanceToPlayer * DamageIncreaseByDistanceToCaster / 100f)
     /// </summary>
     DamageIncreasePercentageByDistanceToCaster,
-    
+    SummonEntity,
 }
 
 public enum IngredientEffectType
