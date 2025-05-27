@@ -16,7 +16,7 @@ public class LightningManager : MonoBehaviour
     [Header("Fog")]
     [SerializeField] bool _fogOn;
     [SerializeField] float _fogRadius;
-    [SerializeField] float _fogIntensity;
+    [SerializeField] float _fogIntensity = .85f;
 
    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     public static void onSceneLoad()
@@ -42,7 +42,7 @@ public class LightningManager : MonoBehaviour
         Shader.SetGlobalFloat("_stipplingTiling", _stipplingTiling);
          
         Shader.SetGlobalFloat("_fogRadius", _fogRadius);
-        //Shader.SetGlobalFloat("_bands", _bands);
+        Shader.SetGlobalFloat("_fogIntensity", _fogIntensity);
         Shader.SetKeyword(GlobalKeyword.Create("FOG"), _fogOn);
 
     }
