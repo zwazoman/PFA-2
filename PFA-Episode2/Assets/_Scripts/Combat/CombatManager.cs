@@ -69,6 +69,7 @@ public class CombatManager : MonoBehaviour
         else if (entity.team == Team.Enemy && EnemyEntities.Contains(entity))
         {
             EnemyEntities.Remove(entity);
+            print(EnemyEntities.Count);
             if (EnemyEntities.Count == 0)
                 await Victory();
         }
@@ -165,9 +166,11 @@ public class CombatManager : MonoBehaviour
 
     async UniTask Victory()
     {
+        print("VICTORY");
+
         await UniTask.Delay(1000);
 
         _rewardPanel?.Show();
-        //await SceneTransitionManager.Instance.GoToScene("WorldMap");
+        await SceneTransitionManager.Instance.GoToScene("WorldMap");
     }
 }

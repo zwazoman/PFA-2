@@ -12,8 +12,6 @@ public class AnimationEventReceiver : MonoBehaviour
 
     public void AttackEvent(/*string connard*/)
     {
-        print("attack good");
-
         _entity.entitySpellCaster.attackEventCompleted = true;
     }
 }

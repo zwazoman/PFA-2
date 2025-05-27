@@ -56,17 +56,17 @@ public class ChooseIngredient : MonoBehaviour
         {
             if (_sceneCombat == true) { _maxIngredientRef = 0; }
             else { _maxIngredientRef = 2; }
-                for (int tagIngredient = 0; tagIngredient <= _maxIngredientRef; tagIngredient++)
+            for (int tagIngredient = 0; tagIngredient <= _maxIngredientRef; tagIngredient++)
+            {
+                if (IsSauce())
                 {
-                    if (IsSauce())
-                    {
-                        IngredientBaseChooseBySac.Add(ReturnSauceChoose());
-                    }
-                    else
-                    {
-                        IngredientBaseChooseBySac.Add(ReturnIngredientChoose());
-                    }
+                    IngredientBaseChooseBySac.Add(ReturnSauceChoose());
                 }
+                else
+                {
+                    IngredientBaseChooseBySac.Add(ReturnIngredientChoose());
+                }
+            }
             foreach (IngredientBase ing in IngredientBaseChooseBySac) { _completeListIngredientChoose.Add(ing); }
             List<IngredientBase> tempo = new();
             tempo.AddRange(IngredientBaseChooseBySac);
@@ -179,13 +179,13 @@ public class ChooseIngredient : MonoBehaviour
     {
         return biais * (2 * (float)tirageActuel / (float)nombreTotalTirage - 1) + probaRef;
     }
-
+#if UNITY_EDITOR
     public void GenerateLists()
     {
         _listIngredientCommon.Clear();
         _listIngredientSavoureux.Clear();
         _listIngredientDivin.Clear();
-        
+
         _listSauceCommon.Clear();
         _listSauceSavoureux.Clear();
         _listSauceDivin.Clear();
@@ -204,7 +204,7 @@ public class ChooseIngredient : MonoBehaviour
                     break;
                 case Rarity.Divin:
                     _listIngredientDivin.Add(asset);
-                    break; 
+                    break;
             }
         }
 
@@ -227,6 +227,7 @@ public class ChooseIngredient : MonoBehaviour
         }
 
     }
+#endif
 }
 
 #if UNITY_EDITOR
@@ -236,7 +237,7 @@ class ChooseIngredientEditor : Editor
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
-        if(GUILayout.Button("générer les listes connard"))
+        if (GUILayout.Button("générer les listes connard"))
         {
             ((ChooseIngredient)target).GenerateLists();
         }
