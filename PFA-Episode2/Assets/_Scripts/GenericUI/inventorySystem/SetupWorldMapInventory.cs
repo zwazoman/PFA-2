@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 using DG.Tweening;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 
 public class SetupWorldMapInventory : MonoBehaviour
@@ -13,55 +13,78 @@ public class SetupWorldMapInventory : MonoBehaviour
     [Header("Prefab")]
     [SerializeField] private GameObject _prefabItem;
 
-    private GameObject test;
+    public List<GameObject> IngredientItemList = new();
+    public List<GameObject> SauceItemSlot = new();
+    public List<GameObject> SpellItemSlot = new();
+
     private GetInfoItem _infoItemUI;
     private Ingredient _ingredientChoose;
     private Sauce _sauceChoose;
 
+    public static SetupWorldMapInventory Instance;
+    private void Awake() { Instance = this; }
     public async void SetupIngredient()
     {
-        for (int i = 0; i < GameManager.Instance.playerInventory.Ingredients.Count; i++)
+        if (IngredientItemList.Count == 0)
         {
-            _ingredientChoose = GameManager.Instance.playerInventory.Ingredients[i];
-            test = Instantiate(_prefabItem, _ingredientSlot[i]); //Création 
-            _infoItemUI = test.GetComponent<GetInfoItem>();
-            _infoItemUI.Icon.sprite = _ingredientChoose.sprite;
-            await SpawnTween(test);
-            //_infoItemUI.IngredientName.text = _ingredientChoose.name;
-            //_infoItemUI.Effect.text = Serializer.GetIngredientEffectString(_ingredientChoose);
+            for (int i = 0; i < GameManager.Instance.playerInventory.Ingredients.Count; i++)
+            {
+                _ingredientChoose = GameManager.Instance.playerInventory.Ingredients[i];
+                GameObject go = Instantiate(_prefabItem, _ingredientSlot[i]); //Création 
+                _infoItemUI = go.GetComponent<GetInfoItem>();
+                _infoItemUI.Icon.sprite = _ingredientChoose.sprite;
+                _infoItemUI.IngredientName.text = _ingredientChoose.name;
+                _infoItemUI.IngredientEffect.text = Serializer.GetIngredientEffectString(_ingredientChoose);
+                _infoItemUI.IngBase = _ingredientChoose;
+                go.transform.GetChild(0).parent = gameObject.transform;
+                IngredientItemList.Add(go);
+                await SpawnTween(go);
+            }
         }
     }
 
-    public async UniTask SetupSauce()
+    public async void SetupSauce()
     {
-        for (int i = 0; i < GameManager.Instance.playerInventory.Sauces.Count; i++)
+        if (SauceItemSlot.Count == 0)
         {
-            _sauceChoose = GameManager.Instance.playerInventory.Sauces[i];
-            GameObject go = Instantiate(_prefabItem, _sauceSlot[i]); //Création 
-            _infoItemUI = go.GetComponent<GetInfoItem>();
-            _infoItemUI.Icon.sprite = _sauceChoose.sprite;
-            await SpawnTween(go);
-            //_infoItemUI.IngredientName.text = _sauceChoose.name;
-            //_infoItemUI.SauceEffect.text = Serializer.GetIngredientEffectString(_sauceChoose);
+            for (int i = 0; i < GameManager.Instance.playerInventory.Sauces.Count; i++)
+            {
+                _sauceChoose = GameManager.Instance.playerInventory.Sauces[i];
+                GameObject go = Instantiate(_prefabItem, _sauceSlot[i]); //Création 
+                _infoItemUI = go.GetComponent<GetInfoItem>();
+                _infoItemUI.Icon.sprite = _sauceChoose.sprite;
+                _infoItemUI.SauceName.text = _sauceChoose.name;
+                _infoItemUI.SauceEffect.text = Serializer.GetSauceEffectString(_sauceChoose);
+                _infoItemUI.SauceAoE.sprite = _sauceChoose.areaOfEffect.sprite;
+                _infoItemUI.IngBase = _sauceChoose;
+                go.transform.GetChild(0).parent = gameObject.transform;
+                SauceItemSlot.Add(go);
+                await SpawnTween(go);
+            }
         }
     }
 
-    public async UniTask SetupSpell()
+    public async void SetupSpell()
     {
-        for (int i = 0; i < GameManager.Instance.playerInventory.Spells.Count; i++)
+        if (SpellItemSlot.Count == 0)
         {
-            SpellData SpellChoose = GameManager.Instance.playerInventory.Spells[i];
-            GameObject go = Instantiate(_prefabItem, _spellSlot[i]); //Création 
-            _infoItemUI = go.GetComponent<GetInfoItem>();
-            _infoItemUI.Icon.sprite = SpellChoose.Sprite;
-            await SpawnTween(go);
-            //_infoItemUI.IngredientName.text = SpellChoose.name;
-            //_infoItemUI.Effect.text = Serializer.GetIngredientEffectString(SpellChoose);
+            for (int i = 0; i < GameManager.Instance.playerInventory.Spells.Count; i++)
+            {
+                SpellData SpellChoose = GameManager.Instance.playerInventory.Spells[i];
+                GameObject go = Instantiate(_prefabItem, _spellSlot[i]); //Création 
+                _infoItemUI = go.GetComponent<GetInfoItem>();
+                _infoItemUI.Icon.sprite = SpellChoose.Sprite;
+                SpellItemSlot.Add(go);
+                go.transform.GetChild(0).parent = gameObject.transform;
+                await SpawnTween(go);
+                //_infoItemUI.IngredientName.text = SpellChoose.name;
+                //_infoItemUI.Effect.text = Serializer.GetIngredientEffectString(SpellChoose);
+            }
         }
     }
 
     private async UniTask SpawnTween(GameObject go)
     {
-        await go.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.2f).SetEase(Ease.InBack);
+        await go.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.2f).SetEase(Ease.InOutBack);
     }
 }
