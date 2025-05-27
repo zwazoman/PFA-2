@@ -124,7 +124,7 @@ public class CookingPanel : AnimatedPanel
         }
     }
 
-    public void tryToCookNewSpell()
+    public async void tryToCookNewSpell()
     {
 
         bool result = _pot.TryCookSpell(out SpellData spell);
@@ -132,13 +132,12 @@ public class CookingPanel : AnimatedPanel
         switch (result)
         {
             case true:
+
+                await Awaitable.WaitForSecondsAsync(.5f);
+
                 Hide();
                 _dishInfoPanel.Show();
                 _dishInfoPanel.Setup(spell);
-
-                //@revoir
-                //inventory.Add(spell)
-                //GameManager.Instance.playerInventory.Spells.Add(spell);
 
                 break;
             case false:

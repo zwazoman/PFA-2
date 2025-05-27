@@ -6,6 +6,7 @@ public class Ingredient : IngredientBase
 {
     [Header("Ingredient")]
     public IngredientsInfo.Family Family;
+    public Mesh mesh;
 
     [Header("Effect")]
     public IngredientEffectType EffectType;
