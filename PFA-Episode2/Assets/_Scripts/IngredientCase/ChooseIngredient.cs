@@ -136,7 +136,7 @@ public class ChooseIngredient : MonoBehaviour
         if (result <= _probaDivin && DivinSauce.Count != 0) //Divin
         {
             //_probaDivin = 0;
-            Sauce sauce = DivinSauce[Random.Range(0, DivinSauce.Count - 1)];
+            Sauce sauce = DivinSauce[Random.Range(0, DivinSauce.Count)];
             DivinSauce.Remove(sauce);
             SetupValueIngredient();
             return sauce;
@@ -144,14 +144,14 @@ public class ChooseIngredient : MonoBehaviour
         else if (result <= _probaDivin + _probaSavoureux && SavoureuxSauce.Count != 0)  //Savoureux
         {
             //_probaSavoureux = 0;
-            Sauce sauce = SavoureuxSauce[Random.Range(0, SavoureuxSauce.Count - 1)];
+            Sauce sauce = SavoureuxSauce[Random.Range(0, SavoureuxSauce.Count)];
             SavoureuxSauce.Remove(sauce);
             SetupValueIngredient();
             return sauce;
         }
         else //Common
         {
-            Sauce sauce = CommonSauce[Random.Range(0, CommonSauce.Count - 1)];
+            Sauce sauce = CommonSauce[Random.Range(0, CommonSauce.Count)];
             SetupValueIngredient();
             return sauce;
         }

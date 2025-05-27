@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,6 +5,9 @@ using UnityEngine.UI;
 public class GetInfoItem : MonoBehaviour
 {
     public Image Icon;
+    public int NumberItem;
+    public TextMeshProUGUI IngredientDoubleTxt;
+
     [HideInInspector] public IngredientBase IngBase;
 
     [Header("Ingredient")]
