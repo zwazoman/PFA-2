@@ -12,6 +12,8 @@ public class CookingPotVisuals : MonoBehaviour
     [SerializeField] Camera _renderCamera;
     [SerializeField] List<MeshFilter> _boneSockets;//1,2,3 -> ings, 4 -> dish
 
+    [SerializeField] ParticleSystem _sauceParticleSystem;
+
     RenderTexture _rt;
     const float TweenDuration = .3f;
     async void Start()
@@ -40,7 +42,7 @@ public class CookingPotVisuals : MonoBehaviour
         byte c = 0;
         for(int i = 0; i < 3; i++)
         {
-            if ( i< ingredients.Count&&ingredients[i] != null )
+            if ( i< ingredients.Count && ingredients[i] != null )
             {
                 c++;
                 _boneSockets[i].transform.parent.DOScale(1, TweenDuration).SetEase(Ease.OutBack);
@@ -53,7 +55,11 @@ public class CookingPotVisuals : MonoBehaviour
             }
         }
 
-        _animator.SetLayerWeight(1,(float)c / (float)3);
+        float alpha = (float)c / 3f;
+        ParticleSystem.EmissionModule m = _sauceParticleSystem.emission;
+        m.rateOverTime = alpha*10;
+        _sauceParticleSystem.playbackSpeed = .5f + alpha * .5f;
+        _animator.SetLayerWeight(1,alpha);
     }
 
     public void PlayCookedDishAnim(SpellData spell)
