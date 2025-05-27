@@ -13,6 +13,8 @@ public class Inventory : ISavable<Inventory>
     public List<int> playerEquipedSpellIndex = new();
     public List<SpellData> playerEquipedSpell = new();
 
+    public int TotalTirageIngredient = 0;
+
     public string NameSave = "InventorySave";
 
     public void Save(string nameSave)

@@ -22,15 +22,18 @@ public class ChooseIngredient : MonoBehaviour
 
     [SerializeField][Range(0, 1)] private float _probaSauce;
 
-    [SerializeField][Range(0, 1)] private float _probaCommon;
-    [SerializeField][Range(0, 1)] private float _probaSavoureux;
-    [SerializeField][Range(0, 1)] private float _probaDivin;
+    [SerializeField][Range(0, 1)] private float _probaCommonRef;
+    [SerializeField][Range(0, 1)] private float _probaSavoureuxRef;
+    [SerializeField][Range(0, 1)] private float _probaDivinRef;
+
+    private float _probaCommon;
+    private float _probaSavoureux;
+    private float _probaDivin;
 
     [SerializeField][Range(-1, 1)] private float _biaisCommon;
     [SerializeField][Range(-1, 1)] private float _biaisSavoureux;
     [SerializeField][Range(-1, 1)] private float _biaisDivin;
-    private int _totalTirage;
-    private int _moyenneTirage;
+    private int _moyenneGameTirage = 24;
 
     [Header("Others")]
     [SerializeField] private bool _sceneCombat;
@@ -45,6 +48,10 @@ public class ChooseIngredient : MonoBehaviour
 
     private void Start()
     {
+        _probaCommon = _probaCommonRef;
+        _probaSavoureux = _probaSavoureuxRef;
+        _probaDivin = _probaDivinRef;
+
         ChooseRandomIngredient();
     }
 
@@ -95,7 +102,7 @@ public class ChooseIngredient : MonoBehaviour
 
         float total = _probaCommon + _probaSavoureux + _probaDivin;
         float result = Random.Range(1, total + 1);
-        _totalTirage++;
+        GameManager.Instance.playerInventory.TotalTirageIngredient++;
         if (result <= _probaDivin && DivinIng.Count != 0) //Divin
         {
             //_probaDivin = 0;
@@ -132,7 +139,7 @@ public class ChooseIngredient : MonoBehaviour
         _probaSauce = 0;
         float total = _probaCommon + _probaSavoureux + _probaDivin;
         float result = Random.Range(1, total + 1);
-        _totalTirage++;
+        GameManager.Instance.playerInventory.TotalTirageIngredient++;
         if (result <= _probaDivin && DivinSauce.Count != 0) //Divin
         {
             //_probaDivin = 0;
@@ -171,13 +178,14 @@ public class ChooseIngredient : MonoBehaviour
     }
     private void SetupValueIngredient()
     {
-        _probaCommon = FormuleRandom(_probaCommon, _biaisCommon, _totalTirage, _moyenneTirage);
-        _probaSavoureux = FormuleRandom(_probaSavoureux, _biaisSavoureux, _totalTirage, _moyenneTirage);
-        _probaDivin = FormuleRandom(_probaDivin, _biaisDivin, _totalTirage, _moyenneTirage);
+        _probaCommon = FormuleRandom(_probaCommonRef, _biaisCommon, _moyenneGameTirage, GameManager.Instance.playerInventory.TotalTirageIngredient);
+        _probaSavoureux = FormuleRandom(_probaSavoureuxRef, _biaisSavoureux, _moyenneGameTirage, GameManager.Instance.playerInventory.TotalTirageIngredient);
+        _probaDivin = FormuleRandom(_probaDivinRef, _biaisDivin, _moyenneGameTirage, GameManager.Instance.playerInventory.TotalTirageIngredient);
     }
     private float FormuleRandom(float probaRef, float biais, int nombreTotalTirage, int tirageActuel)
     {
-        return biais * (2 * (float)tirageActuel / (float)nombreTotalTirage - 1) + probaRef;
+        float test = biais * (2 * (float)tirageActuel / (float)nombreTotalTirage - 1) + probaRef;
+        return test;
     }
 #if UNITY_EDITOR
     public void GenerateLists()
