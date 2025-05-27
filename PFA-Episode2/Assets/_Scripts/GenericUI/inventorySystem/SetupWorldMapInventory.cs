@@ -18,7 +18,7 @@ public class SetupWorldMapInventory : MonoBehaviour
     private Ingredient _ingredientChoose;
     private Sauce _sauceChoose;
 
-    public void SetupIngredient()
+    public async void SetupIngredient()
     {
         for (int i = 0; i < GameManager.Instance.playerInventory.Ingredients.Count; i++)
         {
@@ -26,13 +26,13 @@ public class SetupWorldMapInventory : MonoBehaviour
             test = Instantiate(_prefabItem, _ingredientSlot[i]); //Création 
             _infoItemUI = test.GetComponent<GetInfoItem>();
             _infoItemUI.Icon.sprite = _ingredientChoose.sprite;
-            SpawnTween(test);
+            await SpawnTween(test);
             //_infoItemUI.IngredientName.text = _ingredientChoose.name;
             //_infoItemUI.Effect.text = Serializer.GetIngredientEffectString(_ingredientChoose);
         }
     }
 
-    public void SetupSauce()
+    public async UniTask SetupSauce()
     {
         for (int i = 0; i < GameManager.Instance.playerInventory.Sauces.Count; i++)
         {
@@ -40,13 +40,13 @@ public class SetupWorldMapInventory : MonoBehaviour
             GameObject go = Instantiate(_prefabItem, _sauceSlot[i]); //Création 
             _infoItemUI = go.GetComponent<GetInfoItem>();
             _infoItemUI.Icon.sprite = _sauceChoose.sprite;
-            SpawnTween(go);
+            await SpawnTween(go);
             //_infoItemUI.IngredientName.text = _sauceChoose.name;
             //_infoItemUI.SauceEffect.text = Serializer.GetIngredientEffectString(_sauceChoose);
         }
     }
 
-    public void SetupSpell()
+    public async UniTask SetupSpell()
     {
         for (int i = 0; i < GameManager.Instance.playerInventory.Spells.Count; i++)
         {
@@ -54,7 +54,7 @@ public class SetupWorldMapInventory : MonoBehaviour
             GameObject go = Instantiate(_prefabItem, _spellSlot[i]); //Création 
             _infoItemUI = go.GetComponent<GetInfoItem>();
             _infoItemUI.Icon.sprite = SpellChoose.Sprite;
-            SpawnTween(go);
+            await SpawnTween(go);
             //_infoItemUI.IngredientName.text = SpellChoose.name;
             //_infoItemUI.Effect.text = Serializer.GetIngredientEffectString(SpellChoose);
         }
@@ -62,6 +62,6 @@ public class SetupWorldMapInventory : MonoBehaviour
 
     private async UniTask SpawnTween(GameObject go)
     {
-        await go.transform.DOScale(new Vector3(1.1f, 1.1f, 1.1f), 0.3f).SetEase(Ease.InBack);
+        await go.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.2f).SetEase(Ease.InBack);
     }
 }
