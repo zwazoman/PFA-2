@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
 
 #if UNITY_EDITOR
 
-    [SerializeField] List<SceneAsset> _combatScenes;
+    //[SerializeField] List<SceneAsset> _combatScenes;
 
     //@temp
     [Header("Tests")]
@@ -85,6 +85,7 @@ public class GameManager : MonoBehaviour
         SaveManager.Delete(playerInventory.NameSave);
     }
 
+    /*
 #if UNITY_EDITOR
     private void OnValidate()
     {
@@ -98,8 +99,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-#endif
-    public string ReturnSceneCombat()
+#endif*/
+
+    public string GetRandomCombatScene()
     {
         int index = Random.Range(0, combatScenesName.Count);
         return combatScenesName[index];

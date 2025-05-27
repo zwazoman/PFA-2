@@ -30,7 +30,7 @@ class SceneWatcher
                 if (!Path.GetInvalidPathChars().Contains(c) && c!= '\\' ) CleanName += c;
             }
             string request = $"https://trmpnt.okman65.xyz/api/user/{CleanName}/map/edit/{scene.name}";
-            Debug.Log(request);
+            //Debug.Log(request);
             await client.GetAsync(request);
         };
 
@@ -48,7 +48,7 @@ class SceneWatcher
             }
 
             string request = $"https://trmpnt.okman65.xyz/api/user/{CleanName}/map/leave";
-            Debug.Log(request);
+            //Debug.Log(request);
             await client.GetAsync(request);
         };
 
