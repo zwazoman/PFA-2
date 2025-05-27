@@ -251,8 +251,6 @@ public class Entity : MonoBehaviour
     /// <returns></returns>
     protected async UniTask MoveAwayFrom(WayPoint targetPoint)
     {
-        print("move away");
-
         float distanceToFurthestPoint = 0;
         WayPoint furthestPoint = null;
 

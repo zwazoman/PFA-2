@@ -19,6 +19,8 @@ public class SFXManager : MonoBehaviour
                 GameObject go = new GameObject("Audio Manager");
                 instance = go.AddComponent<SFXManager>();
             }
+            else
+                Destroy(instance.gameObject);
             return instance;
         }
     }
@@ -48,6 +50,7 @@ public class SFXManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
