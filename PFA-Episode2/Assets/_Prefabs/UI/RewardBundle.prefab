@@ -27,7 +27,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 929887344020402771}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -93,40 +93,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _listSauceCommon:
-  - {fileID: 11400000, guid: f3a67e88ca651cb4dab82baac7d92c09, type: 2}
-  - {fileID: 11400000, guid: 91dbba1c6a061e649bf1b60c1cabb301, type: 2}
+  - {fileID: 11400000, guid: e566403a8cdfaa94c850ffa34112eaed, type: 2}
   - {fileID: 11400000, guid: 897ecd4af4b94314f9abb7f6e2d40765, type: 2}
+  - {fileID: 11400000, guid: f3a67e88ca651cb4dab82baac7d92c09, type: 2}
   _listSauceSavoureux:
   - {fileID: 11400000, guid: 17c6d25584476654894446b06ce935d9, type: 2}
   - {fileID: 11400000, guid: 7cbc210b84798d9448a0430bbc46bd6e, type: 2}
   _listSauceDivin:
-  - {fileID: 11400000, guid: ce0cd459453ccc245a90eb31855f99c3, type: 2}
   - {fileID: 11400000, guid: 77d4b553f89fc4f4093859d4ea67ec46, type: 2}
+  - {fileID: 11400000, guid: 91dbba1c6a061e649bf1b60c1cabb301, type: 2}
+  - {fileID: 11400000, guid: ce0cd459453ccc245a90eb31855f99c3, type: 2}
   _listIngredientCommon:
-  - {fileID: 11400000, guid: b12e1a94da7461a43af50889513fac8c, type: 2}
-  - {fileID: 11400000, guid: dd4f9ba9d59613d47acf0dc75e7f3b36, type: 2}
   - {fileID: 11400000, guid: be6b759c2da798c458ba5b207443976c, type: 2}
+  - {fileID: 11400000, guid: b12e1a94da7461a43af50889513fac8c, type: 2}
   - {fileID: 11400000, guid: 77335c933e1686f4081a372818c5917d, type: 2}
-  - {fileID: 11400000, guid: 7ff9cb789646db647a66246c8e945073, type: 2}
-  - {fileID: 11400000, guid: 7ff9cb789646db647a66246c8e945073, type: 2}
-  - {fileID: 11400000, guid: 7ff9cb789646db647a66246c8e945073, type: 2}
+  - {fileID: 11400000, guid: dd4f9ba9d59613d47acf0dc75e7f3b36, type: 2}
   _listIngredientSavoureux:
   - {fileID: 11400000, guid: d0ea9bb491d34a647b42e43baac8dcfb, type: 2}
+  - {fileID: 11400000, guid: 7ff9cb789646db647a66246c8e945073, type: 2}
   - {fileID: 11400000, guid: 457adb04d41d98945ae78604df554e2b, type: 2}
   - {fileID: 11400000, guid: 7bec12e9b176f7446a5f98ff85538939, type: 2}
-  - {fileID: 11400000, guid: 7ff9cb789646db647a66246c8e945073, type: 2}
   _listIngredientDivin:
-  - {fileID: 11400000, guid: 59e178a219d584c4db49820eb7e6b4fe, type: 2}
-  - {fileID: 11400000, guid: 8a8f526e43683064896caeeea2530b94, type: 2}
   - {fileID: 11400000, guid: 0f0b821449e54d14f9a4069061d81197, type: 2}
+  - {fileID: 11400000, guid: 8a8f526e43683064896caeeea2530b94, type: 2}
+  - {fileID: 11400000, guid: 59e178a219d584c4db49820eb7e6b4fe, type: 2}
   - {fileID: 11400000, guid: 4face9cc5d6ad534fa99ee2d36600d16, type: 2}
-  _probaSauce: 0.25
+  _probaSauce: 0.7
   _probaCommon: 0.7
   _probaSavoureux: 0.28
   _probaDivin: 0.02
   _biaisCommon: -0.35
   _biaisSavoureux: 0.25
   _biaisDivin: 0.1
+  _sceneCombat: 0
 --- !u!114 &3395975815645383881
 MonoBehaviour:
   m_ObjectHideFlags: 0
