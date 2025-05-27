@@ -1,1 +1,1 @@
-public enum Sounds{}
+public enum Sounds{EntityDeath,}

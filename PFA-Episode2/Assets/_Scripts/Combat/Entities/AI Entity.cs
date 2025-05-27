@@ -212,8 +212,6 @@ public class AIEntity : Entity
     /// <returns></returns>
     protected async UniTask<bool> CastSpellAtPoint(Spell choosenSpell, WayPoint targetPoint)
     {
-        print(targetEntityPoint.Content.gameObject.name);
-
         if (targetPoint == null)
             return false;
 

@@ -82,6 +82,7 @@ public class EntityVisuals : MonoBehaviour
     {
         try
         {
+            SFXManager.Instance.PlaySFXClip(Sounds.EntityDeath);
             await animator.PlayAnimationTrigger(owner.deathTrigger);
         } catch (Exception e) { Debug.LogException(e); }
 
