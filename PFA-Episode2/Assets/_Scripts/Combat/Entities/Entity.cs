@@ -72,8 +72,6 @@ public class Entity : MonoBehaviour
     // game management
     public virtual async UniTask PlayTurn()
     {
-        print(gameObject.name);
-
         Tools.Flood(currentPoint);
         stats.currentMovePoints = stats.maxMovePoints;
         await stats.ApplyShield(-1);

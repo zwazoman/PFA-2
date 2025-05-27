@@ -111,7 +111,7 @@ public class AIEntity : Entity
 
         foreach (Spell spell in castableSpells)
         {
-            if(choosenSpell.spellData.CoolDown > maxCooldown || choosenSpell == null)
+            if(choosenSpell == null || choosenSpell.spellData.CoolDown > maxCooldown)
             {
                 choosenSpell = spell;
                 maxCooldown = choosenSpell.spellData.CoolDown;
