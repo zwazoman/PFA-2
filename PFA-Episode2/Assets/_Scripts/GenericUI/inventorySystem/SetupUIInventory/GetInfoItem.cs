@@ -24,22 +24,22 @@ public class GetInfoItem : MonoBehaviour
     public TextMeshProUGUI SpellEffect;
     public Image SpellAoE;
 
-    private List<GameObject> _listPanel = new();
-
     public void SetPanelOn()
     {
-        if (IngBase is Sauce)
+        if (IngBase is Sauce )
         {
             PanelSauce.SetActive(true);
+            SetupWorldMapInventory.Instance.PanelToDisable.Add(PanelSauce);
         }
         else if (IngBase is Ingredient)
         {
             PanelIng.SetActive(true);
+            SetupWorldMapInventory.Instance.PanelToDisable.Add(PanelIng);
         }
     }
 
     public void SetPanelOff()
     {
-        //?
+        foreach (GameObject obj in SetupWorldMapInventory.Instance.PanelToDisable) { obj.SetActive(false); }
     }
 }
