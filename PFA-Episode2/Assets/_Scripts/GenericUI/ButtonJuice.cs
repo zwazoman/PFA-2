@@ -12,6 +12,7 @@ public class ButtonJuice : MonoBehaviour, IPointerEnterHandler,IPointerExitHandl
     public void OnPointerEnter(PointerEventData eventData)
     {
         transform.DOScale(_baseScale+Vector3.one* _AdditionalScaleOnPointerEnter, _tweeningTime).SetUpdate(true);
+        SFXManager.Instance.PlaySFXClip(Sounds.ButtonPress);
     }
 
     public void OnPointerExit(PointerEventData eventData)

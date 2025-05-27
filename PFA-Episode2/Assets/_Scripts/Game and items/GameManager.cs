@@ -45,7 +45,6 @@ public class GameManager : MonoBehaviour
         if(instance == this || instance == null)
         {
             //singleton
-            Debug.Log("Initializing game manager",this);
             instance = this;
             DontDestroyOnLoad(gameObject);
             
@@ -54,13 +53,11 @@ public class GameManager : MonoBehaviour
             //LoadOrCreateSave();
 
 #if UNITY_EDITOR
-            Debug.Log("Filling inventory with test Items and spells");
             //@temp
             if (tests)
             {
                 foreach (PremadeSpell premadeSpell in premadeSpells)
                 {
-                    Debug.Log("- test spell ");
                     playerInventory.playerEquipedSpell.Add(premadeSpell.SpellData);
                 }
             }
