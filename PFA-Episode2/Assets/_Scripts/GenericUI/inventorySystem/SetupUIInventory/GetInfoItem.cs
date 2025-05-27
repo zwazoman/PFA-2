@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class GetInfoItem : MonoBehaviour
 {
     public Image Icon;
-    public int NumberItem;
+    public int NumberItem = 1;
     public TextMeshProUGUI IngredientDoubleTxt;
 
     [HideInInspector] public IngredientBase IngBase;
