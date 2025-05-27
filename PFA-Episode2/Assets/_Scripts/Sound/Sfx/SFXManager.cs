@@ -19,8 +19,6 @@ public class SFXManager : MonoBehaviour
                 GameObject go = new GameObject("Audio Manager");
                 instance = go.AddComponent<SFXManager>();
             }
-            else
-                Destroy(instance.gameObject);
             return instance;
         }
     }
