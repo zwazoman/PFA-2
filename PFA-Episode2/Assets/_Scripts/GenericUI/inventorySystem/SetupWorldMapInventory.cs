@@ -13,9 +13,10 @@ public class SetupWorldMapInventory : MonoBehaviour
     [Header("Prefab")]
     [SerializeField] private GameObject _prefabItem;
 
-    public List<GameObject> IngredientItemList = new();
-    public List<GameObject> SauceItemSlot = new();
-    public List<GameObject> SpellItemSlot = new();
+    private List<GameObject> _ingredientItemList = new();
+    private List<GameObject> _sauceItemSlot = new();
+    private List<GameObject> _spellItemSlot = new();
+    public List<GameObject> PanelToDisable = new();
 
     private GetInfoItem _infoItemUI;
     private Ingredient _ingredientChoose;
@@ -25,7 +26,7 @@ public class SetupWorldMapInventory : MonoBehaviour
     private void Awake() { Instance = this; }
     public async void SetupIngredient()
     {
-        if (IngredientItemList.Count == 0)
+        if (_ingredientItemList.Count == 0)
         {
             for (int i = 0; i < GameManager.Instance.playerInventory.Ingredients.Count; i++)
             {
@@ -37,7 +38,7 @@ public class SetupWorldMapInventory : MonoBehaviour
                 _infoItemUI.IngredientEffect.text = Serializer.GetIngredientEffectString(_ingredientChoose);
                 _infoItemUI.IngBase = _ingredientChoose;
                 go.transform.GetChild(0).parent = gameObject.transform;
-                IngredientItemList.Add(go);
+                _ingredientItemList.Add(go);
                 await SpawnTween(go);
             }
         }
@@ -45,7 +46,7 @@ public class SetupWorldMapInventory : MonoBehaviour
 
     public async void SetupSauce()
     {
-        if (SauceItemSlot.Count == 0)
+        if (_sauceItemSlot.Count == 0)
         {
             for (int i = 0; i < GameManager.Instance.playerInventory.Sauces.Count; i++)
             {
@@ -58,7 +59,7 @@ public class SetupWorldMapInventory : MonoBehaviour
                 _infoItemUI.SauceAoE.sprite = _sauceChoose.areaOfEffect.sprite;
                 _infoItemUI.IngBase = _sauceChoose;
                 go.transform.GetChild(0).parent = gameObject.transform;
-                SauceItemSlot.Add(go);
+                _sauceItemSlot.Add(go);
                 await SpawnTween(go);
             }
         }
@@ -66,7 +67,7 @@ public class SetupWorldMapInventory : MonoBehaviour
 
     public async void SetupSpell()
     {
-        if (SpellItemSlot.Count == 0)
+        if (_spellItemSlot.Count == 0)
         {
             for (int i = 0; i < GameManager.Instance.playerInventory.Spells.Count; i++)
             {
@@ -74,7 +75,7 @@ public class SetupWorldMapInventory : MonoBehaviour
                 GameObject go = Instantiate(_prefabItem, _spellSlot[i]); //Création 
                 _infoItemUI = go.GetComponent<GetInfoItem>();
                 _infoItemUI.Icon.sprite = SpellChoose.Sprite;
-                SpellItemSlot.Add(go);
+                _spellItemSlot.Add(go);
                 go.transform.GetChild(0).parent = gameObject.transform;
                 await SpawnTween(go);
                 //_infoItemUI.IngredientName.text = SpellChoose.name;
