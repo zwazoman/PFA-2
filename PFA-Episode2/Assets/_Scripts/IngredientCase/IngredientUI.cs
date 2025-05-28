@@ -7,13 +7,14 @@ public class IngredientUI : MonoBehaviour
     [SerializeField] TMP_Text txt_title; //Titre
     [SerializeField] Image img_Icon; //Sprite
     [SerializeField] Image img_SauceArea; //Sprite
+    [SerializeField] Image img_frame; 
 
     //public Image frame; //Cadre
 
     [SerializeField] TMP_Text txt_effect; //Titre
 
 
-    public void Setup(IngredientBase ing)
+    public void Setup(IngredientBase ing,Sprite frameSprite)
     {
         txt_title.text = ing.name;           //Name
         img_Icon.sprite = ing.sprite;        //Sprite
@@ -34,5 +35,7 @@ public class IngredientUI : MonoBehaviour
             img_SauceArea.transform.parent.gameObject.SetActive(false);
 
         }
+
+        img_frame.sprite = frameSprite;
     }
 }
