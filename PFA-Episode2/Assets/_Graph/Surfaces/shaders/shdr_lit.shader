@@ -140,9 +140,11 @@ Shader "Unlit/shdr_lit"
                 float4 coloredShadow =  tex2D(_lightGradientMap,float2(shadow,_enviroID)); //gradient mapping
 
                 //stippling
+
                 coloredShadow = lerp(coloredShadow,coloredShadow*.5  ,(1 -stippling.x * (1-shadow))*.5); //tiling : 0.218 //petits triangles clairs
                 coloredShadow = lerp(coloredShadow,coloredShadow*.8  ,stippling.y * (1-shadow)*(1-shadow)*(1-shadow)); //tiling : 0.218 //petits triangles clairs
-
+                
+                
                 //light blending 
                 //col = lerp(col,col * coloredShadow,.5);
                 //col = (col > 0.5) * (1 - (1-2*(col-0.5)) * (1-coloredShadow)) + (col <= 0.5) * ((2*col) * coloredShadow); // overlay
