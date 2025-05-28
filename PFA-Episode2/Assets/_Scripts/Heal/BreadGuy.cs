@@ -8,6 +8,7 @@ public class BreadGuy : MonoBehaviour
     [SerializeField] Animator _animator;
 
     bool healed = false;
+    bool _activate = false;
 
     #region AnimationParameters
     string _isSpeaking = "IsSpeaking";
@@ -17,18 +18,24 @@ public class BreadGuy : MonoBehaviour
 
     private void Start()
     {
-        //dialog ?
+        DialogueManager.Instance.SearchDialogue(Random.Range(0, DialogueManager.Instance.TextData.DialogueData.Count));
     }
 
 
     public async void StartHealing()
     {
-        if (healed) return;
-        healed = true;
-        await _animator.PlayAnimationTrigger(_give);
-        GameManager.Instance.playerInventory.playerHealth.health = Mathf.Clamp(GameManager.Instance.playerInventory.playerHealth.health += HealAmount, 0, GameManager.Instance.playerInventory.playerHealth.maxHealth);
-        print(GameManager.Instance.playerInventory.playerHealth.health);
+        if (!healed)
+        {
+            healed = true;
+            await _animator.PlayAnimationTrigger(_give);
+            GameManager.Instance.playerInventory.playerHealth.health = Mathf.Clamp(GameManager.Instance.playerInventory.playerHealth.health += HealAmount, 0, GameManager.Instance.playerInventory.playerHealth.maxHealth);
+            print(GameManager.Instance.playerInventory.playerHealth.health);
 
-        await SceneTransitionManager.Instance.GoToScene("WorldMap");
+            DialogueManager.Instance.SearchDialogue(Random.Range(0, DialogueManager.Instance.TextData.DialogueData.Count));
+        }
+        else
+        {
+            await SceneTransitionManager.Instance.GoToScene("WorldMap");
+        }
     }
 }

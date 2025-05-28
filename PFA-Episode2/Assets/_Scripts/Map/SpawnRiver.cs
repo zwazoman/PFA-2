@@ -15,8 +15,8 @@ public class SpawnRiver : MonoBehaviour
     private GameObject _imposibleGround;
 
     // Seed
-    public bool _useSeed = false;
-    public int _seed = 0;
+    [HideInInspector] public bool UseSeed = false;
+    [HideInInspector] public int Seed = 0;
 
     #region Singleton
     public static SpawnRiver Instance;
@@ -26,15 +26,15 @@ public class SpawnRiver : MonoBehaviour
 
     public void StartSpawnRiver() //Dans MapMaker2 et SaveMapGeneration
     {
-        if (_useSeed)
+        if (UseSeed)
         {
-            Random.InitState(_seed);
+            Random.InitState(Seed);
         }
         else
         {
-            _seed = Random.Range(0, int.MaxValue);
-            Random.InitState(_seed);
-            _useSeed = true;
+            Seed = Random.Range(0, int.MaxValue);
+            Random.InitState(Seed);
+            UseSeed = true;
         }
 
         List<GameObject> spawnSpecialGroundClone = new List<GameObject>(_spawnSpecialGround);

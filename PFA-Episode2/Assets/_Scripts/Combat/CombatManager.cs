@@ -32,8 +32,6 @@ public class CombatManager : MonoBehaviour
     [HideInInspector] public List<Entity> EnemyEntities = new();
 
     [SerializeField] public List<SpawnSetup> Setups = new();
-    [SerializeField] int _minEnnemiesCount;
-    [SerializeField] float _excendentSpawnProba = .3f;
 
     public List<Entity> Entities { get; private set; } = new();
 
@@ -130,6 +128,8 @@ public class CombatManager : MonoBehaviour
 
     void SummonEntities()
     {
+        int ennemiesCount = ComputeEnnemiesCount();
+
         SpawnSetup choosenSetup = Setups.PickRandom();
 
         choosenSetup.playerSpawner.SummonEntity();
@@ -142,18 +142,21 @@ public class CombatManager : MonoBehaviour
         //mélanger les spawners ?
 
         //check si _min ennemies > spawners
-        if (_minEnnemiesCount > spawners.Count)
+        if (ennemiesCount > spawners.Count)
             throw new Exception("pas assez de spawners");
 
-        for (int i = 0; i < _minEnnemiesCount; i++)
+        for (int i = 0; i < ennemiesCount; i++)
         {
             spawners[i].SummonEntity();
             spawners.Remove(spawners[i]);
         }
+    }
 
-        foreach (Spawner spawner in spawners)
-            if (UnityEngine.Random.value <= _excendentSpawnProba)
-                spawner.SummonEntity();
+    int ComputeEnnemiesCount()
+    {
+        //mettre le nombre d'ennemis qui spawn là
+
+        return 2;
     }
 
     async UniTask GameOver()

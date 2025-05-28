@@ -22,8 +22,10 @@ public class CookingPot : MonoBehaviour
 
     [SerializeField] TMP_Text txt_sauceName;
     [SerializeField] TMP_Text txt_sauceEffect;
+    [SerializeField] TMP_Text txt_button;
+    [SerializeField] RectTransform _buttonTransform;
     [SerializeField] Image _sauceAreaImage;
-    [SerializeField] TMP_Text _txt_cooldown, _txt_range;
+    [SerializeField] TMP_Text _txt_cooldown;
     [SerializeField] CookingPotVisuals Visuals3D;
 
     [Header("Asset References")]
@@ -33,12 +35,12 @@ public class CookingPot : MonoBehaviour
 
     private void UpdateCooldownAndRangeDisplay()
     {
-        byte cd = 0, range = 0;
+        byte cd = 0;
         foreach(Ingredient ing in ingredients)
         {
             cd += ing.CoolDownIncrease;
         }
-        _txt_cooldown.text = Serializer.GetCoolDownString(cd);
+        _txt_cooldown.text = Serializer.GetCoolDownString((byte)(cd+1));
     }
 
     void UpdateIngredientsStatsDisplay()
@@ -48,6 +50,9 @@ public class CookingPot : MonoBehaviour
         ingredientInfo2.UpdateVisual(ingredients.Count >= 3 ? ingredients[2] : null);
 
         Visuals3D.UpdateIngredientsList(ingredients);
+
+        txt_button.text = ingredients.Count < 3 ? $"{ingredients.Count}/3" : "Cook !";
+        _buttonTransform.DOPunchScale(Vector3.one * .1f, .2f);
 
     }
 
@@ -95,7 +100,7 @@ public class CookingPot : MonoBehaviour
         if (removed |= (container.item is Ingredient && ingredients.Contains((Ingredient)container.item)))
         {
             items[ingredients.IndexOf((Ingredient)container.item)] = null;
-            ingredients.Remove ((Ingredient)container.item);
+            ingredients.Remove((Ingredient)container.item);
             container.Reset();
 
             UpdateIngredientsStatsDisplay();

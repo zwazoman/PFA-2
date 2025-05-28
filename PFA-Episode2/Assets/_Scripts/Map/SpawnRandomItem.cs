@@ -13,30 +13,12 @@ public class SpawnRandomItem : MonoBehaviour
     [SerializeField] private Transform _parent;
     [SerializeField] private Transform _player;
 
-    void Start()
-    {
-        SpawnAllItemsOnce();
-    }
-
-    void SpawnAllItemsOnce()
+    void SpawnItemOnGround()
     {
         if (_spawnItems.Count == 0 || _spawnPoints.Count == 0)
         {
             Debug.LogWarning("Pas d’objets ou de points.");
             return;
-        }
-
-        foreach (Transform point in _spawnPoints)
-        {
-            float chance = Random.value;
-            if (chance <= _spawnProbability)
-            {
-                int randomIndex = Random.Range(0, _spawnItems.Count);
-                GameObject item = Instantiate(_spawnItems[randomIndex], _parent);
-                item.transform.position = point.position;
-                //item.SetActive(false); // Désactivé au départ
-                _spawnedItems.Add(item);
-            }
         }
     }
 

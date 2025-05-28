@@ -2,8 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using System;
-using UnityEditor.Experimental.GraphView;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class SpellCaster : MonoBehaviour
 {
@@ -185,10 +183,13 @@ public class SpellCaster : MonoBehaviour
             if (casterToEntity == Vector3.zero)
                 return hitEntity.currentPoint;
 
-            int xPushDirection = casterToEntity.x != 0 ? (int)Mathf.Sign(casterToEntity.x) : 0;
-            int zPushDirection = casterToEntity.z != 0 ? (int)Mathf.Sign(casterToEntity.z) : 0;
+            int xPushDirection = Mathf.Round(casterToEntity.x) != 0 ? (int)Mathf.Sign(casterToEntity.x) : 0;
+            int zPushDirection = Mathf.Round(casterToEntity.z) != 0 ? (int)Mathf.Sign(casterToEntity.z) : 0;
 
             pushDirection = new Vector3(xPushDirection, 0, zPushDirection);
+
+            Debug.DrawLine(posWithHeigth, posWithHeigth + pushDirection * 2, Color.red, 20);
+
         }
 
         bool isDiagonal = Mathf.RoundToInt(pushDirection.x) != 0 && Mathf.RoundToInt(pushDirection.z) != 0;
@@ -317,6 +318,12 @@ public class SpellCaster : MonoBehaviour
                     break;
                 case SpellEffectType.DamageIncreasePercentageByDistanceToCaster:
                     e.damage *= (1 + zoneData.hitEntityCTXDict[entity].distanceToHitEnemy * .2f);
+                    break;
+                case SpellEffectType.DamageIncreaseMeleeRange:
+                    if(zoneData.hitEntityCTXDict[entity].distanceToHitEnemy == 1)
+                    {
+                        e.damage *= (effect.value);
+                    }
                     break;
             }
 

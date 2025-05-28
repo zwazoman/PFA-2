@@ -39,6 +39,7 @@ public class MapMaker2 : MonoBehaviour
     private Node _existingValue;
     public List<Node> AllNodeGood = new();
     #endregion
+
     private void Awake()
     {
         Instance = this;
@@ -156,7 +157,7 @@ public class MapMaker2 : MonoBehaviour
         if (DicoNode.ContainsKey(newPosition))
         {
             _existingValue = DicoNode[newPosition];
-            print("Un node est déja présent ici" + _existingValue);
+            //print("Un node est déja présent ici" + _existingValue);
             NodeList.Enqueue(CurrentNode);
         }
         else
