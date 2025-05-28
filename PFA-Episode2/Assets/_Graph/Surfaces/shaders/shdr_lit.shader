@@ -150,13 +150,13 @@ Shader "Unlit/shdr_lit"
                 
                 col =  lerp(col, (coloredShadow > 0.5) * (1 - (1-col) * (1-(coloredShadow-0.5))) + (coloredShadow <= 0.5) * (col * (coloredShadow+0.5)),1); //softlight
                 
-                col = lerp(col,coloredShadow,saturate((1-shadow)*(1-shadow))*.85);
+                col = lerp(col,coloredShadow,saturate((1-shadow)*(1-shadow))*1); // default _fogIntensity : .85
 
                 //color adjustment
                 col *= _lightness;
 
                 //vignette (mettre dans post process plutot si y en a)
-                float vignette =  1-saturate((distance(float2(0.5,0.5),i.pos.xy/_ScreenParams.xy)-.4)*1);
+                float vignette =  1-saturate((distance(float2(0.5,0.5),i.pos.xy/_ScreenParams.xy)-.4)*_fogIntensity);
                 col *= vignette;
                 return col; 
             }

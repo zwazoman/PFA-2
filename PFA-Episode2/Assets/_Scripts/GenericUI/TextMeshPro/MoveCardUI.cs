@@ -1,5 +1,7 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using System;
+using System.Threading;
 using UnityEngine;
 
 /// <summary>
@@ -11,20 +13,31 @@ public class MoveCardUI : MonoBehaviour
     [SerializeField] private int maxRotaY = 11;
     [SerializeField] private int maxRotaZ = 2;
 
-    private void Start() { MoveCard(); }
-
-    private async UniTask MoveCard()
+    private void Start()
     {
-        while(isActiveAndEnabled)
+        _ = MoveCardAsync(this.GetCancellationTokenOnDestroy()); //Sinon erreur
+    }
+
+    private async UniTask MoveCardAsync(CancellationToken cancellationToken)
+    {
+        try
         {
-            int x = Random.Range(0, maxRotaX);
-            int y = Random.Range(0, maxRotaY);
-            int z = Random.Range(0, maxRotaZ);
-            float delay = Random.Range(1f, 2f);
-            Sequence seq = DOTween.Sequence();
-            if (gameObject == null) { return; }
-            seq.Join(transform.DORotate(new Vector3(x, y, z), delay));
-            await seq.AsyncWaitForCompletion().AsUniTask();
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                int x = UnityEngine.Random.Range(0, maxRotaX);
+                int y = UnityEngine.Random.Range(0, maxRotaY);
+                int z = UnityEngine.Random.Range(0, maxRotaZ);
+                float delay = UnityEngine.Random.Range(1f, 2f);
+
+                Sequence seq = DOTween.Sequence();
+                seq.Join(transform.DORotate(new Vector3(x, y, z), delay));
+
+                await seq.AsyncWaitForCompletion().AsUniTask().AttachExternalCancellation(cancellationToken);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+
         }
     }
 

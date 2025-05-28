@@ -24,6 +24,7 @@ public class CookingPot : MonoBehaviour
     [SerializeField] TMP_Text txt_sauceEffect;
     [SerializeField] Image _sauceAreaImage;
     [SerializeField] TMP_Text _txt_cooldown, _txt_range;
+    [SerializeField] CookingPotVisuals Visuals3D;
 
     [Header("Asset References")]
     [SerializeField] Sauce _defaultSauce;
@@ -45,6 +46,9 @@ public class CookingPot : MonoBehaviour
         ingredientInfo0.UpdateVisual(ingredients.Count >= 1 ? ingredients[0] : null);
         ingredientInfo1.UpdateVisual(ingredients.Count >= 2 ? ingredients[1] : null);
         ingredientInfo2.UpdateVisual(ingredients.Count >= 3 ? ingredients[2] : null);
+
+        Visuals3D.UpdateIngredientsList(ingredients);
+
     }
 
     void UpdateSauceDisplay() //@revoir image zone
@@ -62,6 +66,7 @@ public class CookingPot : MonoBehaviour
         UpdateSauceDisplay();
         UpdateIngredientsStatsDisplay();
         UpdateCooldownAndRangeDisplay();
+
     }
 
     private void Start()
@@ -147,6 +152,8 @@ public class CookingPot : MonoBehaviour
 
         spell = Crafting.CraftNewSpell(ingredients.ToArray(),sauce == null ? _defaultSauce : sauce);
         GameManager.Instance.playerInventory.Spells.Add(spell);
+
+        Visuals3D.PlayCookedDishAnim(spell);
 
         return true;
     }

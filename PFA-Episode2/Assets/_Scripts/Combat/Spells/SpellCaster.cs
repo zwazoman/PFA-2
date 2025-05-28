@@ -183,10 +183,13 @@ public class SpellCaster : MonoBehaviour
             if (casterToEntity == Vector3.zero)
                 return hitEntity.currentPoint;
 
-            int xPushDirection = casterToEntity.x != 0 ? (int)Mathf.Sign(casterToEntity.x) : 0;
-            int zPushDirection = casterToEntity.z != 0 ? (int)Mathf.Sign(casterToEntity.z) : 0;
+            int xPushDirection = Mathf.Round(casterToEntity.x) != 0 ? (int)Mathf.Sign(casterToEntity.x) : 0;
+            int zPushDirection = Mathf.Round(casterToEntity.z) != 0 ? (int)Mathf.Sign(casterToEntity.z) : 0;
 
             pushDirection = new Vector3(xPushDirection, 0, zPushDirection);
+
+            Debug.DrawLine(posWithHeigth, posWithHeigth + pushDirection * 2, Color.red, 20);
+
         }
 
         bool isDiagonal = Mathf.RoundToInt(pushDirection.x) != 0 && Mathf.RoundToInt(pushDirection.z) != 0;
@@ -433,19 +436,8 @@ public class SpellCaster : MonoBehaviour
 
     async UniTask UtilitaryBehaviour(Spell spell, SpellCastData zoneData, WayPoint target)
     {
-        SpellProjectile projectile;
-        Vector3 spawnPos;
-        if (_spellCastingSocket != null)
-            spawnPos = _spellCastingSocket.position;
-        else
-            spawnPos = transform.position;
-
-        PoolManager.Instance.ProjectilePool.PullObjectFromPool(spawnPos).TryGetComponent(out projectile);
-        await projectile.Launch(castingEntity, target, spell.spellData.Mesh);
-
-
         BakedUtilitarySpellEffect e = ComputeUtilitarySpellEffect(spell, ref zoneData);
-        await ApplyUtilitarySpell(e);
+        await ApplyUtilitarySpell(e, spell);
     }
 
     async UniTask HitEntityBehaviour(Entity entity, Spell spell, SpellCastData zoneData)
@@ -479,10 +471,22 @@ public class SpellCaster : MonoBehaviour
         attackEventCompleted = false;
     }
 
-    async UniTask ApplyUtilitarySpell(BakedUtilitarySpellEffect effect)
+    async UniTask ApplyUtilitarySpell(BakedUtilitarySpellEffect effect, Spell spell)
     {
         if (effect.summonPoint != null)
+        {
+            SpellProjectile projectile;
+            Vector3 spawnPos;
+            if (_spellCastingSocket != null)
+                spawnPos = _spellCastingSocket.position;
+            else
+                spawnPos = transform.position;
+
+            PoolManager.Instance.ProjectilePool.PullObjectFromPool(spawnPos).TryGetComponent(out projectile);
+            await projectile.Launch(castingEntity, effect.summonPoint, spell.spellData.Mesh);
+
             SummonEntityAtPoint(effect.summonPoint);
+        }
     }
 }
 

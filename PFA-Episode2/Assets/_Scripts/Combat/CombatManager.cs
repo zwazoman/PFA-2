@@ -69,6 +69,7 @@ public class CombatManager : MonoBehaviour
         else if (entity.team == Team.Enemy && EnemyEntities.Contains(entity))
         {
             EnemyEntities.Remove(entity);
+            print(EnemyEntities.Count);
             if (EnemyEntities.Count == 0)
                 await Victory();
         }
@@ -120,8 +121,8 @@ public class CombatManager : MonoBehaviour
             }
 
             //cleanup corpses
-            foreach (PlayerEntity player in PlayerEntities) if (player.isDead) Destroy(player);
-            foreach (AIEntity e in EnemyEntities) if (e.isDead) Destroy(e);
+            foreach (Entity player in PlayerEntities) if (player.isDead) Destroy(player);
+            foreach (Entity e in EnemyEntities) if (e.isDead) Destroy(e);
 
             await UniTask.Yield();
         }
@@ -165,6 +166,8 @@ public class CombatManager : MonoBehaviour
 
     async UniTask Victory()
     {
+        print("VICTORY");
+
         await UniTask.Delay(1000);
 
         _rewardPanel?.Show();

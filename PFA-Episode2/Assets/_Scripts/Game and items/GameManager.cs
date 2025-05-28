@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
 
 #if UNITY_EDITOR
 
-    [SerializeField] List<SceneAsset> _combatScenes;
+    //[SerializeField] List<SceneAsset> _combatScenes;
 
     //@temp
     [Header("Tests")]
@@ -45,7 +45,6 @@ public class GameManager : MonoBehaviour
         if(instance == this || instance == null)
         {
             //singleton
-            Debug.Log("Initializing game manager",this);
             instance = this;
             DontDestroyOnLoad(gameObject);
             
@@ -54,13 +53,11 @@ public class GameManager : MonoBehaviour
             //LoadOrCreateSave();
 
 #if UNITY_EDITOR
-            Debug.Log("Filling inventory with test Items and spells");
             //@temp
             if (tests)
             {
                 foreach (PremadeSpell premadeSpell in premadeSpells)
                 {
-                    Debug.Log("- test spell ");
                     playerInventory.playerEquipedSpell.Add(premadeSpell.SpellData);
                 }
             }
@@ -85,6 +82,7 @@ public class GameManager : MonoBehaviour
         SaveManager.Delete(playerInventory.NameSave);
     }
 
+    /*
 #if UNITY_EDITOR
     private void OnValidate()
     {
@@ -98,8 +96,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-#endif
-    public string ReturnSceneCombat()
+#endif*/
+
+    public string GetRandomCombatScene()
     {
         int index = Random.Range(0, combatScenesName.Count);
         return combatScenesName[index];
