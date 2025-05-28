@@ -39,6 +39,7 @@ public class MapMaker2 : MonoBehaviour
     private Node _existingValue;
     public List<Node> AllNodeGood = new();
     #endregion
+
     private void Awake()
     {
         Instance = this;
