@@ -3,10 +3,11 @@ using TMPro;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
-    [SerializeField] private Dialogue _textData;
+    public Dialogue TextData;
 
     [SerializeField] TMP_Text _nameCharacter;
     [SerializeField] TMP_Text _text;
@@ -16,6 +17,7 @@ public class DialogueManager : MonoBehaviour
 
     [SerializeField] private GameObject _panel;
     [SerializeField] private GameObject _textBox;
+    [SerializeField] private Button _button;
 
     private List<Tweener> _shakeTweeners = new();
     private bool _isWriting = false;
@@ -47,6 +49,11 @@ public class DialogueManager : MonoBehaviour
         SearchDialogue(_numberDialogue);
     }
 
+    public void RandomNextDialogue()
+    {
+        SearchDialogue(Random.Range(0, TextData.DialogueData.Count));
+    }
+
     // Appelle la clé de fin de dialogue du Excel
     public void Skip()
     {
@@ -56,6 +63,7 @@ public class DialogueManager : MonoBehaviour
     // Divise les différents éléments pour les ranger par ligne puis par éléments, ensuite cherche la clé corresspondante
     public void SearchDialogue(int NumberDialogue)
     {
+        _button.interactable = true;
         _numberDialogue = NumberDialogue;
         if (_isWriting) return;
 
@@ -63,11 +71,11 @@ public class DialogueManager : MonoBehaviour
 
         _panel.transform.DOLocalMoveY(0, 0.5f, false);
 
-        for (int i = 0; i < _textData.DialogueData.Count; i++)
+        for (int i = 0; i < TextData.DialogueData.Count; i++)
         {
             if (i == NumberDialogue)
             {
-                Sentence sentence = _textData.DialogueData[i].Sentence[_numberSentence];
+                Sentence sentence = TextData.DialogueData[i].Sentence[_numberSentence];
                 _nameCharacter.text = sentence.CharacterName;
                 WriteText(sentence.Text, sentence.ShakeTextBox, sentence.ShakeText, sentence.LetterByLetter);
             }
@@ -187,6 +195,7 @@ public class DialogueManager : MonoBehaviour
 
     private void EndDialogue()
     {
+        _button.interactable = false;
         _panel.transform.DOLocalMoveY(-500, 0.5f, false);
         _numberSentence = 0;
         _nameCharacter.text = "";

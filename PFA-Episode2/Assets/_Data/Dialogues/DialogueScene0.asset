@@ -72,3 +72,19 @@ MonoBehaviour:
       ShakeTextBox: 0
       ShakeText: 0
       LetterByLetter: 0
+  - Sentence:
+    - CharacterName: Testeur
+      Text: "Test test, <color=#FF0000>1,</color> <color=#0000FF>2,</color> je test
+        le <i><b>syst\uFFFDme.</b></i>"
+      Key: 43
+      NextKey: Fin
+      ShakeTextBox: 1
+      ShakeText: 1
+      LetterByLetter: 1
+    - CharacterName: End
+      Text: '-'
+      Key: End
+      NextKey: 
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 0
