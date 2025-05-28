@@ -92,8 +92,8 @@ public class SaveMapGeneration : MonoBehaviour
 
         SerializableSeed seed = new()
         {
-            useSeed = SpawnRiver.Instance._useSeed,
-            seed = SpawnRiver.Instance._seed
+            useSeed = SpawnRiver.Instance.UseSeed,
+            seed = SpawnRiver.Instance.Seed
         };
 
         wrapper.seed = seed;
@@ -175,8 +175,8 @@ public class SaveMapGeneration : MonoBehaviour
                 }
             }
 
-            SpawnRiver.Instance._useSeed = wrapper.seed.useSeed;
-            SpawnRiver.Instance._seed = wrapper.seed.seed;
+            SpawnRiver.Instance.UseSeed = wrapper.seed.useSeed;
+            SpawnRiver.Instance.Seed = wrapper.seed.seed;
 
             /*for (int i = 0; i < wrapper.grounds.Count; i++)
             {
