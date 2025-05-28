@@ -2672,7 +2672,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00024414062, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 2730, y: 1260}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &230363848
@@ -9465,6 +9465,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 935e61c4e5d3a7642b701c7f893c8df7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _inventoryPanel: {fileID: 1475923824}
+  _equippedSpellSlot: {fileID: 507188868}
 --- !u!4 &768411623 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7298079616524139726, guid: e7fabb71f1acc554c9168c6a6eabf297, type: 3}
@@ -13150,6 +13152,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4374838352554207066, guid: a092a0efda827464ca7191d425290aa4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -125.00012
+      objectReference: {fileID: 0}
     - target: {fileID: 4714802200742158484, guid: a092a0efda827464ca7191d425290aa4, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -14078,6 +14084,7 @@ MonoBehaviour:
     Sauces: []
     playerEquipedSpellIndex: 
     playerEquipedSpell: []
+    TotalTirageIngredient: 0
     NameSave: InventorySave
   staticData: {fileID: 0}
   combatScenesName: []
@@ -31767,18 +31774,6 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: StartGameCombat, Assembly-CSharp
         m_MethodName: StartGame
         m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 767053676}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
