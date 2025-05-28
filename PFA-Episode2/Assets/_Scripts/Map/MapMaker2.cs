@@ -157,7 +157,7 @@ public class MapMaker2 : MonoBehaviour
         if (DicoNode.ContainsKey(newPosition))
         {
             _existingValue = DicoNode[newPosition];
-            print("Un node est déja présent ici" + _existingValue);
+            //print("Un node est déja présent ici" + _existingValue);
             NodeList.Enqueue(CurrentNode);
         }
         else

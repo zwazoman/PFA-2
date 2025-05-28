@@ -1,3 +1,4 @@
+using AYellowpaper.SerializedCollections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,8 @@ public class SetupIngredientUI : MonoBehaviour
 {
     [SerializeField] private List<IngredientUI> _listIngredientUI = new();
     public List<List<IngredientBase>> ListListIngredient = new();
+    public SerializedDictionary<Rarity, Sprite> itemFramesPerRarity = new();
+
     private bool _firstTime;
 
     public static SetupIngredientUI Instance;
@@ -16,7 +19,7 @@ public class SetupIngredientUI : MonoBehaviour
     {
         try
         {
-            _listIngredientUI[index].Setup(IngredientBase);
+            _listIngredientUI[index].Setup(IngredientBase, itemFramesPerRarity[IngredientBase.rarity]);
         }
         catch (Exception e){ Debug.LogException(e); }
     }
