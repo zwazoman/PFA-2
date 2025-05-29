@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnRiver : MonoBehaviour
+public class SpawnGround : MonoBehaviour
 {
     [Header("Spawn Settings")]
     [SerializeField] private List<Transform> _spawnPoints = new();
@@ -19,7 +19,7 @@ public class SpawnRiver : MonoBehaviour
     [HideInInspector] public int Seed = 0;
 
     #region Singleton
-    public static SpawnRiver Instance;
+    public static SpawnGround Instance;
 
     private void Awake() { Instance = this; }
     #endregion
