@@ -38,7 +38,7 @@ public class ChooseIngredient : MonoBehaviour
     [Header("Others")]
     [SerializeField] private bool _sceneCombat;
     private int _maxIngredientRef;
-
+    private bool _sauceChoose;
     public List<IngredientBase> IngredientBaseChooseBySac { get; private set; } = new();
     private List<IngredientBase> _completeListIngredientChoose = new();
 
@@ -65,14 +65,9 @@ public class ChooseIngredient : MonoBehaviour
             else { _maxIngredientRef = 2; }
             for (int tagIngredient = 0; tagIngredient <= _maxIngredientRef; tagIngredient++)
             {
-                if (IsSauce())
-                {
-                    IngredientBaseChooseBySac.Add(ReturnSauceChoose());
-                }
-                else
-                {
-                    IngredientBaseChooseBySac.Add(ReturnIngredientChoose());
-                }
+                if (!_sauceChoose) { IsSauce(); }
+                if (tagIngredient == 2 && _sauceChoose) { IngredientBaseChooseBySac.Add(ReturnSauceChoose()); }
+                else { IngredientBaseChooseBySac.Add(ReturnIngredientChoose()); }
             }
             foreach (IngredientBase ing in IngredientBaseChooseBySac) { _completeListIngredientChoose.Add(ing); }
             List<IngredientBase> tempo = new();
@@ -163,11 +158,10 @@ public class ChooseIngredient : MonoBehaviour
             return sauce;
         }
     }
-    private bool IsSauce()
+    private void IsSauce()
     {
         float numberChoose = Random.value;
-        if (numberChoose >= _probaSauce) { return false; }
-        else { return true; }
+        if (numberChoose <= _probaSauce) { _sauceChoose = true; }
     }
     public async Task ResetIngredient()
     {
@@ -187,68 +181,69 @@ public class ChooseIngredient : MonoBehaviour
         float test = biais * (2 * (float)tirageActuel / (float)nombreTotalTirage - 1) + probaRef;
         return test;
     }
-#if UNITY_EDITOR
-    public void GenerateLists()
-    {
-        _listIngredientCommon.Clear();
-        _listIngredientSavoureux.Clear();
-        _listIngredientDivin.Clear();
+    //#if UNITY_EDITOR
+    //    public void GenerateLists()
+    //    {
+    //        _listIngredientCommon.Clear();
+    //        _listIngredientSavoureux.Clear();
+    //        _listIngredientDivin.Clear();
 
-        _listSauceCommon.Clear();
-        _listSauceSavoureux.Clear();
-        _listSauceDivin.Clear();
+    //        _listSauceCommon.Clear();
+    //        _listSauceSavoureux.Clear();
+    //        _listSauceDivin.Clear();
 
-        string[] files = Directory.GetFiles("Assets/_Data/Ingredients/ingredients", "*.asset", SearchOption.TopDirectoryOnly);
-        foreach (string path in files)
-        {
-            Ingredient asset = (Ingredient)AssetDatabase.LoadAssetAtPath(path, typeof(Ingredient));
-            switch (asset.rarity)
-            {
-                case Rarity.Ordinaire:
-                    _listIngredientCommon.Add(asset);
-                    break;
-                case Rarity.Savoureux:
-                    _listIngredientSavoureux.Add(asset);
-                    break;
-                case Rarity.Divin:
-                    _listIngredientDivin.Add(asset);
-                    break;
-            }
-        }
+    //        string[] files = Directory.GetFiles("Assets/_Data/Ingredients/ingredients", "*.asset", SearchOption.TopDirectoryOnly);
+    //        foreach (string path in files)
+    //        {
+    //            Ingredient asset = (Ingredient)AssetDatabase.LoadAssetAtPath(path, typeof(Ingredient));
+    //            switch (asset.rarity)
+    //            {
+    //                case Rarity.Ordinaire:
+    //                    _listIngredientCommon.Add(asset);
+    //                    break;
+    //                case Rarity.Savoureux:
+    //                    _listIngredientSavoureux.Add(asset);
+    //                    break;
+    //                case Rarity.Divin:
+    //                    _listIngredientDivin.Add(asset);
+    //                    break;
+    //            }
+    //        }
 
-        files = Directory.GetFiles("Assets/_Data/Ingredients/Sauce", "*.asset", SearchOption.TopDirectoryOnly);
-        foreach (string path in files)
-        {
-            Sauce asset = (Sauce)AssetDatabase.LoadAssetAtPath(path, typeof(Sauce));
-            switch (asset.rarity)
-            {
-                case Rarity.Ordinaire:
-                    _listSauceCommon.Add(asset);
-                    break;
-                case Rarity.Savoureux:
-                    _listSauceSavoureux.Add(asset);
-                    break;
-                case Rarity.Divin:
-                    _listSauceDivin.Add(asset);
-                    break;
-            }
-        }
+    //        files = Directory.GetFiles("Assets/_Data/Ingredients/Sauce", "*.asset", SearchOption.TopDirectoryOnly);
+    //        foreach (string path in files)
+    //        {
+    //            Sauce asset = (Sauce)AssetDatabase.LoadAssetAtPath(path, typeof(Sauce));
+    //            switch (asset.rarity)
+    //            {
+    //                case Rarity.Ordinaire:
+    //                    _listSauceCommon.Add(asset);
+    //                    break;
+    //                case Rarity.Savoureux:
+    //                    _listSauceSavoureux.Add(asset);
+    //                    break;
+    //                case Rarity.Divin:
+    //                    _listSauceDivin.Add(asset);
+    //                    break;
+    //            }
+    //        }
 
-    }
-#endif
+    //    }
+    //#endif
+    //}
+
+    //#if UNITY_EDITOR
+    //[CustomEditor(typeof(ChooseIngredient))]
+    //class ChooseIngredientEditor : Editor
+    //{
+    //    public override void OnInspectorGUI()
+    //    {
+    //        base.OnInspectorGUI();
+    //        if (GUILayout.Button("générer les listes connard"))
+    //        {
+    //            ((ChooseIngredient)target).GenerateLists();
+    //        }
+    //    }
+    //}
+    //#endif
 }
-
-#if UNITY_EDITOR
-[CustomEditor(typeof(ChooseIngredient))]
-class ChooseIngredientEditor : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        base.OnInspectorGUI();
-        if (GUILayout.Button("générer les listes connard"))
-        {
-            ((ChooseIngredient)target).GenerateLists();
-        }
-    }
-}
-#endif
