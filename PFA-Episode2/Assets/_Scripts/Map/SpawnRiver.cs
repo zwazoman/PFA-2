@@ -55,7 +55,7 @@ public class SpawnRiver : MonoBehaviour
             {
                 GameObject item = Instantiate(_spawnGround, point.position, point.rotation, _parent);
                 item.transform.localScale = new Vector3(4, 4, 4);
-                SetupObject(item, point, false);
+                SetupObject(item, point, false, index);
             }
             else
             {
@@ -65,25 +65,30 @@ public class SpawnRiver : MonoBehaviour
                     int randomIndex = Random.Range(0, spawnSpecialGroundClone.Count);
                     GameObject item = Instantiate(spawnSpecialGroundClone[randomIndex], point.position, point.rotation, _parent);
                     item.transform.localScale = new Vector3(4, 4, 4);
-                    SetupObject(item, point, true);
+                    SetupObject(item, point, true, index);
                 }
                 else
                 {
                     GameObject item = Instantiate(_spawnGround, point.position, point.rotation, _parent);
                     item.transform.localScale = new Vector3(4, 4, 4);
-                    SetupObject(item, point, false);
+                    SetupObject(item, point, false, index);
                 }
             }
         }
+        SpawnRandomItem.Instance.SpawnItemOnGround();
     }
 
-    public void SetupObject(GameObject obj, Transform point, bool IsSpecial)
+    public void SetupObject(GameObject obj, Transform point, bool IsSpecial, int index)
     {
         obj.transform.position = point.position;
         GroundList.Add(obj);
         if (IsSpecial)
         {
             _imposibleGround = obj;
+        }
+        if (index < PlayerMap.Instance.PositionMap - 1 || index > PlayerMap.Instance.PositionMap + 3)
+        {
+            obj.SetActive(false);
         }
     }
 }
