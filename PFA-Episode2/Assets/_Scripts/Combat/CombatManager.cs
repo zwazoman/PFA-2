@@ -69,7 +69,10 @@ public class CombatManager : MonoBehaviour
             EnemyEntities.Remove(entity);
             print(EnemyEntities.Count);
             if (EnemyEntities.Count == 0)
+            {
+                GameManager.Instance.playerInventory.playerHealth.health = Mathf.RoundToInt(entity.stats.currentHealth);
                 await Victory();
+            }
         }
 
         if(entity is PlayerEntity)
