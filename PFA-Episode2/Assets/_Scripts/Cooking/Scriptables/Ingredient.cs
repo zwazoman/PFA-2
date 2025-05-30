@@ -30,7 +30,7 @@ public class Ingredient : IngredientBase
                 Spell.Effects.Add(new(SpellEffectType.Shield, EffectStatType, EffectValue));
                 break;
             case IngredientEffectType.Range:
-                Spell.Range += (byte)Mathf.Max(1, Spell.Range + EffectValue);
+                Spell.Range = (byte)Mathf.Max(1, Spell.Range + EffectValue);
                 break;
         }
 
