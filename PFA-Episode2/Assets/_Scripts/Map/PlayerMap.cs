@@ -37,6 +37,11 @@ public class PlayerMap : MonoBehaviour
         Vector3 p = transform.position + camOffset;
         p.z = 100;
         _camera.transform.position = p;
+
+        if (PositionMap == 0)
+        {
+            SaveMapGeneration.Instance.SaveMap();
+        }
     }
 
     public async UniTask<Vector3> SetupTarget() 
@@ -69,7 +74,10 @@ public class PlayerMap : MonoBehaviour
         {
             if (KeyAndValues.Key == position)
             {
-                SaveMapGeneration.Instance.SaveMap();
+                GameManager.Instance.PlayerPosMap.playerPosition = Vector3Int.RoundToInt(transform.localPosition);
+                GameManager.Instance.PlayerPosMap.PositionMap = PositionMap;
+                GameManager.Instance.PlayerPosMap.Y = Y;
+
                 GameManager.Instance.playerInventory.Save(GameManager.Instance.playerInventory.NameSave);
                 if (KeyAndValues.Value.EventName.ToString() == "Start") { break; }
                 if (KeyAndValues.Value.EventName.ToString() == "Combat")

@@ -29,7 +29,6 @@ public class SaveMapGeneration : MonoBehaviour
     #endregion
 
     // Fonction qui sauvegarde toutes les infos relatives au nodes
-    // Fonction qui sauvegarde toutes les infos relatives au nodes
     public void SaveMap()
     {
         MapWrapper wrapper = new();
@@ -128,9 +127,20 @@ public class SaveMapGeneration : MonoBehaviour
 
             MapWrapper wrapper = JsonUtility.FromJson<MapWrapper>(json);
 
-            PlayerMap.Instance.transform.localPosition = wrapper.player.playerPosition;
-            PlayerMap.Instance.PositionMap = wrapper.player.PositionMap;
-            PlayerMap.Instance.Y = wrapper.player.Y;
+            if (GameManager.Instance.PlayerPosMap.PositionMap == 0)
+            {
+                PlayerMap.Instance.transform.localPosition = wrapper.player.playerPosition;
+                PlayerMap.Instance.PositionMap = wrapper.player.PositionMap;
+                PlayerMap.Instance.Y = wrapper.player.Y;
+            }
+            else
+            {
+                SerializablePlayer player = GameManager.Instance.PlayerPosMap;
+
+                PlayerMap.Instance.transform.localPosition = player.playerPosition;
+                PlayerMap.Instance.PositionMap = player.PositionMap;
+                PlayerMap.Instance.Y = player.Y;
+            }
 
             MapMaker2.Instance.DicoNode.Clear();
 
@@ -178,19 +188,6 @@ public class SaveMapGeneration : MonoBehaviour
             SpawnGround.Instance.UseSeed = wrapper.seed.useSeed;
             SpawnGround.Instance.Seed = wrapper.seed.seed;
 
-            /*for (int i = 0; i < wrapper.grounds.Count; i++)
-            {
-                SerializableGround ground = wrapper.grounds[i];
-                //GameObject prefab = SpawnRiver.Instance.GetPrefabByName(ground.groundObject);
-                //GameObject gameObject = Instantiate(prefab);
-                SpawnRiver.Instance.GroundList.Add(gameObject);
-
-                //SpawnRiver.Instance.GroundList[i] = ground.groundObject;
-                SpawnRiver.Instance.GroundList[i].transform.position = ground.groundTransform.PosiScale[0];
-                SpawnRiver.Instance.GroundList[i].transform.rotation = ground.groundTransform.rotation;
-                SpawnRiver.Instance.GroundList[i].transform.localScale = ground.groundTransform.PosiScale[1];
-            }*/
-
             // Relie les créateurs une fois que tous les nodes sont instanciés
             foreach (SerializableNode item in wrapper.nodes)
             {
@@ -214,6 +211,7 @@ public class SaveMapGeneration : MonoBehaviour
             MapMaker2.Instance.AllNodeGood = new List<Node>(tempDico.Values);
             SpawnGround.Instance.StartSpawnRiver();
             Node.TriggerMapCompleted(); // Redéclenche l'affichage des sprites
+            SaveMap();
         }
         else
         {
