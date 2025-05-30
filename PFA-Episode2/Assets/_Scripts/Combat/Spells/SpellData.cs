@@ -77,9 +77,13 @@ public struct SpellEffect
         {
             Effects = new SpellEffect[] { Effects[0] };
         }
-        else
+        else if(Effects.Length == 0)
         {
             Effects = new SpellEffect[] { new SpellEffect(SpellEffectType.Damage,StatType.FlatIncrease,2)};
+        }
+        else
+        {
+            Debug.LogError("y'a un pb là connard");
         }
        
     }
