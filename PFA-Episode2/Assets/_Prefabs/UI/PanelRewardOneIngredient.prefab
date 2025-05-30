@@ -659,7 +659,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326740531093642969}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
@@ -923,6 +923,7 @@ MonoBehaviour:
   txt_title: {fileID: 7460547694692014920}
   img_Icon: {fileID: 3027178902802096006}
   img_SauceArea: {fileID: 4290241248838004424}
+  img_frame: {fileID: 0}
   txt_effect: {fileID: 2505839322322271110}
 --- !u!114 &4307706061053301511
 MonoBehaviour:
@@ -2666,6 +2667,7 @@ MonoBehaviour:
   txt_title: {fileID: 1451829203984057657}
   img_Icon: {fileID: 1816041328973092059}
   img_SauceArea: {fileID: 6320800236118694495}
+  img_frame: {fileID: 0}
   txt_effect: {fileID: 236606903206613089}
 --- !u!114 &5030931490051731359
 MonoBehaviour:
@@ -4146,10 +4148,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8a8f526e43683064896caeeea2530b94, type: 2}
   - {fileID: 11400000, guid: 0f0b821449e54d14f9a4069061d81197, type: 2}
   - {fileID: 11400000, guid: 4face9cc5d6ad534fa99ee2d36600d16, type: 2}
+  _listBannedIngredient: []
   _probaSauce: 0.25
-  _probaCommon: 0.7
-  _probaSavoureux: 0.28
-  _probaDivin: 0.02
+  _probaCommonRef: 0
+  _probaSavoureuxRef: 0
+  _probaDivinRef: 0
   _biaisCommon: -0.35
   _biaisSavoureux: 0.25
   _biaisDivin: 0.1
@@ -4170,6 +4173,14 @@ MonoBehaviour:
   - {fileID: 8381280575497219542}
   - {fileID: 2131350427213892127}
   - {fileID: 2081025056845004301}
+  itemFramesPerRarity:
+    _serializedList:
+    - Key: 0
+      Value: {fileID: 21300000, guid: 398ff278afb198a4fbbb2955b8860b7d, type: 3}
+    - Key: 1
+      Value: {fileID: 21300000, guid: 398ff278afb198a4fbbb2955b8860b7d, type: 3}
+    - Key: 2
+      Value: {fileID: 21300000, guid: 398ff278afb198a4fbbb2955b8860b7d, type: 3}
 --- !u!114 &6084680982855433791
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5606,6 +5617,7 @@ MonoBehaviour:
   txt_title: {fileID: 1999938333689013799}
   img_Icon: {fileID: 5591337306603241264}
   img_SauceArea: {fileID: 3611336105069754856}
+  img_frame: {fileID: 0}
   txt_effect: {fileID: 1025275942204295933}
 --- !u!114 &2834443237385022158
 MonoBehaviour:
