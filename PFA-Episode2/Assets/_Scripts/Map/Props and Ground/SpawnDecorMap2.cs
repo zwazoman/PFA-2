@@ -21,7 +21,7 @@ public class SpawnDecorMap2 : MonoBehaviour
         int pos = PlayerMap.Instance.PositionMap;
 
         if (pos >= 0) _activeIndices.AddRange(new[] { 0, 1 });
-        if (pos >= 1) ReplaceLast(2);
+        if (pos >= 2) ReplaceLast(2);
         if (pos >= 3) _activeIndices.Add(3);
         if (pos >= 4) ReplaceLast(4);
         if (pos >= 6) ReplaceLast(5);

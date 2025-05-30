@@ -93,4 +93,9 @@ public class Node : MonoBehaviour
     {
         _mesh.transform.DOScale(new Vector3(0,0,0), 0.5f).SetEase(Ease.InBack);
     }
+
+    public bool GetInteractable()
+    {
+        return _button.interactable;
+    }
 }
