@@ -70,7 +70,9 @@ public class CombatManager : MonoBehaviour
             print(EnemyEntities.Count);
             if (EnemyEntities.Count == 0)
             {
-                GameManager.Instance.playerInventory.playerHealth.health = Mathf.RoundToInt(entity.stats.currentHealth);
+                foreach(Entity connard in PlayerEntities)
+                    if(connard is PlayerEntity)
+                        GameManager.Instance.playerInventory.playerHealth.health = Mathf.RoundToInt(connard.stats.currentHealth);
                 await Victory();
             }
         }
