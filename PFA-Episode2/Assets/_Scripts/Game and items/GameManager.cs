@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     public Inventory playerInventory = new();
+    public SerializablePlayer PlayerPosMap = new SerializablePlayer();
 
     [Header("Data")]
     public GameStaticData staticData;
