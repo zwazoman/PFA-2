@@ -10,14 +10,23 @@ public class AreaOfEffect : ScriptableObject
 #if UNITY_EDITOR
     public void SavePreviewImage()
     {
-        Texture2D texture = new(7,7);
+        Texture2D texture = new(50,50);
         texture.filterMode = FilterMode.Point;
 
-        for(int i = 0; i < 7; i++)
+        for(int i = 0; i < 5; i++)
         {
-            for(int j = 0; j < 7; j++)
+            for(int j = 0; j < 5; j++)
             {
-                texture.SetPixel(i,j,AffectedTiles.Contains(new Vector2Int(i-3,j-3)) ? Color.white : new Color(1,0,0,0));
+                for(int x = 0; x < 10; x++)
+                {
+                    for(int y = 0; y < 10; y++) 
+                    { 
+                        texture.SetPixel(i*10+x,j*10+y,
+                            (AffectedTiles.Contains(new Vector2Int(i-2,j-2)) && x>1 && x<9 && y>1 && y<9)
+                            
+                            ? Color.white : new Color(1,0,0,0));
+                    }
+                }
             }
         }
 

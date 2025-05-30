@@ -17,6 +17,7 @@ public class Node : MonoBehaviour
     public bool Visited;
     public bool Intersection;
     public List<GameObject> PathBetweenNode = new();
+    [HideInInspector] public string CombatScene;
     [SerializeField] private GameObject _parentGO;
     [SerializeField] private GameObject _prefabBoss;
     [SerializeField] private Button _button;
@@ -54,6 +55,7 @@ public class Node : MonoBehaviour
                 CombatPrefab.SetActive(true);
                 _mesh = CombatPrefab;
                 _meshRend.material = _mat;
+                CombatScene = GameManager.Instance.GetRandomCombatScene();
                 break;
             case NodesEventTypes.Ingredient:
                 GameObject IngredientPrefab = PoolObject.Instance.IngredientList.Dequeue();

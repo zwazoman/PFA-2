@@ -74,7 +74,7 @@ public class PlayerMap : MonoBehaviour
                 if (KeyAndValues.Value.EventName.ToString() == "Start") { break; }
                 if (KeyAndValues.Value.EventName.ToString() == "Combat")
                 {
-                    await SceneTransitionManager.Instance.GoToScene(GameManager.Instance.GetRandomCombatScene().ToString());
+                    await SceneTransitionManager.Instance.GoToScene(KeyAndValues.Value.CombatScene);
                 }
                 else { await SceneTransitionManager.Instance.GoToScene(KeyAndValues.Value.EventName.ToString()); }
             }

@@ -28,7 +28,16 @@ public class MapAttributeEvent3 : MonoBehaviour
             List<Node> _listOfNodeAtPosition = MapBuildingTools.Instance.ReturnListOfNodeFromNodePosition(index);
             foreach (Node node in _listOfNodeAtPosition) { AttributeEventNode(node); }
         }
-        foreach(Node node in MapMaker2.Instance.AllNodeGood) { node.SetupSprite(); }
+        foreach(Node node in MapMaker2.Instance.AllNodeGood)
+        {
+            node.SetupSprite();
+            if (PlayerMap.Instance.PositionMap + 3 >= node.Position) { node.gameObject.SetActive(true); }
+            else 
+            { 
+                node.gameObject.SetActive(false);
+                foreach(GameObject go in node.PathBetweenNode) { go.SetActive(false); }
+            }
+        }
     }
 
     private void AttributeEventNode(Node SamePositionNode)
