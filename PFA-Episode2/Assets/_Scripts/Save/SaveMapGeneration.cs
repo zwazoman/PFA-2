@@ -92,8 +92,8 @@ public class SaveMapGeneration : MonoBehaviour
 
         SerializableSeed seed = new()
         {
-            useSeed = SpawnRiver.Instance._useSeed,
-            seed = SpawnRiver.Instance._seed
+            useSeed = SpawnGround.Instance.UseSeed,
+            seed = SpawnGround.Instance.Seed
         };
 
         wrapper.seed = seed;
@@ -175,8 +175,8 @@ public class SaveMapGeneration : MonoBehaviour
                 }
             }
 
-            SpawnRiver.Instance._useSeed = wrapper.seed.useSeed;
-            SpawnRiver.Instance._seed = wrapper.seed.seed;
+            SpawnGround.Instance.UseSeed = wrapper.seed.useSeed;
+            SpawnGround.Instance.Seed = wrapper.seed.seed;
 
             /*for (int i = 0; i < wrapper.grounds.Count; i++)
             {
@@ -212,7 +212,7 @@ public class SaveMapGeneration : MonoBehaviour
 
             MapMaker2.Instance.DicoNode = tempDico;
             MapMaker2.Instance.AllNodeGood = new List<Node>(tempDico.Values);
-            SpawnRiver.Instance.StartSpawnRiver();
+            SpawnGround.Instance.StartSpawnRiver();
             Node.TriggerMapCompleted(); // Redéclenche l'affichage des sprites
         }
         else

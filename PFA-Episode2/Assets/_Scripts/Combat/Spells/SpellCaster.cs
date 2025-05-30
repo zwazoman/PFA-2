@@ -319,6 +319,12 @@ public class SpellCaster : MonoBehaviour
                 case SpellEffectType.DamageIncreasePercentageByDistanceToCaster:
                     e.damage *= (1 + zoneData.hitEntityCTXDict[entity].distanceToHitEnemy * .2f);
                     break;
+                case SpellEffectType.DamageIncreaseMeleeRange:
+                    if(zoneData.hitEntityCTXDict[entity].distanceToHitEnemy == 1)
+                    {
+                        e.damage *= (effect.value);
+                    }
+                    break;
             }
 
             
