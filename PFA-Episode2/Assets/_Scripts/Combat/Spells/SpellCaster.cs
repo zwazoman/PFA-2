@@ -404,7 +404,7 @@ public class SpellCaster : MonoBehaviour
         attackEventCompleted = false;
         try
         {
-            castingEntity.visuals.animator.SetTrigger(castingEntity.attackTrigger);
+            castingEntity.visuals.animator.SetTrigger(Entity.attackTrigger);
         }
         catch (Exception ex)
         {
@@ -464,7 +464,7 @@ public class SpellCaster : MonoBehaviour
         //wait for animations to play
         try
         {
-            await entity.visuals.animator.PlayAnimationTrigger(entity.hitTrigger);
+            await entity.visuals.animator.PlayAnimationTrigger(Entity.hitTrigger);
         }
         catch (Exception ex) { Debug.LogException(ex); }
 

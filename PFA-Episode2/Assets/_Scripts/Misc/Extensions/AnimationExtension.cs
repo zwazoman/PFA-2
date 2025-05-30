@@ -13,7 +13,7 @@ public static class AnimationExtension
         animator.SetTrigger(trigger);
         await UniTask.Delay(275);
         
-        await Awaitable.WaitForSecondsAsync(GetAnimationLength(trigger,animator));
+        await Awaitable.WaitForSecondsAsync(Mathf.Max(0, GetAnimationLength(trigger,animator)- 0.1f));
     }
 
     public static void PlayAnimationBool(this Animator animator, string boolos)

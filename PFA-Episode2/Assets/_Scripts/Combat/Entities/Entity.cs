@@ -13,25 +13,29 @@ using Cysharp.Threading.Tasks.Triggers;
 public class Entity : MonoBehaviour
 {
     public Team team = Team.Enemy;
-
     public bool isDead { get; private set; }
 
     public EntityStats stats = new();
+
+
+    [Header("Asset References")]
     public Sprite Icon;
 
-    [HideInInspector] public WayPoint currentPoint;
-    [HideInInspector] public SpellCaster entitySpellCaster;
-
+    [Header("Scene References")]
     public EntityVisuals visuals;
     public Transform eatSocket;
 
+    //navigation
     protected Dictionary<WayPoint, int> WaypointDistance = new Dictionary<WayPoint, int>();
     protected List<WayPoint> Walkables = new List<WayPoint>();
     protected List<Spell> spells = new();
 
+    //spells
+    [HideInInspector] public WayPoint currentPoint;
+    [HideInInspector] public SpellCaster entitySpellCaster;
+
     //events
     public event Action OnDead;
-
     /// <summary>
     /// float newShield,float newHP,Vector3 direction
     /// </summary>
@@ -39,12 +43,12 @@ public class Entity : MonoBehaviour
     public event Action OnSpellPreviewCancel;
 
     #region AnimationTriggers
-    [HideInInspector] public string moveBool = "Move";
-    [HideInInspector] public string attackTrigger = "Attack";
-    [HideInInspector] public string idleTrigger = "Idle";
-    [HideInInspector] public string pushBool = "Push";
-    [HideInInspector] public string hitTrigger = "Hit";
-    [HideInInspector] public string deathTrigger = "Death";
+    [HideInInspector] public const string moveBool = "Move";
+    [HideInInspector] public const string attackTrigger = "Attack";
+    [HideInInspector] public const string idleTrigger = "Idle";
+    [HideInInspector] public const string pushBool = "Push";
+    [HideInInspector] public const string hitTrigger = "Hit";
+    [HideInInspector] public const string deathTrigger = "Death";
 
     #endregion
 

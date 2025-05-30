@@ -15,7 +15,7 @@ public class EntityUI : MonoBehaviour
         this.owner = owner;
         
         //healthbar
-        owner.stats.healthFeedbackTasks.Add(UpdateLifebar);
+        owner.stats.OnHealthUpdated+=(UpdateLifebar);
         lifebar.MaxValue = owner.stats.maxHealth;
         lifebar.MinValue = 0;
         UpdateLifebar(0,owner.stats.currentHealth);
@@ -49,7 +49,7 @@ public class EntityUI : MonoBehaviour
         _shieldBar.Value = newShield;
     }
 
-    private async UniTask UpdateLifebar(float delta, float newValue)
+    private void UpdateLifebar(float delta, float newValue)
     {
         //Debug.Log("delta : " + delta.ToString() + " , new value : " + newValue.ToString());
         lifebar.Value = newValue;

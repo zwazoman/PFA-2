@@ -20,6 +20,13 @@ public class EntityStats
     /// </summary>
     public event Action<float> ShieldUpdateFeeback;
 
+
+    /// <summary>
+    /// float : health delta
+    /// float : new HP
+    /// </summary>
+    public event Action<float,float> OnHealthUpdated;
+
     public float maxHealth;
     public int maxMovePoints;
 
@@ -52,7 +59,11 @@ public class EntityStats
         //Debug.Log("apply health : " + delta.ToString());
         currentHealth += delta;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-        
+
+        Debug.Log("Health Updated ! ", owner);
+
+        OnHealthUpdated?.Invoke(delta, currentHealth);
+
         //feedbacks
         UniTask[] tasks = new UniTask[healthFeedbackTasks.Count];
         for (int i = 0; i < healthFeedbackTasks.Count; i++)
@@ -61,6 +72,8 @@ public class EntityStats
             tasks[i] = task(delta, currentHealth);
         }
         await UniTask.WhenAll(tasks);
+
+        
 
         //healthFeedbackTasks?.Invoke(delta, currentHealth);
 
