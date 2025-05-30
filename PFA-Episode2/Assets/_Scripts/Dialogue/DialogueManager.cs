@@ -68,7 +68,7 @@ public class DialogueManager : MonoBehaviour
 
         StopShakeEffect();
 
-        _panel.transform.DOLocalMoveY(0, 0.5f, false);
+        //_panel.transform.DOLocalMoveY(0, 0.5f, false);
 
         for (int i = 0; i < TextData.DialogueData.Count; i++)
         {
