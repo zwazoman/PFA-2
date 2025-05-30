@@ -124,8 +124,8 @@ public class Entity : MonoBehaviour
         try
         {
             if (effect.shield != 0) await stats.ApplyShield(effect.shield);
-            if (effect.damage != 0) await stats.ApplyDamage(effect.damage);
-            if (effect.pushPoint != null) await Push(Mathf.RoundToInt(effect.pushDamage), effect.pushPoint);
+            if (effect.damage != 0 && effect.pushPoint == null) await stats.ApplyDamage(effect.damage);
+            if (effect.pushPoint != null) await Push(Mathf.RoundToInt(effect.pushDamage + effect.damage), effect.pushPoint);
         }
         catch (Exception e)
         {
@@ -173,9 +173,9 @@ public class Entity : MonoBehaviour
         if(pushTarget != currentPoint)
         {
             visuals.animator.PlayAnimationBool(pushBool);
-            await UniTask.Delay(300);
+            //await UniTask.Delay(200);
 
-            await StartMoving(pushTarget.transform.position,7,-1);
+            await StartMoving(pushTarget.transform.position,13,-1);
 
             visuals.animator.EndAnimationBool(pushBool);
         }

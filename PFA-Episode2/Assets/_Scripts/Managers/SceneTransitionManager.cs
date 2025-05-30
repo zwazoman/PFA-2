@@ -95,8 +95,7 @@ public class SceneTransitionManager : MonoBehaviour
         if (!duration.HasValue) duration = _fadingDuration;
 
         _CanvasGroup.gameObject.SetActive(true);
-        _CanvasGroup.DOFade(0, duration.Value);
-        await UniTask.Delay(Mathf.CeilToInt(duration.Value * 1000));
+        await _CanvasGroup.DOFade(0, duration.Value).AsyncWaitForCompletion().AsUniTask();
         _CanvasGroup.gameObject.SetActive(false);
 
     }
@@ -109,8 +108,7 @@ public class SceneTransitionManager : MonoBehaviour
         if (!duration.HasValue) duration = _fadingDuration;
 
         _CanvasGroup.gameObject.SetActive(true);
-        _CanvasGroup.DOFade(1, duration.Value);
-        await UniTask.Delay(Mathf.CeilToInt(duration.Value * 1000));
+        await _CanvasGroup.DOFade(1, duration.Value).AsyncWaitForCompletion().AsUniTask() ;
     }
 
     private async void Start()

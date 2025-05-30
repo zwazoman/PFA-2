@@ -39,7 +39,7 @@ public class EntityStats
         this.maxHealth = maxHP;
         currentHealth = maxHP+1;
 
-        ApplyHealth(-1);
+        ApplyHealth(0);
         owner.gameObject.GetComponent<EntityUI>().Setup(owner);
     }
 
