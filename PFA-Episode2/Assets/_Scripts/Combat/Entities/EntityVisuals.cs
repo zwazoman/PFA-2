@@ -10,9 +10,14 @@ public class EntityVisuals : MonoBehaviour
 {
     Entity owner;
 
+    [Header("Scene References")]
     [SerializeField] public Transform VisualsRoot;
-
     [SerializeField] public Animator animator;
+
+    [Header("VFXs")]
+    [SerializeField] private ParticleSystem _hitParticles;
+    [SerializeField] private ParticleSystem  _wallHitParticles;
+
     [SerializeField] bool _enableAnimations = true;
 
     List<PooledObject> Arrows = new();
@@ -83,7 +88,7 @@ public class EntityVisuals : MonoBehaviour
         try
         {
             SFXManager.Instance.PlaySFXClip(Sounds.EntityDeath);
-            await animator.PlayAnimationTrigger(owner.deathTrigger);
+            await animator.PlayAnimationTrigger(Entity.deathTrigger);
         } catch (Exception e) { Debug.LogException(e); }
 
         gameObject.SetActive(false);
@@ -94,7 +99,8 @@ public class EntityVisuals : MonoBehaviour
         if (Time.timeSinceLevelLoad < 1) return;
         if (delta < 0) //damage
         {
-            await VisualsRoot.DOShakePosition(.5f, .2f).AsyncWaitForCompletion().AsUniTask();
+            _hitParticles.Play();
+            await VisualsRoot.DOShakePosition(.25f, .3f,15).AsyncWaitForCompletion().AsUniTask();
         }
         else //heal
         {

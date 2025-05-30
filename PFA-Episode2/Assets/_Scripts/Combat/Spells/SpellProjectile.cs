@@ -22,13 +22,13 @@ public class SpellProjectile : MonoBehaviour
         transform.Rotate(new Vector3(0, 1 * rotationSpeed, 0) * Time.deltaTime);
     }
 
-    public async UniTask Launch(Entity caster, Entity target, Mesh spellMesh = null, float launchSpeed = .7f)
+    public async UniTask Launch(Entity caster, Entity target, Mesh spellMesh = null, float launchSpeed = .15f)
     {
         if(spellMesh != null)
             _filter.mesh = spellMesh;
 
         if(target != caster)
-            await transform.DOMove(target.eatSocket.position, launchSpeed / (target.eatSocket.position - transform.position).magnitude);
+            await transform.DOMove(target.eatSocket.position, launchSpeed * (target.eatSocket.position - transform.position).magnitude);
 
         _pool.GoBackIntoPool();
     }
