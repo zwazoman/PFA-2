@@ -77,9 +77,10 @@ public class ChooseIngredient : MonoBehaviour
             SetupIngredientUI.Instance.ListListIngredient.Add(tempo);
             IngredientBaseChooseBySac.Clear();
 
+            _probaSauce = TempoProbaSauce;
+            _sauceChoose = false;
             //_probaSavoureux = TempoProbaSavoureux;
             //_probaDivin = TempoProbaDivin;
-            _probaSauce = TempoProbaSauce;
         }
         for (int i = 0; i != _completeListIngredientChoose.Count; i++)
         {
