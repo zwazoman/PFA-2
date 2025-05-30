@@ -160,6 +160,7 @@ Shader "Unlit/shdr_lit"
                 //vignette (mettre dans post process plutot si y en a)
                 float vignette =  1-saturate((distance(float2(0.5,0.5),i.pos.xy/_ScreenParams.xy)-.4)*_fogIntensity);
                 col *= vignette;
+ 
                 return col; 
             }
             ENDCG
