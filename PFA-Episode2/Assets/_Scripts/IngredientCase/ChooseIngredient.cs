@@ -18,6 +18,8 @@ public class ChooseIngredient : MonoBehaviour
     [SerializeField] private List<Ingredient> _listIngredientSavoureux = new();
     [SerializeField] private List<Ingredient> _listIngredientDivin = new();
 
+    [SerializeField] private List<Ingredient> _listBannedIngredient = new();
+
     [Header("Probability")]
 
     [SerializeField][Range(0, 1)] private float _probaSauce;
@@ -51,7 +53,7 @@ public class ChooseIngredient : MonoBehaviour
         _probaCommon = _probaCommonRef;
         _probaSavoureux = _probaSavoureuxRef;
         _probaDivin = _probaDivinRef;
-
+        if (PlayerMap.Instance.PositionMap != 1) { AddShield(); }
         ChooseRandomIngredient();
     }
 
@@ -180,6 +182,13 @@ public class ChooseIngredient : MonoBehaviour
     {
         float test = biais * (2 * (float)tirageActuel / (float)nombreTotalTirage - 1) + probaRef;
         return test;
+    }
+
+    private void AddShield()
+    {
+        foreach (Ingredient ing in _listIngredientCommon) { if (!_listBannedIngredient.Contains(ing) && ing.rarity == Rarity.Ordinaire) { _listIngredientCommon.Add(_listBannedIngredient[0]); break; } }
+        foreach (Ingredient ing in _listIngredientSavoureux) { if (!_listBannedIngredient.Contains(ing) && ing.rarity == Rarity.Savoureux) { _listIngredientSavoureux.Add(_listBannedIngredient[1]); break; } }
+        foreach (Ingredient ing in _listIngredientDivin) { if (!_listBannedIngredient.Contains(ing) && ing.rarity == Rarity.Divin) { _listIngredientDivin.Add(_listBannedIngredient[2]); break; } }
     }
     //#if UNITY_EDITOR
     //    public void GenerateLists()
