@@ -16,13 +16,20 @@ public class Crafting : MonoBehaviour
             i.ModifySpellEffect(spell);
         }
 
-        sauce.ModifySpellEffect(spell);
+
+        Debug.Log(" = Raw spell effects = ");
+        foreach(SpellEffect e in  spell.Effects)Debug.Log(e.effectType);
 
         //collapse similar effects
         SpellEffect[] effects = spell.Effects.ToArray();
         Debug.Log(effects.Length);
         SpellEffect.CollapseSimilarSpellEffects(ref effects);
         spell.Effects = effects.ToList();
+
+        Debug.Log(" = collapsed spell effects = ");
+        foreach (SpellEffect e in spell.Effects) Debug.Log(e.effectType);
+
+        sauce.ModifySpellEffect(spell);
 
         //apply multipliers
         SortSpellEffects(spell.Effects);
@@ -50,6 +57,8 @@ public class Crafting : MonoBehaviour
             Debug.LogException(new Exception("Couldnt remove ingredients from player inventory.",e));
         }
 
+        Debug.Log(" = Final spell effects =");
+        foreach (SpellEffect e in spell.Effects) Debug.Log(e.effectType);
 
         return spell;
     }
