@@ -154,9 +154,11 @@ public class CombatManager : MonoBehaviour
 
     int ComputeEnnemiesCount()
     {
-        //mettre le nombre d'ennemis qui spawn là
-
-        return 2;
+        int positionMap = PlayerMap.Instance.PositionMap;
+        if (positionMap >= 4) { return 2; }
+        else if (positionMap >= 8) { return 3; }
+        else if (positionMap >= 12) { return 4; }
+        else { return 1; }
     }
 
     async UniTask GameOver()
@@ -170,6 +172,7 @@ public class CombatManager : MonoBehaviour
     async UniTask Victory()
     {
         print("VICTORY");
+        print(GameManager.Instance.playerInventory.playerHealth.health);
 
         await UniTask.Delay(1000);
 
