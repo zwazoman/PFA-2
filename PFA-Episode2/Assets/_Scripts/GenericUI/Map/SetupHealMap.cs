@@ -12,6 +12,7 @@ public class SetupHealMap : MonoBehaviour
 
     private void SetupLife()
     {
+        print(GameManager.Instance.playerInventory.playerHealth.health);
         _lifebar.Value = GameManager.Instance.playerInventory.playerHealth.health;
         _hpText.text = GameManager.Instance.playerInventory.playerHealth.health.ToString();
     }
