@@ -23,7 +23,7 @@ public class EntityInfoFrame : MonoBehaviour
         this._owner = owner;
 
         //healthbar
-        owner.stats.healthFeedbackTasks.Add(OnHpUpdated);
+        owner.stats.OnHealthUpdated+=(OnHpUpdated);
 
         //shield bar
         owner.stats.ShieldUpdateFeeback += OnShieldUpdated;
@@ -58,7 +58,7 @@ public class EntityInfoFrame : MonoBehaviour
         _shieldText.text = newShield > 0 ?( "+" + newShield.ToString()): "";
     }
 
-    private async UniTask OnHpUpdated(float delta, float newValue)
+    private void OnHpUpdated(float delta, float newValue)
     {
         _lifebar.Value = newValue;
         _hpText.text = Mathf.Round(newValue).ToString();

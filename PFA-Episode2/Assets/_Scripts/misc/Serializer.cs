@@ -15,7 +15,7 @@ public static class Serializer
 
     static readonly string[] SauceEffectTypeToString =
     {
-        "No Special effect","Cast through walls","Damage+ for every hit","damage+ with range"
+        "No Special effect","Cast through walls","Damage+ for every hit","Damage+ with range", "Melee Damage Up", "Summon Entity"
     };
 
     public static string GetSpellEffectString(SpellEffect e)

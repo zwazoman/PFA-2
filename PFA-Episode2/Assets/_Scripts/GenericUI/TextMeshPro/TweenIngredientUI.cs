@@ -26,7 +26,7 @@ public class TweenIngredientUI : MonoBehaviour
     private async void Start() //Pour le texte du début
     {
         Sequence seq = DOTween.Sequence();
-        seq.Join(_tmpRect.DOScale(0.9f, 0.5f).SetEase(Ease.OutBack));
+        seq.Join(_tmpRect.DOScale(0.9f, 0.35f).SetEase(Ease.OutBack));
         seq.Join(_tmpRect.DOAnchorPos(new Vector2(0, _targetYTxt), TweenDuration).SetEase(Ease.InOutQuad));
         await seq.AsyncWaitForCompletion().AsUniTask();
 
@@ -83,7 +83,7 @@ public class TweenIngredientUI : MonoBehaviour
     public async UniTask Monte(RectTransform chosenUI) //Carte choisi 
     {
         Sequence seq = DOTween.Sequence();
-        seq.Join(chosenUI.DOPunchScale(new Vector3(0.5f, 0.5f, 0.5f), .35f, 5, 0.6f));
+        seq.Join(chosenUI.DOPunchScale(new Vector3(0.5f, 0.5f, 0.5f), .25f, 5, 0.6f));
         seq.Join(chosenUI.DOAnchorPos(new Vector2(chosenUI.anchoredPosition.x, 2100), TweenDuration).SetEase(Ease.InBack));
 
         await seq.AsyncWaitForCompletion().AsUniTask();

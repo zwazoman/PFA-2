@@ -21,20 +21,17 @@ public class CameraBehaviour : MonoBehaviour
         {
             if(e is PlayerEntity )
             {
-                e.stats.healthFeedbackTasks.Add(OnPlayerHit);
+                e.stats.OnHealthUpdated+=(OnPlayerHit);
             }
         }
     }
 
-    private async UniTask OnPlayerHit(float delta, float newHealth)
+    private void OnPlayerHit(float delta,float newValue )
     {
         if(delta < 0 && Time.timeSinceLevelLoad > 1)
         {
             transform.DOShakePosition(.3f, .4f);
         }
-
-        await UniTask.Yield();
-        return;
     }
 
 
