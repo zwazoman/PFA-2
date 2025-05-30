@@ -24,7 +24,7 @@ public class Sauce : IngredientBase
                 Spell.Effects.Add(new(SpellEffectType.DamageIncreasePercentageByDistanceToCaster, StatType.Multiplier, 1.1f));
                 break;
             case SauceEffectType.DamageIncreaseMeleeRange:
-                Spell.Effects.Add(new(SpellEffectType.DamageIncreaseMeleeRange, StatType.Multiplier, 1.5f));
+                Spell.Effects.Add(new(SpellEffectType.DamageIncreaseMeleeRange, StatType.Multiplier, 1.4f));
                 break;
             case SauceEffectType.SummonEntity:
                 Spell.Effects.Add(new(SpellEffectType.EntitySummon, StatType.FlatIncrease, 1));
