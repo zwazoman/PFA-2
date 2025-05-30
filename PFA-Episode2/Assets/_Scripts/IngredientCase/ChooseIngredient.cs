@@ -53,7 +53,7 @@ public class ChooseIngredient : MonoBehaviour
         _probaCommon = _probaCommonRef;
         _probaSavoureux = _probaSavoureuxRef;
         _probaDivin = _probaDivinRef;
-        //if (PlayerMap.Instance.PositionMap != 1) { AddShield(); }
+        if (PlayerMap.Instance.PositionMap != 1) { AddShield(); }
         ChooseRandomIngredient();
     }
 
