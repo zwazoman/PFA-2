@@ -19102,6 +19102,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8261438918249781463}
   - component: {fileID: 7528153390215057401}
+  - component: {fileID: 8261438918249781464}
+  - component: {fileID: 8261438918249781465}
   m_Layer: 0
   m_Name: PlayerMap
   m_TagString: Untagged
@@ -19570,6 +19572,40 @@ Transform:
   - {fileID: 795063002655843402}
   m_Father: {fileID: 1487401232}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!114 &8261438918249781464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5902492299681451734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a340a67bce26b5245b27a010d2f769c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectionRadius: 1.5
+--- !u!65 &8261438918249781465
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5902492299681451734}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!224 &8295660892483762955
 RectTransform:
   m_ObjectHideFlags: 0
