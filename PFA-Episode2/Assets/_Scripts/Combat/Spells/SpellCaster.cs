@@ -304,7 +304,7 @@ public class SpellCaster : MonoBehaviour
                     zoneData.hitEntityCTXDict[entity].PushDamage = pushDamages;
                     zoneData.hitEntityCTXDict[entity].PushPoint = pushPoint;
 
-                    e.pushDamage = pushDamages;
+                    e.pushDamage = pushDamages * 2;
                     e.pushPoint = zoneData.hitEntityCTXDict[entity].PushPoint;
                     break;
                 case SpellEffectType.Shield:
@@ -404,7 +404,7 @@ public class SpellCaster : MonoBehaviour
         attackEventCompleted = false;
         try
         {
-            castingEntity.visuals.animator.SetTrigger(castingEntity.attackTrigger);
+            castingEntity.visuals.animator.SetTrigger(Entity.attackTrigger);
         }
         catch (Exception ex)
         {
@@ -461,17 +461,18 @@ public class SpellCaster : MonoBehaviour
         PoolManager.Instance.ProjectilePool.PullObjectFromPool(spawnPos).TryGetComponent(out projectile);
         await projectile.Launch(castingEntity, entity, spell.spellData.Mesh);
 
+        BakedTargetedSpellEffect e = ComputeTargetedSpellEffect(spell, ref zoneData, entity);
+
         //wait for animations to play
-        try
+        if (e.pushPoint==null) try
         {
-            await entity.visuals.animator.PlayAnimationTrigger(entity.hitTrigger);
+            await entity.visuals.animator.PlayAnimationTrigger(Entity.hitTrigger);
         }
         catch (Exception ex) { Debug.LogException(ex); }
 
         //cancel preview
         StopSpellEffectPreview(entity);
 
-        BakedTargetedSpellEffect e = ComputeTargetedSpellEffect(spell, ref zoneData, entity);
         await entity.ApplySpell(e);
 
         attackEventCompleted = false;

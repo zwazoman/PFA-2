@@ -39,7 +39,6 @@ public class DialogueManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(this.gameObject);
     }
     #endregion
 
@@ -69,7 +68,7 @@ public class DialogueManager : MonoBehaviour
 
         StopShakeEffect();
 
-        _panel.transform.DOLocalMoveY(0, 0.5f, false);
+        //_panel.transform.DOLocalMoveY(0, 0.5f, false);
 
         for (int i = 0; i < TextData.DialogueData.Count; i++)
         {

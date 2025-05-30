@@ -15,7 +15,37 @@ MonoBehaviour:
   DialogueData:
   - Sentence:
     - CharacterName: BreadMan
-      Text: Hello i go to heal you
+      Text: Il lost my friend Pedro, you have see his
+      Key: 0
+      NextKey: End
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 1
+    - CharacterName: End
+      Text: '-'
+      Key: End
+      NextKey: 
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 0
+  - Sentence:
+    - CharacterName: BreadMan
+      Text: I sell my family
+      Key: 0
+      NextKey: End
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 1
+    - CharacterName: End
+      Text: '-'
+      Key: End
+      NextKey: 
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 0
+  - Sentence:
+    - CharacterName: BreadMan
+      Text: I'm not a bread, I'm a "Pain"
       Key: 0
       NextKey: End
       ShakeTextBox: 0
