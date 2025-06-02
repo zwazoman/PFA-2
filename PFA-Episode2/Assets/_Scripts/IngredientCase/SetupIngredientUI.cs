@@ -2,6 +2,7 @@ using AYellowpaper.SerializedCollections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SetupIngredientUI : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class SetupIngredientUI : MonoBehaviour
     public List<List<IngredientBase>> ListListIngredient = new();
     public SerializedDictionary<SauceEffectType, IngredientUISerialize> itemIconPerSauceEffect = new();
     public SerializedDictionary<IngredientEffectType, IngredientUISerialize> itemIconPerIngredientEffect = new();
+    [SerializeField] private List<Button> _listButton = new();
 
     private bool _firstTime;
 
@@ -28,6 +30,7 @@ public class SetupIngredientUI : MonoBehaviour
 
     public async void Next(int index)
     {
+        foreach (Button btn in _listButton) { btn.interactable = false; }
         foreach (IngredientBase ing in ListListIngredient[index])
         {
             if (ing is Sauce Sauce) { GameManager.Instance.playerInventory.Sauces.Add(Sauce); }
@@ -40,9 +43,11 @@ public class SetupIngredientUI : MonoBehaviour
             await TweenIngredientUI.Instance.Monte(TweenIngredientUI.Instance.PanelToTween[index]);
             await TweenIngredientUI.Instance.TweenUIDespawn();
             await ChooseIngredient.Instance.ResetIngredient();
+            //foreach (Button btn in _listButton) { btn.interactable = true; }
         }
         else
         {
+            foreach (Button btn in _listButton) { btn.interactable = false; }
             await TweenIngredientUI.Instance.Monte(TweenIngredientUI.Instance.PanelToTween[index]);
             await TweenIngredientUI.Instance.TweenUIDespawn();
             await SceneTransitionManager.Instance.GoToScene("WorldMap");
