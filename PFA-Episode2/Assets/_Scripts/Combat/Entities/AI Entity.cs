@@ -27,7 +27,7 @@ public class AIEntity : Entity
     {
         base.Start();
 
-        stats.Setup(Data.MaxHealth);
+        stats.Setup(Data.MaxHealth, Data.MaxHealth);
         CombatManager.Instance.RegisterEntity(this);
 
         foreach(PremadeSpell premadeSpell in Data.Spells)
