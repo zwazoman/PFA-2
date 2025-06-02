@@ -60,7 +60,7 @@ public class DraggableSpell : Draggable
         while (isDragging)
         {
             //on dragging on new tile
-            if (Tools.CheckMouseRay(out WayPoint point) && point != null && (_currentPoint == null || point != _currentPoint))
+            if (Tools.CheckMouseRay(out WayPoint point,fingerOffset : true) && point != null && (_currentPoint == null || point != _currentPoint))
             {
                 _currentPoint = point;
 

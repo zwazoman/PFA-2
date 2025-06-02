@@ -10,6 +10,10 @@ public static class Tools
 
     public static Vector3[] AllFlatDirections = { Vector3.forward, Vector3.right, -Vector3.forward, -Vector3.right };
 
+    public static Vector3 GetPositionAboveFinger()
+    {
+        return Input.mousePosition + Vector3.up * 120;
+    }
     public static Vector3Int SnapOnGrid(this Vector3 initialPos)
     {
         return new Vector3Int(Mathf.RoundToInt(initialPos.x), 0, Mathf.RoundToInt(initialPos.z));
@@ -245,7 +249,7 @@ public static class Tools
         FloodDict.Clear();
     }
 
-    public static bool CheckMouseRay(out WayPoint point, bool blockedByUi = false)
+    public static bool CheckMouseRay(out WayPoint point, bool blockedByUi = false,bool fingerOffset = false)
     {
         point = null;
 
@@ -255,7 +259,7 @@ public static class Tools
         }
 
         RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(fingerOffset? GetPositionAboveFinger() : Input.mousePosition);
 
         Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Waypoint"));
 
