@@ -1,41 +1,36 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class IngredientUI : MonoBehaviour
 {
-    [SerializeField] TMP_Text txt_title; //Titre
-    [SerializeField] Image img_Icon; //Sprite
-    [SerializeField] Image img_SauceArea; //Sprite
-    [SerializeField] Image img_frame; 
-
-    //public Image frame; //Cadre
-
-    [SerializeField] TMP_Text txt_effect; //Titre
+    [SerializeField] TMP_Text _txt_title; //Titre
+    [SerializeField] Image _img_Icon; //Sprite
+    [SerializeField] Image _img_SauceArea; //Sprite
+    [SerializeField] TMP_Text _txt_effect; //Titre
+    [SerializeField] Image _img_IconEffect;
+    [SerializeField] List<Image> _starsList = new();
 
 
     public void Setup(IngredientBase ing,Sprite frameSprite)
     {
-        txt_title.text = ing.name;           //Name
-        img_Icon.sprite = ing.sprite;        //Sprite
-
-        //frame.sprite = GameManager.Instance.staticData.itemFramesPerRarity[ing.rarity];
+        _txt_title.text = ing.name;           //Name
+        _img_Icon.sprite = ing.sprite;        //Sprite
 
         if (ing is Sauce)                                                 //Sauce
         {
             Sauce s = (Sauce)ing;
-            txt_effect.text = Serializer.GetSauceEffectString(s);
-            img_SauceArea.sprite = s.areaOfEffect.sprite;
-            img_SauceArea.transform.parent.gameObject.SetActive(true);
+            _txt_effect.text = Serializer.GetSauceEffectString(s);
+            _img_SauceArea.sprite = s.areaOfEffect.sprite;
+            _img_SauceArea.transform.parent.gameObject.SetActive(true);
         }
         else                                                                                  //Ingrédient
         {
             Ingredient Ingredient = (Ingredient)ing;
-            txt_effect.text = Serializer.GetIngredientEffectString(Ingredient);
-            img_SauceArea.transform.parent.gameObject.SetActive(false);
+            _txt_effect.text = Serializer.GetIngredientEffectString(Ingredient);
+            _img_SauceArea.transform.parent.gameObject.SetActive(false);
 
         }
-
-        img_frame.sprite = frameSprite;
     }
 }
