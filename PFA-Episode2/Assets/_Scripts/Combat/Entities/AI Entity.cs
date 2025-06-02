@@ -75,6 +75,8 @@ public class AIEntity : Entity
 
     public override async UniTask EndTurn()
     {
+        await UniTask.Delay(ThinkDelayMilis);
+
         await base.EndTurn();
     }
 
