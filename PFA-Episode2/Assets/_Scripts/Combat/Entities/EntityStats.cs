@@ -34,10 +34,10 @@ public class EntityStats
     public int currentMovePoints;
     public float currentHealth;
 
-    public void Setup(float maxHP)
+    public void Setup(float maxHP,float startHP)
     {
         this.maxHealth = maxHP;
-        currentHealth = maxHP+1;
+        currentHealth = startHP;
 
         ApplyHealth(0);
         owner.gameObject.GetComponent<EntityUI>().Setup(owner);

@@ -33,7 +33,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     public virtual void OnDrag(PointerEventData eventData)
     {
-        transform.position = Input.mousePosition;
+        transform.position = Tools.GetPositionAboveFinger();
     }
 
     public virtual void OnEndDrag(PointerEventData eventData)
