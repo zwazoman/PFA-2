@@ -1,1 +1,1 @@
-public enum Sounds{ButtonPress,EntityDeath,EggplantWalk,}
+public enum Sounds{ButtonPress,EntityDeath,EggplantWalk,EggplantEat,EggplantHit,EggplantAttack,}
