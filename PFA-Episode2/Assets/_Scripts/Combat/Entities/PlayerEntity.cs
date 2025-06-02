@@ -1,6 +1,7 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(SpellCaster))]
@@ -64,21 +65,41 @@ public class PlayerEntity : Entity
 
     public async UniTask CheckPlayerInput()
     {
+        CombatUiManager.Instance.StopButtonShake();
+        
+        bool canPlay = true;
         while (!endTurnButton.Pressed)
         {
-            foreach (DraggableSpell draggable in spellsUI)
-            {
-                await draggable.BeginDrag();
-            }
+            bool hasMoreActions = false;
+            
+            //si il joue un spell
+            if(canPlay)
+                foreach (DraggableSpell draggable in spellsUI)
+                {
+                    hasMoreActions |= draggable.canUse;
+                    await draggable.BeginDrag();
+                }
 
-            if (Input.GetMouseButtonUp(0) && Tools.CheckMouseRay(out WayPoint point) && !EventSystem.current.IsPointerOverGameObject(0))
+            //si il clique sur une case de mouvement
+            hasMoreActions |= stats.currentMovePoints > 0;
+            if (canPlay && Input.GetMouseButtonUp(0) && Tools.CheckMouseRay(out WayPoint point) && !EventSystem.current.IsPointerOverGameObject(0))
             {
-                //await point.Lift(.6f, .5f,0);
                 await TryMoveTo(point);
             }
-
+            
+            //quand le joueur n'a plus d'actions
+            if (!hasMoreActions && canPlay)
+            {
+                canPlay = false;
+                //jiggle end button when no more action is possible
+                CombatUiManager.Instance.ShakeButton();
+            }
+            
             await UniTask.Yield();
         }
+        
+        CombatUiManager.Instance.StopButtonShake();
+
     }
 
     public void ShowSpellsUI()
