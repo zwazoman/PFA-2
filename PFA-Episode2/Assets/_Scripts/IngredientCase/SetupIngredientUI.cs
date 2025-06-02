@@ -7,7 +7,10 @@ public class SetupIngredientUI : MonoBehaviour
 {
     [SerializeField] private List<IngredientUI> _listIngredientUI = new();
     public List<List<IngredientBase>> ListListIngredient = new();
-    public SerializedDictionary<Rarity, Sprite> itemFramesPerRarity = new();
+    public SerializedDictionary<SauceEffectType, Sprite> itemIconPerSauceEffect = new();
+    public SerializedDictionary<IngredientEffectType, Sprite> itemIconPerIngredientEffect = new();
+    public SerializedDictionary<SauceEffectType, Color> colorPerSauceEffect = new();
+    public SerializedDictionary<IngredientEffectType, Color> colorPerIngredientEffect = new();
 
     private bool _firstTime;
 
@@ -19,7 +22,8 @@ public class SetupIngredientUI : MonoBehaviour
     {
         try
         {
-            _listIngredientUI[index].Setup(IngredientBase, itemFramesPerRarity[IngredientBase.rarity]);
+            if (IngredientBase is Sauce sauce) { _listIngredientUI[index].Setup(IngredientBase, itemIconPerSauceEffect[sauce.effect], IngredientBase.rarity); }
+            else if (IngredientBase is Ingredient ing) { _listIngredientUI[index].Setup(IngredientBase, itemIconPerIngredientEffect[ing.EffectType], IngredientBase.rarity); }
         }
         catch (Exception e){ Debug.LogException(e); }
     }
