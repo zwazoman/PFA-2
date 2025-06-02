@@ -39,7 +39,6 @@ public class TweenIngredientUI : MonoBehaviour
         {
             RectTransform rect = PanelToTween[i];
             Sequence seq = DOTween.Sequence();
-            _buttonList[i].interactable = true;
             switch (i)
             {
                 case 0:
@@ -54,6 +53,7 @@ public class TweenIngredientUI : MonoBehaviour
             }
 
             await seq.AsyncWaitForCompletion().AsUniTask();
+            _buttonList[i].interactable = true;
         }
     }
 
