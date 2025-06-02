@@ -18,6 +18,7 @@ namespace mup
             public UnityEngine.AnimationEvent animationEvent;
 #endif
             public int frame = 0;
+            public string SoundName;
         }
         public List<AnimationEvent> animationEvents;
 
@@ -33,7 +34,7 @@ namespace mup
         {
             List<UnityEngine.AnimationEvent> events = AnimationUtility.GetAnimationEvents(animationCip).ToList();
 
-            events = events.Where(x => x.functionName != "AttackEvent").ToList();
+            events = events.Where(x => x.functionName != "SoundEvent").ToList();
 
             animationEvents = animationEvents.OrderBy(a => a.frame).ToList();
             foreach (AnimationEvent a in animationEvents)
@@ -44,7 +45,8 @@ namespace mup
                     a.animationEvent.time = (float)a.frame * (1.0f/animationCip.frameRate);
                 }
 
-                a.animationEvent.functionName = "AttackEvent";
+                a.animationEvent.functionName = "SoundEvent";
+                a.animationEvent.stringParameter = a.SoundName;
 
                 events.Add(a.animationEvent);
             }

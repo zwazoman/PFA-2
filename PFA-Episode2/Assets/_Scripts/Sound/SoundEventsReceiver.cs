@@ -3,19 +3,25 @@ using UnityEngine;
 
 public class SoundEventsReceiver : MonoBehaviour
 {
-    public void CallSound(string parameters)
+    public void PlaySound(string soundName)
     {
+        //try
+        //{
+        //    Sounds sound = (Sounds)(int.Parse(parameters.Split("_")[0]));
+        //    Debug.Log("CallSound " + sound);
+
+        //    SFXManager.Instance.PlaySFXClip(sound);
+
+        //}
+        //catch (Exception e)
+        //{
+        //    Debug.LogException(e);
+        //}
+
         try
         {
-            Sounds sound = (Sounds)(int.Parse(parameters.Split("_")[0]));
-            Debug.Log("CallSound " + sound);
-
-            SFXManager.Instance.PlaySFXClip(sound);
-
+            SFXManager.Instance.PlaySFXClip(soundName);
         }
-        catch (Exception e)
-        {
-            Debug.LogException(e);
-        }
+        catch (Exception e) { Debug.LogException(e); }
     }
 }
