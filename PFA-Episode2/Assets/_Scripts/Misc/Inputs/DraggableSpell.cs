@@ -3,6 +3,7 @@ using DG.Tweening;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class DraggableSpell : Draggable
@@ -21,7 +22,7 @@ public class DraggableSpell : Draggable
     [SerializeField] private Image _cooldownImage;
     [SerializeField] private TMP_Text _cooldownText;
 
-    bool _canUse = true;
+    public bool canUse = true;
 
     public void SetUp(Spell spell,Entity player)
     {
@@ -44,7 +45,7 @@ public class DraggableSpell : Draggable
 
     public async UniTask BeginDrag()
     {
-        if (isDragging && _canUse)
+        if (isDragging && canUse)
         {
             spellCaster.castingEntity.ClearWalkables();
             _rangePoints = spellCaster.PreviewSpellRange(spell);
@@ -60,7 +61,7 @@ public class DraggableSpell : Draggable
         while (isDragging)
         {
             //on dragging on new tile
-            if (Tools.CheckMouseRay(out WayPoint point) && point != null && (_currentPoint == null || point != _currentPoint))
+            if (Tools.CheckMouseRay(out WayPoint point,fingerOffset : true) && point != null && (_currentPoint == null || point != _currentPoint))
             {
                 _currentPoint = point;
 
@@ -86,7 +87,7 @@ public class DraggableSpell : Draggable
 
     void EnableSpell()
     {
-        _canUse = true;
+        canUse = true;
         enabled = true;
 
         _spellImage.enabled = true;
@@ -104,7 +105,7 @@ public class DraggableSpell : Draggable
 
     void DisableSpell()
     {
-        _canUse = false;
+        canUse = false;
         enabled = false;
 
         _cooldownImage.gameObject.SetActive(true);

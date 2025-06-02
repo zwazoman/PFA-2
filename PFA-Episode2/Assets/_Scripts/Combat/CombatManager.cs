@@ -159,7 +159,7 @@ public class CombatManager : MonoBehaviour
 
     int ComputeEnnemiesCount()
     {
-        int positionMap = PlayerMap.Instance.PositionMap;
+        int positionMap = PlayerMap.Instance?.PositionMap??  0;
         if (positionMap > 9) { return 4; }
         else if (positionMap > 6) { return 3; }
         else if(positionMap > 3) { return 2; }
