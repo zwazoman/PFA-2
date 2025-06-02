@@ -144,17 +144,27 @@ public class SFXManager : MonoBehaviour
         return AudioSourceHandle(audioSource, volume, pitch);
     }
 
-    public AudioSource PlaySFXClip(String audioClipName, float volume = 1f, float pitch = 1f)
+    public AudioSource PlaySFXClip(String audioClipName, float volumeFactor = 1f, float pitchFactor = 1f)
     {
         AudioSource audioSource = UseFromPool();
+
+        Clip choosenClip = null;
 
         foreach(String name in _soundsDict.Keys)
         {
             if (name == audioClipName)
-                audioSource.clip = ChooseRandomClip(_soundsDict[name]);
+                choosenClip = _soundsDict[name];
         }
 
-        return AudioSourceHandle(audioSource, volume, pitch);
+        if (choosenClip == null)
+        {
+            Debug.LogError("incorrect sound Name");
+            return null;
+        }
+
+        audioSource.clip = ChooseRandomClip(choosenClip);
+
+        return AudioSourceHandle(audioSource, choosenClip.Volume * volumeFactor, choosenClip.Pitch * pitchFactor);
     }
 
     #endregion
@@ -203,17 +213,29 @@ public class SFXManager : MonoBehaviour
         return AudioSourceHandle(audioSource, volume, pitch, is2DSound, bypassesEffects);
     }
 
-    public AudioSource PlaySFXClipAtPosition(String audioClipName, Vector3 position, bool is2DSound = false, bool bypassesEffects = false, float volume = 1f, float pitch = 1f)
+    public AudioSource PlaySFXClipAtPosition(String audioClipName, Vector3 position, bool is2DSound = false, bool bypassesEffects = false, float volumeFactor = 1f, float pitchFactor = 1f)
     {
         AudioSource audioSource = UseFromPool();
 
+        Clip choosenClip = null;
+
         foreach (String name in _soundsDict.Keys)
+        {
             if (name == audioClipName)
-                audioSource.clip = ChooseRandomClip(_soundsDict[name]);
+                choosenClip = _soundsDict[name];
+        }
+
+        if (choosenClip == null)
+        {
+            Debug.LogError("incorrect sound Name");
+            return null;
+        }
+
+        audioSource.clip = ChooseRandomClip(choosenClip);
 
         audioSource.gameObject.transform.position = position;
 
-        return AudioSourceHandle(audioSource, volume, pitch, is2DSound, bypassesEffects);
+        return AudioSourceHandle(audioSource, choosenClip.Volume * volumeFactor, choosenClip.Pitch * pitchFactor, is2DSound, bypassesEffects);
     }
 
     #endregion
@@ -316,11 +338,6 @@ public class SFXManager : MonoBehaviour
         }
         enumText += "}";
         File.WriteAllText(_soundsEnumFilePath, enumText);
-    }
-
-    public void TestSound()
-    {
-        //play sound in editor ?
     }
 
     #endif
