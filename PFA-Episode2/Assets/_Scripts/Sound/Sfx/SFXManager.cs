@@ -135,12 +135,6 @@ public class SFXManager : MonoBehaviour
         return AudioSourceHandle(audioSource, choosenClip.Volume * volumefactor, choosenClip.Pitch * pitchfactor, true, false, choosenClip.MixerGroup);
     }
 
-    /// <summary>
-    /// récupère une audioSource dans la pool et joue le son donné
-    /// </summary>
-    /// <param name="choosenSound"></param>
-    /// <param name="volume"></param>
-    /// <param name="pitch"></param>
     public AudioSource PlaySFXClip(AudioClip audioClip, float volume = 1f, float pitch = 1f)
     {
         AudioSource audioSource = UseFromPool();
@@ -148,6 +142,29 @@ public class SFXManager : MonoBehaviour
         audioSource.clip = audioClip; // assigne le clip random à l'audiosource
 
         return AudioSourceHandle(audioSource, volume, pitch);
+    }
+
+    public AudioSource PlaySFXClip(String audioClipName, float volumeFactor = 1f, float pitchFactor = 1f)
+    {
+        AudioSource audioSource = UseFromPool();
+
+        Clip choosenClip = null;
+
+        foreach(String name in _soundsDict.Keys)
+        {
+            if (name == audioClipName)
+                choosenClip = _soundsDict[name];
+        }
+
+        if (choosenClip == null)
+        {
+            Debug.LogError("incorrect sound Name");
+            return null;
+        }
+
+        audioSource.clip = ChooseRandomClip(choosenClip);
+
+        return AudioSourceHandle(audioSource, choosenClip.Volume * volumeFactor, choosenClip.Pitch * pitchFactor);
     }
 
     #endregion
@@ -185,14 +202,6 @@ public class SFXManager : MonoBehaviour
 
     }
 
-    /// <summary>
-    ///joue un son. le son sera placé a un endroit donné et prendra en compte ou non les effets.
-    /// </summary>
-    /// <param name="choosenSound"></param>
-    /// <param name="position"></param>
-    /// <param name="bypassesEffects"></param>
-    /// <param name="volume"></param>
-    /// <param name="pitch"></param>
     public AudioSource PlaySFXClipAtPosition(AudioClip choosenSound, Vector3 position, bool is2DSound = false, bool bypassesEffects = false, float volume = 1f, float pitch = 1f)
     {
         AudioSource audioSource = UseFromPool();
@@ -202,6 +211,31 @@ public class SFXManager : MonoBehaviour
         audioSource.gameObject.transform.position = position;
 
         return AudioSourceHandle(audioSource, volume, pitch, is2DSound, bypassesEffects);
+    }
+
+    public AudioSource PlaySFXClipAtPosition(String audioClipName, Vector3 position, bool is2DSound = false, bool bypassesEffects = false, float volumeFactor = 1f, float pitchFactor = 1f)
+    {
+        AudioSource audioSource = UseFromPool();
+
+        Clip choosenClip = null;
+
+        foreach (String name in _soundsDict.Keys)
+        {
+            if (name == audioClipName)
+                choosenClip = _soundsDict[name];
+        }
+
+        if (choosenClip == null)
+        {
+            Debug.LogError("incorrect sound Name");
+            return null;
+        }
+
+        audioSource.clip = ChooseRandomClip(choosenClip);
+
+        audioSource.gameObject.transform.position = position;
+
+        return AudioSourceHandle(audioSource, choosenClip.Volume * volumeFactor, choosenClip.Pitch * pitchFactor, is2DSound, bypassesEffects);
     }
 
     #endregion
@@ -304,11 +338,6 @@ public class SFXManager : MonoBehaviour
         }
         enumText += "}";
         File.WriteAllText(_soundsEnumFilePath, enumText);
-    }
-
-    public void TestSound()
-    {
-        //play sound in editor ?
     }
 
     #endif
