@@ -14,7 +14,7 @@ public class IngredientUI : MonoBehaviour
     [SerializeField] List<Image> _starsList = new();
     [SerializeField] GameObject _spellZoneGO;
 
-    public void Setup(IngredientBase ing, Sprite iconEffect, Rarity rarity)
+    public void Setup(IngredientBase ing, Sprite iconEffect, Rarity rarity, Color color)
     {
         _txt_title.text = ing.name;           //Name
         _img_Icon.sprite = ing.sprite;        //Sprite
@@ -39,6 +39,8 @@ public class IngredientUI : MonoBehaviour
                 _starsList[2].gameObject.SetActive(true);
                 break;
         }                    //Stars
+        _txt_effect.color = color;
+        _img_IconEffect.color = color;
         if (ing is Sauce s)                                                 //Sauce
         {
             s = (Sauce)ing;
@@ -52,12 +54,6 @@ public class IngredientUI : MonoBehaviour
             Ingredient Ingredient = (Ingredient)ing;
             _txt_effect.text = Serializer.GetIngredientEffectString(Ingredient);
             _img_SauceArea.transform.parent.gameObject.SetActive(false);
-            _txt_effect.color = new Color(87, 122, 44, 48);
         }
-    }
-
-    public void SetupColor()
-    {
-
     }
 }

@@ -7,10 +7,8 @@ public class SetupIngredientUI : MonoBehaviour
 {
     [SerializeField] private List<IngredientUI> _listIngredientUI = new();
     public List<List<IngredientBase>> ListListIngredient = new();
-    public SerializedDictionary<SauceEffectType, Sprite> itemIconPerSauceEffect = new();
-    public SerializedDictionary<IngredientEffectType, Sprite> itemIconPerIngredientEffect = new();
-    public SerializedDictionary<SauceEffectType, Color> colorPerSauceEffect = new();
-    public SerializedDictionary<IngredientEffectType, Color> colorPerIngredientEffect = new();
+    public SerializedDictionary<SauceEffectType, IngredientUISerialize> itemIconPerSauceEffect = new();
+    public SerializedDictionary<IngredientEffectType, IngredientUISerialize> itemIconPerIngredientEffect = new();
 
     private bool _firstTime;
 
@@ -22,8 +20,8 @@ public class SetupIngredientUI : MonoBehaviour
     {
         try
         {
-            if (IngredientBase is Sauce sauce) { _listIngredientUI[index].Setup(IngredientBase, itemIconPerSauceEffect[sauce.effect], IngredientBase.rarity); }
-            else if (IngredientBase is Ingredient ing) { _listIngredientUI[index].Setup(IngredientBase, itemIconPerIngredientEffect[ing.EffectType], IngredientBase.rarity); }
+            if (IngredientBase is Sauce sauce) { _listIngredientUI[index].Setup(IngredientBase, itemIconPerSauceEffect[sauce.effect].IconEffectSprite, IngredientBase.rarity, itemIconPerSauceEffect[sauce.effect].EffectTypeColor); }
+            else if (IngredientBase is Ingredient ing) { _listIngredientUI[index].Setup(IngredientBase, itemIconPerIngredientEffect[ing.EffectType].IconEffectSprite, IngredientBase.rarity, itemIconPerIngredientEffect[ing.EffectType].EffectTypeColor); }
         }
         catch (Exception e){ Debug.LogException(e); }
     }
