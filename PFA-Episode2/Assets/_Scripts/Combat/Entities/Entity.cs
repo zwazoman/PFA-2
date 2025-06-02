@@ -76,6 +76,7 @@ public class Entity : MonoBehaviour
     // game management
     public virtual async UniTask PlayTurn()
     {
+        SFXManager.Instance.PlaySFXClip(Sounds.TurnChange);
         Tools.Flood(currentPoint);
         stats.currentMovePoints = stats.maxMovePoints;
         await stats.ApplyShield(-1);
