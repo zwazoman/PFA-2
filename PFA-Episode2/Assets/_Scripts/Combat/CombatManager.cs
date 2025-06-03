@@ -87,10 +87,10 @@ public class CombatManager : MonoBehaviour
     {
         await UniTask.Yield();
         if (_startGameOnSceneStart)
-            await StartGame();
+            await Play();
     }
 
-    public async UniTask StartGame()
+    public async UniTask Play()
     {
         if(_summonEntities)
             SummonEntities();
@@ -104,11 +104,10 @@ public class CombatManager : MonoBehaviour
                 if (player == null) continue;
 
                 foreach (Entity e in Entities) e.StopPreviewingSpellEffect();
-
+                
                 OnNewTurn?.Invoke(player);
                 await player.PlayTurn();
-
-
+                
             }
 
             //enemy entities
@@ -144,7 +143,7 @@ public class CombatManager : MonoBehaviour
         foreach (Spawner spawner in choosenSetup.Spawners)
             spawners.Add(spawner);
 
-        //mélanger les spawners ?
+        //mï¿½langer les spawners ?
 
         //check si _min ennemies > spawners
         if (ennemiesCount > spawners.Count)
