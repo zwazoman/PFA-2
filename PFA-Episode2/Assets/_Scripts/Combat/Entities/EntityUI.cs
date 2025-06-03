@@ -26,7 +26,7 @@ public class EntityUI : MonoBehaviour
         owner.stats.ShieldUpdateFeeback += OnShieldUpdated;
 
         //death handling
-        owner.OnDead += () => { UpdateLifebar(-1, 0); OnShieldUpdated(0); };
+        owner.OnDead += () => { UpdateLifebar(-1, 0); OnShieldUpdated(0); lifebar.transform.parent.gameObject.SetActive(false); };
 
         //topleft icons
         CombatUiManager.Instance.RegisterEntity(owner);
@@ -43,6 +43,7 @@ public class EntityUI : MonoBehaviour
             lifebar.CancelPreview();
             _shieldBar.CancelPreview();
         };
+        
     }
     private void OnShieldUpdated(float newShield)
     {

@@ -271,6 +271,7 @@ public class Entity : MonoBehaviour
             }
         }
 
+        print(furthestPoint.transform.position);
         await TryMoveTo(furthestPoint);
     }
     public virtual async UniTask TryMoveTo(WayPoint targetPoint, bool showTiles = true)
@@ -337,14 +338,15 @@ public class Entity : MonoBehaviour
     //death
     public async UniTask Die()
     {
-        visuals.DeathAnimation();
+        //visuals.PlayDeathAnimation();
+        OnDead?.Invoke();
 
-        if (this is PlayerEntity player || team == Team.Enemy && CombatManager.Instance.EnemyEntities.Count == 1)
-            await visuals.DeathAnimation();
+        //if (this is PlayerEntity || team == Team.Enemy && CombatManager.Instance.EnemyEntities.Count == 1)
+        Debug.Log("about to play death animation");
+        await visuals.PlayDeathAnimation();
 
         currentPoint.StepOff();
         isDead = true;
-        OnDead?.Invoke();
 
         await CombatManager.Instance.UnRegisterEntity(this);
 
