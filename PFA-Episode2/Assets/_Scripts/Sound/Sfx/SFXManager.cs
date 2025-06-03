@@ -116,7 +116,6 @@ public class SFXManager : MonoBehaviour
     public AudioSource PlaySFXClip(Sounds choosenSound, float volumefactor = 1f, float pitchfactor = 1f)
     {
         AudioSource audioSource = UseFromPool();
-        print(_clips.Count);
         Clip choosenClip = _clips[(int)choosenSound];
 
         try

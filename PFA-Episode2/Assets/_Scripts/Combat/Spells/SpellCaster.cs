@@ -235,6 +235,8 @@ public class SpellCaster : MonoBehaviour
 
     void SummonEntityAtPoint(WayPoint point)
     {
+        print("summon");
+
         GameObject kamikaze = Instantiate(GameManager.Instance.staticData.kamikaze, new Vector3(point.transform.position.x, .5f, point.transform.position.z), Quaternion.identity);
         Entity entity = kamikaze.GetComponent<Entity>();
 
@@ -392,6 +394,8 @@ public class SpellCaster : MonoBehaviour
             return false;
         }
 
+        print("LANCE");
+
         PlayerEntity playerCastingEntity = null;
 
         if (castingEntity is PlayerEntity)
@@ -443,6 +447,7 @@ public class SpellCaster : MonoBehaviour
 
     async UniTask UtilitaryBehaviour(Spell spell, SpellCastData zoneData, WayPoint target)
     {
+        print("aaa");
         BakedUtilitarySpellEffect e = ComputeUtilitarySpellEffect(spell, ref zoneData);
         await ApplyUtilitarySpell(e, spell);
     }
@@ -481,8 +486,10 @@ public class SpellCaster : MonoBehaviour
 
     async UniTask ApplyUtilitarySpell(BakedUtilitarySpellEffect effect, Spell spell)
     {
+        print("ooo");
         if (effect.summonPoint != null)
         {
+            print("eeee");
             SpellProjectile projectile;
             Vector3 spawnPos;
             if (_spellCastingSocket != null)

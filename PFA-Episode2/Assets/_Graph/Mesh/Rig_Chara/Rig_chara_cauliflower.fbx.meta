@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: acb77a2e29bdfb54d88dfc59dba98969
+guid: c80c4142c037cfd4f89aa26e92aecb11
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -36,61 +36,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: rig_chara_fish|Anim_attack_fish
-      takeName: rig_chara_fish|Anim_attack_fish
-      internalID: 4495238341682058094
+      name: Anim_hit_cauliflower
+      takeName: Anim_hit_cauliflower
+      internalID: 4816257184588212109
       firstFrame: 0
       lastFrame: 40
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events:
-      - time: 0.1268116
-        functionName: SoundEvent
-        data: FishAttackWindup
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.5
-        functionName: SoundEvent
-        data: FishAttack
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.6923452
-        functionName: AttackEvent
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: rig_chara_fish|Anim_death_fish
-      takeName: rig_chara_fish|Anim_death_fish
-      internalID: 3029068408944232256
-      firstFrame: 0
-      lastFrame: 110
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -115,59 +65,9 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: rig_chara_fish|Anim_hit_fish
-      takeName: rig_chara_fish|Anim_hit_fish
-      internalID: -6659538016306466290
-      firstFrame: 0
-      lastFrame: 40
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events:
-      - time: 0.29046562
-        functionName: SoundEvent
-        data: FishEat
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.49002215
-        functionName: SoundEvent
-        data: FishEat
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.691796
-        functionName: SoundEvent
-        data: FishEat
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: rig_chara_fish|Anim_idle_fish
-      takeName: rig_chara_fish|Anim_idle_fish
-      internalID: 4358705643797101165
+      name: Anim_idle_cauliflower
+      takeName: Anim_idle_cauliflower
+      internalID: 3833785187258094878
       firstFrame: 0
       lastFrame: 60
       wrapMode: 0
@@ -194,11 +94,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: rig_chara_fish|Anim_move_fish
-      takeName: rig_chara_fish|Anim_move_fish
-      internalID: 2416594990517500702
+      name: Anim_move_cauliflower
+      takeName: Anim_move_cauliflower
+      internalID: 3174750287523982047
       firstFrame: 0
-      lastFrame: 20
+      lastFrame: 40
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -217,43 +117,15 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events:
-      - time: 0
-        functionName: SoundEvent
-        data: FishWalk
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.23946784
-        functionName: SoundEvent
-        data: FishWalk
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.47893572
-        functionName: SoundEvent
-        data: FishWalk
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.7427938
-        functionName: SoundEvent
-        data: FishWalk
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
+      events: []
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: rig_chara_fish|Anim_openm_fish
-      takeName: rig_chara_fish|Anim_openm_fish
-      internalID: -8799009984275354403
+      name: Anim_push_cauliflower
+      takeName: Anim_push_cauliflower
+      internalID: -7865593575488531012
       firstFrame: 0
       lastFrame: 20
       wrapMode: 0
@@ -280,9 +152,38 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: rig_chara_fish|Anim_push_fish
-      takeName: rig_chara_fish|Anim_push_fish
-      internalID: 4854205888591807883
+      name: Anim_death_cauliflower
+      takeName: Anim_death_cauliflower
+      internalID: 8529303033834374396
+      firstFrame: 0
+      lastFrame: 100
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Anim_openm_cauliflower
+      takeName: Anim_openm_cauliflower
+      internalID: -2658789173154153680
       firstFrame: 0
       lastFrame: 20
       wrapMode: 0
@@ -291,8 +192,73 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
-      loopBlend: 1
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Anim_attackd_cauliflower
+      takeName: Anim_attackd_cauliflower
+      internalID: 3660782798470561449
+      firstFrame: 0
+      lastFrame: 60
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events:
+      - time: 0.6741344
+        functionName: AttackEvent
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Anim_popmini_cauliflower
+      takeName: Anim_popmini_cauliflower
+      internalID: 5944524935311231686
+      firstFrame: 0
+      lastFrame: 75
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
