@@ -170,7 +170,7 @@ public class AIEntity : Entity
         switch (choosenSpell.spellType)
         {
             case SpellType.Attack:
-                break;
+                return await CastSpellAtPoint(choosenSpell, choosenTargetPoint);
             case SpellType.Defense:
                 List<WayPoint> enemyPoints = new();
 
@@ -180,7 +180,7 @@ public class AIEntity : Entity
                 }
 
                 enemyPoints.FindClosestFloodPoint(out choosenTargetPoint, Tools.SmallFlood(targetEntityPoint, 6, false, true));
-                break;
+                return await CastSpellAtPoint(choosenSpell, choosenTargetPoint);
             case SpellType.Utilitary:
                 //cast le sort le plus proche possible du joueur
 
@@ -198,12 +198,13 @@ public class AIEntity : Entity
 
                 targetPoints.FindClosestFloodPoint(out choosenPoint, Tools.SmallFlood(targetEntityPoint, Tools.FloodDict[targetEntityPoint]));
 
-                await CastSpell(choosenSpell, choosenPoint, choosenPoint);
+                if (choosenPoint == null)
+                    return true;
 
+                await CastSpell(choosenSpell, choosenPoint, choosenPoint);
                 break;
         }
-
-        return await CastSpellAtPoint(choosenSpell, choosenTargetPoint);
+        return true;
 
     }
 

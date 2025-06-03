@@ -271,6 +271,7 @@ public class Entity : MonoBehaviour
             }
         }
 
+        print(furthestPoint.transform.position);
         await TryMoveTo(furthestPoint);
     }
     public virtual async UniTask TryMoveTo(WayPoint targetPoint, bool showTiles = true)
