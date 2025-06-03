@@ -60,8 +60,6 @@ public class EntityStats
         currentHealth += delta;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
-        Debug.Log("Health Updated ! ", owner);
-
         OnHealthUpdated?.Invoke(delta, currentHealth);
 
         //feedbacks
