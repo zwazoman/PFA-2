@@ -42,6 +42,7 @@ public class ChooseIngredient : MonoBehaviour
     private int _maxIngredientRef;
     private bool _sauceChoose;
     public List<IngredientBase> IngredientBaseChooseBySac { get; private set; } = new();
+    private IngredientBase _previousIngredient;
     private List<IngredientBase> _completeListIngredientChoose = new();
 
     public static ChooseIngredient Instance;
@@ -63,12 +64,12 @@ public class ChooseIngredient : MonoBehaviour
 
         for (int sacIndex = 0; sacIndex <= 2; sacIndex++)
         {
-            if (_sceneCombat == true) { _maxIngredientRef = 0; }
+            if (_sceneCombat) { _maxIngredientRef = 0; }
             else { _maxIngredientRef = 2; }
             for (int tagIngredient = 0; tagIngredient <= _maxIngredientRef; tagIngredient++)
             {
                 if (!_sauceChoose) { IsSauce(); }
-                if (tagIngredient == 2 && _sauceChoose) { IngredientBaseChooseBySac.Add(ReturnSauceChoose()); }
+                if (tagIngredient == _maxIngredientRef && _sauceChoose) { IngredientBaseChooseBySac.Add(ReturnSauceChoose()); }
                 else { IngredientBaseChooseBySac.Add(ReturnIngredientChoose()); }
             }
             foreach (IngredientBase ing in IngredientBaseChooseBySac) { _completeListIngredientChoose.Add(ing); }
@@ -94,9 +95,9 @@ public class ChooseIngredient : MonoBehaviour
     /// <returns>Ingrédient (scriptable Object)</returns>
     private Ingredient ReturnIngredientChoose()
     {
-        List<Ingredient> CommonIng = _listIngredientCommon;
-        List<Ingredient> SavoureuxIng = _listIngredientSavoureux;
-        List<Ingredient> DivinIng = _listIngredientDivin;
+        List<Ingredient> CommonIng = new(_listIngredientCommon);
+        List<Ingredient> SavoureuxIng = new(_listIngredientSavoureux);
+        List<Ingredient> DivinIng = new(_listIngredientDivin);
 
         float total = _probaCommon + _probaSavoureux + _probaDivin;
         float result = Random.Range(1, total + 1);
@@ -119,11 +120,14 @@ public class ChooseIngredient : MonoBehaviour
         }
         else //Common
         {
+            if (_previousIngredient != null) { CommonIng.Remove((Ingredient)_previousIngredient); }
             Ingredient ing = CommonIng[Random.Range(0, CommonIng.Count)];
+            _previousIngredient = ing;
             SetupValueIngredient();
             return ing;
         }
     }
+
     /// <summary>
     /// Retourne une sauce au hasard selon les proba des sauces
     /// </summary>
@@ -191,73 +195,73 @@ public class ChooseIngredient : MonoBehaviour
         foreach (Ingredient ing in _listIngredientSavoureux) { if (!_listBannedIngredient.Contains(ing) && ing.rarity == Rarity.Savoureux) { _listIngredientSavoureux.Add(_listBannedIngredient[1]); break; } }
         foreach (Ingredient ing in _listIngredientDivin) { if (!_listBannedIngredient.Contains(ing) && ing.rarity == Rarity.Divin) { _listIngredientDivin.Add(_listBannedIngredient[2]); break; } }
     }
-
-#if UNITY_EDITOR
-    public void GenerateListsDeCon()
-    {
-        _listIngredientCommon.Clear();
-        _listIngredientSavoureux.Clear();
-        _listIngredientDivin.Clear();
-
-        _listSauceCommon.Clear();
-        _listSauceSavoureux.Clear();
-        _listSauceDivin.Clear();
-
-        string[] files = Directory.GetFiles("Assets/_Data/Ingredients/ingredients", "*.asset", SearchOption.TopDirectoryOnly);
-        foreach (string path in files)
-        {
-            
-            Ingredient asset = (Ingredient)AssetDatabase.LoadAssetAtPath(path, typeof(Ingredient));
-            switch (asset.rarity)
-            {
-                case Rarity.Ordinaire:
-                    _listIngredientCommon.Add(asset);
-                    break;
-                case Rarity.Savoureux:
-                    _listIngredientSavoureux.Add(asset);
-                    break;
-                case Rarity.Divin:
-                    _listIngredientDivin.Add(asset);
-                    break;
-            }
-        }
-
-        files = Directory.GetFiles("Assets/_Data/Ingredients/Sauce", "*.asset", SearchOption.TopDirectoryOnly);
-        foreach (string path in files)
-        {
-            
-            Sauce asset = (Sauce)AssetDatabase.LoadAssetAtPath(path, typeof(Sauce));
-            if (asset.name != "No Sauce")
-            switch (asset.rarity)
-            {
-                case Rarity.Ordinaire:
-                    _listSauceCommon.Add(asset);
-                    break;
-                case Rarity.Savoureux:
-                    _listSauceSavoureux.Add(asset);
-                    break;
-                case Rarity.Divin:
-                    _listSauceDivin.Add(asset);
-                    break;
-            }
-        }
-
-    }
-#endif
 }
+//#if UNITY_EDITOR
+//    public void GenerateListsDeCon()
+//    {
+//        _listIngredientCommon.Clear();
+//        _listIngredientSavoureux.Clear();
+//        _listIngredientDivin.Clear();
 
-#if UNITY_EDITOR
-[CustomEditor(typeof(ChooseIngredient))]
-class ChooseIngredientEditor : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        base.OnInspectorGUI();
-        if (GUILayout.Button("générer les listes connard"))
-        {
-            ((ChooseIngredient)target).GenerateListsDeCon();
-        }
-    }
-}
-    #endif
+//        _listSauceCommon.Clear();
+//        _listSauceSavoureux.Clear();
+//        _listSauceDivin.Clear();
+
+//        string[] files = Directory.GetFiles("Assets/_Data/Ingredients/ingredients", "*.asset", SearchOption.TopDirectoryOnly);
+//        foreach (string path in files)
+//        {
+            
+//            Ingredient asset = (Ingredient)AssetDatabase.LoadAssetAtPath(path, typeof(Ingredient));
+//            switch (asset.rarity)
+//            {
+//                case Rarity.Ordinaire:
+//                    _listIngredientCommon.Add(asset);
+//                    break;
+//                case Rarity.Savoureux:
+//                    _listIngredientSavoureux.Add(asset);
+//                    break;
+//                case Rarity.Divin:
+//                    _listIngredientDivin.Add(asset);
+//                    break;
+//            }
+//        }
+
+//        files = Directory.GetFiles("Assets/_Data/Ingredients/Sauce", "*.asset", SearchOption.TopDirectoryOnly);
+//        foreach (string path in files)
+//        {
+            
+//            Sauce asset = (Sauce)AssetDatabase.LoadAssetAtPath(path, typeof(Sauce));
+//            if (asset.name != "No Sauce")
+//            switch (asset.rarity)
+//            {
+//                case Rarity.Ordinaire:
+//                    _listSauceCommon.Add(asset);
+//                    break;
+//                case Rarity.Savoureux:
+//                    _listSauceSavoureux.Add(asset);
+//                    break;
+//                case Rarity.Divin:
+//                    _listSauceDivin.Add(asset);
+//                    break;
+//            }
+//        }
+
+//    }
+//#endif
+//}
+
+//#if UNITY_EDITOR
+//[CustomEditor(typeof(ChooseIngredient))]
+//class ChooseIngredientEditor : Editor
+//{
+//    public override void OnInspectorGUI()
+//    {
+//        base.OnInspectorGUI();
+//        if (GUILayout.Button("générer les listes connard"))
+//        {
+//            ((ChooseIngredient)target).GenerateListsDeCon();
+//        }
+//    }
+//}
+//    #endif
 
