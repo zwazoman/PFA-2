@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEditor;
 using System.IO;
+using System.Net.NetworkInformation;
 
 public class ChooseIngredient : MonoBehaviour
 {
@@ -42,7 +43,8 @@ public class ChooseIngredient : MonoBehaviour
     private int _maxIngredientRef;
     private bool _sauceChoose;
     public List<IngredientBase> IngredientBaseChooseBySac { get; private set; } = new();
-    private IngredientBase _previousIngredient;
+    private Ingredient _previousIngredient;
+    private Sauce _previousSauce;
     private List<IngredientBase> _completeListIngredientChoose = new();
 
     public static ChooseIngredient Instance;
@@ -120,7 +122,7 @@ public class ChooseIngredient : MonoBehaviour
         }
         else //Common
         {
-            if (_previousIngredient != null) { CommonIng.Remove((Ingredient)_previousIngredient); }
+            if (_previousIngredient != null) { CommonIng.Remove(_previousIngredient); }
             Ingredient ing = CommonIng[Random.Range(0, CommonIng.Count)];
             _previousIngredient = ing;
             SetupValueIngredient();
@@ -160,7 +162,9 @@ public class ChooseIngredient : MonoBehaviour
         }
         else //Common
         {
+            if (_previousSauce != null) { CommonSauce.Remove(_previousSauce); }
             Sauce sauce = CommonSauce[Random.Range(0, CommonSauce.Count)];
+            _previousSauce = sauce;
             SetupValueIngredient();
             return sauce;
         }
