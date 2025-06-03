@@ -14,6 +14,7 @@ public class TweenIngredientUI : MonoBehaviour
     public List<RectTransform> PanelToTween = new();
     public static TweenIngredientUI Instance;
     [SerializeField] private int _targetX = 1300;
+    [SerializeField] private int _targetY = 0;
     [SerializeField] private int _targetYTxt = 955;
 
     const float TweenDuration = .25f;
@@ -42,13 +43,13 @@ public class TweenIngredientUI : MonoBehaviour
             switch (i)
             {
                 case 0:
-                    seq.Join(rect.DOAnchorPos(new Vector2(-_targetX, 0), TweenDuration).SetEase(Ease.OutBack));
+                    seq.Join(rect.DOAnchorPos(new Vector2(-_targetX, _targetY), TweenDuration).SetEase(Ease.OutBack));
                     break;
                 case 1:
-                    seq.Join(rect.DOAnchorPos(new Vector2(0, 0), TweenDuration).SetEase(Ease.OutBack));
+                    seq.Join(rect.DOAnchorPos(new Vector2(0, _targetY), TweenDuration).SetEase(Ease.OutBack));
                     break;
                 case 2:
-                    seq.Join(rect.DOAnchorPos(new Vector2(_targetX,0), TweenDuration).SetEase(Ease.OutBack));
+                    seq.Join(rect.DOAnchorPos(new Vector2(_targetX,_targetY), TweenDuration).SetEase(Ease.OutBack));
                     break;
             }
 

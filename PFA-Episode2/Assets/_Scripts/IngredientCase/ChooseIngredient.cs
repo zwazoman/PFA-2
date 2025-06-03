@@ -68,7 +68,7 @@ public class ChooseIngredient : MonoBehaviour
             for (int tagIngredient = 0; tagIngredient <= _maxIngredientRef; tagIngredient++)
             {
                 if (!_sauceChoose) { IsSauce(); }
-                if (tagIngredient == 2 && _sauceChoose) { IngredientBaseChooseBySac.Add(ReturnSauceChoose()); }
+                if (tagIngredient == _maxIngredientRef && _sauceChoose) { IngredientBaseChooseBySac.Add(ReturnSauceChoose()); }
                 else { IngredientBaseChooseBySac.Add(ReturnIngredientChoose()); }
             }
             foreach (IngredientBase ing in IngredientBaseChooseBySac) { _completeListIngredientChoose.Add(ing); }
