@@ -21,7 +21,6 @@ public class SpellCaster : MonoBehaviour
             TryGetComponent(out castingEntity);
     }
 
-
     //preview spell range
     public List<WayPoint> PreviewSpellRange(Spell spell, WayPoint center = null, bool showZone = true, bool ignoreTerrain = false)
     {
@@ -318,7 +317,7 @@ public class SpellCaster : MonoBehaviour
                     e.damage += 8 * (zoneData.hitEntityCTXDict[entity].numberOfHitEnnemies - 1);
                     break;
                 case SpellEffectType.DamageIncreasePercentageByDistanceToCaster:
-                    e.damage *= (1 + zoneData.hitEntityCTXDict[entity].distanceToHitEnemy * .2f);
+                    e.damage *= (1 + zoneData.hitEntityCTXDict[entity].distanceToHitEnemy * .5f);
                     break;
                 case SpellEffectType.DamageIncreaseMeleeRange:
                     if(zoneData.hitEntityCTXDict[entity].distanceToHitEnemy == 1)

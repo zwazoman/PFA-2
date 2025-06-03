@@ -162,7 +162,7 @@ public class ChooseIngredient : MonoBehaviour
         }
         else //Common
         {
-            if (_previousSauce != null) { CommonSauce.Remove(_previousSauce); }
+            //if (_previousSauce != null) { CommonSauce.Remove(_previousSauce); }
             Sauce sauce = CommonSauce[Random.Range(0, CommonSauce.Count)];
             _previousSauce = sauce;
             SetupValueIngredient();

@@ -5,7 +5,7 @@ public static class Serializer
     //spell effect
     static readonly string[] SpellEffectTypeToString =
     {
-        "Damage","Recoil","Shield","Damage per hit ennemy","damage increase per distance","Melee multiplier","Summon Entity"
+        "Damage","Recoil","Shield","Damage per hit ennemy","damage with distance","Melee multiplier","Summon Entity"
     };
 
     static readonly char[] statTypeToString =

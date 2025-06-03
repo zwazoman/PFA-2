@@ -89,6 +89,52 @@ MonoBehaviour:
   _entityFramesGroup: {fileID: 0}
   _playerFrame: {fileID: 0}
   _ennemyInfoFramePrefab: {fileID: 5794147932768092306, guid: 6409bb59442407c47864ac9fc6b1cd15, type: 3}
+--- !u!1 &2592502283784417627
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5940104471000109465}
+  - component: {fileID: 3060665475259127349}
+  m_Layer: 0
+  m_Name: pool_vfx_Godray
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5940104471000109465
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2592502283784417627}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3023198322974479771}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3060665475259127349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2592502283784417627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c95b865e9b31b2459018503c37202b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefab: {fileID: 5640066015730650527, guid: e5f95c52727b8024bacae90c972e3763, type: 3}
+  _poolSize: 5
 --- !u!1 &2927394063279804282
 GameObject:
   m_ObjectHideFlags: 0
@@ -139,8 +185,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  _minEnnemiesCount: 1
-  _excendentSpawnProba: 0.3
   _summonEntities: 1
   _startGameOnSceneStart: 0
   _gameOverPanel: {fileID: 0}
@@ -754,6 +798,7 @@ Transform:
   m_Children:
   - {fileID: 5394470313694402401}
   - {fileID: 6564623360490324684}
+  - {fileID: 5940104471000109465}
   m_Father: {fileID: 4144835364260791156}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3293547413607182688
@@ -770,6 +815,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ArrowPool: {fileID: 4157884094158148823}
   ProjectilePool: {fileID: 8313054891194807582}
+  vfx_GodrayPool: {fileID: 3060665475259127349}
 --- !u!1001 &4856462147327887237
 PrefabInstance:
   m_ObjectHideFlags: 0
