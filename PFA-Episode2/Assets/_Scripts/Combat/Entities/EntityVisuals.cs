@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements.Experimental;
 
 public class EntityVisuals : MonoBehaviour
 {
@@ -83,14 +84,32 @@ public class EntityVisuals : MonoBehaviour
         };
     }
 
-    public async UniTask DeathAnimation()
+    public async UniTask PlayDeathAnimation()
     {
+        
+        GameObject vfx = null;
+        
         try
         {
+            //sfx
             SFXManager.Instance.PlaySFXClip(Sounds.EntityDeath);
+            
+            //vfx
+            try { vfx = PoolManager.Instance.vfx_GodrayPool.PullObjectFromPool(transform.position,Quaternion.Euler(-90,0,0)); Debug.Log("qwrsdtxcfytgyihuiçàûoytqrhgdetWHUÏYPGTYRSHQWSYXCKIJÖUHYDTSJWDHGFXCGKIÖUHYGTFKYDGTWHGHXFCKGIJMKO%PL"); }
+            catch (Exception e) { Debug.LogException(e); }
+            
+            //animation
             await animator.PlayAnimationTrigger(Entity.deathTrigger);
+            
         } catch (Exception e) { Debug.LogException(e); }
+        
+        //0 scale
+        owner.eatSocket.transform.DOMoveY( 20, 0.2f);
+        await owner.eatSocket.transform.DOScale(Vector3.zero, 0.2f).SetEase(Ease.OutBack).ToUniTask();
 
+        //kill vfx
+        if(vfx) vfx.GetComponent<PooledObject>().GoBackIntoPool();
+        
         gameObject.SetActive(false);
     }
 

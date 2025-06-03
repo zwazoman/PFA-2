@@ -1,10 +1,5 @@
 using UnityEngine;
 
-public enum Pools
-{
-    Bullet
-}
-
 public class PoolManager : MonoBehaviour
 {
     //singleton
@@ -31,4 +26,7 @@ public class PoolManager : MonoBehaviour
 
     public Pool ArrowPool;
     public Pool ProjectilePool;
+    
+    //VFXs
+    public Pool vfx_GodrayPool;
 }

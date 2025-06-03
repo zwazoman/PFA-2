@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions.Comparers;
 
-public class Crafting : MonoBehaviour
+public static class Crafting
 {
     public static SpellData CraftNewSpell(Ingredient[] ingredients, Sauce sauce)
     {
@@ -15,8 +15,7 @@ public class Crafting : MonoBehaviour
         {
             i.ModifySpellEffect(spell);
         }
-
-
+        
         Debug.Log(" = Raw spell effects = ");
         foreach(SpellEffect e in  spell.Effects)Debug.Log(e.effectType);
 
