@@ -293,8 +293,8 @@ public class SpellCaster : MonoBehaviour
                     else throw new System.Exception("y'a un pb là");
 
                     break;
+                
                 case SpellEffectType.Recoil:
-
                     WayPoint pushPoint = ComputePushPoint(
                         zoneData.hitEntityCTXDict[entity].pushDirection,
                         entity,
@@ -307,6 +307,7 @@ public class SpellCaster : MonoBehaviour
                     e.pushDamage = pushDamages * 2;
                     e.pushPoint = zoneData.hitEntityCTXDict[entity].PushPoint;
                     break;
+                
                 case SpellEffectType.Shield:
                     if (effect.statType == StatType.FlatIncrease) e.shield += effect.value;
                     else if (effect.statType == StatType.Multiplier) e.shield *= effect.value;
