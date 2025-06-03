@@ -184,7 +184,8 @@ public class Entity : MonoBehaviour
         if (pushDamages > 0)
             await stats.ApplyDamage(pushDamages);
 
-        pushTarget.StepOn(this);
+        if(!isDead) 
+            pushTarget.StepOn(this);
     }
 
     public List<Entity> GetEnemyList()
