@@ -41,6 +41,9 @@ public class Entity : MonoBehaviour
     /// </summary>
     public event Action<float,float,Vector3> OnPreviewSpell;
     public event Action OnSpellPreviewCancel;
+    public event Action OnPushDamageTaken;
+    public event Action<bool> OnMovement;
+    
 
     #region AnimationTriggers
     [HideInInspector] public const string moveBool = "Move";
@@ -126,7 +129,7 @@ public class Entity : MonoBehaviour
         {
             if (effect.shield != 0) await stats.ApplyShield(effect.shield);
             if (effect.damage != 0 && effect.pushPoint == null) await stats.ApplyDamage(effect.damage);
-            if (effect.pushPoint != null) await Push(Mathf.RoundToInt(effect.pushDamage + effect.damage), effect.pushPoint);
+            if (effect.pushPoint != null) await Push(Mathf.RoundToInt(effect.damage),Mathf.RoundToInt(effect.pushDamage ), effect.pushPoint);
         }
         catch (Exception e)
         {
@@ -167,7 +170,7 @@ public class Entity : MonoBehaviour
     }
 
     //recoil
-    async UniTask Push(int pushDamages, WayPoint pushTarget)
+    async UniTask Push(int baseDamage,int pushDamages, WayPoint pushTarget)
     {
         currentPoint.StepOff();
 
@@ -182,7 +185,11 @@ public class Entity : MonoBehaviour
         }
 
         if (pushDamages > 0)
-            await stats.ApplyDamage(pushDamages);
+            OnPushDamageTaken?.Invoke();
+        
+        
+        await stats.ApplyDamage(pushDamages + baseDamage);
+        
 
         if(!isDead) 
             pushTarget.StepOn(this);
@@ -239,7 +246,7 @@ public class Entity : MonoBehaviour
             return true;
         }
 
-        await UniTask.Delay(500);
+        await UniTask.Delay(400);
 
         WayPoint moveToPoint;
 
@@ -290,7 +297,9 @@ public class Entity : MonoBehaviour
         }
 
         visuals.animator.PlayAnimationBool(moveBool);
-
+        
+        OnMovement?.Invoke(true);
+        
         for (int i = 0; i < pathlength; i++)
         {
             currentPoint.StepOff();
@@ -307,11 +316,13 @@ public class Entity : MonoBehaviour
             stats.currentMovePoints--;
         }
 
+        OnMovement?.Invoke(false);
         visuals.animator.EndAnimationBool(moveBool);
         Tools.Flood(currentPoint);
         ClearWalkables();
         ApplyWalkables(showTiles);
     }
+
 
     async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 5, float rotmultiplyer = 1)
     {

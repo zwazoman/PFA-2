@@ -21,6 +21,18 @@ public class SpellCaster : MonoBehaviour
             TryGetComponent(out castingEntity);
     }
 
+    void SummonEntityAtPoint(WayPoint point)
+    {
+        GameObject kamikaze = Instantiate(GameManager.Instance.staticData.kamikaze, new Vector3(point.transform.position.x, .5f, point.transform.position.z), Quaternion.identity);
+        Entity entity = kamikaze.GetComponent<Entity>();
+
+        if (castingEntity.team == Team.Player)
+            entity.team = Team.Player;
+        else if (castingEntity.team == Team.Enemy)
+            entity.team = Team.Enemy;
+    }
+
+    
     //preview spell range
     public List<WayPoint> PreviewSpellRange(Spell spell, WayPoint center = null, bool showZone = true, bool ignoreTerrain = false)
     {
@@ -231,18 +243,7 @@ public class SpellCaster : MonoBehaviour
 
         return choosenPoint;
     }
-
-    void SummonEntityAtPoint(WayPoint point)
-    {
-        GameObject kamikaze = Instantiate(GameManager.Instance.staticData.kamikaze, new Vector3(point.transform.position.x, .5f, point.transform.position.z), Quaternion.identity);
-        Entity entity = kamikaze.GetComponent<Entity>();
-
-        if (castingEntity.team == Team.Player)
-            entity.team = Team.Player;
-        else if (castingEntity.team == Team.Enemy)
-            entity.team = Team.Enemy;
-    }
-
+    
     BakedUtilitarySpellEffect ComputeUtilitarySpellEffect(Spell spell, ref SpellCastData zoneData)
     {
         BakedUtilitarySpellEffect e = new();
@@ -473,6 +474,7 @@ public class SpellCaster : MonoBehaviour
         //cancel preview
         StopSpellEffectPreview(entity);
 
+        //apply spell
         await entity.ApplySpell(e);
 
         attackEventCompleted = false;

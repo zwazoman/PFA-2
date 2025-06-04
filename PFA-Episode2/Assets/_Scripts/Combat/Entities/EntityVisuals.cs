@@ -18,6 +18,7 @@ public class EntityVisuals : MonoBehaviour
     [Header("VFXs")]
     [SerializeField] private ParticleSystem _hitParticles;
     [SerializeField] private ParticleSystem  _wallHitParticles;
+    [SerializeField] private ParticleSystem  _runParticles;
 
     [SerializeField] bool _enableAnimations = true;
 
@@ -29,11 +30,27 @@ public class EntityVisuals : MonoBehaviour
 
         if (animator == null)
             animator = VisualsRoot.GetComponentInChildren<Animator>();
-    }
 
+    }
+    
+    
+    
     private void Start()
     {
+        //walk particle
+        owner.OnMovement += (bool b) => {
+            try
+            {
+                if (b) _runParticles.Play();
+                else _runParticles.Stop();
+            }catch(Exception e) { Debug.LogException(e); }
+        };
+        
+        //health update
         owner.stats.healthFeedbackTasks.Add(OnHealthUpdated);
+        
+        //pushDamage vfx
+        owner.OnPushDamageTaken += () => _wallHitParticles.Play();
 
         //spell preview
         owner.OnPreviewSpell += (float newShield, float newHP, Vector3 direction) =>
@@ -68,8 +85,7 @@ public class EntityVisuals : MonoBehaviour
                 Arrows.Add(o);
                 o.transform.position = pose;
             }
-            //if(direction!=Vector3.zero)EditorApplication.isPaused = true;
-            // }catch(Exception ex) { Debug.LogException(ex); }
+
 
         };
 

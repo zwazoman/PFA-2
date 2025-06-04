@@ -8,6 +8,7 @@ public class CameraBehaviour : MonoBehaviour
 {
 
     Vector3 basePosition;
+    [SerializeField] Camera _cam;
 
     private async void Start()
     {
@@ -40,10 +41,12 @@ public class CameraBehaviour : MonoBehaviour
         if(e is PlayerEntity)
         {
             transform.DOMove(basePosition, .8f).SetEase(Ease.InOutSine);
+            _cam.DOOrthoSize(3.6f,.8f);
         }
         else
         {
             transform.DOMove(basePosition + Vector3.up*1f, .8f).SetEase(Ease.InOutSine);
+            _cam.DOOrthoSize(4,.8f);
         }
     }
 
