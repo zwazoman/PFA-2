@@ -60,6 +60,30 @@ MonoBehaviour:
         MixerGroup: {fileID: 0}
         tempClipList: []
         tempClip: {fileID: 0}
+    - Key: CardEnter
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: 3c9125087f906564d86b9c2207201c83, type: 3}
+        - {fileID: 8300000, guid: 0b71db5b83f6b784b823ff3c36b007ee, type: 3}
+        - {fileID: 8300000, guid: 42b975fd62e60ac42bfe443d5bbb705a, type: 3}
+        Volume: 0.5
+        Pitch: 1
+        RandomType: 1
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: CardExit
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: 93eb635272b48e0489700a9f6ff8fdeb, type: 3}
+        - {fileID: 8300000, guid: 6d7f84b96611c934b938b5a220b3c4c6, type: 3}
+        - {fileID: 8300000, guid: bfdd9efe416f6f949aad66ed1063c26f, type: 3}
+        Volume: 0.5
+        Pitch: 1
+        RandomType: 1
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
     - Key: TurnChange
       Value:
         ClipList:
@@ -231,7 +255,7 @@ MonoBehaviour:
         - {fileID: 8300000, guid: b108508f15a13464fadfe3ca3ac2dae3, type: 3}
         - {fileID: 8300000, guid: 08bfaa21047c14a40801abb42cecc476, type: 3}
         - {fileID: 8300000, guid: 579d8f83c14aa8c45aca25af6f086492, type: 3}
-        Volume: 0.3
+        Volume: 0.6
         Pitch: 0.8
         RandomType: 2
         MixerGroup: {fileID: 0}
@@ -245,13 +269,13 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8373471912036536613}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: a9fb15345a6963a418c04c64434aea46, type: 3}
-  m_Resource: {fileID: 8300000, guid: a9fb15345a6963a418c04c64434aea46, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 319112ccf794a3b429fb1ab1a9a85560, type: 3}
+  m_Resource: {fileID: 8300000, guid: 319112ccf794a3b429fb1ab1a9a85560, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.235
+  m_Volume: 0.6
   m_Pitch: 1
   Loop: 1
   Mute: 0
