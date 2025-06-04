@@ -55,6 +55,7 @@ public class ChooseIngredient : MonoBehaviour
         _probaSavoureux = _probaSavoureuxRef;
         _probaDivin = _probaDivinRef;
         //if (PlayerMap.Instance.PositionMap != 1) { AddShield(); }
+        if (_sceneCombat || PlayerMap.Instance.PositionMap == 1) { SetupIngredientUI.Instance.NumberRoll = 2; }
         ChooseRandomIngredient();
     }
 
