@@ -6894,7 +6894,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1447066304}
   - {fileID: 1316467365}
   - {fileID: 1907431809}
   m_Father: {fileID: 0}
@@ -20250,7 +20249,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 549481811}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 279633862603933050, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
       propertyPath: m_Name
@@ -20260,21 +20259,25 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2690044664781462046, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 3061929779469775917, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.66207
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3061929779469775917, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.1102133
+      value: 0.5000005
       objectReference: {fileID: 0}
     - target: {fileID: 3061929779469775917, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -6.171648
+      value: -4
       objectReference: {fileID: 0}
     - target: {fileID: 3061929779469775917, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071066
       objectReference: {fileID: 0}
     - target: {fileID: 3061929779469775917, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
       propertyPath: m_LocalRotation.x
@@ -20282,7 +20285,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3061929779469775917, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0.70710707
       objectReference: {fileID: 0}
     - target: {fileID: 3061929779469775917, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
       propertyPath: m_LocalRotation.z
@@ -20294,7 +20297,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3061929779469775917, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 3061929779469775917, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -20302,19 +20305,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3659406706944900222, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3940952041982709943, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4504407417257943303, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6904206773815292165, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -22126,11 +22129,6 @@ Transform:
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8434345322044409761, guid: e7fabb71f1acc554c9168c6a6eabf297, type: 3}
   m_PrefabInstance: {fileID: 609304423}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1447066304 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3061929779469775917, guid: 1bed982c48fb28f4fb2587d3148ef028, type: 3}
-  m_PrefabInstance: {fileID: 1260876868}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1448240033 stripped
 MonoBehaviour:
@@ -33647,6 +33645,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 988dbe291525a3a44a7f9a882d26e9aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cam: {fileID: 0}
 --- !u!224 &1368665720335834915
 RectTransform:
   m_ObjectHideFlags: 0
@@ -37023,3 +37022,4 @@ SceneRoots:
   - {fileID: 562731882}
   - {fileID: 1132931975}
   - {fileID: 59823009}
+  - {fileID: 1260876868}
