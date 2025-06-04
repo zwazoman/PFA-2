@@ -21,9 +21,7 @@ public class AnimatedPanel : MonoBehaviour
 
     public async void Show()
     {
-        print("Show");
         _canvasGroup.gameObject.SetActive(true);
-        print(_canvasGroup.gameObject.name);
         transform.DOPunchScale(Vector3.one * _scaleJumpOnShow, TransitionTime * 2, 5);
         await _canvasGroup.DOFade(1, TransitionTime).AsyncWaitForCompletion().AsUniTask();
 

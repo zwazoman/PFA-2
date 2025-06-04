@@ -47,12 +47,16 @@ public class SetupSpellInventory : MonoBehaviour
                     ConnardDeMes2.GetComponent<DraggableSpellContainer>().Target = _targetInventory[i];
                     Transform parent = go.transform.parent; //SpellSlot
                     GameObject enfant = ConnardDeMes2.transform.GetChild(1).gameObject; //L'image disable
-
                     ConnardDeMes2.transform.SetParent(_equippedInventory[_index].gameObject.transform);
                     ConnardDeMes2.transform.localPosition = Vector3.zero;
                     enfant.SetActive(true);
                     enfant.transform.SetParent(parent);
                     enfant.transform.localPosition = Vector3.zero;
+                    RectTransform rectTransform = enfant.GetComponent<RectTransform>();
+                    rectTransform.anchorMin = Vector2.zero;
+                    rectTransform.anchorMax = Vector2.one;
+                    rectTransform.offsetMin = Vector2.zero;
+                    rectTransform.offsetMax = Vector2.zero;
                     ConnardDeMes2.transform.GetComponent<DraggableSpellContainer>().originalParent = enfant.transform.parent;
                     _index++;
                 }
