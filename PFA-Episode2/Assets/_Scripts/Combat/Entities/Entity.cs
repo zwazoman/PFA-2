@@ -187,10 +187,8 @@ public class Entity : MonoBehaviour
         if (pushDamages > 0)
             OnPushDamageTaken?.Invoke();
         
-        
         await stats.ApplyDamage(pushDamages + baseDamage);
         
-
         if(!isDead) 
             pushTarget.StepOn(this);
     }
