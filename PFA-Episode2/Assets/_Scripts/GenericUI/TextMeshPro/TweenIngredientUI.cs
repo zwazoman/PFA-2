@@ -39,21 +39,21 @@ public class TweenIngredientUI : MonoBehaviour
         for (int i = 0; i < PanelToTween.Count; i++)
         {
             RectTransform rect = PanelToTween[i];
-            Sequence seq = DOTween.Sequence();
             switch (i)
             {
                 case 0:
-                    seq.Join(rect.DOAnchorPos(new Vector2(-_targetX, _targetY), TweenDuration).SetEase(Ease.OutBack));
+                    SFXManager.Instance.PlaySFXClip(Sounds.CardEnter);
+                    await rect.DOAnchorPos(new Vector2(-_targetX, _targetY), TweenDuration).SetEase(Ease.OutBack);
                     break;
                 case 1:
-                    seq.Join(rect.DOAnchorPos(new Vector2(0, _targetY), TweenDuration).SetEase(Ease.OutBack));
+                    SFXManager.Instance.PlaySFXClip(Sounds.CardEnter);
+                    await rect.DOAnchorPos(new Vector2(0, _targetY), TweenDuration).SetEase(Ease.OutBack);
                     break;
                 case 2:
-                    seq.Join(rect.DOAnchorPos(new Vector2(_targetX,_targetY), TweenDuration).SetEase(Ease.OutBack));
+                    SFXManager.Instance.PlaySFXClip(Sounds.CardEnter);
+                    await rect.DOAnchorPos(new Vector2(_targetX, _targetY), TweenDuration).SetEase(Ease.OutBack);
                     break;
             }
-
-            await seq.AsyncWaitForCompletion().AsUniTask();
             _buttonList[i].interactable = true;
         }
     }
@@ -62,22 +62,23 @@ public class TweenIngredientUI : MonoBehaviour
     {
         for (int i = 0; i < PanelToTween.Count; i++)
         {
-            Sequence seq = DOTween.Sequence();
             RectTransform rect = PanelToTween[i];
 
             switch (i)
             {
                 case 0:
-                    seq.Join(rect.DOAnchorPos(new Vector2(-_targetX, -2100), TweenDuration).SetEase(Ease.InBack));
+                    await rect.DOAnchorPos(new Vector2(-_targetX, -2100), TweenDuration).SetEase(Ease.InBack);
+                    SFXManager.Instance.PlaySFXClip(Sounds.CardExit);
                     break;
                 case 1:
-                    seq.Join(rect.DOAnchorPos(new Vector2(0, -2100), TweenDuration).SetEase(Ease.InBack));
+                    SFXManager.Instance.PlaySFXClip(Sounds.CardExit);
+                    await rect.DOAnchorPos(new Vector2(0, -2100), TweenDuration).SetEase(Ease.InBack);
                     break;
                 case 2:
-                    seq.Join(rect.DOAnchorPos(new Vector2(_targetX, -2100), TweenDuration).SetEase(Ease.InBack));
+                    SFXManager.Instance.PlaySFXClip(Sounds.CardExit);
+                    await rect.DOAnchorPos(new Vector2(_targetX, -2100), TweenDuration).SetEase(Ease.InBack);
                     break;
             }
-            await seq.AsyncWaitForCompletion().AsUniTask();
         }
     }
 
