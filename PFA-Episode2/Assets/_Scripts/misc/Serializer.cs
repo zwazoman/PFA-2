@@ -5,7 +5,7 @@ public static class Serializer
     //spell effect
     static readonly string[] SpellEffectTypeToString =
     {
-        "Damage","Recoil","Shield","Damage per hit ennemy","damage with distance","Melee multiplier","Summon Entity"
+        "Damage","Knockback","Shield","Multi-hit Damage","damage with distance","Melee multiplier","Summon Entity"
     };
 
     static readonly char[] statTypeToString =
@@ -15,7 +15,7 @@ public static class Serializer
 
     static readonly string[] SauceEffectTypeToString =
     {
-        "No Special effect","Cast through walls","Damage+ for every hit","Damage+ with range", "Melee multiplier", "Summon Entity"
+        "No Special effect","Cast through walls","Multi-hit Damage","Damage with range", "Melee multiplier", "Summon Entity"
     };
 
     public static string GetSpellEffectString(SpellEffect e)
@@ -30,7 +30,7 @@ public static class Serializer
     //ingredient effect
     static readonly string[] IngredientEffectTypeToString =
     {
-        "Damage","Recoil","Shield","Range"
+        "Damage","Knockback","Shield","Range"
     };
 
     public static string GetIngredientEffectString(Ingredient e)
