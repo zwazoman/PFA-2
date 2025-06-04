@@ -54,7 +54,7 @@ public class ChooseIngredient : MonoBehaviour
         _probaCommon = _probaCommonRef;
         _probaSavoureux = _probaSavoureuxRef;
         _probaDivin = _probaDivinRef;
-        //if (PlayerMap.Instance.PositionMap != 1) { AddShield(); }
+        if (PlayerMap.Instance.PositionMap != 1) { AddShield(); }
         if (_sceneCombat || PlayerMap.Instance.PositionMap == 1) { SetupIngredientUI.Instance.NumberRoll = 2; }
         ChooseRandomIngredient();
     }
@@ -193,10 +193,28 @@ public class ChooseIngredient : MonoBehaviour
 
     private void AddShield()
     {
-        foreach (Ingredient ing in _listIngredientCommon) { if (!_listBannedIngredient.Contains(ing) && ing.rarity == Rarity.Ordinaire) { _listIngredientCommon.Add(_listBannedIngredient[0]); break; } }
-        foreach (Ingredient ing in _listIngredientSavoureux) { if (!_listBannedIngredient.Contains(ing) && ing.rarity == Rarity.Savoureux) { _listIngredientSavoureux.Add(_listBannedIngredient[1]); break; } }
-        foreach (Ingredient ing in _listIngredientDivin) { if (!_listBannedIngredient.Contains(ing) && ing.rarity == Rarity.Divin) { _listIngredientDivin.Add(_listBannedIngredient[2]); break; } }
+        foreach (Ingredient banned in _listBannedIngredient)
+        {
+            switch (banned.rarity)
+            {
+                case Rarity.Ordinaire:
+                    if (!_listIngredientCommon.Contains(banned))
+                        _listIngredientCommon.Add(banned);
+                    break;
+
+                case Rarity.Savoureux:
+                    if (!_listIngredientSavoureux.Contains(banned))
+                        _listIngredientSavoureux.Add(banned);
+                    break;
+
+                case Rarity.Divin:
+                    if (!_listIngredientDivin.Contains(banned))
+                        _listIngredientDivin.Add(banned);
+                    break;
+            }
+        }
     }
+
 }
 //#if UNITY_EDITOR
 //    public void GenerateListsDeCon()
@@ -212,7 +230,7 @@ public class ChooseIngredient : MonoBehaviour
 //        string[] files = Directory.GetFiles("Assets/_Data/Ingredients/ingredients", "*.asset", SearchOption.TopDirectoryOnly);
 //        foreach (string path in files)
 //        {
-            
+
 //            Ingredient asset = (Ingredient)AssetDatabase.LoadAssetAtPath(path, typeof(Ingredient));
 //            switch (asset.rarity)
 //            {
@@ -231,7 +249,7 @@ public class ChooseIngredient : MonoBehaviour
 //        files = Directory.GetFiles("Assets/_Data/Ingredients/Sauce", "*.asset", SearchOption.TopDirectoryOnly);
 //        foreach (string path in files)
 //        {
-            
+
 //            Sauce asset = (Sauce)AssetDatabase.LoadAssetAtPath(path, typeof(Sauce));
 //            if (asset.name != "No Sauce")
 //            switch (asset.rarity)
