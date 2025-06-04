@@ -3,7 +3,6 @@ using TMPro;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
-using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -17,13 +16,14 @@ public class DialogueManager : MonoBehaviour
 
     [SerializeField] private GameObject _panel;
     [SerializeField] private GameObject _textBox;
-    [SerializeField] private Button _button;
 
-    private List<Tweener> _shakeTweeners = new();
-    private bool _isWriting = false;
-    private string _nextDialogueKey;
+    private readonly List<Tweener> _shakeTweeners = new();
+    private bool _isWriting;
     private int _numberDialogue = 0;
     private int _numberSentence = 0;
+    private bool _isFinish;
+
+    [SerializeField] private BreadGuy _bread;
 
     private bool IsPunctuation(char c) => c is '?' or '.' or '!' or ',';
 
@@ -43,32 +43,23 @@ public class DialogueManager : MonoBehaviour
     #endregion
 
     // Lis quel dialogue suis pour l'activer
-    public void NextDialogue()
-    {
+    public async UniTask NextDialogue() 
+    { 
+        await UniTask.Delay(100);
+        _characterDelay = 0.06f;
+        _punctuationDelay = 0.01f;
         SearchDialogue(_numberDialogue);
     }
-
-    public void RandomNextDialogue()
-    {
-        SearchDialogue(Random.Range(0, TextData.DialogueData.Count));
-    }
-
-    // Appelle la clé de fin de dialogue du Excel
-    public void Skip()
-    {
-        EndDialogue();
-    }
+    public void GetRandomSequenceDialogue() { SearchDialogue(Random.Range(0, TextData.DialogueData.Count)); }
+    public void GetDialogue(int NumberDialogue) { SearchDialogue(NumberDialogue); }
 
     // Divise les différents éléments pour les ranger par ligne puis par éléments, ensuite cherche la clé corresspondante
-    public void SearchDialogue(int NumberDialogue)
+    private void SearchDialogue(int NumberDialogue)
     {
-        _button.interactable = true;
         _numberDialogue = NumberDialogue;
         if (_isWriting) return;
 
         StopShakeEffect();
-
-        //_panel.transform.DOLocalMoveY(0, 0.5f, false);
 
         for (int i = 0; i < TextData.DialogueData.Count; i++)
         {
@@ -192,12 +183,28 @@ public class DialogueManager : MonoBehaviour
         _shakeTweeners.Clear();
     }
 
-    private void EndDialogue()
+    private async void EndDialogue()
     {
-        _button.interactable = false;
-        _panel.transform.DOLocalMoveY(-500, 0.5f, false);
+        if (!_isFinish)
+        {
+            _isFinish = true;
+            await _panel.transform.DOScale(Vector3.zero, 0.4f).SetEase(Ease.InOutBack);
+            _panel.SetActive(false);
+            await UniTask.Delay(500);
+            await SceneTransitionManager.Instance.GoToScene("WorldMap");
+        }
         _numberSentence = 0;
         _nameCharacter.text = "";
         _text.text = "";
+    }
+
+    public void Click()
+    {
+        if(_bread.StartDialogue)
+        {
+            _characterDelay = 0;
+            _punctuationDelay = 0;
+            NextDialogue();
+        }
     }
 }
