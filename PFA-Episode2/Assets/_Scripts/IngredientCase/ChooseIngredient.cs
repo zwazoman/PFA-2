@@ -1,9 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnityEditor;
-using System.IO;
-using System.Net.NetworkInformation;
+using Cysharp.Threading.Tasks;
 
 public class ChooseIngredient : MonoBehaviour
 {
@@ -100,9 +98,8 @@ public class ChooseIngredient : MonoBehaviour
         List<Ingredient> CommonIng = new(_listIngredientCommon);
         List<Ingredient> SavoureuxIng = new(_listIngredientSavoureux);
         List<Ingredient> DivinIng = new(_listIngredientDivin);
-
         float total = _probaCommon + _probaSavoureux + _probaDivin;
-        float result = Random.Range(1, total + 1);
+        float result = Random.Range(0, total + 1);
         GameManager.Instance.playerInventory.TotalTirageIngredient++;
         if (result <= _probaDivin && DivinIng.Count != 0) //Divin
         {
@@ -174,7 +171,7 @@ public class ChooseIngredient : MonoBehaviour
         float numberChoose = Random.value;
         if (numberChoose <= _probaSauce) { _sauceChoose = true; }
     }
-    public async Task ResetIngredient()
+    public async UniTask ResetIngredient()
     {
         IngredientBaseChooseBySac.Clear();
         _completeListIngredientChoose.Clear();
@@ -190,7 +187,6 @@ public class ChooseIngredient : MonoBehaviour
     private float FormuleRandom(float probaRef, float biais, int nombreTotalTirage, int tirageActuel)
     {
         float test = biais * (2 * (float)tirageActuel / (float)nombreTotalTirage - 1) + probaRef;
-        print(test);
         return test;
     }
 
