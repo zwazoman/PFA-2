@@ -14,14 +14,16 @@ public class AnimatedPanel : MonoBehaviour
     [SerializeField] CanvasGroup _canvasGroup;
     [SerializeField] private float _scaleJumpOnShow = 0f;
 
-    protected virtual void Awake()
-    {
-        TryGetComponent(out _canvasGroup);
-    }
+    //protected virtual void Awake()
+    //{
+    //    TryGetComponent(out _canvasGroup);
+    //}
 
     public async void Show()
     {
+        print("Show");
         _canvasGroup.gameObject.SetActive(true);
+        print(_canvasGroup.gameObject.name);
         transform.DOPunchScale(Vector3.one * _scaleJumpOnShow, TransitionTime * 2, 5);
         await _canvasGroup.DOFade(1, TransitionTime).AsyncWaitForCompletion().AsUniTask();
 

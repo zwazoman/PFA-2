@@ -181,6 +181,7 @@ public class CombatManager : MonoBehaviour
         await UniTask.Delay(1000);
 
         _rewardPanel?.Show();
+        Time.timeScale = 1;
         //await SceneTransitionManager.Instance.GoToScene("WorldMap");
     }
 }
