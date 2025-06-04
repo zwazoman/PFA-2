@@ -190,6 +190,7 @@ public class ChooseIngredient : MonoBehaviour
     private float FormuleRandom(float probaRef, float biais, int nombreTotalTirage, int tirageActuel)
     {
         float test = biais * (2 * (float)tirageActuel / (float)nombreTotalTirage - 1) + probaRef;
+        print(test);
         return test;
     }
 
