@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MusicManager : MonoBehaviour
 {
@@ -13,12 +14,12 @@ public class MusicManager : MonoBehaviour
 
     private void Start()
     {
-        _musicSource = GetComponent<AudioSource>();
-        SceneTransitionManager.Instance.OnSceneChange += CheckMusic;
+        SceneManager.activeSceneChanged += (Scene _, Scene _) => SceneTransitionManager.Instance.OnSceneChange += CheckMusic; ;
     }
 
     async void CheckMusic(string nextSceneName)
     {
+        print(nextSceneName);
         foreach(string sceneName in musicClipDict.Keys)
             if(sceneName == nextSceneName)
                 await SwapMusics(musicClipDict[sceneName]);
@@ -26,9 +27,13 @@ public class MusicManager : MonoBehaviour
 
     async UniTask SwapMusics(MusicParameters musicParameter)
     {
+        AudioClip choosenMusic = musicParameter.musics.PickRandom();
+
+        if (choosenMusic == _musicSource.clip)
+            return;
 
         await _musicSource.DOFade(0, _fadeDuration);
-        _musicSource.clip = musicParameter.musics.PickRandom();
+        _musicSource.clip = choosenMusic;
         await _musicSource.DOFade(musicParameter.targetVolume, _fadeDuration);
     }
 }
