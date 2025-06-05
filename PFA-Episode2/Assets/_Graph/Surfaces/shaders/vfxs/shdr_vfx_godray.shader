@@ -37,7 +37,7 @@ Shader "Unlit/shdr_vfx_godray"
             Texture2D _MainTex;
             SamplerState my_linear_repeat_sampler;
             
-            float3 _Color;
+            float4 _Color;
             float4 _scrollingAndTiling;
 
             v2f vert (appdata v)
@@ -57,11 +57,11 @@ Shader "Unlit/shdr_vfx_godray"
 
 
                 
-                alpha *= i.uv.y;
+                alpha *= i.uv.y*i.uv.y * _Color.w;
                 alpha *= saturate((1.0-i.uv.y)*5);
                 
                 // sample the texture
-                fixed4 col = fixed4( _Color*2,alpha*5);
+                fixed4 col = fixed4( _Color.xyz*2,alpha*5);
                 
                 // apply fog
                 return col;
