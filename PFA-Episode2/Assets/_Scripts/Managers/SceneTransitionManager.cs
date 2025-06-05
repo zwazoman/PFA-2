@@ -1,5 +1,7 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using System;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Scripting;
@@ -38,6 +40,8 @@ public class SceneTransitionManager : MonoBehaviour
         //Fight1,
         //Fight2
     }
+
+    public event Action<string> OnSceneChange;
 
     [SerializeField] CanvasGroup _CanvasGroup;
     [SerializeField] Image _image;
@@ -79,6 +83,8 @@ public class SceneTransitionManager : MonoBehaviour
         if (_canChangeScene)
         {
             _canChangeScene = false;
+
+            OnSceneChange?.Invoke(sceneName);
 
             AsyncOperation o = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
             o.allowSceneActivation = false;

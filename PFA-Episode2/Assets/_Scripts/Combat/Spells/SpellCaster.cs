@@ -281,6 +281,11 @@ public class SpellCaster : MonoBehaviour
     /// <returns></returns>
     BakedTargetedSpellEffect ComputeTargetedSpellEffect(Spell spell, ref SpellCastData zoneData, Entity entity)
     {
+        bool teamMix = true;
+
+        if (castingEntity is PlayerEntity)
+            teamMix = false; // si player entity les sorts ne s'appliquent que sur une des deux équipes
+
         BakedTargetedSpellEffect e = new();
 
         foreach (SpellEffect effect in spell.spellData.Effects)
@@ -288,6 +293,8 @@ public class SpellCaster : MonoBehaviour
             switch (effect.effectType)
             {
                 case SpellEffectType.Damage:
+                    if (!teamMix && entity.team == castingEntity.team)
+                        break;
                     if (effect.statType == StatType.FlatIncrease) e.damage += effect.value;
                     else if (effect.statType == StatType.Multiplier) e.damage *= effect.value;
                     else throw new System.Exception("y'a un pb là");
@@ -306,25 +313,38 @@ public class SpellCaster : MonoBehaviour
 
                     e.pushDamage = pushDamages * 2;
                     e.pushPoint = zoneData.hitEntityCTXDict[entity].PushPoint;
+
                     break;
                 
                 case SpellEffectType.Shield:
+                    if (!teamMix && entity.team != castingEntity.team)
+                        break;
                     if (effect.statType == StatType.FlatIncrease) e.shield += effect.value;
                     else if (effect.statType == StatType.Multiplier) e.shield *= effect.value;
                     else throw new System.Exception("y'a un pb l�");
+
                     break;
 
                 case SpellEffectType.DamageIncreaseForEachHitEnnemy:
+                    if (!teamMix && entity.team == castingEntity.team)
+                        break;
                     e.damage += 8 * (zoneData.hitEntityCTXDict[entity].numberOfHitEnnemies - 1);
+
                     break;
                 case SpellEffectType.DamageIncreasePercentageByDistanceToCaster:
+                    if (!teamMix && entity.team == castingEntity.team)
+                        break;
                     e.damage *= (1 + zoneData.hitEntityCTXDict[entity].distanceToHitEnemy * .5f);
+
                     break;
                 case SpellEffectType.DamageIncreaseMeleeRange:
-                    if(zoneData.hitEntityCTXDict[entity].distanceToHitEnemy == 1)
+                    if (!teamMix && entity.team == castingEntity.team)
+                        break;
+                    if (zoneData.hitEntityCTXDict[entity].distanceToHitEnemy == 1)
                     {
                         e.damage *= (effect.value);
                     }
+
                     break;
             }
 
