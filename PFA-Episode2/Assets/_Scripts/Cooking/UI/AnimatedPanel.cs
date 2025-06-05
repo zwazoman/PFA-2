@@ -14,10 +14,10 @@ public class AnimatedPanel : MonoBehaviour
     [SerializeField] CanvasGroup _canvasGroup;
     [SerializeField] private float _scaleJumpOnShow = 0f;
 
-    protected virtual void Awake()
-    {
-        TryGetComponent(out _canvasGroup);
-    }
+    //protected virtual void Awake()
+    //{
+    //    TryGetComponent(out _canvasGroup);
+    //}
 
     public async void Show()
     {

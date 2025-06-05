@@ -18,6 +18,7 @@ public class LightningManager : MonoBehaviour
     [SerializeField] float _fogRadius;
     [SerializeField] float _fogIntensity = .85f;
 
+    
    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     public static void onSceneLoad()
     {

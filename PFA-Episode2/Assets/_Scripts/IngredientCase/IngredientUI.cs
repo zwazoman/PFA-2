@@ -14,6 +14,7 @@ public class IngredientUI : MonoBehaviour
     [SerializeField] List<Image> _starsList = new();
     [SerializeField] GameObject _spellZoneGO;
 
+    [SerializeField] private GameObject _Stars;
     public void Setup(IngredientBase ing, Sprite iconEffect, Rarity rarity, Color color)
     {
         _txt_title.text = ing.name;           //Name
@@ -25,18 +26,21 @@ public class IngredientUI : MonoBehaviour
                 _starsList[0].gameObject.SetActive(true);
                 _starsList[1].gameObject.SetActive(false);
                 _starsList[2].gameObject.SetActive(false);
+                _Stars.SetActive(false);
                 break;
 
             case Rarity.Savoureux:
                 _starsList[0].gameObject.SetActive(true);
                 _starsList[1].gameObject.SetActive(true);
                 _starsList[2].gameObject.SetActive(false);
+                _Stars.SetActive(false);
                 break;
 
             case Rarity.Divin:
                 _starsList[0].gameObject.SetActive(true);
                 _starsList[1].gameObject.SetActive(true);
                 _starsList[2].gameObject.SetActive(true);
+                _Stars.SetActive(true);
                 break;
         }                    //Stars
         _txt_effect.color = color;
@@ -48,7 +52,7 @@ public class IngredientUI : MonoBehaviour
             _img_SauceArea.sprite = s.areaOfEffect.sprite;
             _img_SauceArea.transform.parent.gameObject.SetActive(true);
         }
-        else                                                                                  //Ingrédient
+        else                                                                                  //Ingrï¿½dient
         {
             _spellZoneGO.SetActive(false);
             Ingredient Ingredient = (Ingredient)ing;

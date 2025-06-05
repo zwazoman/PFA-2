@@ -37,6 +37,7 @@ public class InteractDontDestroyOnLoad : MonoBehaviour
                 GameManager.Instance.playerInventory.Save(GameManager.Instance.playerInventory.NameSave);
                 break;
             case "Delete":
+                PlayerPrefs.SetInt("Nombre total de tirage sur la run", 0);
                 GameManager.Instance.DeleteSave();
                 break;
         }

@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions.Comparers;
 
-public class Crafting : MonoBehaviour
+public static class Crafting
 {
     public static SpellData CraftNewSpell(Ingredient[] ingredients, Sauce sauce)
     {
@@ -15,8 +15,7 @@ public class Crafting : MonoBehaviour
         {
             i.ModifySpellEffect(spell);
         }
-
-
+        
         Debug.Log(" = Raw spell effects = ");
         foreach(SpellEffect e in  spell.Effects)Debug.Log(e.effectType);
 
@@ -26,8 +25,8 @@ public class Crafting : MonoBehaviour
         SpellEffect.CollapseSimilarSpellEffects(ref effects);
         spell.Effects = effects.ToList();
 
-        Debug.Log(" = collapsed spell effects = ");
-        foreach (SpellEffect e in spell.Effects) Debug.Log(e.effectType);
+        //Debug.Log(" = collapsed spell effects = ");
+        //foreach (SpellEffect e in spell.Effects) Debug.Log(e.effectType);
 
         sauce.ModifySpellEffect(spell);
 
@@ -57,8 +56,8 @@ public class Crafting : MonoBehaviour
             Debug.LogException(new Exception("Couldnt remove ingredients from player inventory.",e));
         }
 
-        Debug.Log(" = Final spell effects =");
-        foreach (SpellEffect e in spell.Effects) Debug.Log(e.effectType);
+        //Debug.Log(" = Final spell effects =");
+        //foreach (SpellEffect e in spell.Effects) Debug.Log(e.effectType);
 
         return spell;
     }
