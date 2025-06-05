@@ -85,6 +85,7 @@ public class SceneTransitionManager : MonoBehaviour
             _canChangeScene = false;
 
             OnSceneChange?.Invoke(sceneName);
+            print("scene change");
 
             AsyncOperation o = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
             o.allowSceneActivation = false;
