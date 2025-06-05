@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using System.Collections.Generic;
 using System.Linq;
@@ -141,7 +142,9 @@ public class CookingPot : MonoBehaviour
         //ingredient
         if (successful|=(container.item is Ingredient && ingredients.Count < 3))
         {
-            items[ingredients.Count] = container;
+            int i = 0;
+            while (i<3 && items[i]!=null) i++;
+            items[i] = container;
             ingredients.Add((Ingredient)container.item);
 
             UpdateIngredientsStatsDisplay();
