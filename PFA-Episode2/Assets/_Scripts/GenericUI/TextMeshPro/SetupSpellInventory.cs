@@ -31,8 +31,9 @@ public class SetupSpellInventory : MonoBehaviour
             _refInfoVariant.SpellName.text = SpellChoose.Name; //Nom
             for (int index = 0; index < SpellChoose.Effects.Count; index++) //Effets
             {
+                _refInfoVariant.Effect[index].gameObject.transform.parent.gameObject.SetActive(true);
                 SpellEffect spellEffect = SpellChoose.Effects[index];
-                _refInfoVariant.Effect.text = Serializer.GetSpellEffectString(spellEffect);
+                _refInfoVariant.Effect[index].text = Serializer.GetSpellEffectString(spellEffect);
             }
 
             _refInfoVariant.SpellZoneEffect.sprite = SpellChoose.AreaOfEffect.sprite; //Area
