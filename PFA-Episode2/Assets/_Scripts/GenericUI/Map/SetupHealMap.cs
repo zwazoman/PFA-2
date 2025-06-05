@@ -14,6 +14,7 @@ public class SetupHealMap : MonoBehaviour
     {
         print(GameManager.Instance.playerInventory.playerHealth.health);
         _lifebar.Value = GameManager.Instance.playerInventory.playerHealth.health;
+        _lifebar.MaxValue = GameManager.Instance.playerInventory.playerHealth.maxHealth;
         _hpText.text = GameManager.Instance.playerInventory.playerHealth.health.ToString();
     }
 }

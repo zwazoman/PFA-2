@@ -63,7 +63,7 @@ public class Entity : MonoBehaviour
         stats.owner = this;
     }
 
-    protected virtual void Start()
+    protected virtual async void Start()
     {
         //set up position on graph
         Vector3Int roundedPos = transform.position.SnapOnGrid();
@@ -74,6 +74,7 @@ public class Entity : MonoBehaviour
         catch(Exception e) { Debug.LogException(e); }
 
         currentPoint.StepOn(this);
+        
     }
 
     // game management
@@ -187,10 +188,8 @@ public class Entity : MonoBehaviour
         if (pushDamages > 0)
             OnPushDamageTaken?.Invoke();
         
-        
         await stats.ApplyDamage(pushDamages + baseDamage);
         
-
         if(!isDead) 
             pushTarget.StepOn(this);
     }

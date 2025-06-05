@@ -1,8 +1,12 @@
 using AYellowpaper.SerializedCollections;
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
+using Cysharp.Threading.Tasks.Triggers;
 
 public class SetupIngredientUI : MonoBehaviour
 {
@@ -11,6 +15,9 @@ public class SetupIngredientUI : MonoBehaviour
     public SerializedDictionary<SauceEffectType, IngredientUISerialize> itemIconPerSauceEffect = new();
     public SerializedDictionary<IngredientEffectType, IngredientUISerialize> itemIconPerIngredientEffect = new();
     [SerializeField] private List<Button> _listButton = new();
+    [SerializeField] private GameObject _parent;
+    [SerializeField] private TextMeshProUGUI _numberRollTxt;
+    public int NumberRoll = 1;
 
     private bool _firstTime;
 
@@ -36,10 +43,13 @@ public class SetupIngredientUI : MonoBehaviour
             if (ing is Sauce Sauce) { GameManager.Instance.playerInventory.Sauces.Add(Sauce); }
             else if (ing is Ingredient Ingredient) { GameManager.Instance.playerInventory.Ingredients.Add(Ingredient); }
         }
-        if (PlayerMap.Instance.PositionMap == 1 && !_firstTime)
+        if (NumberRoll > 1)
         {
             _firstTime = true;
             ListListIngredient.Clear();
+            NumberRoll--;
+            _numberRollTxt.text = "x " + NumberRoll.ToString();
+            TweenCard();
             await TweenIngredientUI.Instance.Monte(TweenIngredientUI.Instance.PanelToTween[index]);
             await TweenIngredientUI.Instance.TweenUIDespawn();
             await ChooseIngredient.Instance.ResetIngredient();
@@ -48,9 +58,18 @@ public class SetupIngredientUI : MonoBehaviour
         else
         {
             foreach (Button btn in _listButton) { btn.interactable = false; }
+            NumberRoll--;
+            _numberRollTxt.text = "x " + NumberRoll.ToString();
+            TweenCard();
             await TweenIngredientUI.Instance.Monte(TweenIngredientUI.Instance.PanelToTween[index]);
             await TweenIngredientUI.Instance.TweenUIDespawn();
             await SceneTransitionManager.Instance.GoToScene("WorldMap");
         }
+    }
+
+    public async UniTask TweenCard()
+    {
+        await _parent.transform.DOScale(new Vector3(0.6f,0.6f,0.6f), 0.2f).SetEase(Ease.OutBack);
+        await _parent.transform.DOScale(new Vector3(1, 1, 1), 0.2f).SetEase(Ease.OutBack);
     }
 }

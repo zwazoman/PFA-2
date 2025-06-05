@@ -1,14 +1,23 @@
+using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class EntityUI : MonoBehaviour
 {
     [Header("SceneReferences")]
     [SerializeField] CoolSlider lifebar;
     [SerializeField] CoolSlider _shieldBar;
+    [SerializeField] private FeedbackNumber _number;
 
     Entity owner;
 
+    // private async void Start()
+    // {
+    //     //todo temp
+    //     await Awaitable.WaitForSecondsAsync(.5f);
+    //     _number.PopupNumber(-10);
+    // }
 
     public void Setup(Entity owner)
     {
@@ -16,6 +25,7 @@ public class EntityUI : MonoBehaviour
         
         //healthbar
         owner.stats.OnHealthUpdated+=(UpdateLifebar);
+        owner.stats.OnHealthUpdated += (float delta,float _) => {_number.PopupNumber(delta);};
         lifebar.MaxValue = owner.stats.maxHealth;
         lifebar.MinValue = 0;
         UpdateLifebar(0,owner.stats.currentHealth);
