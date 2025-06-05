@@ -35,13 +35,13 @@ public class SetupSpellInventory : MonoBehaviour
                 _refInfoVariant.Effect.text = Serializer.GetSpellEffectString(spellEffect);
             }
 
-            if (_refInfoVariant.SpellZoneEffect.sprite != null) //Sécurité
-            { _refInfoVariant.SpellZoneEffect.sprite = SpellChoose.AreaOfEffect.sprite; } //Area
+            _refInfoVariant.SpellZoneEffect.sprite = SpellChoose.AreaOfEffect.sprite; //Area
 
             foreach (int spellDataIndex in GameManager.Instance.playerInventory.playerEquipedSpellIndex) //pour chaque spell qu'on construit on vérifie si il est equipe
             {
                 if(i == spellDataIndex)
                 {
+                    print("ntm");
                     ConnardDeMes2 = go; //L'objet entier
                     ConnardDeMes2.GetComponent<DraggableSpellContainer>()._faudraRemove = true;
                     ConnardDeMes2.GetComponent<DraggableSpellContainer>().Target = _targetInventory[i];
@@ -58,6 +58,7 @@ public class SetupSpellInventory : MonoBehaviour
                     rectTransform.offsetMin = Vector2.zero;
                     rectTransform.offsetMax = Vector2.zero;
                     ConnardDeMes2.transform.GetComponent<DraggableSpellContainer>().originalParent = enfant.transform.parent;
+                    ConnardDeMes2.GetComponent<DraggableSpellContainer>().enabled = false;
                     _index++;
                 }
             }
