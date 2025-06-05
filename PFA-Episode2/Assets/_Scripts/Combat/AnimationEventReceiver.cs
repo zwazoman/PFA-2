@@ -33,7 +33,6 @@ public class AnimationEventReceiver : MonoBehaviour
 
         try
         {
-            print(soundName);
             SFXManager.Instance.PlaySFXClip(soundName);
         }
         catch (Exception e) { Debug.LogException(e); }
