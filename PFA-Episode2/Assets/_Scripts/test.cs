@@ -4,8 +4,9 @@ using UnityEngine;
 public class Test : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _txt;
-    void Update()
+
+    private void Start()
     {
-       _txt.text = Screen.currentResolution.refreshRateRatio.ToString();
+        _txt.text = PlayerPrefs.GetInt("Nombre total de tirage sur la run").ToString();
     }
 }

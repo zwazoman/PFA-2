@@ -1,7 +1,6 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using System;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Scripting;
@@ -85,6 +84,7 @@ public class SceneTransitionManager : MonoBehaviour
             _canChangeScene = false;
 
             OnSceneChange?.Invoke(sceneName);
+            print("scene change");
 
             AsyncOperation o = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
             o.allowSceneActivation = false;
