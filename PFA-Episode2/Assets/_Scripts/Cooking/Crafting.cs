@@ -25,8 +25,8 @@ public static class Crafting
         SpellEffect.CollapseSimilarSpellEffects(ref effects);
         spell.Effects = effects.ToList();
 
-        Debug.Log(" = collapsed spell effects = ");
-        foreach (SpellEffect e in spell.Effects) Debug.Log(e.effectType);
+        //Debug.Log(" = collapsed spell effects = ");
+        //foreach (SpellEffect e in spell.Effects) Debug.Log(e.effectType);
 
         sauce.ModifySpellEffect(spell);
 
@@ -56,8 +56,8 @@ public static class Crafting
             Debug.LogException(new Exception("Couldnt remove ingredients from player inventory.",e));
         }
 
-        Debug.Log(" = Final spell effects =");
-        foreach (SpellEffect e in spell.Effects) Debug.Log(e.effectType);
+        //Debug.Log(" = Final spell effects =");
+        //foreach (SpellEffect e in spell.Effects) Debug.Log(e.effectType);
 
         return spell;
     }

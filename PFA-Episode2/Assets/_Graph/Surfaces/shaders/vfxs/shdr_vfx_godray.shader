@@ -54,8 +54,6 @@ Shader "Unlit/shdr_vfx_godray"
                 uv = uv *  _scrollingAndTiling.zw + _Time[1] * _scrollingAndTiling.xy;
 
                 float alpha = _MainTex.Sample(my_linear_repeat_sampler,uv);
-
-
                 
                 alpha *= i.uv.y*i.uv.y * _Color.w;
                 alpha *= saturate((1.0-i.uv.y)*5);
