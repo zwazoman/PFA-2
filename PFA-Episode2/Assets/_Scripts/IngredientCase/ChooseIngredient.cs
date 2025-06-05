@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 
 public class ChooseIngredient : MonoBehaviour
@@ -34,7 +33,7 @@ public class ChooseIngredient : MonoBehaviour
     [SerializeField][Range(-1, 1)] private float _biaisCommon;
     [SerializeField][Range(-1, 1)] private float _biaisSavoureux;
     [SerializeField][Range(-1, 1)] private float _biaisDivin;
-    private int _moyenneGameTirage = 24;
+    private int _moyenneGameTirage = 35;
 
     [Header("Others")]
     [SerializeField] private bool _sceneCombat;
@@ -102,6 +101,8 @@ public class ChooseIngredient : MonoBehaviour
         float total = _probaCommon + _probaSavoureux + _probaDivin;
         float result = Random.Range(0, total + 1);
         GameManager.Instance.playerInventory.TotalTirageIngredient++;
+        PlayerPrefs.SetInt("Nombre total de tirage sur la run", PlayerPrefs.GetInt("Nombre total de tirage sur la run") + 1);
+        print(PlayerPrefs.GetInt("Nombre total de tirage sur la run"));
         if (result <= _probaDivin && DivinIng.Count != 0) //Divin
         {
             //_probaDivin = 0;
@@ -142,6 +143,7 @@ public class ChooseIngredient : MonoBehaviour
         float total = _probaCommon + _probaSavoureux + _probaDivin;
         float result = Random.Range(1, total + 1);
         GameManager.Instance.playerInventory.TotalTirageIngredient++;
+        PlayerPrefs.SetInt("Nombre total de tirage sur la run", PlayerPrefs.GetInt("Nombre total de tirage sur la run") + 1);
         if (result <= _probaDivin && DivinSauce.Count != 0) //Divin
         {
             //_probaDivin = 0;
