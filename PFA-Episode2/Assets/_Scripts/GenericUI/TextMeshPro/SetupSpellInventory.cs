@@ -45,7 +45,6 @@ public class SetupSpellInventory : MonoBehaviour
                     ConnardDeMes2 = go; //L'objet entier
                     ConnardDeMes2.GetComponent<DraggableSpellContainer>()._faudraRemove = true;
                     ConnardDeMes2.GetComponent<DraggableSpellContainer>().Target = _targetInventory[i];
-                    ConnardDeMes2.GetComponent<DraggableSpellContainer>().CanBeMove = false;
                     Transform parent = go.transform.parent; //SpellSlot
                     GameObject enfant = ConnardDeMes2.transform.GetChild(1).gameObject; //L'image disable
                     ConnardDeMes2.transform.SetParent(_equippedInventory[_index].gameObject.transform);
@@ -59,6 +58,7 @@ public class SetupSpellInventory : MonoBehaviour
                     rectTransform.offsetMin = Vector2.zero;
                     rectTransform.offsetMax = Vector2.zero;
                     ConnardDeMes2.transform.GetComponent<DraggableSpellContainer>().originalParent = enfant.transform.parent;
+                    ConnardDeMes2.GetComponent<DraggableSpellContainer>().enabled = false;
                     _index++;
                 }
             }
