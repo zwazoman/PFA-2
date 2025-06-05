@@ -488,11 +488,12 @@ public class SpellCaster : MonoBehaviour
         BakedTargetedSpellEffect e = ComputeTargetedSpellEffect(spell, ref zoneData, entity);
 
         //wait for animations to play
-        if (e.pushPoint==null) try
-        {
-            await entity.visuals.animator.PlayAnimationTrigger(Entity.hitTrigger);
-        }
-        catch (Exception ex) { Debug.LogException(ex); }
+        if (e.pushPoint == null) 
+            try
+            {
+                await entity.visuals.animator.PlayAnimationTrigger(Entity.hitTrigger);
+            }
+            catch (Exception ex) { Debug.LogException(ex); }
 
         //cancel preview
         StopSpellEffectPreview(entity);
