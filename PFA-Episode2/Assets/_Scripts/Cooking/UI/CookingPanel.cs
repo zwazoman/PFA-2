@@ -52,14 +52,14 @@ public class CookingPanel : AnimatedPanel
 
     void OnShown()
     {
-        Debug.Log(GarbageCollector.isIncremental);
+        //Debug.Log(GarbageCollector.isIncremental);
         GarbageCollector.CollectIncremental(100);
         LoadPlayerInventory();//pas dingue
     }
 
     public void LoadPlayerInventory()
     {
-        Debug.Log("about to load player inventory");
+        //Debug.Log("about to load player inventory");
         LoadInventory(GameManager.Instance.playerInventory);
     }
 
@@ -67,10 +67,10 @@ public class CookingPanel : AnimatedPanel
     {
         Clear();
 
-        Debug.Log("-- loading inventory --");
-        Debug.Log("Sauce count : " + inv.Sauces.Count);
-        Debug.Log("Ingredient count : " + inv.Ingredients.Count);
-        Debug.Log("Spell count : " + inv.Spells.Count);
+        // Debug.Log("-- loading inventory --");
+        // Debug.Log("Sauce count : " + inv.Sauces.Count);
+        // Debug.Log("Ingredient count : " + inv.Ingredients.Count);
+        // Debug.Log("Spell count : " + inv.Spells.Count);
 
         //content height
         float height = _ingredientsParent.cellSize.y + _ingredientsParent.spacing.y;
@@ -105,7 +105,7 @@ public class CookingPanel : AnimatedPanel
                 .GetComponentInChildren<DraggableIngredientContainer>()
                 .SetUp(inv.Sauces[i]);
         }
-        Debug.Log("----");
+        //Debug.Log("----");
     }
     private void Clear()
     {
