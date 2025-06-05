@@ -35,16 +35,17 @@ public class SetupSpellInventory : MonoBehaviour
                 _refInfoVariant.Effect.text = Serializer.GetSpellEffectString(spellEffect);
             }
 
-            if (_refInfoVariant.SpellZoneEffect.sprite != null) //Sécurité
-            { _refInfoVariant.SpellZoneEffect.sprite = SpellChoose.AreaOfEffect.sprite; } //Area
+            _refInfoVariant.SpellZoneEffect.sprite = SpellChoose.AreaOfEffect.sprite; //Area
 
             foreach (int spellDataIndex in GameManager.Instance.playerInventory.playerEquipedSpellIndex) //pour chaque spell qu'on construit on vérifie si il est equipe
             {
                 if(i == spellDataIndex)
                 {
+                    print("ntm");
                     ConnardDeMes2 = go; //L'objet entier
                     ConnardDeMes2.GetComponent<DraggableSpellContainer>()._faudraRemove = true;
                     ConnardDeMes2.GetComponent<DraggableSpellContainer>().Target = _targetInventory[i];
+                    ConnardDeMes2.GetComponent<DraggableSpellContainer>().CanBeMove = false;
                     Transform parent = go.transform.parent; //SpellSlot
                     GameObject enfant = ConnardDeMes2.transform.GetChild(1).gameObject; //L'image disable
                     ConnardDeMes2.transform.SetParent(_equippedInventory[_index].gameObject.transform);

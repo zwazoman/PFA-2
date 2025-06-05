@@ -16,6 +16,7 @@ public class DraggableSpellContainer : DraggableItemContainer
     [SerializeField] GetInfoInVariant _infoVariant;
     public Transform Target;
     [SerializeField] Transform _enfant;
+    public bool CanBeMove = true;
 
     public bool _faudraRemove;
 
@@ -27,6 +28,7 @@ public class DraggableSpellContainer : DraggableItemContainer
 
     public override void OnBeginDrag(PointerEventData eventData)
     {
+        if (!CanBeMove) { return; }
         base.OnBeginDrag(eventData);
         _descriptionPanel.gameObject.SetActive(true);
     }
@@ -55,6 +57,7 @@ public class DraggableSpellContainer : DraggableItemContainer
 
     public override void Reset()
     {
+        CanBeMove = true;
         _enfant.parent = gameObject.transform;
         _enfant.localPosition = Vector3.zero;
         if(_faudraRemove) { GameManager.Instance.playerInventory.playerEquipedSpellIndex.Remove(_infoVariant.IndexInPlayerSpell); _faudraRemove = false; }
