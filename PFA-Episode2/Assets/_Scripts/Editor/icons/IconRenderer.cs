@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
@@ -43,7 +44,7 @@ public class IconRenderer : MonoBehaviour
 
     public void RenderCurrentImage(RenderTexture source, RenderTexture Result,string spriteName,string textureName)
     {
-        Debug.Log("  - Rendering : " + spriteName);
+        Debug.Log(" - Rendering : " + spriteName);
 
         string texturePath = TexturePath + _textureSuffix + textureName + ".asset";
         string spritePath  = SpritePath + _spriteSuffix + spriteName + ".asset";
@@ -70,7 +71,6 @@ public class IconRenderer : MonoBehaviour
         RenderTexture.active = Result;
         t.ReadPixels(new Rect(0, 0, Result.width, Result.height), 0, 0);
         t.Apply();
-
 
         //save output texture to disk
         if (NoValidTextureAlreadyExists)

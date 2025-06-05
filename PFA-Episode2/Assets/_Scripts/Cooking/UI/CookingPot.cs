@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class CookingPot : MonoBehaviour
@@ -18,7 +19,6 @@ public class CookingPot : MonoBehaviour
     [SerializeField] InfoHeader ingredientInfo0;
     [SerializeField] InfoHeader ingredientInfo1;
     [SerializeField] InfoHeader ingredientInfo2;
-
 
     [SerializeField] TMP_Text txt_sauceName;
     [SerializeField] TMP_Text txt_sauceEffect;
@@ -118,6 +118,7 @@ public class CookingPot : MonoBehaviour
 
         if (removed && shake) transform.DOShakeRotation(.2f,Vector3.forward*90,randomnessMode : ShakeRandomnessMode.Harmonic);
         
+        Debug.Log("Removed ingredient. new list : " );
     }
 
     public bool TryAddIngredient(DraggableIngredientContainer container)
