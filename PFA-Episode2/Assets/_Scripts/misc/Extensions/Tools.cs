@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -12,7 +13,7 @@ public static class Tools
 
     public static Vector3 GetPositionAboveFinger()
     {
-        return Input.mousePosition + Vector3.up * 10*100/Screen.height;
+        return Input.mousePosition + Vector3.up * 10*1080/Screen.height;
     }
     public static Vector3Int SnapOnGrid(this Vector3 initialPos)
     {
@@ -28,6 +29,33 @@ public static class Tools
         return Physics.Raycast(aPos, offset, offset.magnitude, LayerMask.GetMask("Wall"));
     }
 
+    // [MenuItem("Data/testAverageFunc")]
+    // public static void TestAverage()
+    // {
+    //     float av = 10;
+    //     int c = 1;
+    //     Debug.Log(av);
+    //     Debug.Log(c);
+    //     AccumulateAverage(ref av, ref c, 12);
+    //     Debug.Log(av);
+    //     Debug.Log(c);
+    // }
+
+    /// <summary>
+    /// prend une moyenne et la met à jour en ajoutant un nouvel élément dedans.
+    /// </summary>
+    /// <param name="AverageOfValues"></param>
+    /// <param name="ValueCount"></param>
+    /// <param name="newValueToAccumulate"></param>
+    public static void AccumulateAverage(ref float AverageOfValues, ref int ValueCount, float newValueToAccumulate)
+    {
+        float currentSum = AverageOfValues * ValueCount;
+        float newSum = currentSum + newValueToAccumulate;
+        
+        ValueCount++;
+        float newAverage = newSum / ValueCount;
+        AverageOfValues = newAverage;
+    }
 
     public static T PickRandom<T>(this T[] array)
     {
