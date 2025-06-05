@@ -47,7 +47,6 @@ public class CookingPanel : AnimatedPanel
 #else
             LoadPlayerInventory();
 #endif
-
         
     }
 
@@ -56,7 +55,6 @@ public class CookingPanel : AnimatedPanel
         Debug.Log(GarbageCollector.isIncremental);
         GarbageCollector.CollectIncremental(100);
         LoadPlayerInventory();//pas dingue
-        
     }
 
     public void LoadPlayerInventory()
