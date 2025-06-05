@@ -151,8 +151,13 @@ public class CombatManager : MonoBehaviour
 
         for (int i = 0; i < ennemiesCount; i++)
         {
-            spawners[i].SummonEntity();
-            spawners.Remove(spawners[i]);
+            print(ennemiesCount); // 3
+            print(spawners.Count); // 4 // 3 // 2
+
+            Spawner choosenSpawner = spawners.PickRandom();
+
+            choosenSpawner.SummonEntity();
+            spawners.Remove(choosenSpawner);
         }
     }
 
