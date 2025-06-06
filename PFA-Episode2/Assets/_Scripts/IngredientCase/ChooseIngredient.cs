@@ -66,27 +66,26 @@ public class ChooseIngredient : MonoBehaviour
         {
             if (_sceneCombat) { _maxIngredientRef = 0; }
             else { _maxIngredientRef = 2; }
+
             for (int tagIngredient = 0; tagIngredient <= _maxIngredientRef; tagIngredient++)
             {
                 if (!_sauceChoose) { IsSauce(); }
                 if (tagIngredient == _maxIngredientRef && _sauceChoose) { IngredientBaseChooseBySac.Add(ReturnSauceChoose()); }
                 else { IngredientBaseChooseBySac.Add(ReturnIngredientChoose()); }
             }
+
             foreach (IngredientBase ing in IngredientBaseChooseBySac) { _completeListIngredientChoose.Add(ing); }
+
             List<IngredientBase> tempo = new();
             tempo.AddRange(IngredientBaseChooseBySac);
             SetupIngredientUI.Instance.ListListIngredient.Add(tempo);
+
             IngredientBaseChooseBySac.Clear();
 
             _probaSauce = TempoProbaSauce;
             _sauceChoose = false;
-            //_probaSavoureux = TempoProbaSavoureux;
-            //_probaDivin = TempoProbaDivin;
         }
-        for (int i = 0; i != _completeListIngredientChoose.Count; i++)
-        {
-            SetupIngredientUI.Instance.SetupInfo(_completeListIngredientChoose[i], i);
-        }
+        for (int i = 0; i != _completeListIngredientChoose.Count; i++) { SetupIngredientUI.Instance.SetupInfo(_completeListIngredientChoose[i], i); }
 
     }
     /// <summary>
@@ -106,7 +105,6 @@ public class ChooseIngredient : MonoBehaviour
 
         if (result <= _probaDivin && DivinIng.Count != 0) //Divin
         {
-            //_probaDivin = 0;
             Ingredient ing = DivinIng[Random.Range(0, DivinIng.Count)];
             DivinIng.Remove(ing);
             SetupValueIngredient();
@@ -114,7 +112,6 @@ public class ChooseIngredient : MonoBehaviour
         }
         else if (result <= _probaDivin + _probaSavoureux && SavoureuxIng.Count != 0) //Savoureux
         {
-            //_probaSavoureux = 0;
             Ingredient ing = SavoureuxIng[Random.Range(0, SavoureuxIng.Count)];
             SavoureuxIng.Remove(ing);
             SetupValueIngredient();
@@ -148,7 +145,6 @@ public class ChooseIngredient : MonoBehaviour
 
         if (result <= _probaDivin && DivinSauce.Count != 0) //Divin
         {
-            //_probaDivin = 0;
             Sauce sauce = DivinSauce[Random.Range(0, DivinSauce.Count)];
             DivinSauce.Remove(sauce);
             SetupValueIngredient();
@@ -156,7 +152,6 @@ public class ChooseIngredient : MonoBehaviour
         }
         else if (result <= _probaDivin + _probaSavoureux && SavoureuxSauce.Count != 0)  //Savoureux
         {
-            //_probaSavoureux = 0;
             Sauce sauce = SavoureuxSauce[Random.Range(0, SavoureuxSauce.Count)];
             SavoureuxSauce.Remove(sauce);
             SetupValueIngredient();
