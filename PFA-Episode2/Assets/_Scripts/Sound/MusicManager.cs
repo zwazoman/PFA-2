@@ -34,6 +34,7 @@ public class MusicManager : MonoBehaviour
 
         await _musicSource.DOFade(0, _fadeDuration);
         _musicSource.clip = choosenMusic;
+        _musicSource.Play();
         await _musicSource.DOFade(musicParameter.targetVolume, _fadeDuration);
     }
 }
