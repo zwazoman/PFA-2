@@ -150,7 +150,8 @@ public class CombatManager : MonoBehaviour
 
         //check si _min ennemies > spawners
         if (ennemiesCount > spawners.Count)
-            throw new Exception("pas assez de spawners");
+            foreach (Spawner spawner in spawners)
+                spawner.SummonEntity();
 
         for (int i = 0; i < ennemiesCount; i++)
         {

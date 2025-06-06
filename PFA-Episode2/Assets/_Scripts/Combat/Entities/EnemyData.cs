@@ -15,5 +15,8 @@ public class EnemyData : ScriptableObject
     [field : SerializeField]
     public int MaxMovePoints { get; private set; }
 
+    [field: SerializeField]
+    public bool CanBeElite { get; private set; } = true;
+
     public PremadeSpell[] Spells;
 }
