@@ -31,18 +31,7 @@ public static class Tools
 
         return Physics.Raycast(aPos, offset, offset.magnitude, LayerMask.GetMask("Wall"));
     }
-
-    [MenuItem("Data/testAverageFunc")]
-    public static void TestAverage()
-    {
-        float? av = 10;
-        int? c = 1;
-        Debug.Log(av);
-        Debug.Log(c);
-        AccumulateAverage(ref av, ref c, 12);
-        Debug.Log(av);
-        Debug.Log(c);
-    }
+    
 
     /// <summary>
     /// prend une moyenne et la met à jour en ajoutant un nouvel élément dedans.

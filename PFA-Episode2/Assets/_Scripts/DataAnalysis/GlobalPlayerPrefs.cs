@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -91,8 +93,6 @@ public static class GlobalPlayerPrefs
         return output;
     }
     
-    
-    
     public async static Task<int?> GetInt(string ValueName,[CanBeNull] HttpClient client = null)
     {
         string answer = await GetString(ValueName,client);
@@ -159,33 +159,105 @@ public static class GlobalPlayerPrefs
         }
     }
     
-    /*[MenuItem("Data/test set int")]
-    public static void testSetInt()
+    #if UNITY_EDITOR
+
+    [MenuItem("Playtests Analysis /Delete All Global PlayerKeys")]
+    public static void DeleteAllGlobalPlayerKeys()
     {
-        SetValue("test1212",69.5f);
-    }*/
-    
-    [MenuItem("DataAnalysis/ShowAllSetValuesNames")]
-    public static async void PrintAllSentValuesNames()
-    {
-        Debug.Log("====");
-        Debug.Log("== int values : ==");
-        string s = "";
-        foreach (string n in _allIntNames)
-        {
-            s += n + "\n";
-        }
-        Debug.Log(s);
-        
-        Debug.Log("== float values : ==");
-        s = "";
-        foreach (string n in _allFloatNames)
-        {
-            s += n + "\n";
-        }
-        Debug.Log(s);
-        Debug.Log("====");
+        ClearAllValues(null, true);
     }
+
+    [MenuItem("Playtests Analysis /Print All Development Player Data")]
+    public static void PrintAllDevelopmentPlayerData() => PrintAllGlobalPlayerKeys(false);
+    
+    [MenuItem("Playtests Analysis /Print All Build Player Data")]
+    public static void PrintAllBuildPlayerData() => PrintAllGlobalPlayerKeys(true);
+    
+    #endif
+    
+    public static async Task PrintAllGlobalPlayerKeys(bool showBuildData = false)
+    {
+        using (HttpClient client = new())
+        {
+            List<string> keys = (await FetchAllKeys(client, true)).ToList();
+            keys.Sort();
+            foreach (string key in keys)
+            {
+                if(key.StartsWith("dev_") == showBuildData) continue;
+                
+                if (key.EndsWith("hidden")) continue;
+                
+                string value = await GetString(key, client);
+                
+                string cleanKey = key;
+                if (cleanKey.StartsWith("dev_")) cleanKey = cleanKey.Substring(4);
+                if (cleanKey.StartsWith(Application.version)) cleanKey = cleanKey.Substring(Application.version.Length+1);
+                cleanKey = cleanKey.RemoveConsecutiveCharacters('_');
+                //cleanKey = cleanKey.Replace('_',' ');
+                
+                Debug.Log(cleanKey + " : " + value);
+            }
+        };
+
+    }
+    
+    
+    public static async Task<string[]> FetchAllKeys([CanBeNull] HttpClient client,bool showDebugLogs = false)
+    {
+        bool newClient = client == null;
+        if (newClient) client = new();
+        
+        string request = $"http://trmpnt.okman65.xyz/api/getAllKeys";
+        
+        //request
+        try
+        {
+            using (HttpResponseMessage response = await client.GetAsync(request))
+            {
+                if(showDebugLogs) Debug.Log(" == sent request : " + request + " ==");
+                response.EnsureSuccessStatusCode();
+                
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                if(showDebugLogs) Debug.Log("answer : " + responseBody);
+                
+                string[] requests = responseBody.Substring(2,responseBody.Length - 4).Split("\",\"");
+                return requests;
+            }
+        }catch(Exception e) {Debug.LogException(e);}
+            
+        
+        if (newClient) client.Dispose();
+        
+        return Array.Empty<string>();
+    }
+    
+    public static async Task ClearAllValues([CanBeNull] HttpClient client, bool showDebugLogs = true)
+    {
+        
+        bool newClient = client == null;
+        if (newClient) client = new();
+        
+        string request = $"http://trmpnt.okman65.xyz/api/clearAllEntries";
+        
+        //request
+        try
+        {
+            using (HttpResponseMessage response = await client.GetAsync(request))
+            {
+                if(showDebugLogs) Debug.Log(" == sent request : " + request + " ==");
+                response.EnsureSuccessStatusCode();
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+                
+                if(showDebugLogs) Debug.Log("answer : " + responseBody);
+            }
+        }catch(Exception e) {Debug.LogException(e);}
+    
+        if(newClient)client.Dispose();
+    }
+    
+
 }
 
 //#endif

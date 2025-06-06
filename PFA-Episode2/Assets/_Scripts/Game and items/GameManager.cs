@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadOrCreateSave()
     {
-        playerInventory = SaveManager.Load<Inventory>(playerInventory.NameSave, false);
+        playerInventory = SaveManager.Load<Inventory>(playerInventory.NameSave, SaveMapGeneration.Instance.Encrypt);
     }
 
     public void DeleteSave()
@@ -103,5 +103,14 @@ public class GameManager : MonoBehaviour
     {
         int index = Random.Range(0, combatScenesName.Count);
         return combatScenesName[index];
+    }
+
+    public int ComputeEnnemiesCount()
+    {
+        int positionMap = PlayerMap.Instance?.PositionMap ?? 0;
+        if (positionMap > 9) { return 4; }
+        else if (positionMap > 6) { return 3; }
+        else if (positionMap > 3) { return 2; }
+        else { return 1; }
     }
 }

@@ -30,12 +30,12 @@ public class TweenIngredientUI : MonoBehaviour
         seq.Join(_tmpRect.DOScale(0.9f, 0.35f).SetEase(Ease.OutBack));
         seq.Join(_tmpRect.DOAnchorPos(new Vector2(0, _targetYTxt), TweenDuration).SetEase(Ease.InOutQuad));
         await seq.AsyncWaitForCompletion().AsUniTask();
-
         await TweenUISpawn();
     }
 
     public async UniTask TweenUISpawn() //Spawn des 3 cartes
     {
+        foreach (Button btn in _buttonList) { btn.interactable = false; }
         for (int i = 0; i < PanelToTween.Count; i++)
         {
             RectTransform rect = PanelToTween[i];
@@ -54,12 +54,13 @@ public class TweenIngredientUI : MonoBehaviour
                     await rect.DOAnchorPos(new Vector2(_targetX, _targetY), TweenDuration).SetEase(Ease.OutBack);
                     break;
             }
-            _buttonList[i].interactable = true;
         }
+        foreach (Button btn in _buttonList) { btn.interactable = true; }
     }
 
     public async UniTask TweenUIDespawn() //Dispawn des 3 cartes
     {
+        foreach (Button btn in _buttonList) { btn.interactable = false; }
         for (int i = 0; i < PanelToTween.Count; i++)
         {
             RectTransform rect = PanelToTween[i];
@@ -80,14 +81,17 @@ public class TweenIngredientUI : MonoBehaviour
                     break;
             }
         }
+        foreach (Button btn in _buttonList) { btn.interactable = true; }
     }
 
     public async UniTask Monte(RectTransform chosenUI) //Carte choisi 
     {
+        foreach(Button btn in _buttonList) { btn.interactable = false; }
         SFXManager.Instance.PlaySFXClip(Sounds.CardEnter);
         await chosenUI.DOPunchScale(new Vector3(0.5f, 0.5f, 0.5f), .25f, 5, 0.6f);
         await chosenUI.DOAnchorPos(new Vector2(chosenUI.anchoredPosition.x, 2100), TweenDuration).SetEase(Ease.InBack);
         chosenUI.position = new Vector2(chosenUI.anchoredPosition.x, -2100);
+        foreach (Button btn in _buttonList) { btn.interactable = true; }
     }
 
 

@@ -9,6 +9,7 @@ public class SwipeOnMap : MonoBehaviour
     [SerializeField] private float detectionRadius = 1.5f;
 
     private List<Node> _directions = new();
+    private bool _isSwipe = true; //Utilisé dans L'UI de la map
 
     private void OnMouseDown()
     {
@@ -17,6 +18,8 @@ public class SwipeOnMap : MonoBehaviour
 
     private void OnMouseUp()
     {
+        if (!_isSwipe) { return; }
+        print("nique");
         _mouseUp = Input.mousePosition;
 
         _directions.Clear();
@@ -86,4 +89,7 @@ public class SwipeOnMap : MonoBehaviour
 
         return Index;
     }
+
+    public void CanSwipe(bool swipe) { _isSwipe = swipe; }
+
 }
