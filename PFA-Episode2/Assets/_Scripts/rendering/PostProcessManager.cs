@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PostProcessManager :  MonoBehaviour
 {
-    [SerializeField] Material postProcessMaterial;
+    /*[SerializeField] Material postProcessMaterial;
 
     RenderTexture RT;
 
@@ -15,5 +15,5 @@ public class PostProcessManager :  MonoBehaviour
     {
         postProcessMaterial.SetVector("_resolution", new Vector2(src.width, src.height));
         Graphics.Blit(src, dest, postProcessMaterial);
-    }
+    }*/
 }
