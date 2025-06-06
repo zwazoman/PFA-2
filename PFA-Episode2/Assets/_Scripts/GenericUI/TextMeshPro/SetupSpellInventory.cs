@@ -31,29 +31,35 @@ public class SetupSpellInventory : MonoBehaviour
             _refInfoVariant.SpellName.text = SpellChoose.Name; //Nom
             for (int index = 0; index < SpellChoose.Effects.Count; index++) //Effets
             {
+                _refInfoVariant.Effect[index].gameObject.transform.parent.gameObject.SetActive(true);
                 SpellEffect spellEffect = SpellChoose.Effects[index];
-                _refInfoVariant.Effect.text = Serializer.GetSpellEffectString(spellEffect);
+                _refInfoVariant.Effect[index].text = Serializer.GetSpellEffectString(spellEffect);
             }
 
-            if (_refInfoVariant.SpellZoneEffect.sprite != null) //Sécurité
-            { _refInfoVariant.SpellZoneEffect.sprite = SpellChoose.AreaOfEffect.sprite; } //Area
+            _refInfoVariant.SpellZoneEffect.sprite = SpellChoose.AreaOfEffect.sprite; //Area
 
             foreach (int spellDataIndex in GameManager.Instance.playerInventory.playerEquipedSpellIndex) //pour chaque spell qu'on construit on vérifie si il est equipe
             {
                 if(i == spellDataIndex)
                 {
+                    print("ntm");
                     ConnardDeMes2 = go; //L'objet entier
                     ConnardDeMes2.GetComponent<DraggableSpellContainer>()._faudraRemove = true;
                     ConnardDeMes2.GetComponent<DraggableSpellContainer>().Target = _targetInventory[i];
                     Transform parent = go.transform.parent; //SpellSlot
                     GameObject enfant = ConnardDeMes2.transform.GetChild(1).gameObject; //L'image disable
-
                     ConnardDeMes2.transform.SetParent(_equippedInventory[_index].gameObject.transform);
                     ConnardDeMes2.transform.localPosition = Vector3.zero;
                     enfant.SetActive(true);
                     enfant.transform.SetParent(parent);
                     enfant.transform.localPosition = Vector3.zero;
+                    RectTransform rectTransform = enfant.GetComponent<RectTransform>();
+                    rectTransform.anchorMin = Vector2.zero;
+                    rectTransform.anchorMax = Vector2.one;
+                    rectTransform.offsetMin = Vector2.zero;
+                    rectTransform.offsetMax = Vector2.zero;
                     ConnardDeMes2.transform.GetComponent<DraggableSpellContainer>().originalParent = enfant.transform.parent;
+                    ConnardDeMes2.GetComponent<DraggableSpellContainer>().enabled = false;
                     _index++;
                 }
             }

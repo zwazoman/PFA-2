@@ -25,6 +25,7 @@ public class CombatManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        TotalEncounteredCombatsCountOverRun++;
     }
     #endregion
 
@@ -83,6 +84,8 @@ public class CombatManager : MonoBehaviour
 
     #endregion
 
+    public static int TotalEncounteredCombatsCountOverRun = 0;
+    
     private async void Start()
     {
         await UniTask.Yield();
@@ -151,8 +154,13 @@ public class CombatManager : MonoBehaviour
 
         for (int i = 0; i < ennemiesCount; i++)
         {
-            spawners[i].SummonEntity();
-            spawners.Remove(spawners[i]);
+            print(ennemiesCount); // 3
+            print(spawners.Count); // 4 // 3 // 2
+
+            Spawner choosenSpawner = spawners.PickRandom();
+
+            choosenSpawner.SummonEntity();
+            spawners.Remove(choosenSpawner);
         }
     }
 
@@ -168,8 +176,12 @@ public class CombatManager : MonoBehaviour
     async UniTask GameOver()
     {
         await UniTask.Delay(1000);
-
+        
         SaveManager.DeleteAll();
+        
+        if(PlaytestDataRecorder.Instance !=null)
+            await PlaytestDataRecorder.Instance.OnGameOver();
+        
         _gameOverPanel?.Show();
     }
 
@@ -181,6 +193,7 @@ public class CombatManager : MonoBehaviour
         await UniTask.Delay(1000);
 
         _rewardPanel?.Show();
+        Time.timeScale = 1;
         //await SceneTransitionManager.Instance.GoToScene("WorldMap");
     }
 }

@@ -1,8 +1,12 @@
+using System;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using System.Collections.Generic;
+using System.Net.Mime;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Random = UnityEngine.Random;
 
 public static class Tools
 {
@@ -12,7 +16,7 @@ public static class Tools
 
     public static Vector3 GetPositionAboveFinger()
     {
-        return Input.mousePosition + Vector3.up * 120;
+        return Input.mousePosition + Vector3.up * 10*1080/Screen.height;
     }
     public static Vector3Int SnapOnGrid(this Vector3 initialPos)
     {
@@ -28,6 +32,52 @@ public static class Tools
         return Physics.Raycast(aPos, offset, offset.magnitude, LayerMask.GetMask("Wall"));
     }
 
+    [MenuItem("Data/testAverageFunc")]
+    public static void TestAverage()
+    {
+        float? av = 10;
+        int? c = 1;
+        Debug.Log(av);
+        Debug.Log(c);
+        AccumulateAverage(ref av, ref c, 12);
+        Debug.Log(av);
+        Debug.Log(c);
+    }
+
+    /// <summary>
+    /// prend une moyenne et la met Ã  jour en ajoutant un nouvel Ã©lÃ©ment dedans.
+    /// </summary>
+    /// <param name="AverageOfValues"></param>
+    /// <param name="ValueCount"></param>
+    /// <param name="newValueToAccumulate"></param>
+    public static void AccumulateAverage(ref float AverageOfValues, ref int ValueCount, float newValueToAccumulate)
+    {
+        float currentSum = AverageOfValues * ValueCount;
+        float newSum = currentSum + newValueToAccumulate;
+        
+        ValueCount++;
+        float newAverage = newSum / ValueCount;
+        AverageOfValues = newAverage;
+    }
+
+    public static void AccumulateAverage(ref float? AverageOfValues, ref int? ValueCount, float newValueToAccumulate)
+    {
+        if (AverageOfValues != null && ValueCount != null)
+        {
+            float currentSum = AverageOfValues.Value * ValueCount.Value;
+            float newSum = currentSum + newValueToAccumulate;
+
+            ValueCount++;
+            float newAverage = newSum / ValueCount.Value;
+            AverageOfValues = newAverage;
+        }
+        else throw new ArgumentNullException();
+
+    }
+    public static string FormatPlaytestValueNameString(string ValueName)
+    {
+        return  (Application.isEditor ? "dev_" : "" ) + Application.version.ToString()+ "_" + ValueName ;
+    }
 
     public static T PickRandom<T>(this T[] array)
     {
@@ -173,7 +223,7 @@ public static class Tools
         {
             if (pair.Value.Equals(value))
             {
-                return pair.Key; // Retourne la clé
+                return pair.Key; // Retourne la clï¿½
             }
         }
         return default;
@@ -196,7 +246,7 @@ public static class Tools
     /// <summary>
     /// Retourne les tuiles accessibles dans un certain rayon en utilisant une recherche en largeur (BFS).
     /// </summary>
-    public static Dictionary<WayPoint, int> Flood(WayPoint startNode) //On part d'un node de départ avec une range donné pour regardé les voisins
+    public static Dictionary<WayPoint, int> Flood(WayPoint startNode) //On part d'un node de dï¿½part avec une range donnï¿½ pour regardï¿½ les voisins
     {
         FloodDict.Clear();
         Dictionary<WayPoint, int> PointDistanceDict = new();

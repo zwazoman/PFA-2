@@ -1,9 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using UnityEditor;
-using System.IO;
-using System.Net.NetworkInformation;
+using Cysharp.Threading.Tasks;
 
 public class ChooseIngredient : MonoBehaviour
 {
@@ -36,7 +33,7 @@ public class ChooseIngredient : MonoBehaviour
     [SerializeField][Range(-1, 1)] private float _biaisCommon;
     [SerializeField][Range(-1, 1)] private float _biaisSavoureux;
     [SerializeField][Range(-1, 1)] private float _biaisDivin;
-    private int _moyenneGameTirage = 24;
+    private int _moyenneGameTirage = 35;
 
     [Header("Others")]
     [SerializeField] private bool _sceneCombat;
@@ -56,7 +53,8 @@ public class ChooseIngredient : MonoBehaviour
         _probaCommon = _probaCommonRef;
         _probaSavoureux = _probaSavoureuxRef;
         _probaDivin = _probaDivinRef;
-        //if (PlayerMap.Instance.PositionMap != 1) { AddShield(); }
+        if (PlayerMap.Instance.PositionMap != 1) { AddShield(); }
+        if (_sceneCombat || PlayerMap.Instance.PositionMap == 1) { SetupIngredientUI.Instance.NumberRoll = 2; }
         ChooseRandomIngredient();
     }
 
@@ -100,10 +98,11 @@ public class ChooseIngredient : MonoBehaviour
         List<Ingredient> CommonIng = new(_listIngredientCommon);
         List<Ingredient> SavoureuxIng = new(_listIngredientSavoureux);
         List<Ingredient> DivinIng = new(_listIngredientDivin);
-
         float total = _probaCommon + _probaSavoureux + _probaDivin;
-        float result = Random.Range(1, total + 1);
+        float result = Random.Range(0, total + 1);
         GameManager.Instance.playerInventory.TotalTirageIngredient++;
+        PlayerPrefs.SetInt("Nombre total de tirage sur la run", PlayerPrefs.GetInt("Nombre total de tirage sur la run") + 1);
+        print(PlayerPrefs.GetInt("Nombre total de tirage sur la run"));
         if (result <= _probaDivin && DivinIng.Count != 0) //Divin
         {
             //_probaDivin = 0;
@@ -144,6 +143,7 @@ public class ChooseIngredient : MonoBehaviour
         float total = _probaCommon + _probaSavoureux + _probaDivin;
         float result = Random.Range(1, total + 1);
         GameManager.Instance.playerInventory.TotalTirageIngredient++;
+        PlayerPrefs.SetInt("Nombre total de tirage sur la run", PlayerPrefs.GetInt("Nombre total de tirage sur la run") + 1);
         if (result <= _probaDivin && DivinSauce.Count != 0) //Divin
         {
             //_probaDivin = 0;
@@ -174,7 +174,7 @@ public class ChooseIngredient : MonoBehaviour
         float numberChoose = Random.value;
         if (numberChoose <= _probaSauce) { _sauceChoose = true; }
     }
-    public async Task ResetIngredient()
+    public async UniTask ResetIngredient()
     {
         IngredientBaseChooseBySac.Clear();
         _completeListIngredientChoose.Clear();
@@ -195,10 +195,28 @@ public class ChooseIngredient : MonoBehaviour
 
     private void AddShield()
     {
-        foreach (Ingredient ing in _listIngredientCommon) { if (!_listBannedIngredient.Contains(ing) && ing.rarity == Rarity.Ordinaire) { _listIngredientCommon.Add(_listBannedIngredient[0]); break; } }
-        foreach (Ingredient ing in _listIngredientSavoureux) { if (!_listBannedIngredient.Contains(ing) && ing.rarity == Rarity.Savoureux) { _listIngredientSavoureux.Add(_listBannedIngredient[1]); break; } }
-        foreach (Ingredient ing in _listIngredientDivin) { if (!_listBannedIngredient.Contains(ing) && ing.rarity == Rarity.Divin) { _listIngredientDivin.Add(_listBannedIngredient[2]); break; } }
+        foreach (Ingredient banned in _listBannedIngredient)
+        {
+            switch (banned.rarity)
+            {
+                case Rarity.Ordinaire:
+                    if (!_listIngredientCommon.Contains(banned))
+                        _listIngredientCommon.Add(banned);
+                    break;
+
+                case Rarity.Savoureux:
+                    if (!_listIngredientSavoureux.Contains(banned))
+                        _listIngredientSavoureux.Add(banned);
+                    break;
+
+                case Rarity.Divin:
+                    if (!_listIngredientDivin.Contains(banned))
+                        _listIngredientDivin.Add(banned);
+                    break;
+            }
+        }
     }
+
 }
 //#if UNITY_EDITOR
 //    public void GenerateListsDeCon()
@@ -214,7 +232,7 @@ public class ChooseIngredient : MonoBehaviour
 //        string[] files = Directory.GetFiles("Assets/_Data/Ingredients/ingredients", "*.asset", SearchOption.TopDirectoryOnly);
 //        foreach (string path in files)
 //        {
-            
+
 //            Ingredient asset = (Ingredient)AssetDatabase.LoadAssetAtPath(path, typeof(Ingredient));
 //            switch (asset.rarity)
 //            {
@@ -233,7 +251,7 @@ public class ChooseIngredient : MonoBehaviour
 //        files = Directory.GetFiles("Assets/_Data/Ingredients/Sauce", "*.asset", SearchOption.TopDirectoryOnly);
 //        foreach (string path in files)
 //        {
-            
+
 //            Sauce asset = (Sauce)AssetDatabase.LoadAssetAtPath(path, typeof(Sauce));
 //            if (asset.name != "No Sauce")
 //            switch (asset.rarity)

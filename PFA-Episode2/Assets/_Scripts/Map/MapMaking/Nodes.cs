@@ -23,6 +23,7 @@ public class Node : MonoBehaviour
     [SerializeField] private Button _button;
     [SerializeField] private MeshRenderer _meshRend;
     [SerializeField] private Material _mat;
+    [SerializeField] private GameObject _halo;
 
     public static void TriggerMapCompleted() { OnMapCompleted?.Invoke(); }
 
@@ -38,6 +39,7 @@ public class Node : MonoBehaviour
     /// </summary>
     public void SetupSprite()
     {
+        _halo.SetActive(false);
         if (PlayerMap.Instance.PositionMap == Position) { return; }
         switch (EventName)
         {
@@ -81,7 +83,7 @@ public class Node : MonoBehaviour
             case NodesEventTypes.Start:
                 break;
         }
-        if ((PlayerMap.Instance.PositionMap == Position - 1 && PlayerMap.Instance.Y == gameObject.transform.localPosition.y) || (PlayerMap.Instance.PositionMap == Position - 1 && Intersection /*&& this.Hauteur != 3*/)) { _button.interactable = true; }
+        if ((PlayerMap.Instance.PositionMap == Position - 1 && PlayerMap.Instance.Y == gameObject.transform.localPosition.y) || (PlayerMap.Instance.PositionMap == Position - 1 && Intersection /*&& this.Hauteur != 3*/)) { _button.interactable = true; _halo.SetActive(true); }
         else { _button.interactable = false; }
         Vector3 rot = transform.eulerAngles;
         rot.z = -90f;
@@ -91,6 +93,7 @@ public class Node : MonoBehaviour
 
     private void TweenMesh()
     {
+        _halo.transform.SetParent(_mesh.transform);
         _mesh.transform.DOScale(new Vector3(0,0,0), 0.5f).SetEase(Ease.InBack);
     }
 

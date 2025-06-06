@@ -1,6 +1,4 @@
-using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -22,7 +20,6 @@ public class DraggableSpellContainer : DraggableItemContainer
     private void Start()
     {
         if (Target == null) { Target = gameObject.transform.transform.parent; }
-
     }
 
     public override void OnBeginDrag(PointerEventData eventData)

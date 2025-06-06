@@ -39,21 +39,21 @@ public class TweenIngredientUI : MonoBehaviour
         for (int i = 0; i < PanelToTween.Count; i++)
         {
             RectTransform rect = PanelToTween[i];
-            Sequence seq = DOTween.Sequence();
             switch (i)
             {
                 case 0:
-                    seq.Join(rect.DOAnchorPos(new Vector2(-_targetX, _targetY), TweenDuration).SetEase(Ease.OutBack));
+                    SFXManager.Instance.PlaySFXClip(Sounds.CardEnter);
+                    await rect.DOAnchorPos(new Vector2(-_targetX, _targetY), TweenDuration).SetEase(Ease.OutBack);
                     break;
                 case 1:
-                    seq.Join(rect.DOAnchorPos(new Vector2(0, _targetY), TweenDuration).SetEase(Ease.OutBack));
+                    SFXManager.Instance.PlaySFXClip(Sounds.CardEnter);
+                    await rect.DOAnchorPos(new Vector2(0, _targetY), TweenDuration).SetEase(Ease.OutBack);
                     break;
                 case 2:
-                    seq.Join(rect.DOAnchorPos(new Vector2(_targetX,_targetY), TweenDuration).SetEase(Ease.OutBack));
+                    SFXManager.Instance.PlaySFXClip(Sounds.CardEnter);
+                    await rect.DOAnchorPos(new Vector2(_targetX, _targetY), TweenDuration).SetEase(Ease.OutBack);
                     break;
             }
-
-            await seq.AsyncWaitForCompletion().AsUniTask();
             _buttonList[i].interactable = true;
         }
     }
@@ -62,32 +62,31 @@ public class TweenIngredientUI : MonoBehaviour
     {
         for (int i = 0; i < PanelToTween.Count; i++)
         {
-            Sequence seq = DOTween.Sequence();
             RectTransform rect = PanelToTween[i];
 
             switch (i)
             {
                 case 0:
-                    seq.Join(rect.DOAnchorPos(new Vector2(-_targetX, -2100), TweenDuration).SetEase(Ease.InBack));
+                    await rect.DOAnchorPos(new Vector2(-_targetX, -2100), TweenDuration).SetEase(Ease.InBack);
+                    SFXManager.Instance.PlaySFXClip(Sounds.CardExit);
                     break;
                 case 1:
-                    seq.Join(rect.DOAnchorPos(new Vector2(0, -2100), TweenDuration).SetEase(Ease.InBack));
+                    SFXManager.Instance.PlaySFXClip(Sounds.CardExit);
+                    await rect.DOAnchorPos(new Vector2(0, -2100), TweenDuration).SetEase(Ease.InBack);
                     break;
                 case 2:
-                    seq.Join(rect.DOAnchorPos(new Vector2(_targetX, -2100), TweenDuration).SetEase(Ease.InBack));
+                    SFXManager.Instance.PlaySFXClip(Sounds.CardExit);
+                    await rect.DOAnchorPos(new Vector2(_targetX, -2100), TweenDuration).SetEase(Ease.InBack);
                     break;
             }
-            await seq.AsyncWaitForCompletion().AsUniTask();
         }
     }
 
     public async UniTask Monte(RectTransform chosenUI) //Carte choisi 
     {
-        Sequence seq = DOTween.Sequence();
-        seq.Join(chosenUI.DOPunchScale(new Vector3(0.5f, 0.5f, 0.5f), .25f, 5, 0.6f));
-        seq.Join(chosenUI.DOAnchorPos(new Vector2(chosenUI.anchoredPosition.x, 2100), TweenDuration).SetEase(Ease.InBack));
-
-        await seq.AsyncWaitForCompletion().AsUniTask();
+        SFXManager.Instance.PlaySFXClip(Sounds.CardEnter);
+        await chosenUI.DOPunchScale(new Vector3(0.5f, 0.5f, 0.5f), .25f, 5, 0.6f);
+        await chosenUI.DOAnchorPos(new Vector2(chosenUI.anchoredPosition.x, 2100), TweenDuration).SetEase(Ease.InBack);
         chosenUI.position = new Vector2(chosenUI.anchoredPosition.x, -2100);
     }
 

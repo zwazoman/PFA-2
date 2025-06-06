@@ -1,7 +1,10 @@
+using System;
 using DG.Tweening;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class CookingPot : MonoBehaviour
@@ -18,7 +21,6 @@ public class CookingPot : MonoBehaviour
     [SerializeField] InfoHeader ingredientInfo0;
     [SerializeField] InfoHeader ingredientInfo1;
     [SerializeField] InfoHeader ingredientInfo2;
-
 
     [SerializeField] TMP_Text txt_sauceName;
     [SerializeField] TMP_Text txt_sauceEffect;
@@ -85,7 +87,14 @@ public class CookingPot : MonoBehaviour
 
     public void RemoveAllIngredients()
     {
-        foreach (DraggableIngredientContainer item in items) 
+        Debug.unityLogger.Log("== Removing all ingredients ==");
+        Debug.Log("Item count : " + items.Length);
+        
+        string s = "";
+        foreach (DraggableIngredientContainer item in items.ToList()) s+= (item?.item.name?? "null") + " ";
+        Debug.Log("Item list : " + s);
+        
+        foreach (DraggableIngredientContainer item in items.ToList()) 
         {
             if(item!=null) RemoveIngredient(item,false);
         }
@@ -99,7 +108,8 @@ public class CookingPot : MonoBehaviour
         //ingredient
         if (removed |= (container.item is Ingredient && ingredients.Contains((Ingredient)container.item)))
         {
-            items[ingredients.IndexOf((Ingredient)container.item)] = null;
+            
+            items[items.ToList().IndexOf((DraggableItemContainer)container)] = null;
             ingredients.Remove((Ingredient)container.item);
             container.Reset();
 
@@ -112,12 +122,15 @@ public class CookingPot : MonoBehaviour
         {
             sauce = null;
             container.Reset();
-
+            items[3] = null;
             UpdateSauceDisplay();
         }
 
         if (removed && shake) transform.DOShakeRotation(.2f,Vector3.forward*90,randomnessMode : ShakeRandomnessMode.Harmonic);
-        
+
+        string s = "";
+        foreach (Ingredient ingredient in ingredients) s+= ingredient.name+ " ";
+        Debug.Log("Removed ingredient. new list : " + s);
     }
 
     public bool TryAddIngredient(DraggableIngredientContainer container)
@@ -129,7 +142,9 @@ public class CookingPot : MonoBehaviour
         //ingredient
         if (successful|=(container.item is Ingredient && ingredients.Count < 3))
         {
-            items[ingredients.Count] = container;
+            int i = 0;
+            while (i<3 && items[i]!=null) i++;
+            items[i] = container;
             ingredients.Add((Ingredient)container.item);
 
             UpdateIngredientsStatsDisplay();
@@ -144,7 +159,14 @@ public class CookingPot : MonoBehaviour
             UpdateSauceDisplay();
         }
 
-        if (successful) transform.DOPunchScale(Vector3.one * .25f, .25f,9,1.2f); else transform.DOShakePosition(.3f,50,20);
+        if (successful)
+        {
+            string s = "";
+            foreach (Ingredient ingredient in ingredients) s+= ingredient.name+ " ";
+            Debug.Log("Added ingredient. new list : " + s);
+            
+            transform.DOPunchScale(Vector3.one * .25f, .25f,9,1.2f);
+        } else transform.DOShakePosition(.3f,50,20);
 
         return successful;
     }
