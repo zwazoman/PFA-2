@@ -27,6 +27,8 @@ public class SetupSpellInventory : MonoBehaviour
             _refInfoVariant.IndexInPlayerSpell = i;
             _refInfoVariant.SpellIcon.sprite = SpellChoose.Sprite; //Sprite
             _refInfoVariant.SpellIconDisable.sprite = SpellChoose.Sprite;
+            _refInfoVariant.Range.text = SpellChoose.Range.ToString();
+            _refInfoVariant.Cooldown.text = SpellChoose.CoolDown.ToString();
 
             _refInfoVariant.SpellName.text = SpellChoose.Name; //Nom
             for (int index = 0; index < SpellChoose.Effects.Count; index++) //Effets
@@ -42,7 +44,6 @@ public class SetupSpellInventory : MonoBehaviour
             {
                 if(i == spellDataIndex)
                 {
-                    print("ntm");
                     ConnardDeMes2 = go; //L'objet entier
                     ConnardDeMes2.GetComponent<DraggableSpellContainer>()._faudraRemove = true;
                     ConnardDeMes2.GetComponent<DraggableSpellContainer>().Target = _targetInventory[i];
