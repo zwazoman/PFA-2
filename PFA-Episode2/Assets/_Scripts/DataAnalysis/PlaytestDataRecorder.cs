@@ -1,75 +1,157 @@
 using System;
+using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 //#if DEVELOPMENT_BUILD || UNITY_EDITOR
 public class PlaytestDataRecorder : MonoBehaviour
 {
-    //game events
-    public void OnRunStarted()
+    private static Dictionary<string, float> _mapTotalLengths = new();
+    private static Dictionary<string, int> _mapOccurencesPerRun = new();
+    
+    //singleton
+    public static PlaytestDataRecorder Instance { get; private set; }
+
+    private HttpClient _client;
+    private HttpClient client
     {
-        AddToInt("TotalRunStartedCount",1);
+        get { return _client ??= new HttpClient(); }
+    }
+
+    private void OnApplicationQuit()
+    {
+        if(_client!=null)_client.Dispose();
+    }
+
+    public void CallOnRunStarted()
+    {
+        OnRunStarted();
+    }
+
+    private void Awake()
+    {
+        Instance = this;
+        if(Time.time<.2f)
+        { 
+            _ = OnGameLauched();
+        }
+    }
+    
+    //game events
+    public async UniTask OnGameLauched()
+    {
+        _mapTotalLengths.Clear();
+        _mapOccurencesPerRun.Clear();
+        await AddToInt("GameLaunch_TotalCount",1);
+    }
+
+    public async UniTask OnRunStarted()
+    {
+        CombatManager.TotalEncounteredCombatsCountOverRun = 0;
+        await AddToInt("RunStarted_TotalCount",1);
     }
         
-    public void OnBossReached()
+    //todo : appeler ces méthodes
+    public async UniTask OnBossReached()
     {
-        AddToInt("TotalBossReachedCount",1);
+        await UpdateFullDataAtEvent("BossReached");
     }
 
-    public void OnBossBeaten()
+    public async UniTask OnBossBeaten()
     {
-        AddToInt("TotalBossBeatenCount",1);
+        List<UniTask> tasks = new();
+        tasks.Add( AddToInt("BossBeaten_TotalCount",1));
+        tasks.Add( UpdateAverage("BossBeaten_Time",Time.time));
+        await UniTask.WhenAll(tasks);
     }
 
-    public void OnGameOver()
+    public async UniTask OnGameOver()
     {
-        AddToInt("TotalGameOverCount",1);
+        await UpdateFullDataAtEvent("GameOver");
     }
-
     
     //scene events
-    public void OnSceneOpened()
+    public async UniTask OnSceneOpened()
     {
+        _mapTotalLengths.TryAdd(SceneManager.GetActiveScene().name, 0);
+        _mapOccurencesPerRun.TryAdd(SceneManager.GetActiveScene().name,1);
+
+        //capture average fps
+        await UniTask.WaitForSeconds(1);
+        float fpsSum = 0;
+        for(int i = 0;i<20;i++)
+        {
+            fpsSum += 1f / Time.deltaTime;
+            await UniTask.WaitForSeconds(.2f);
+        }
+        float averageFps = fpsSum / 20f;
+        await UpdateAverage("FPS_"+SceneManager.GetActiveScene().name, averageFps);
+
+    }
+    public async UniTask OnSceneExited()
+    {
+        await UpdateAverage("Map_"+ SceneManager.GetActiveScene().name + "_Duration",Time.timeSinceLevelLoad);
         
+        _mapTotalLengths[SceneManager.GetActiveScene().name] += Time.timeSinceLevelLoad;
+        _mapOccurencesPerRun[SceneManager.GetActiveScene().name] ++;
     }
 
-    public void OnSceneExited()
+    //helper local functions
+    private async UniTask UpdateFullDataAtEvent(string eventName)
     {
-        
-    }
+        Debug.Log(" ===== about to update data for event : " + eventName + " =====");
 
+        List<UniTask> tasks = new();
+        
+        tasks.Add(  AddToInt(eventName + "_TotalOccurrences",1));
+        tasks.Add(  UpdateAverage(eventName +"_ReachedAt", Time.time));
+        
+        tasks.Add(  UpdateAverage(eventName + "_Inventory_RemainingIngredientsCount", GameManager.Instance.playerInventory.Ingredients.Count));
+        tasks.Add(  UpdateAverage(eventName + "_Inventory_SpellCount", GameManager.Instance.playerInventory.Spells.Count));
+        
+        tasks.Add(  UpdateAverage(eventName + "_CombatsOccurences", CombatManager.TotalEncounteredCombatsCountOverRun));
+
+        foreach (string key in _mapTotalLengths.Keys)
+        {
+            tasks.Add(  UpdateAverage(eventName + "_TotalSpentTimeOnMap_"+key, _mapTotalLengths[key]));
+            tasks.Add(  UpdateAverage(eventName + "_MapOccurrences_"+key, _mapOccurencesPerRun[key]));
+        }
+
+        await UniTask.WhenAll(tasks);
+    }
     
-    
-    //helper functions
-    
-    private async void AddToFloat(string valueName, float offset)
+    //helper network functions
+    private async UniTask AddToFloat(string valueName, float offset)
     {
         string name = Tools.FormatPlaytestValueNameString(valueName) ;
         
             float? currentValue = await GlobalPlayerPrefs.GetFloat(valueName);
             if (currentValue == null)
             {
-                await GlobalPlayerPrefs.SetValue(valueName,offset);
+                await GlobalPlayerPrefs.SetValue(valueName,offset,client);
             }
             else
             {
                 currentValue += offset;
-                await GlobalPlayerPrefs.SetValue(valueName,currentValue.Value);
+                await GlobalPlayerPrefs.SetValue(valueName,currentValue.Value,client);
             }
     }
     
-    private async void AddToInt(string valueName, int offset)
+    private async UniTask AddToInt(string valueName, int offset)
     {
         string name = Tools.FormatPlaytestValueNameString(valueName) ;
         int? currentValue = await GlobalPlayerPrefs.GetInt(valueName);
         if (currentValue == null)
         {
-            await GlobalPlayerPrefs.SetValue(valueName,offset);
+            await GlobalPlayerPrefs.SetValue(name,offset,client);
         }
         else
         {
             currentValue += offset;
-            await GlobalPlayerPrefs.SetValue(valueName,currentValue);
+            await GlobalPlayerPrefs.SetValue(name,currentValue,client);
         }
     }
     
@@ -78,14 +160,14 @@ public class PlaytestDataRecorder : MonoBehaviour
         try
         {
             //set up names
-            string averageName = Tools.FormatPlaytestValueNameString(valueName) + "_average";
-            string countName = Tools.FormatPlaytestValueNameString(valueName) + "_count";
+            string averageName = Tools.FormatPlaytestValueNameString(valueName) + "__Average";
+            string countName = Tools.FormatPlaytestValueNameString(valueName) + "__Count__hidden";
 
             //fetch current global values
-            float? currentAverage = await GlobalPlayerPrefs.GetFloat(averageName);
-            int? currentCount = await GlobalPlayerPrefs.GetInt(countName);
+            float? currentAverage = await GlobalPlayerPrefs.GetFloat(averageName,client);
+            int? currentCount = await GlobalPlayerPrefs.GetInt(countName,client);
 
-            if ((currentAverage == null) != (currentCount == null)) throw (new Exception("y'a un big probleme là"));
+            if ((currentAverage == null) != (currentCount == null)) Debug.LogException( (new Exception("y'a un big probleme là")));
             
             //update averages
             
@@ -101,8 +183,8 @@ public class PlaytestDataRecorder : MonoBehaviour
             }
             
             //update global values
-            await GlobalPlayerPrefs.SetValue(averageName, currentAverage.Value);
-            await GlobalPlayerPrefs.SetValue(countName, currentCount.Value);
+            await GlobalPlayerPrefs.SetValue(averageName, currentAverage.Value,client);
+            await GlobalPlayerPrefs.SetValue(countName, currentCount.Value,client);
 
         }catch (Exception e) {Debug.LogException(e);}
 

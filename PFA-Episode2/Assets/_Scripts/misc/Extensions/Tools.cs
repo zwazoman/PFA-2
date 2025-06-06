@@ -76,7 +76,7 @@ public static class Tools
     }
     public static string FormatPlaytestValueNameString(string ValueName)
     {
-        return ValueName + "_" + Application.version.ToString();
+        return  (Application.isEditor ? "dev_" : "" ) + Application.version.ToString()+ "_" + ValueName ;
     }
 
     public static T PickRandom<T>(this T[] array)

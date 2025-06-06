@@ -26,7 +26,7 @@ public class SceneTransitionManager : MonoBehaviour
     #endregion
 
     /// <summary>
-    /// structure à respecter dans les build settings
+    /// structure ï¿½ respecter dans les build settings
     /// </summary>
     public enum Scene
     {
@@ -89,6 +89,8 @@ public class SceneTransitionManager : MonoBehaviour
             AsyncOperation o = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
             o.allowSceneActivation = false;
             await FadeOut();
+            if(PlaytestDataRecorder.Instance !=null)
+                await PlaytestDataRecorder.Instance.OnSceneExited();
             o.allowSceneActivation = true;
         }
     }
@@ -120,6 +122,8 @@ public class SceneTransitionManager : MonoBehaviour
     private async void Start()
     {
         _CanvasGroup.alpha = 1;
+        if(PlaytestDataRecorder.Instance !=null)
+            _ = PlaytestDataRecorder.Instance.OnSceneOpened();
         await FadeIn();
     }
 }

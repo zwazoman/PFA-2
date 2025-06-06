@@ -1,96 +1,109 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
+using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+//#if DEVELOPMENT_BUILD || UNITY_EDITOR
 
 public static class GlobalPlayerPrefs
 {
+    private static HashSet<string> _allFloatNames = new();
+    private static HashSet<string> _allIntNames = new();
     
-    public async static Task SetString(string ValueName,string value)
+    public async static Task SetString(string valueName,string value,[CanBeNull] System.Net.Http.HttpClient client = null,bool showDebugLogs = false)
     {
-        using (System.Net.Http.HttpClient client = new())
+        bool newClient = client == null;
+        if (newClient) client = new();
+        
+        //cleanup value name
+        string cleanName = "";
+        foreach (char c in valueName)
         {
-            //cleanup value name
-            string cleanName = "";
-            foreach (char c in ValueName)
+            if (!Path.GetInvalidPathChars().Contains(c) && c!= '\\' ) cleanName += c;
+        }
+        string request = $"https://trmpnt.okman65.xyz/api/setValue/{cleanName}/{value}\n";
+        
+        //request
+        try
+        {
+            using (HttpResponseMessage response = await client.GetAsync(request))
             {
-                if (!Path.GetInvalidPathChars().Contains(c) && c!= '\\' ) cleanName += c;
+                if(showDebugLogs) Debug.Log(" == sent request : " + request + " ==");
+                response.EnsureSuccessStatusCode();
+                
+                string responseBody = await response.Content.ReadAsStringAsync();
+                // Debug.Log(response.ReasonPhrase);
+                // Debug.Log(response.StatusCode);
+                // Debug.Log(response.RequestMessage.Headers);
+                if(showDebugLogs) Debug.Log("answer : " + responseBody);
             }
-            string request = $"https://trmpnt.okman65.xyz/api/setValue/{cleanName}/{value}\n";
+        }catch(Exception e) {Debug.LogException(e);}
             
-            //request
-            try
-            {
-                using (HttpResponseMessage response = await client.GetAsync(request))
-                {
-                    Debug.Log(" == sent request : " + request + " ==");
-                    response.EnsureSuccessStatusCode();
-                    
-                    string responseBody = await response.Content.ReadAsStringAsync();
-                    // Debug.Log(response.ReasonPhrase);
-                    // Debug.Log(response.StatusCode);
-                    // Debug.Log(response.RequestMessage.Headers);
-                    Debug.Log("answer : " + responseBody);
-                }
-            }catch(Exception e) {Debug.LogException(e);}
-            
-        };
+        
+        if (newClient) client.Dispose();
     }
     
-    public async static Task<string?> GetString(string ValueName)
+    public async static Task<string?> GetString(string ValueName,[CanBeNull] System.Net.Http.HttpClient client = null,bool  showDebugLogs = false)
     {
         string? output = null;
         
-        using (System.Net.Http.HttpClient client = new())
+        bool newClient = client == null;
+        if (newClient) client = new();
+        
+        //cleanup value name
+        string cleanName = "";
+        foreach (char c in ValueName)
         {
-            //cleanup value name
-            string cleanName = "";
-            foreach (char c in ValueName)
+            if (!Path.GetInvalidPathChars().Contains(c) && c!= '\\' ) cleanName += c;
+        }
+        string request = $"https://trmpnt.okman65.xyz/api/getValue/{cleanName}";
+        
+        
+        //request
+        try
+        {
+            using (HttpResponseMessage response = await client.GetAsync(request))
             {
-                if (!Path.GetInvalidPathChars().Contains(c) && c!= '\\' ) cleanName += c;
+                if(showDebugLogs) Debug.Log(" == sent request : " + request + " ==");
+                response.EnsureSuccessStatusCode();
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                //Debug.Log(response.ReasonPhrase);
+                //Debug.Log(response.StatusCode);
+                //Debug.Log(response.RequestMessage.Headers);
+                if(showDebugLogs) Debug.Log("answer : " + responseBody);
+
+                output = (responseBody);
             }
-            string request = $"https://trmpnt.okman65.xyz/api/getValue/{cleanName}";
+        }catch(Exception e) {Debug.LogException(e);}
+    
+        if(newClient)client.Dispose();
             
-            
-            //request
-            try
-            {
-                using (HttpResponseMessage response = await client.GetAsync(request))
-                {
-                    Debug.Log(" == sent request : " + request + " ==");
-                    response.EnsureSuccessStatusCode();
-
-                    string responseBody = await response.Content.ReadAsStringAsync();
-
-                    //Debug.Log(response.ReasonPhrase);
-                    //Debug.Log(response.StatusCode);
-                    //Debug.Log(response.RequestMessage.Headers);
-                    Debug.Log("answer : " + responseBody);
-
-                    output = (responseBody);
-                }
-            }catch(Exception e) {Debug.LogException(e);}
-        };
 
         return output;
     }
-    public async static Task<int?> GetInt(string ValueName)
+    
+    
+    
+    public async static Task<int?> GetInt(string ValueName,[CanBeNull] HttpClient client = null)
     {
-        string answer = await GetString(ValueName);
+        string answer = await GetString(ValueName,client);
         int? output = null;
         
         try
         {
-            output = int.Parse(answer);
+            if (int.TryParse(answer,out int result)) return result;
+            else return null;
         }
-        catch(Exception e) when (e is FormatException or ArgumentNullException)
+        catch(Exception e)
         {
             Debug.LogException(new Exception("c'est pas un int connard", e));
             return null;
@@ -99,9 +112,9 @@ public static class GlobalPlayerPrefs
         return output;
     }
     
-    public async static Task<float?> GetFloat(string ValueName)
+    public async static Task<float?> GetFloat(string ValueName,[CanBeNull] HttpClient client = null)
     {
-        string answer = await GetString(ValueName);
+        string answer = await GetString(ValueName,client);
         float? output = null;
         
         try
@@ -117,26 +130,29 @@ public static class GlobalPlayerPrefs
         
         return output;
     }
-    
+
     /// <summary>
     /// supports ints, floats and strings.
     /// </summary>
-    /// <param name="ValueName"></param>
+    /// <param name="valueName"></param>
     /// <param name="value"></param>
+    /// <param name="client"></param>
     /// <typeparam name="T"></typeparam>
     /// <exception cref="Exception"></exception>
-    public async static Task SetValue<T>(string ValueName, T value)
+    public async static Task SetValue<T>(string valueName, T value,[CanBeNull] HttpClient client = null)
     {
         switch (value)
         {
             case int :
-                await SetString(ValueName, value.ToString());
+                await SetString(valueName, value.ToString(),client);
+                _allIntNames.Add(valueName);
                 break;
             case float:
-                await SetString(ValueName, value.ToString());
+                await SetString(valueName, value.ToString(),client);
+                _allFloatNames.Add(valueName);
                 break;
             case string : 
-                await SetString(ValueName, value.ToString());
+                await SetString(valueName, value.ToString(),client);
                 break;
             default:
                 throw new Exception( "Value type isn't supported.");
@@ -149,13 +165,27 @@ public static class GlobalPlayerPrefs
         SetValue("test1212",69.5f);
     }*/
     
-    [MenuItem("Data/show player data")]
-    public static async void PrintAllData()
+    [MenuItem("DataAnalysis/ShowAllSetValuesNames")]
+    public static async void PrintAllSentValuesNames()
     {
-        //GetString("test1212");
-        Debug.Log(await GetFloat("jexistepas") );
-        //GetInt("test1212");
+        Debug.Log("====");
+        Debug.Log("== int values : ==");
+        string s = "";
+        foreach (string n in _allIntNames)
+        {
+            s += n + "\n";
+        }
+        Debug.Log(s);
+        
+        Debug.Log("== float values : ==");
+        s = "";
+        foreach (string n in _allFloatNames)
+        {
+            s += n + "\n";
+        }
+        Debug.Log(s);
+        Debug.Log("====");
     }
 }
 
-#endif
+//#endif
