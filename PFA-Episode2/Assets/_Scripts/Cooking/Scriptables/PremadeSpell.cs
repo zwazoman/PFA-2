@@ -5,4 +5,10 @@ public class PremadeSpell : ScriptableObject
 {
     public SpellType spellType = SpellType.Attack;
     public SpellData SpellData;
+
+    public PremadeSpell Copy()
+    {
+        return (PremadeSpell)MemberwiseClone();
+    }
+
 }

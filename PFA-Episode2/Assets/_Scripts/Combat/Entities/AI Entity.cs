@@ -8,6 +8,7 @@ public enum AIBehaviour
     Coward
 }
 
+[RequireComponent(typeof(EliteEntity))]
 public class AIEntity : Entity
 {
     [SerializeField] EnemyData Data;
@@ -16,10 +17,14 @@ public class AIEntity : Entity
 
     const int ThinkDelayMilis = 150;
 
+    EliteEntity _elite;
+
     protected override void Awake()
     {
         base.Awake();
-        stats.maxMovePoints = Data.MaxMovePoints;
+
+        TryGetComponent(out _elite);
+
         team = Team.Enemy;
     }
 
@@ -27,10 +32,22 @@ public class AIEntity : Entity
     {
         base.Start();
 
+        stats.maxMovePoints = Data.MaxMovePoints;
         stats.Setup(Data.MaxHealth, Data.MaxHealth);
+
+        //elite handle
+        List<PremadeSpell> premadeSpells = new();
+        if (Random.value < .2f && Data.CanBeElite)
+        {
+            _elite.ApplyEliteStats(ref premadeSpells, Data.Spells);
+
+        }
+        if (premadeSpells.Count == 0)
+            premadeSpells.AddRange(Data.Spells);
+
         CombatManager.Instance.RegisterEntity(this);
 
-        foreach(PremadeSpell premadeSpell in Data.Spells)
+        foreach(PremadeSpell premadeSpell in premadeSpells)
         {
             Spell spell = new();
             spell.spellData = premadeSpell.SpellData;
@@ -113,13 +130,16 @@ public class AIEntity : Entity
 
         foreach (Spell spell in castableSpells)
         {
-            if(choosenSpell == null || choosenSpell.spellData.CoolDown > maxCooldown)
+            print(spell.spellData.CoolDown);
+
+            if(choosenSpell == null || spell.spellData.CoolDown > maxCooldown)
             {
                 choosenSpell = spell;
                 maxCooldown = choosenSpell.spellData.CoolDown;
             }
         }
 
+        print(choosenSpell.spellData.CoolDown);
         return choosenSpell;
     }
 

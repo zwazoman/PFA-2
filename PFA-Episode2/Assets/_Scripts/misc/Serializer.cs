@@ -48,7 +48,7 @@ public static class Serializer
     }
 
     const string s = "s", cd = " turn", r = " tile", t = " - ",e = "";
-    public  static string GetCoolDownString(byte cooldown) => cooldown.ToString() + cd + (cooldown> 1 ? s : e);
-    public static string GetRangeString(byte Range)
+    public  static string GetCoolDownString(int cooldown) => cooldown.ToString() + cd + (cooldown> 1 ? s : e);
+    public static string GetRangeString(int Range)
         => Mathf.Max(0, Range - SpellCaster.RangeRingThickness).ToString() + t + Range.ToString() + r + (Range > 1 ? s : e);
 }
