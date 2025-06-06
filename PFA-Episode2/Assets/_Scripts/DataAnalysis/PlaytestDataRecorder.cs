@@ -45,26 +45,26 @@ public class PlaytestDataRecorder : MonoBehaviour
     {
         _mapTotalLengths.Clear();
         _mapOccurencesPerRun.Clear();
-        await AddToInt("GameLaunch_TotalCount",1);
+        await AddToInt("Progression_GameLaunch_TotalCount",1);
     }
 
     public async UniTask OnRunStarted()
     {
         CombatManager.TotalEncounteredCombatsCountOverRun = 0;
-        await AddToInt("RunStarted_TotalCount",1);
+        await AddToInt("Progression_RunStarted_TotalCount",1);
     }
         
     //todo : appeler ces méthodes
     public async UniTask OnBossReached()
     {
-        await UpdateFullDataAtEvent("BossReached");
+        await UpdateFullDataAtEvent("Progression_BossReached");
     }
 
     public async UniTask OnBossBeaten()
     {
         List<UniTask> tasks = new();
-        tasks.Add( AddToInt("BossBeaten_TotalCount",1));
-        tasks.Add( UpdateAverage("BossBeaten_Time",Time.time));
+        tasks.Add( AddToInt("Progression_BossBeaten_TotalCount",1));
+        tasks.Add( UpdateAverage("Progression_BossBeaten_Time",Time.time));
         await UniTask.WhenAll(tasks);
     }
 
@@ -88,7 +88,7 @@ public class PlaytestDataRecorder : MonoBehaviour
             await UniTask.WaitForSeconds(.2f);
         }
         float averageFps = fpsSum / 20f;
-        await UpdateAverage("FPS_"+SceneManager.GetActiveScene().name, averageFps);
+        await UpdateAverage("Map_"+SceneManager.GetActiveScene().name+"_FPS", averageFps);
 
     }
     public async UniTask OnSceneExited()
@@ -105,10 +105,11 @@ public class PlaytestDataRecorder : MonoBehaviour
         Debug.Log(" ===== about to update data for event : " + eventName + " =====");
 
         List<UniTask> tasks = new();
-        
+        eventName = "Info_" + eventName;
         tasks.Add(  AddToInt(eventName + "_TotalOccurrences",1));
         tasks.Add(  UpdateAverage(eventName +"_ReachedAt", Time.time));
         
+        tasks.Add(  UpdateAverage(eventName + "_Loot_Tirages", GameManager.Instance.playerInventory.TotalTirageIngredient));
         tasks.Add(  UpdateAverage(eventName + "_Inventory_RemainingIngredientsCount", GameManager.Instance.playerInventory.Ingredients.Count));
         tasks.Add(  UpdateAverage(eventName + "_Inventory_SpellCount", GameManager.Instance.playerInventory.Spells.Count));
         
@@ -116,8 +117,8 @@ public class PlaytestDataRecorder : MonoBehaviour
 
         foreach (string key in _mapTotalLengths.Keys)
         {
-            tasks.Add(  UpdateAverage(eventName + "_TotalSpentTimeOnMap_"+key, _mapTotalLengths[key]));
-            tasks.Add(  UpdateAverage(eventName + "_MapOccurrences_"+key, _mapOccurencesPerRun[key]));
+            tasks.Add(  UpdateAverage(eventName + "_Map_TotalSpentTimeOnMap_"+key, _mapTotalLengths[key]));
+            tasks.Add(  UpdateAverage(eventName + "_Map_MapOccurrences_"+key, _mapOccurencesPerRun[key]));
         }
 
         await UniTask.WhenAll(tasks);

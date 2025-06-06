@@ -7,7 +7,7 @@ using System.Collections.Generic;
 /// </summary>
 public class SaveMapGeneration : MonoBehaviour
 {
-    [Tooltip("Sauvegarde crypter ou non")] public bool Encrypt;
+    [Tooltip("Sauvegarde crypter ou non")] public bool Encrypt = true;
     [Tooltip("Numéro de fichier de sauvegarde")] public byte SaveID;
     const string ENCRYPT_KEY = "Tr0mp1ne7te";
     public int PositionMap { get; private set; }
