@@ -34,6 +34,7 @@ public class PlayerMap : MonoBehaviour
     private void Start()
     {
         GameManager.Instance.playerInventory.Save(GameManager.Instance.playerInventory.NameSave);
+        GameManager.Instance.CalculateProgress();
         LoadNextScene();
         Vector3 p = transform.position + camOffset;
         p.z = 100;
