@@ -153,6 +153,7 @@ public class PlaytestDataRecorder : MonoBehaviour
             currentValue += offset;
             await GlobalPlayerPrefs.SetValue(name,currentValue,client);
         }
+        
     }
     
     private async UniTask UpdateAverage(string valueName,float valueToAdd)
