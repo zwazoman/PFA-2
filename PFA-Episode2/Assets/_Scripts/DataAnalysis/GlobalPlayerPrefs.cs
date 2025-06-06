@@ -159,6 +159,7 @@ public static class GlobalPlayerPrefs
         }
     }
     
+    #if UNITY_EDITOR
 
     [MenuItem("Playtests Analysis /Delete All Global PlayerKeys")]
     public static void DeleteAllGlobalPlayerKeys()
@@ -171,6 +172,9 @@ public static class GlobalPlayerPrefs
     
     [MenuItem("Playtests Analysis /Print All Build Player Data")]
     public static void PrintAllBuildPlayerData() => PrintAllGlobalPlayerKeys(true);
+    
+    #endif
+    
     public static async Task PrintAllGlobalPlayerKeys(bool showBuildData = false)
     {
         using (HttpClient client = new())
