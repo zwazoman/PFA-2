@@ -21,7 +21,8 @@ public class WayPoint : MonoBehaviour
         Movement,
         SpellAreaOfEffect,
         SpellCastZone_Agressive,
-        SpellCastZone_Shield
+        SpellCastZone_Shield,
+        occludedAreaOfEffect
     }
 
     public event Action OnSteppedOn;
@@ -97,21 +98,34 @@ public class WayPoint : MonoBehaviour
         if (state == _currentPreviewState || _previewVisuals==null) return;
 
         _currentPreviewState = state;
+        transform.DOKill();
         // material
         switch (state)
         {
             case PreviewState.Movement:
+                _previewVisuals.transform.DOScale(1f, TweenDuration);
                 _previewVisuals.sharedMaterial = GameManager.Instance.staticData._mat_movementPreview;
                 break;
             case PreviewState.SpellAreaOfEffect:
+                _previewVisuals.transform.DOScale(1f, TweenDuration);
                 _previewVisuals.sharedMaterial = GameManager.Instance.staticData._mat_spellAoePreview;
                 break;
             case PreviewState.SpellCastZone_Agressive:
+                _previewVisuals.transform.DOScale(1f, TweenDuration);
                 _previewVisuals.sharedMaterial = GameManager.Instance.staticData._mat_spellCastZonePreview;
                 break;
             case PreviewState.SpellCastZone_Shield:
+                _previewVisuals.transform.DOScale(1f, TweenDuration);
                 _previewVisuals.sharedMaterial = GameManager.Instance.staticData._mat_spellAoePreview_shield;
                 break;
+            case PreviewState.occludedAreaOfEffect:
+                Sequence s = DOTween.Sequence();
+                s.Append(_previewVisuals.transform.DOScale(1f, TweenDuration).SetEase(Ease.OutCubic));
+                s.Append(_previewVisuals.transform.DOScale(0, TweenDuration*2).SetEase(Ease.InCubic));
+                s.onComplete = () => { if (state == PreviewState.occludedAreaOfEffect) SetPreviewState(PreviewState.NoPreview); };
+                _previewVisuals.sharedMaterial = GameManager.Instance.staticData._mat_OccludedspellCastZonePreview;
+                break;
+            
             case PreviewState.NoPreview:
                 break;
             
@@ -129,7 +143,7 @@ public class WayPoint : MonoBehaviour
         else
         {
             _previewVisuals.gameObject.SetActive(true);
-            _previewVisuals.transform.DOScale(1, TweenDuration);
+            if(state != PreviewState.occludedAreaOfEffect)_previewVisuals.transform.DOScale(1, TweenDuration);
         }
     }
 

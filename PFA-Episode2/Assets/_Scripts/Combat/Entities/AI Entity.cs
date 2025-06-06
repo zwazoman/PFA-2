@@ -203,7 +203,7 @@ public class AIEntity : Entity
 
                 List<WayPoint> targetPoints = new();
 
-                List<WayPoint> rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, currentPoint, false);
+                List<WayPoint> rangePoints = entitySpellCaster.ComputeAndPreviewSpellRange(choosenSpell, currentPoint, false);
 
                 foreach (WayPoint point in rangePoints)
                 {
@@ -245,7 +245,7 @@ public class AIEntity : Entity
         List<WayPoint> rangePoints;
         SpellCastData castData = new();
 
-        rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, targetPoint, false, true);
+        rangePoints = entitySpellCaster.ComputeAndPreviewSpellRange(choosenSpell, targetPoint, false, true);
 
         foreach (WayPoint rangePoint in rangePoints)
         {
@@ -269,7 +269,7 @@ public class AIEntity : Entity
 
             GetInvertShot(choosenTargetPoint, targetPointsDict[choosenTargetPoint][0], choosenSpell, out pointToSelect, targetPoint);
 
-            rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint, false );
+            rangePoints = entitySpellCaster.ComputeAndPreviewSpellRange(choosenSpell, choosenTargetPoint, false );
             castData = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints, false);
 
             targetPointsDict[choosenTargetPoint].Remove(targetPointsDict[choosenTargetPoint][0]);
@@ -298,7 +298,7 @@ public class AIEntity : Entity
     async UniTask<bool> CastSpell(Spell choosenSpell, WayPoint pointToSelect, WayPoint target)
     {
         HideWalkables();
-        List<WayPoint> rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, currentPoint);
+        List<WayPoint> rangePoints = entitySpellCaster.ComputeAndPreviewSpellRange(choosenSpell, currentPoint);
         await UniTask.Delay(ThinkDelayMilis);
         SpellCastData castData = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints);
         await UniTask.Delay(ThinkDelayMilis);
