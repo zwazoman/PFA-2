@@ -98,11 +98,12 @@ public class ChooseIngredient : MonoBehaviour
         List<Ingredient> CommonIng = new(_listIngredientCommon);
         List<Ingredient> SavoureuxIng = new(_listIngredientSavoureux);
         List<Ingredient> DivinIng = new(_listIngredientDivin);
+
         float total = _probaCommon + _probaSavoureux + _probaDivin;
         float result = Random.Range(0, total + 1);
+
         GameManager.Instance.playerInventory.TotalTirageIngredient++;
-        PlayerPrefs.SetInt("Nombre total de tirage sur la run", PlayerPrefs.GetInt("Nombre total de tirage sur la run") + 1);
-        print(PlayerPrefs.GetInt("Nombre total de tirage sur la run"));
+
         if (result <= _probaDivin && DivinIng.Count != 0) //Divin
         {
             //_probaDivin = 0;
@@ -142,8 +143,9 @@ public class ChooseIngredient : MonoBehaviour
         _probaSauce = 0;
         float total = _probaCommon + _probaSavoureux + _probaDivin;
         float result = Random.Range(1, total + 1);
+
         GameManager.Instance.playerInventory.TotalTirageIngredient++;
-        PlayerPrefs.SetInt("Nombre total de tirage sur la run", PlayerPrefs.GetInt("Nombre total de tirage sur la run") + 1);
+
         if (result <= _probaDivin && DivinSauce.Count != 0) //Divin
         {
             //_probaDivin = 0;
