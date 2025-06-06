@@ -26,6 +26,11 @@ public class SpellData
 
     [Header("Zone")]
     public AreaOfEffect AreaOfEffect;
+
+    public SpellData Copy()
+    {
+        return (SpellData)MemberwiseClone();
+    }
 }
 
 [Serializable]

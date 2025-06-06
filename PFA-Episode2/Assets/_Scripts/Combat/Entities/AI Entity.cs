@@ -11,7 +11,7 @@ public enum AIBehaviour
 [RequireComponent(typeof(EliteEntity))]
 public class AIEntity : Entity
 {
-    [SerializeField] EnemyData Data;
+    [SerializeField] public EnemyData Data;
 
     WayPoint targetEntityPoint;
 
@@ -32,15 +32,17 @@ public class AIEntity : Entity
     {
         base.Start();
 
-        stats.maxMovePoints = Data.MaxMovePoints;
-        stats.Setup(Data.MaxHealth, Data.MaxHealth);
-
         //elite handle
         List<PremadeSpell> premadeSpells = new();
-        if (Random.value < .2f && Data.CanBeElite)
+        if (Random.value < 0 && Data.CanBeElite )                //CONNARD MATEO TODO todo
         {
             _elite.ApplyEliteStats(ref premadeSpells, Data.Spells);
 
+        }
+        else
+        {
+            stats.maxMovePoints = Data.MaxMovePoints;
+            stats.Setup(Data.MaxHealth, Data.MaxHealth);
         }
         if (premadeSpells.Count == 0)
             premadeSpells.AddRange(Data.Spells);
@@ -129,17 +131,12 @@ public class AIEntity : Entity
         Spell choosenSpell = null;
 
         foreach (Spell spell in castableSpells)
-        {
-            print(spell.spellData.CoolDown);
-
             if(choosenSpell == null || spell.spellData.CoolDown > maxCooldown)
             {
                 choosenSpell = spell;
                 maxCooldown = choosenSpell.spellData.CoolDown;
             }
-        }
 
-        print(choosenSpell.spellData.CoolDown);
         return choosenSpell;
     }
 
