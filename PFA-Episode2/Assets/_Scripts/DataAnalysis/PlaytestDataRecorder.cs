@@ -105,10 +105,11 @@ public class PlaytestDataRecorder : MonoBehaviour
         Debug.Log(" ===== about to update data for event : " + eventName + " =====");
 
         List<UniTask> tasks = new();
-        eventName = "Event_" + eventName;
+        eventName = "Info_" + eventName;
         tasks.Add(  AddToInt(eventName + "_TotalOccurrences",1));
         tasks.Add(  UpdateAverage(eventName +"_ReachedAt", Time.time));
         
+        tasks.Add(  UpdateAverage(eventName + "_Loot_Tirages", GameManager.Instance.playerInventory.TotalTirageIngredient));
         tasks.Add(  UpdateAverage(eventName + "_Inventory_RemainingIngredientsCount", GameManager.Instance.playerInventory.Ingredients.Count));
         tasks.Add(  UpdateAverage(eventName + "_Inventory_SpellCount", GameManager.Instance.playerInventory.Spells.Count));
         
