@@ -11,4 +11,6 @@ public class GetInfoInVariant : MonoBehaviour
     public Image SpellZoneEffect;
     public Image SpellIconDisable;
     public int IndexInPlayerSpell;
+    public TextMeshProUGUI Range;
+    public TextMeshProUGUI Cooldown;
 }
