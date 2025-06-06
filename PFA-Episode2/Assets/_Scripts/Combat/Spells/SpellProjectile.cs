@@ -36,10 +36,12 @@ public class SpellProjectile : MonoBehaviour
 
     public async UniTask Launch(Entity caster, WayPoint tile, Mesh spellMesh = null, float launchSpeed = .7f)
     {
-        Debug.Log("Launching spell ! mesh name : " + spellMesh.name);
         
         if (spellMesh != null)
+        {
+            Debug.Log("Launching spell ! mesh name : " + spellMesh.name);
             _filter.mesh = spellMesh;
+        }
 
         if (tile != caster.currentPoint)
             await transform.DOMove(tile.transform.position + Vector3.up * .5f, launchSpeed / (tile.transform.position + Vector3.up * .5f - transform.position).magnitude);
