@@ -48,7 +48,7 @@ public class DraggableSpell : Draggable
         if (isDragging && canUse)
         {
             spellCaster.castingEntity.ClearWalkables();
-            _rangePoints = spellCaster.PreviewSpellRange(spell);
+            _rangePoints = spellCaster.ComputeAndPreviewSpellRange(spell);
             await DragAndDrop();
         }
     }

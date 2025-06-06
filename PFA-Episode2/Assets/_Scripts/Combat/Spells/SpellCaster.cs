@@ -34,7 +34,7 @@ public class SpellCaster : MonoBehaviour
 
     
     //preview spell range
-    public List<WayPoint> PreviewSpellRange(Spell spell, WayPoint center = null, bool showZone = true, bool ignoreTerrain = false)
+    public List<WayPoint> ComputeAndPreviewSpellRange(Spell spell, WayPoint center = null, bool showZone = true, bool ignoreTerrain = false)
     {
         if (center == null)
             center = castingEntity.currentPoint;
@@ -45,10 +45,16 @@ public class SpellCaster : MonoBehaviour
 
         foreach (WayPoint point in floodDict.Keys)
         {
-            if ((!ignoreTerrain && (spell.spellData.IsOccludedByWalls && Tools.CheckWallsBetween(center, point) || point.State == WaypointState.Obstructed)) || spell.spellData.Range > RangeRingThickness && (floodDict[point] - RangeRingThickness) < 0)
+            if (point.State == WaypointState.Obstructed) continue; //walls
+            if ((floodDict[point] > spell.spellData.Range ||floodDict[point]  <= spell.spellData.Range-RangeRingThickness) && (floodDict[point]!=0)) continue; //range
+            if ((!ignoreTerrain && (spell.spellData.IsOccludedByWalls && Tools.CheckWallsBetween(center, point)))) //line of sight
+            {
+                if (showZone) point.SetPreviewState(WayPoint.PreviewState.occludedAreaOfEffect);
                 continue;
-            else if (showZone)
-                point.SetPreviewState(WayPoint.PreviewState.SpellAreaOfEffect);
+            }
+            
+           
+            if (showZone) point.SetPreviewState(WayPoint.PreviewState.SpellAreaOfEffect);
 
             rangePoints.Add(point);
         }
@@ -281,10 +287,7 @@ public class SpellCaster : MonoBehaviour
     /// <returns></returns>
     BakedTargetedSpellEffect ComputeTargetedSpellEffect(Spell spell, ref SpellCastData zoneData, Entity entity)
     {
-        bool teamMix = true;
-
-        if (castingEntity is PlayerEntity)
-            teamMix = false; // si player entity les sorts ne s'appliquent que sur une des deux équipes
+        bool teamMix = !(castingEntity is PlayerEntity);// si player entity les sorts ne s'appliquent que sur une des deux équipes
 
         BakedTargetedSpellEffect e = new();
 

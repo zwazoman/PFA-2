@@ -16,7 +16,7 @@ public static class Tools
 
     public static Vector3 GetPositionAboveFinger()
     {
-        return Input.mousePosition + Vector3.up * 10*1080/Screen.height;
+        return Input.mousePosition + Vector3.up * 140f*1080f/(float)Screen.height;
     }
     public static Vector3Int SnapOnGrid(this Vector3 initialPos)
     {
@@ -292,6 +292,7 @@ public static class Tools
     {
         point = null;
 
+        Debug.LogWarning(fingerOffset);
         if (blockedByUi && EventSystem.current.IsPointerOverGameObject(0))
         {
             return false;
