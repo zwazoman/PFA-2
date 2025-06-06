@@ -19,7 +19,7 @@ public class Inventory : ISavable<Inventory>
 
     public void Save(string nameSave)
     {
-        SaveManager.Save<Inventory>(nameSave, this, false);
+        SaveManager.Save<Inventory>(nameSave, this, SaveMapGeneration.Instance.Encrypt);
     }
 
     public void AddIngredient(IngredientBase ing)

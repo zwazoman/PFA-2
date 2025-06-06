@@ -93,8 +93,6 @@ public static class GlobalPlayerPrefs
         return output;
     }
     
-    
-    
     public async static Task<int?> GetInt(string ValueName,[CanBeNull] HttpClient client = null)
     {
         string answer = await GetString(ValueName,client);
@@ -161,20 +159,19 @@ public static class GlobalPlayerPrefs
         }
     }
     
-    /*[MenuItem("Data/test set int")]
-    public static void testSetInt()
-    {
-        SetValue("test1212",69.5f);
-    }*/
 
-    [MenuItem("Data/DeleteAllGlobalPlayerKeys")]
+    [MenuItem("Playtests Analysis /Delete All Global PlayerKeys")]
     public static void DeleteAllGlobalPlayerKeys()
     {
         ClearAllValues(null, true);
     }
+
+    [MenuItem("Playtests Analysis /Print All Development Player Data")]
+    public static void PrintAllDevelopmentPlayerData() => PrintAllGlobalPlayerKeys(false);
     
-    [MenuItem("Data/PrintAllGlobalPlayerKeys")]
-    public static async Task PrintAllGlobalPlayerKeys()
+    [MenuItem("Playtests Analysis /Print All Build Player Data")]
+    public static void PrintAllBuildPlayerData() => PrintAllGlobalPlayerKeys(true);
+    public static async Task PrintAllGlobalPlayerKeys(bool showBuildData = false)
     {
         using (HttpClient client = new())
         {
@@ -182,6 +179,8 @@ public static class GlobalPlayerPrefs
             keys.Sort();
             foreach (string key in keys)
             {
+                if(key.StartsWith("dev_") == showBuildData) continue;
+                
                 if (key.EndsWith("hidden")) continue;
                 
                 string value = await GetString(key, client);
