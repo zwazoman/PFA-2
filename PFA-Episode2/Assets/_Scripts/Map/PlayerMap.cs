@@ -85,6 +85,10 @@ public class PlayerMap : MonoBehaviour
                 {
                     await SceneTransitionManager.Instance.GoToScene(KeyAndValues.Value.CombatScene);
                 }
+                else if(KeyAndValues.Value.EventName.ToString() == "Boss")
+                {
+                    await SceneTransitionManager.Instance.GoToScene("Forest_Combat_Boss");
+                }
                 else { await SceneTransitionManager.Instance.GoToScene(KeyAndValues.Value.EventName.ToString()); }
             }
         }
