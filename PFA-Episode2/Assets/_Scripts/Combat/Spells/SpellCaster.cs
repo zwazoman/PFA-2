@@ -480,16 +480,20 @@ public class SpellCaster : MonoBehaviour
             spawnPos = transform.position;
 
         PoolManager.Instance.ProjectilePool.PullObjectFromPool(spawnPos).TryGetComponent(out projectile);
+        
+        Debug.Log(spell.spellData.Mesh);
+        Debug.Log(spell.spellData.Name);
         await projectile.Launch(castingEntity, entity, spell.spellData.Mesh);
 
         BakedTargetedSpellEffect e = ComputeTargetedSpellEffect(spell, ref zoneData, entity);
 
         //wait for animations to play
-        if (e.pushPoint==null) try
-        {
-            await entity.visuals.animator.PlayAnimationTrigger(Entity.hitTrigger);
-        }
-        catch (Exception ex) { Debug.LogException(ex); }
+        if (e.pushPoint == null) 
+            try
+            {
+                await entity.visuals.animator.PlayAnimationTrigger(Entity.hitTrigger);
+            }
+            catch (Exception ex) { Debug.LogException(ex); }
 
         //cancel preview
         StopSpellEffectPreview(entity);

@@ -25,6 +25,7 @@ public class CombatManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        TotalEncounteredCombatsCountOverRun++;
     }
     #endregion
 
@@ -83,6 +84,8 @@ public class CombatManager : MonoBehaviour
 
     #endregion
 
+    public static int TotalEncounteredCombatsCountOverRun = 0;
+    
     private async void Start()
     {
         await UniTask.Yield();
@@ -173,8 +176,12 @@ public class CombatManager : MonoBehaviour
     async UniTask GameOver()
     {
         await UniTask.Delay(1000);
-
+        
         SaveManager.DeleteAll();
+        
+        if(PlaytestDataRecorder.Instance !=null)
+            await PlaytestDataRecorder.Instance.OnGameOver();
+        
         _gameOverPanel?.Show();
     }
 
