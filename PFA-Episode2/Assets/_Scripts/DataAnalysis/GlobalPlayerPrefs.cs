@@ -106,9 +106,10 @@ public static class GlobalPlayerPrefs
         
         try
         {
-            output = float.Parse(answer);
+            if (float.TryParse(answer,out float result)) return result;
+            else return null;
         }
-        catch(Exception e) when (e is FormatException or ArgumentNullException)
+        catch(Exception e)
         {
             Debug.LogException(new Exception("c'est pas un float connard", e));
             return null;
@@ -148,13 +149,13 @@ public static class GlobalPlayerPrefs
         SetValue("test1212",69.5f);
     }*/
     
-    /*[MenuItem("Data/show player data")]
-    public static void PrintAllData()
+    [MenuItem("Data/show player data")]
+    public static async void PrintAllData()
     {
-        GetString("test1212");
-        GetFloat("test1212");
-        GetInt("test1212");
-    }*/
+        //GetString("test1212");
+        Debug.Log(await GetFloat("jexistepas") );
+        //GetInt("test1212");
+    }
 }
 
 #endif

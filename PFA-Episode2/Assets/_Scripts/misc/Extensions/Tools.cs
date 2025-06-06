@@ -1,9 +1,12 @@
+using System;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using System.Collections.Generic;
+using System.Net.Mime;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Random = UnityEngine.Random;
 
 public static class Tools
 {
@@ -29,17 +32,17 @@ public static class Tools
         return Physics.Raycast(aPos, offset, offset.magnitude, LayerMask.GetMask("Wall"));
     }
 
-    // [MenuItem("Data/testAverageFunc")]
-    // public static void TestAverage()
-    // {
-    //     float av = 10;
-    //     int c = 1;
-    //     Debug.Log(av);
-    //     Debug.Log(c);
-    //     AccumulateAverage(ref av, ref c, 12);
-    //     Debug.Log(av);
-    //     Debug.Log(c);
-    // }
+    [MenuItem("Data/testAverageFunc")]
+    public static void TestAverage()
+    {
+        float? av = 10;
+        int? c = 1;
+        Debug.Log(av);
+        Debug.Log(c);
+        AccumulateAverage(ref av, ref c, 12);
+        Debug.Log(av);
+        Debug.Log(c);
+    }
 
     /// <summary>
     /// prend une moyenne et la met à jour en ajoutant un nouvel élément dedans.
@@ -55,6 +58,25 @@ public static class Tools
         ValueCount++;
         float newAverage = newSum / ValueCount;
         AverageOfValues = newAverage;
+    }
+
+    public static void AccumulateAverage(ref float? AverageOfValues, ref int? ValueCount, float newValueToAccumulate)
+    {
+        if (AverageOfValues != null && ValueCount != null)
+        {
+            float currentSum = AverageOfValues.Value * ValueCount.Value;
+            float newSum = currentSum + newValueToAccumulate;
+
+            ValueCount++;
+            float newAverage = newSum / ValueCount.Value;
+            AverageOfValues = newAverage;
+        }
+        else throw new ArgumentNullException();
+
+    }
+    public static string FormatPlaytestValueNameString(string ValueName)
+    {
+        return ValueName + "_" + Application.version.ToString();
     }
 
     public static T PickRandom<T>(this T[] array)
