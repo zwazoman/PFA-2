@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadOrCreateSave()
     {
-        playerInventory = SaveManager.Load<Inventory>(playerInventory.NameSave, false);
+        playerInventory = SaveManager.Load<Inventory>(playerInventory.NameSave, SaveMapGeneration.Instance.Encrypt);
     }
 
     public void DeleteSave()

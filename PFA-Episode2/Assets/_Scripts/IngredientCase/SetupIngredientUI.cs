@@ -40,8 +40,7 @@ public class SetupIngredientUI : MonoBehaviour
         foreach (Button btn in _listButton) { btn.interactable = false; }
         foreach (IngredientBase ing in ListListIngredient[index])
         {
-            if (ing is Sauce Sauce) { GameManager.Instance.playerInventory.Sauces.Add(Sauce); }
-            else if (ing is Ingredient Ingredient) { GameManager.Instance.playerInventory.Ingredients.Add(Ingredient); }
+            GameManager.Instance.playerInventory.AddIngredient(ing);
         }
         if (NumberRoll > 1)
         {

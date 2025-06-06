@@ -19,6 +19,12 @@ public class Inventory : ISavable<Inventory>
 
     public void Save(string nameSave)
     {
-        SaveManager.Save<Inventory>(nameSave, this, false);
+        SaveManager.Save<Inventory>(nameSave, this, SaveMapGeneration.Instance.Encrypt);
+    }
+
+    public void AddIngredient(IngredientBase ing)
+    {
+        if(ing is Sauce sauce) { Sauces.Add(sauce); }
+        else if (ing is Ingredient ingredient) { Ingredients.Add(ingredient); }
     }
 }
