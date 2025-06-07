@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -14,6 +15,9 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     int siblingIndex;
     CanvasGroup canvasGroup;
 
+    //notifiers
+    public event Action EventBeginDrag, EventEndDrag;
+    
     protected virtual void Awake()
     {
         TryGetComponent(out canvasGroup);
@@ -29,6 +33,8 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         siblingIndex = transform.GetSiblingIndex();
         canvasGroup.blocksRaycasts = false;
         transform.parent = transform.root;
+        
+        EventBeginDrag?.Invoke();
     }
 
     public virtual void OnDrag(PointerEventData eventData)
@@ -39,6 +45,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public virtual void OnEndDrag(PointerEventData eventData)
     {
         isDragging = false;
+        EventEndDrag?.Invoke();
     }
 
     public virtual void Reset()

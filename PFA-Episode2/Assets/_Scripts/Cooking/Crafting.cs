@@ -25,6 +25,19 @@ public static class Crafting
         SpellEffect.CollapseSimilarSpellEffects(ref effects);
         spell.Effects = effects.ToList();
 
+        //add damage if none
+        bool shouldAddDamageEffect = true;
+        foreach (var e in spell.Effects)
+        {
+            if (e.effectType is SpellEffectType.Damage)
+            {
+                shouldAddDamageEffect = false;
+                break;
+            }
+        }
+        if(shouldAddDamageEffect) spell.Effects.Add(new(SpellEffectType.Damage,StatType.FlatIncrease,3));
+        
+       
         //Debug.Log(" = collapsed spell effects = ");
         //foreach (SpellEffect e in spell.Effects) Debug.Log(e.effectType);
 

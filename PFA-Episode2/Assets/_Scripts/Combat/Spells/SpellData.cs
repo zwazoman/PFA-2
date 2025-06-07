@@ -84,11 +84,11 @@ public struct SpellEffect
         }
         else if(Effects.Length == 0)
         {
-            Effects = new SpellEffect[] { new SpellEffect(SpellEffectType.Damage,StatType.FlatIncrease,2)};
+            Effects = new SpellEffect[] { /*new SpellEffect(SpellEffectType.Damage,StatType.FlatIncrease,2)*/};
         }
         else
         {
-            Debug.LogError("y'a un pb là connard");
+            Debug.LogError("y'a un pb lï¿½ connard");
         }
        
     }
