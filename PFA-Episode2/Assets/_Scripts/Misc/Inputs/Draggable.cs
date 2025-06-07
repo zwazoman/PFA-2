@@ -15,6 +15,8 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     int siblingIndex;
     CanvasGroup canvasGroup;
 
+    public bool usePositionAboveFinger = true;
+    
     //notifiers
     public event Action EventBeginDrag, EventEndDrag;
     
@@ -39,7 +41,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     public virtual void OnDrag(PointerEventData eventData)
     {
-        transform.position = Tools.GetPositionAboveFinger();
+        transform.position = usePositionAboveFinger ? Tools.GetPositionAboveFinger() : Input.mousePosition;
     }
 
     public virtual void OnEndDrag(PointerEventData eventData)

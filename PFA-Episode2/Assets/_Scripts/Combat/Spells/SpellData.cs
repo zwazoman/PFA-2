@@ -14,6 +14,7 @@ public class SpellData
     public Mesh Mesh;
 
     public string IngredientsCombination;
+    public bool IsUtilitary;
 
     [Header("Casting")]
 
@@ -27,6 +28,7 @@ public class SpellData
     [Header("Zone")]
     public AreaOfEffect AreaOfEffect;
 
+    
     public SpellData Copy()
     {
         return (SpellData)MemberwiseClone();
