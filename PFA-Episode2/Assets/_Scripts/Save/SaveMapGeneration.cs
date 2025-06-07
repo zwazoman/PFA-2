@@ -72,7 +72,16 @@ public class SaveMapGeneration : MonoBehaviour
 
                 links.Add(linkObj);
             }
+            //foreach (Node n in node.Children)
+            //{
+            //    List<SerializableNode> childList = new();
+            //    SerializableNode child = new()
+            //    {
+            //        n,
+            //    };
+            //    childList.Add(child);
 
+            //}
             SerializableNode snode = new()
             {
                 key = kvp.Key,
@@ -80,10 +89,9 @@ public class SaveMapGeneration : MonoBehaviour
                 hauteur = node.Hauteur,
                 eventName = node.EventName,
                 onYReviendra = node.OnYReviendra,
-                Intersection = node.Intersection,
-                Visited = node.Visited,
                 creatorKey = node.Creator != null ? MapBuildingTools.Instance.GetKeyFromNode(node.Creator) : Vector3Int.zero,
                 paths = links
+
             };
 
             wrapper.nodes.Add(snode);
@@ -154,8 +162,6 @@ public class SaveMapGeneration : MonoBehaviour
                 node.Hauteur = item.hauteur;
                 node.EventName = item.eventName;
                 node.OnYReviendra = item.onYReviendra;
-                node.Intersection = item.Intersection;
-                node.Visited = item.Visited;
 
                 tempDico[item.key] = node;
 

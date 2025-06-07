@@ -110,7 +110,6 @@ public class MapMaker2 : MonoBehaviour
             {
                 _probaToutDroitCroisement = 0;
                 CurrentNode = NodeList.Dequeue();
-                CurrentNode.Intersection = true;
                 CurrentNode.OnYReviendra = true;
                 Intersection.Add(CurrentNode);
                 ToutDroit(tourboucle, ParentNode);
@@ -118,7 +117,6 @@ public class MapMaker2 : MonoBehaviour
             }
 
             CurrentNode = NodeList.Dequeue();
-            CurrentNode.Intersection = true;
             _distanceSpawnYModifiable = _distanceSpawnY;
             CurrentNode.OnYReviendra = true;
             Intersection.Add(CurrentNode);
@@ -126,7 +124,6 @@ public class MapMaker2 : MonoBehaviour
             CurrentNode.Hauteur = _currentHeight + 1;
 
             CurrentNode = NodeList.Dequeue();
-            CurrentNode.Intersection = true;
             _distanceSpawnYModifiable = -_distanceSpawnY;
             ToutDroit(tourboucle, ParentNode);
             CurrentNode.Hauteur = _currentHeight - 1;
@@ -168,6 +165,7 @@ public class MapMaker2 : MonoBehaviour
             DicoNode.Add(newPosition, CurrentNode);
             MapBuildingTools.Instance.TraceTonTrait(ParentNode, CurrentNode);
             CurrentNode.Creator = ParentNode;
+            ParentNode.Children.Add(CurrentNode);
             CurrentNode.Position = tourboucle;
         }
         _toutdroit++;
@@ -175,7 +173,6 @@ public class MapMaker2 : MonoBehaviour
 
     public void CreateBranch(int tourboucle, bool Up)
     {
-        CurrentNode.Intersection = true;
         if (Up) //Si on peut monter
         {
             _distanceSpawnYModifiable = _distanceSpawnY;
@@ -213,6 +210,10 @@ public class MapMaker2 : MonoBehaviour
 
                     MapBuildingTools.Instance.TraceTonTrait(ParentNode, nodeExistant);// Trace une ligne entre le parent actuel et le node déjà existant
                     nodeExistant.Creator = ParentNode;
+                    if (!ParentNode.Children.Contains(MapBuildingTools.Instance.ReturnNodeFromNodePosition(ParentNode.Position, 1)))
+                    {
+                        ParentNode.Children.Add(MapBuildingTools.Instance.ReturnNodeFromNodePosition(ParentNode.Position, 1));
+                    }
                     NodeList.Enqueue(CurrentNode);
                     break;
                 }
@@ -224,6 +225,7 @@ public class MapMaker2 : MonoBehaviour
                         {
                             CreateBranch(tour, false); // descendre
                             MapBuildingTools.Instance.TraceTonTrait(ParentNode, _existingValue);
+                            ParentNode.Children.Add(_existingValue);
                         }
                         else
                         {
@@ -237,8 +239,8 @@ public class MapMaker2 : MonoBehaviour
                     CreateBranch(tour, false); // descendre
                     if (_existingValue != null)
                     {
-                        _existingValue.Intersection = true;
                         MapBuildingTools.Instance.TraceTonTrait(ParentNode, _existingValue);
+                        ParentNode.Children.Add(_existingValue);
                         _toutdroit = 0;
                     }
                 }
@@ -257,10 +259,6 @@ public class MapMaker2 : MonoBehaviour
         foreach (Node node in DicoNode.Values)
         {
             AllNodeGood.Add(node);
-            if (node.OnYReviendra)
-            {
-                node.Intersection = true;
-            }
         }
         MapBuildingTools.Instance.AttributeEvent(MapRange);
         MapAttributeEvent3.Instance.SetupEventNode();
