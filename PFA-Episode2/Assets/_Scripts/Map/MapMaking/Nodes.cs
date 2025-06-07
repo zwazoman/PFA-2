@@ -40,7 +40,7 @@ public class Node : MonoBehaviour
     /// </summary>
     public void SetupSprite()
     {
-        _halo.SetActive(false);
+        //_halo.SetActive(false);
         if (PlayerMap.Instance.PositionMap != Position) 
         {
             GameObject prefab = null;
@@ -80,7 +80,7 @@ public class Node : MonoBehaviour
             }
         }
 
-        _button.interactable = false;
+        //_button.interactable = false;
         if (PlayerMap.Instance.PositionMap == 0 && Position == 1)
         {
             _button.interactable = true;
@@ -92,7 +92,14 @@ public class Node : MonoBehaviour
             {
                 node._button.interactable = true;
                 node._halo.SetActive(true);
+                _button.interactable = false;
+                _halo.SetActive(false);
             }
+        }
+        else if (Creator.Position != PlayerMap.Instance.PositionMap)
+        {
+            _button.interactable = false;
+            _halo.SetActive(false);
         }
 
         Vector3 rot = transform.eulerAngles;

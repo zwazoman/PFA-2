@@ -72,16 +72,17 @@ public class SaveMapGeneration : MonoBehaviour
 
                 links.Add(linkObj);
             }
-            //foreach (Node n in node.Children)
-            //{
-            //    List<SerializableNode> childList = new();
-            //    SerializableNode child = new()
-            //    {
-            //        n,
-            //    };
-            //    childList.Add(child);
 
-            //}
+            List<Vector3Int> childrenKeys = new();
+            if (node.Children != null)
+            {
+                foreach (var child in node.Children)
+                {
+                    if (child != null)
+                        childrenKeys.Add(MapBuildingTools.Instance.GetKeyFromNode(child));
+                }
+            }
+
             SerializableNode snode = new()
             {
                 key = kvp.Key,
@@ -90,8 +91,8 @@ public class SaveMapGeneration : MonoBehaviour
                 eventName = node.EventName,
                 onYReviendra = node.OnYReviendra,
                 creatorKey = node.Creator != null ? MapBuildingTools.Instance.GetKeyFromNode(node.Creator) : Vector3Int.zero,
+                ChildKey = childrenKeys,
                 paths = links
-
             };
 
             wrapper.nodes.Add(snode);
@@ -119,12 +120,10 @@ public class SaveMapGeneration : MonoBehaviour
         }
     }
 
-
     // Fonction pour lire les information contenu dans le fichier json de sauvegarde
     public void LoadMap()
     {
         string path = Application.persistentDataPath + $"/MapSave{SaveID}.json";
-        print(path);
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
@@ -151,7 +150,6 @@ public class SaveMapGeneration : MonoBehaviour
             }
 
             MapMaker2.Instance.DicoNode.Clear();
-
             Dictionary<Vector3Int, Node> tempDico = new();
 
             foreach (SerializableNode item in wrapper.nodes)
@@ -179,29 +177,27 @@ public class SaveMapGeneration : MonoBehaviour
                 }
 
                 foreach (GameObject obj in node.PathBetweenNode) { obj.SetActive(false); }
-                if (node.Position <= PlayerMap.Instance.PositionMap + 3 && node.Position >= PlayerMap.Instance.PositionMap - 1)
-                { 
-                    node.gameObject.SetActive(true);
-                    node.SetupSprite();
-                    for (int i = 0; i < node.PathBetweenNode.Count; i++)
-                    {
-                        node.PathBetweenNode[i].gameObject.SetActive(true);
-                    }
-                    //foreach (GameObject obj in node.PathBetweenNode) { obj.SetActive(true); }
-                }
             }
 
-            SpawnGround.Instance.UseSeed = wrapper.seed.useSeed;
-            SpawnGround.Instance.Seed = wrapper.seed.seed;
-
-            // Relie les créateurs une fois que tous les nodes sont instanciés
+            // Remet les reference
             foreach (SerializableNode item in wrapper.nodes)
             {
                 if (tempDico.ContainsKey(item.key))
                 {
                     Node node = tempDico[item.key];
 
-                    // Lie le deuxième node avec le Startnode
+                    // Restore le ou les enfants
+                    node.Children = new List<Node>();
+                    if (item.ChildKey != null)
+                    {
+                        foreach (var childKey in item.ChildKey)
+                        {
+                            if (tempDico.ContainsKey(childKey))
+                                node.Children.Add(tempDico[childKey]);
+                        }
+                    }
+
+                    // Restore le créateur
                     if (item.position == 1)
                     {
                         node.Creator = MapMaker2.Instance.ParentNode;
@@ -210,13 +206,27 @@ public class SaveMapGeneration : MonoBehaviour
                     {
                         node.Creator = tempDico[item.creatorKey];
                     }
+
+                    if (node.Position <= PlayerMap.Instance.PositionMap + 3 && node.Position >= PlayerMap.Instance.PositionMap - 1)
+                    {
+                        node.gameObject.SetActive(true);
+                        node.SetupSprite();
+
+                        for (int i = 0; i < node.PathBetweenNode.Count; i++)
+                        {
+                            node.PathBetweenNode[i].gameObject.SetActive(true);
+                        }
+                    }
                 }
             }
 
             MapMaker2.Instance.DicoNode = tempDico;
             MapMaker2.Instance.AllNodeGood = new List<Node>(tempDico.Values);
+            SpawnGround.Instance.UseSeed = wrapper.seed.useSeed;
+            SpawnGround.Instance.Seed = wrapper.seed.seed;
+
             SpawnGround.Instance.StartSpawnRiver();
-            Node.TriggerMapCompleted(); // Redéclenche l'affichage des sprites
+            Node.TriggerMapCompleted();
             SaveMap();
         }
         else
@@ -225,7 +235,7 @@ public class SaveMapGeneration : MonoBehaviour
         }
     }
 
-    // Fonction pour supprimer la sauvegarde
+    // Fontion pour supprimer la sauvegarde
     public void DeleteMap()
     {
         string path = Application.persistentDataPath + $"/MapSave{SaveID}.json";
@@ -235,7 +245,7 @@ public class SaveMapGeneration : MonoBehaviour
         }
     }
 
-    // Fonction pour crypter et décrypter les informations
+    // Fonction pour crypter ou decrypter
     public string EncryptDecrypt(string json)
     {
         string result = "";
