@@ -16,6 +16,7 @@ public class Node : MonoBehaviour
     private GameObject _mesh;
     public bool Visited;
     public bool Intersection;
+    public List<Node> Children { get; private set; } = new List<Node>();
     public List<GameObject> PathBetweenNode = new();
     [SerializeField] public string CombatScene;
     [SerializeField] private GameObject _parentGO;
@@ -83,7 +84,10 @@ public class Node : MonoBehaviour
             case NodesEventTypes.Start:
                 break;
         }
-        if ((PlayerMap.Instance.PositionMap == Position - 1 && PlayerMap.Instance.Y == gameObject.transform.localPosition.y) || (PlayerMap.Instance.PositionMap == Position - 1 && Intersection /*&& this.Hauteur != 3*/)) { _button.interactable = true; _halo.SetActive(true); }
+        if ((PlayerMap.Instance.PositionMap == Position - 1 && PlayerMap.Instance.Y == gameObject.transform.localPosition.y) || (PlayerMap.Instance.PositionMap == Position - 1 && Intersection )) 
+        {
+            _button.interactable = true; _halo.SetActive(true);
+        }
         else { _button.interactable = false; }
         Vector3 rot = transform.eulerAngles;
         rot.z = -90f;
