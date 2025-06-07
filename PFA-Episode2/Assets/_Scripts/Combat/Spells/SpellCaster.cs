@@ -409,22 +409,28 @@ public class SpellCaster : MonoBehaviour
     //spell casting
     public async UniTask<bool> TryCastSpell(Spell spell, WayPoint target, List<WayPoint> rangePoints, SpellCastData zoneData)
     {
-        if (zoneData.zonePoints == null || zoneData.zonePoints.Count == 0)
+        //check if spell is castable
+        if (zoneData.zonePoints == null
+            || zoneData.zonePoints.Count == 0
+            || (zoneData.hitEntityCTXDict == null && ! spell.spellData.IsUtilitary)
+            )
         {
             StopSpellRangePreview(ref rangePoints, ref zoneData);
             return false;
         }
 
+        //hide spell UI for player
         PlayerEntity playerCastingEntity = null;
-
-        if (castingEntity is PlayerEntity)
+        if (castingEntity is PlayerEntity playerEntity)
         {
-            playerCastingEntity = castingEntity as PlayerEntity;
+            playerCastingEntity = playerEntity;
             playerCastingEntity.HideSpellsUI();
         }
 
+        //look at target
         await castingEntity.LookAt(target);
 
+        //play attack animation
         attackEventCompleted = false;
         try
         {
@@ -435,30 +441,32 @@ public class SpellCaster : MonoBehaviour
             Debug.LogException(ex);
             attackEventCompleted = true;
         }
-
+        
         while (!attackEventCompleted)
             await UniTask.Yield();
 
+        //play animations on hit entities
         List<UniTask> tasks = new();
-
-        if (zoneData.hitEntityCTXDict != null && zoneData.hitEntityCTXDict.Keys != null)
+        if (zoneData.hitEntityCTXDict != null)
         {
             foreach (Entity entity in zoneData.hitEntityCTXDict.Keys)
             {
                 tasks.Add(HitEntityBehaviour(entity, spell, zoneData));
             }
         }
-
-        tasks.Add(UtilitaryBehaviour(spell, zoneData, target));
+        //... or utilitary spell effect
+        if(spell.spellData.IsUtilitary) tasks.Add(UtilitaryBehaviour(spell, zoneData, target));
 
         await UniTask.WhenAll(tasks);
 
-
+        //show spell UI for player 
         if (playerCastingEntity != null)
             playerCastingEntity.ShowSpellsUI();
 
+        //apply cooldown
         spell.StartCooldown();
 
+        //cancel preview
         StopSpellRangePreview(ref rangePoints, ref zoneData);
 
         return true;

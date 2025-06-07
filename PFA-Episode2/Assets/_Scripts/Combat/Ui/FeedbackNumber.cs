@@ -6,7 +6,7 @@ public class FeedbackNumber : MonoBehaviour
 {
     [SerializeField]private TMP_Text txt;
     private const float amplitude = .5f;
-    private const float duration = 1f;
+    private const float duration = 1.5f;
     public void PopupNumber(float number)
     {
         gameObject.SetActive(true);
