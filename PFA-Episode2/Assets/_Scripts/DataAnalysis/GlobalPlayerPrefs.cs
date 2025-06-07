@@ -222,18 +222,18 @@ public static class GlobalPlayerPrefs
         // {
         //     nblignes = Mathf.Max(nblignes,)
         // }
-        // string content = "";
-        // string lastWord = "";
-        // foreach (var entry in entries)
-        // {
-        //     string[] words = entry.Key.Split("_");
-        //     string word = words[0];
-        //
-        //     if (word != lastWord) content += ",\n" ;
-        //
-        //     lastWord = word;
-        //     content += entry.Key + ',' + entry.Value.Replace(',','.') + '\n';
-        // }
+        string content = "";
+        string lastWord = "";
+        foreach (var entry in entries)
+        {
+            string[] words = entry.Key.Split("_");
+            string word = words[0];
+        
+            if (word != lastWord) content += ",\n" ;
+        
+            lastWord = word;
+            content += entry.Key + ',' + entry.Value.Replace(',','.') + '\n';
+        }
         //
         //write to file
         string docPath = "Assets/_Data/Playtests/Build";
