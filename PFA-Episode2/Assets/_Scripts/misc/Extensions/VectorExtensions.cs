@@ -60,6 +60,11 @@ public static class VectorExtensions
     {
         return new Vector3(v.x,0,v.y);
     }
+    
+    public static Vector3 Flatten(this Vector3 v)
+    {
+        return new Vector3(v.x,0,v.z);
+    }
 
     public static Vector3Int X0Y(this Vector2Int v)
     {
