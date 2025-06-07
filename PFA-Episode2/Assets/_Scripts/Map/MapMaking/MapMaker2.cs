@@ -168,6 +168,7 @@ public class MapMaker2 : MonoBehaviour
             DicoNode.Add(newPosition, CurrentNode);
             MapBuildingTools.Instance.TraceTonTrait(ParentNode, CurrentNode);
             CurrentNode.Creator = ParentNode;
+            ParentNode.Children.Add(CurrentNode);
             CurrentNode.Position = tourboucle;
         }
         _toutdroit++;
@@ -213,6 +214,7 @@ public class MapMaker2 : MonoBehaviour
 
                     MapBuildingTools.Instance.TraceTonTrait(ParentNode, nodeExistant);// Trace une ligne entre le parent actuel et le node déjà existant
                     nodeExistant.Creator = ParentNode;
+                    ParentNode.Children.Add(MapBuildingTools.Instance.ReturnNodeFromNodePosition(ParentNode.Position, 1)); //Marche pas car le dico pas fini
                     NodeList.Enqueue(CurrentNode);
                     break;
                 }
