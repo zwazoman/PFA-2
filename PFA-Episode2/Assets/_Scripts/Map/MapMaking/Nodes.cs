@@ -78,6 +78,7 @@ public class Node : MonoBehaviour
                 }
             }
         }
+        if (Creator == null ) { return; }
         if (PlayerMap.Instance.PositionMap == 0 && Position == 1)
         {
             _button.interactable = true;
