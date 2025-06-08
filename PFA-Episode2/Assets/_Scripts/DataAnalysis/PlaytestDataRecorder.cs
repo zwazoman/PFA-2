@@ -51,6 +51,7 @@ public class PlaytestDataRecorder : MonoBehaviour
     public async UniTask OnRunStarted()
     {
         CombatManager.TotalEncounteredCombatsCountOverRun = 0;
+        Debug.Log("Run started !!!!!");
         await AddToInt("Progression_RunStarted_TotalCount",1);
     }
         
@@ -144,13 +145,15 @@ public class PlaytestDataRecorder : MonoBehaviour
     private async UniTask AddToInt(string valueName, int offset)
     {
         string name = Tools.FormatPlaytestValueNameString(valueName) ;
-        int? currentValue = await GlobalPlayerPrefs.GetInt(valueName);
+        int? currentValue = await GlobalPlayerPrefs.GetInt(name);
         if (currentValue == null)
         {
+            Debug.Log("nul response, replacing value !");
             await GlobalPlayerPrefs.SetValue(name,offset,client);
         }
         else
         {
+            Debug.Log("adding to original value");
             currentValue += offset;
             await GlobalPlayerPrefs.SetValue(name,currentValue,client);
         }

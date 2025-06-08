@@ -136,6 +136,7 @@ public class EntityVisuals : MonoBehaviour
         {
             _hitParticles.Play();
             await VisualsRoot.DOShakePosition(.25f, .3f,15).AsyncWaitForCompletion().AsUniTask();
+            SFXManager.Instance.PlaySFXClip(Sounds.CombatHit);
         }
         else //heal
         {

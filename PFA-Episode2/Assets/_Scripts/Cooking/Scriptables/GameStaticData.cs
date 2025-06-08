@@ -39,4 +39,5 @@ public class GameStaticData : ScriptableObject
     public Material _mat_spellAoePreview_shield;
 
     public Material _mat_spellCastZonePreview;
+    public Material _mat_OccludedspellCastZonePreview;
 }

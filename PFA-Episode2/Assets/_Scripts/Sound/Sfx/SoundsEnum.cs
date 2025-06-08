@@ -1,1 +1,1 @@
-public enum Sounds{ButtonPress,CardEnter,CardExit,TurnChange,EntityDeath,EggplantWalk,EggplantEat,EggplantHit,EggplantAttack,OnionWalk,OnionEat,FishWalk,FishEat,FishAttack,FishAttackWindup,MouseWalk,MouseWalkBis,MouseAttack,}
+public enum Sounds{ButtonPress,CardEnter,CardExit,TurnChange,EntityDeath,EggplantWalk,EggplantEat,EggplantHit,EggplantAttack,OnionWalk,OnionEat,FishWalk,FishEat,FishAttack,FishAttackWindup,MouseWalk,MouseWalkBis,MouseAttack,HighWoosh,NormalWhoosh,LowWhoosh,CombatHit,}

@@ -135,7 +135,7 @@ public class CombatManager : MonoBehaviour
 
     void SummonEntities()
     {
-        int ennemiesCount = ComputeEnnemiesCount();
+        int ennemiesCount = GameManager.Instance.ComputeEnnemiesCount();
 
         SpawnSetup choosenSetup = Setups.PickRandom();
 
@@ -163,15 +163,6 @@ public class CombatManager : MonoBehaviour
             choosenSpawner.SummonEntity();
             spawners.Remove(choosenSpawner);
         }
-    }
-
-    int ComputeEnnemiesCount()
-    {
-        int positionMap = PlayerMap.Instance?.PositionMap??  0;
-        if (positionMap > 9) { return 4; }
-        else if (positionMap > 6) { return 3; }
-        else if(positionMap > 3) { return 2; }
-        else { return 1; }
     }
 
     async UniTask GameOver()

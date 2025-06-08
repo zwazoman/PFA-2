@@ -16,7 +16,7 @@ public static class Tools
 
     public static Vector3 GetPositionAboveFinger()
     {
-        return Input.mousePosition + Vector3.up * 10*1080/Screen.height;
+        return Input.mousePosition + Vector3.up * 140f*1080f/(float)Screen.height;
     }
     public static Vector3Int SnapOnGrid(this Vector3 initialPos)
     {
@@ -31,18 +31,7 @@ public static class Tools
 
         return Physics.Raycast(aPos, offset, offset.magnitude, LayerMask.GetMask("Wall"));
     }
-
-    [MenuItem("Data/testAverageFunc")]
-    public static void TestAverage()
-    {
-        float? av = 10;
-        int? c = 1;
-        Debug.Log(av);
-        Debug.Log(c);
-        AccumulateAverage(ref av, ref c, 12);
-        Debug.Log(av);
-        Debug.Log(c);
-    }
+    
 
     /// <summary>
     /// prend une moyenne et la met à jour en ajoutant un nouvel élément dedans.
@@ -76,7 +65,11 @@ public static class Tools
     }
     public static string FormatPlaytestValueNameString(string ValueName)
     {
-        return  (Application.isEditor ? "dev_" : "" ) + Application.version.ToString()+ "_" + ValueName ;
+        return FormatPlaytestValueNameString(ValueName,Application.isEditor);
+    }
+    public static string FormatPlaytestValueNameString(string ValueName,bool editor)
+    {
+        return  (editor ? "dev_" : "" ) + Application.version.ToString()+ "_" + ValueName ;
     }
 
     public static T PickRandom<T>(this T[] array)
@@ -303,6 +296,7 @@ public static class Tools
     {
         point = null;
 
+        Debug.LogWarning(fingerOffset);
         if (blockedByUi && EventSystem.current.IsPointerOverGameObject(0))
         {
             return false;

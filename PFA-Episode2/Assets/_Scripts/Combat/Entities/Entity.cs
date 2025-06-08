@@ -178,8 +178,8 @@ public class Entity : MonoBehaviour
         if(pushTarget != currentPoint)
         {
             visuals.animator.PlayAnimationBool(pushBool);
-            //await UniTask.Delay(200);
 
+            SFXManager.Instance.PlaySFXClip(Sounds.HighWoosh);
             await StartMoving(pushTarget.transform.position,13,-1);
 
             visuals.animator.EndAnimationBool(pushBool);

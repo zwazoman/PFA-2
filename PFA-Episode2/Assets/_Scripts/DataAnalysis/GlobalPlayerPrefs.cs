@@ -97,7 +97,7 @@ public static class GlobalPlayerPrefs
     {
         string answer = await GetString(ValueName,client);
         int? output = null;
-        
+        Debug.Log(answer);
         try
         {
             if (int.TryParse(answer,out int result)) return result;
@@ -159,43 +159,134 @@ public static class GlobalPlayerPrefs
         }
     }
     
+    //menu items
+    #if UNITY_EDITOR
 
-    [MenuItem("Playtests Analysis /Delete All Global PlayerKeys")]
+    [MenuItem("Data / Attention / c'est pas pour toi / Tes vraiment sur ? / pitié / Delete All Global PlayerKeys / vraiment ? / pour de vrai ? / on pourra pas les récupérer après / je vais pleurer / Amen")]
     public static void DeleteAllGlobalPlayerKeys()
     {
         ClearAllValues(null, true);
     }
 
-    [MenuItem("Playtests Analysis /Print All Development Player Data")]
-    public static void PrintAllDevelopmentPlayerData() => PrintAllGlobalPlayerKeys(false);
-    
-    [MenuItem("Playtests Analysis /Print All Build Player Data")]
-    public static void PrintAllBuildPlayerData() => PrintAllGlobalPlayerKeys(true);
-    public static async Task PrintAllGlobalPlayerKeys(bool showBuildData = false)
+    [MenuItem("Playtests Analysis /Editor Data/print all editor data")]
+    public static async void PrintAllDevelopmentPlayerData()
     {
+        var dico = await GetGlobalPlaytestStats(false);
+        foreach (var pair in dico)
+        {
+            Debug.Log(pair.Key + " : " + pair.Value);
+        }
+    }
+    
+    [MenuItem("Playtests Analysis /Build Data/print all build data")]
+    public static async void PrintAllBuildPlayerData() 
+    {
+        var dico = await GetGlobalPlaytestStats(true);
+        foreach (var pair in dico)
+        {
+            Debug.Log(pair.Key + " : " + pair.Value);
+        }
+    }
+    
+    [MenuItem("Playtests Analysis /Editor Data/save all editor data to file")]
+    public static void SaveAllDevelopmentPlayerDataToFile()
+    {
+        throw new NotImplementedException();
+        GetGlobalPlaytestStats(false);
+    }
+
+    [MenuItem("Playtests Analysis /Build Data/save all build data to file")]
+    public async static void SaveAllBuildPlayerDataToFile()
+    {
+        //fetch data
+        SortedDictionary<string, string> entries = await GetGlobalPlaytestStats(true);
+        
+        //generate cells
+        SortedDictionary<string, SortedDictionary<string, SortedDictionary<string, string>>> tableaux = new();
+        
+        foreach (var entry in entries)
+        {
+            string[] words = entry.Key.Split("_");
+            string tableau = words[0];
+            string ligne = words[1];
+            string colonne = entry.Key.Substring(tableau.Length+ligne.Length+2);
+
+            tableaux[tableau][ligne][colonne] = entry.Value;
+        }
+
+        
+        
+        // int nbTableaux = tableaux.Count;
+        // int nblignes = 0;
+        // foreach (var ligne in tableaux.Values)
+        // {
+        //     nblignes = Mathf.Max(nblignes,)
+        // }
+        string content = "";
+        string lastWord = "";
+        foreach (var entry in entries)
+        {
+            string[] words = entry.Key.Split("_");
+            string word = words[0];
+        
+            if (word != lastWord) content += ",\n" ;
+        
+            lastWord = word;
+            content += entry.Key + ',' + entry.Value.Replace(',','.') + '\n';
+        }
+        //
+        //write to file
+        string docPath = "Assets/_Data/Playtests/Build";
+        string docName = Tools.FormatPlaytestValueNameString("PlaytestData",false);
+        using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, docName+".csv")))
+        {
+            outputFile.Write(content);
+            Debug.Log(content);
+            Debug.Log(outputFile);
+        }
+        
+    }
+    
+#endif
+    
+    public static async Task<SortedDictionary<string, string>> GetGlobalPlaytestStats(bool showBuildData = false)
+    {
+        static async UniTask PullDataIntoDico(SortedDictionary<string, string> dico,string key,HttpClient client)
+        {
+            string value = await GetString(key, client);
+                
+            string cleanKey = key;
+            if (cleanKey.StartsWith("dev_")) cleanKey = cleanKey.Substring(4);
+            if (cleanKey.StartsWith(Application.version)) cleanKey = cleanKey.Substring(Application.version.Length+1);
+            cleanKey = cleanKey.RemoveConsecutiveCharacters('_');
+
+            dico[cleanKey] = value;
+        }
+        SortedDictionary<string, string> dico = new();
+        
         using (HttpClient client = new())
         {
             List<string> keys = (await FetchAllKeys(client, true)).ToList();
             keys.Sort();
+
+            List<UniTask> tasks = new();
             foreach (string key in keys)
             {
                 if(key.StartsWith("dev_") == showBuildData) continue;
-                
                 if (key.EndsWith("hidden")) continue;
-                
-                string value = await GetString(key, client);
-                
-                string cleanKey = key;
-                if (cleanKey.StartsWith("dev_")) cleanKey = cleanKey.Substring(4);
-                if (cleanKey.StartsWith(Application.version)) cleanKey = cleanKey.Substring(Application.version.Length+1);
-                cleanKey = cleanKey.RemoveConsecutiveCharacters('_');
-                //cleanKey = cleanKey.Replace('_',' ');
-                
-                Debug.Log(cleanKey + " : " + value);
-            }
-        };
 
+                tasks.Add( PullDataIntoDico(dico,key,client));
+
+            }
+
+            await UniTask.WhenAll(tasks);
+            
+        };
+        return dico;
     }
+    
+    
+    
     
     
     public static async Task<string[]> FetchAllKeys([CanBeNull] HttpClient client,bool showDebugLogs = false)

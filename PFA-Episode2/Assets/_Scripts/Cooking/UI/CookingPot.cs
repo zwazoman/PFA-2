@@ -2,6 +2,7 @@ using System;
 using DG.Tweening;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -33,7 +34,62 @@ public class CookingPot : MonoBehaviour
     [Header("Asset References")]
     [SerializeField] Sauce _defaultSauce;
 
+    //aimant vers draggable
+    private Vector3 _basePosition;
+    private bool _isBig = false;
+    private RectTransform rTransform;
+
+    private bool buttonIsShaking;
+    
     #region Display
+        
+    #region buttonShake
+
+    //todo : faire une classe bouttonShake ou quoi, c'est dégueu ça
+    
+    public async UniTask ShakeButton()
+    {
+        buttonIsShaking = true;
+        while (buttonIsShaking)
+        {
+            _buttonTransform.DOShakeRotation(1, Vector3.forward * 5, 10);
+            await _buttonTransform.DOShakePosition(1,Vector3.one*8,2,randomness:10f,randomnessMode:ShakeRandomnessMode.Harmonic).ToUniTask();
+        }
+    }
+    public void StopButtonShake()
+    {
+        buttonIsShaking = false;
+    }
+    
+    #endregion
+    
+    public void Grow()
+    {
+        _isBig = true;
+        transform.DOScale(1.1f, .2f).SetEase(Ease.OutBack);
+    }
+
+    public void Shrink()
+    {
+        _isBig = false;
+        transform.DOMove(_basePosition,.35f).SetEase(Ease.OutBack);
+        transform.DOScale(1f, .35f).SetEase(Ease.OutBack);
+    }
+
+    private void Update()
+    {
+        if (_isBig)
+        {
+            Vector3 potToFInger =  (Vector2)Input.mousePosition - (Vector2)_basePosition - Vector2.up * (rTransform.sizeDelta.y * .1f);
+            
+            float alpha = Mathf.Clamp01(potToFInger.magnitude / 800 * 1080f / Screen.height);
+            alpha = - alpha * (1f - alpha)*2;
+            potToFInger = potToFInger.normalized * (75 * 1080f) / Screen.height * (alpha);
+                
+            Vector3 vel = new();
+            transform.position = Vector3.SmoothDamp(transform.position, _basePosition - potToFInger + Vector3.up * (rTransform.sizeDelta.y * .1f),ref vel,.02f);
+        }
+    }
 
     private void UpdateCooldownAndRangeDisplay()
     {
@@ -53,7 +109,9 @@ public class CookingPot : MonoBehaviour
 
         Visuals3D.UpdateIngredientsList(ingredients);
 
-        txt_button.text = ingredients.Count < 3 ? $"{ingredients.Count}/3" : "Cook !";
+        txt_button.text = ingredients.Count < 3 ? $"Ingredients :\n{ingredients.Count}/3" : "Cook !";
+        if (ingredients.Count == 3) ShakeButton(); else StopButtonShake();
+        
         _buttonTransform.DOPunchScale(Vector3.one * .1f, .2f);
 
     }
@@ -73,12 +131,16 @@ public class CookingPot : MonoBehaviour
         UpdateSauceDisplay();
         UpdateIngredientsStatsDisplay();
         UpdateCooldownAndRangeDisplay();
-
     }
 
-    private void Start()
+    private async void Start()
     {
+        TryGetComponent(out rTransform);
         UpdateDisplay();
+
+        await UniTask.NextFrame();
+        _basePosition = transform.position;
+        
     }
 
     #endregion
@@ -165,8 +227,8 @@ public class CookingPot : MonoBehaviour
             foreach (Ingredient ingredient in ingredients) s+= ingredient.name+ " ";
             Debug.Log("Added ingredient. new list : " + s);
             
-            transform.DOPunchScale(Vector3.one * .25f, .25f,9,1.2f);
-        } else transform.DOShakePosition(.3f,50,20);
+            //transform.DOPunchScale(Vector3.one * .5f, .2f,9,1.2f);
+        } else transform.root.GetChild(0).DOShakePosition(.3f,50,16);
 
         return successful;
     }

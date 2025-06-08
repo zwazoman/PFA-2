@@ -11,7 +11,7 @@ public enum AIBehaviour
 [RequireComponent(typeof(EliteEntity))]
 public class AIEntity : Entity
 {
-    [SerializeField] EnemyData Data;
+    [SerializeField] public EnemyData Data;
 
     WayPoint targetEntityPoint;
 
@@ -32,15 +32,17 @@ public class AIEntity : Entity
     {
         base.Start();
 
-        stats.maxMovePoints = Data.MaxMovePoints;
-        stats.Setup(Data.MaxHealth, Data.MaxHealth);
-
         //elite handle
         List<PremadeSpell> premadeSpells = new();
-        if (Random.value < .2f && Data.CanBeElite)
+        if (Random.value < 0 && Data.CanBeElite )                //CONNARD MATEO TODO todo
         {
             _elite.ApplyEliteStats(ref premadeSpells, Data.Spells);
 
+        }
+        else
+        {
+            stats.maxMovePoints = Data.MaxMovePoints;
+            stats.Setup(Data.MaxHealth, Data.MaxHealth);
         }
         if (premadeSpells.Count == 0)
             premadeSpells.AddRange(Data.Spells);
@@ -129,17 +131,12 @@ public class AIEntity : Entity
         Spell choosenSpell = null;
 
         foreach (Spell spell in castableSpells)
-        {
-            print(spell.spellData.CoolDown);
-
             if(choosenSpell == null || spell.spellData.CoolDown > maxCooldown)
             {
                 choosenSpell = spell;
                 maxCooldown = choosenSpell.spellData.CoolDown;
             }
-        }
 
-        print(choosenSpell.spellData.CoolDown);
         return choosenSpell;
     }
 
@@ -206,7 +203,7 @@ public class AIEntity : Entity
 
                 List<WayPoint> targetPoints = new();
 
-                List<WayPoint> rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, currentPoint, false);
+                List<WayPoint> rangePoints = entitySpellCaster.ComputeAndPreviewSpellRange(choosenSpell, currentPoint, false);
 
                 foreach (WayPoint point in rangePoints)
                 {
@@ -248,7 +245,7 @@ public class AIEntity : Entity
         List<WayPoint> rangePoints;
         SpellCastData castData = new();
 
-        rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, targetPoint, false, true);
+        rangePoints = entitySpellCaster.ComputeAndPreviewSpellRange(choosenSpell, targetPoint, false, true);
 
         foreach (WayPoint rangePoint in rangePoints)
         {
@@ -272,7 +269,7 @@ public class AIEntity : Entity
 
             GetInvertShot(choosenTargetPoint, targetPointsDict[choosenTargetPoint][0], choosenSpell, out pointToSelect, targetPoint);
 
-            rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, choosenTargetPoint, false );
+            rangePoints = entitySpellCaster.ComputeAndPreviewSpellRange(choosenSpell, choosenTargetPoint, false );
             castData = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints, false);
 
             targetPointsDict[choosenTargetPoint].Remove(targetPointsDict[choosenTargetPoint][0]);
@@ -301,7 +298,7 @@ public class AIEntity : Entity
     async UniTask<bool> CastSpell(Spell choosenSpell, WayPoint pointToSelect, WayPoint target)
     {
         HideWalkables();
-        List<WayPoint> rangePoints = entitySpellCaster.PreviewSpellRange(choosenSpell, currentPoint);
+        List<WayPoint> rangePoints = entitySpellCaster.ComputeAndPreviewSpellRange(choosenSpell, currentPoint);
         await UniTask.Delay(ThinkDelayMilis);
         SpellCastData castData = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints);
         await UniTask.Delay(ThinkDelayMilis);

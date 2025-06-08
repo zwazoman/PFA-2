@@ -8,28 +8,29 @@ using DG.Tweening;
 public class Node : MonoBehaviour
 {
     public static event Action OnMapCompleted;
-    public int Position;
-    public int Hauteur;
-    public Node Creator;
+
+    [Header ("Settings Node")]
+    public int Position; // de 0 à MapRange
+    public int Hauteur; // de 2 à 4
+    public Node Creator; // son parent
+    public List<Node> Children = new();
     public NodesEventTypes EventName;
-    public bool OnYReviendra;
-    private GameObject _mesh;
-    public bool Visited;
-    public bool Intersection;
     public List<GameObject> PathBetweenNode = new();
-    [SerializeField] public string CombatScene;
+
+    [HideInInspector] public bool OnYReviendra;
+    [HideInInspector] public string CombatScene;
     [SerializeField] private GameObject _parentGO;
     [SerializeField] private GameObject _prefabBoss;
     [SerializeField] private Button _button;
     [SerializeField] private MeshRenderer _meshRend;
     [SerializeField] private Material _mat;
     [SerializeField] private GameObject _halo;
+    private GameObject _mesh;
 
     public static void TriggerMapCompleted() { OnMapCompleted?.Invoke(); }
 
     public void InteractPlayer()
     {
-        Visited = true;
         PlayerMap.Instance.clickedNode = this;
         TweenMesh();
     }
@@ -39,52 +40,68 @@ public class Node : MonoBehaviour
     /// </summary>
     public void SetupSprite()
     {
-        _halo.SetActive(false);
-        if (PlayerMap.Instance.PositionMap == Position) { return; }
-        switch (EventName)
+        //_halo.SetActive(false);
+        if (PlayerMap.Instance.PositionMap != Position) 
         {
-            case NodesEventTypes.Cuisine:
-                GameObject CuisinePrefab = PoolObject.Instance.CusineList.Dequeue();
-                CuisinePrefab.transform.position = _parentGO.transform.position;
-                CuisinePrefab.transform.SetParent(gameObject.transform);
-                CuisinePrefab.SetActive(true);
-                _mesh = CuisinePrefab;
-                break;
-            case NodesEventTypes.Combat:
-                GameObject CombatPrefab = PoolObject.Instance.CombatList.Dequeue();
-                CombatPrefab.transform.position = _parentGO.transform.position;
-                CombatPrefab.transform.SetParent(gameObject.transform);
-                CombatPrefab.SetActive(true);
-                _mesh = CombatPrefab;
-                _meshRend.material = _mat;
-                CombatScene = GameManager.Instance.GetRandomCombatScene();
-                break;
-            case NodesEventTypes.Ingredient:
-                GameObject IngredientPrefab = PoolObject.Instance.IngredientList.Dequeue();
-                IngredientPrefab.transform.position = _parentGO.transform.position;
-                IngredientPrefab.transform.parent = gameObject.transform;
-                IngredientPrefab.SetActive(true);
-                _mesh = IngredientPrefab;
-                break;
-            case NodesEventTypes.Heal:
-                GameObject HealPrefab = PoolObject.Instance.HealList.Dequeue();
-                HealPrefab.transform.position = _parentGO.transform.position;
-                HealPrefab.transform.SetParent(gameObject.transform);
-                HealPrefab.SetActive(true);
-                _mesh = HealPrefab;
-                break;
-            case NodesEventTypes.Boss:
-                GameObject go = Instantiate(_prefabBoss);
-                go.transform.position = _parentGO.transform.position;
-                go.transform.SetParent(gameObject.transform);
-                go.SetActive(true);
-                _mesh = go;
-                break;
-            case NodesEventTypes.Start:
-                break;
+            GameObject prefab = null;
+            switch (EventName)
+            {
+                case NodesEventTypes.Cuisine:
+                    prefab = PoolObject.Instance.CusineList.Dequeue();
+                    break;
+                case NodesEventTypes.Combat:
+                    prefab = PoolObject.Instance.CombatList.Dequeue();
+                    break;
+                case NodesEventTypes.Ingredient:
+                    prefab = PoolObject.Instance.IngredientList.Dequeue();
+                    break;
+                case NodesEventTypes.Heal:
+                    prefab = PoolObject.Instance.HealList.Dequeue();
+                    break;
+                case NodesEventTypes.Boss:
+                    prefab = Instantiate(_prefabBoss);
+                    break;
+                case NodesEventTypes.Start:
+                    return;
+            }
+
+            if (prefab != null)
+            {
+                prefab.transform.position = _parentGO.transform.position;
+                prefab.transform.SetParent(transform);
+                prefab.SetActive(true);
+                _mesh = prefab;
+
+                if (EventName == NodesEventTypes.Combat)
+                {
+                    _meshRend.material = _mat;
+                    CombatScene = GameManager.Instance.GetRandomCombatScene();
+                }
+            }
         }
-        if ((PlayerMap.Instance.PositionMap == Position - 1 && PlayerMap.Instance.Y == gameObject.transform.localPosition.y) || (PlayerMap.Instance.PositionMap == Position - 1 && Intersection /*&& this.Hauteur != 3*/)) { _button.interactable = true; _halo.SetActive(true); }
-        else { _button.interactable = false; }
+
+        //_button.interactable = false;
+        if (PlayerMap.Instance.PositionMap == 0 && Position == 1)
+        {
+            _button.interactable = true;
+            _halo.SetActive(true);
+        }
+        else if (Position == PlayerMap.Instance.PositionMap)
+        {
+            foreach (Node node in Children)
+            {
+                node._button.interactable = true;
+                node._halo.SetActive(true);
+                _button.interactable = false;
+                _halo.SetActive(false);
+            }
+        }
+        else if (Creator.Position != PlayerMap.Instance.PositionMap)
+        {
+            _button.interactable = false;
+            _halo.SetActive(false);
+        }
+
         Vector3 rot = transform.eulerAngles;
         rot.z = -90f;
         transform.eulerAngles = rot;
@@ -97,8 +114,5 @@ public class Node : MonoBehaviour
         _mesh.transform.DOScale(new Vector3(0,0,0), 0.5f).SetEase(Ease.InBack);
     }
 
-    public bool GetInteractable()
-    {
-        return _button.interactable;
-    }
+    public bool GetInteractable() { return _button.interactable; }
 }
