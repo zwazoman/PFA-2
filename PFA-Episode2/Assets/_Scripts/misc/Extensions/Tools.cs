@@ -296,7 +296,7 @@ public static class Tools
     {
         point = null;
 
-        Debug.LogWarning(fingerOffset);
+        //Debug.LogWarning(fingerOffset);
         if (blockedByUi && EventSystem.current.IsPointerOverGameObject(0))
         {
             return false;
@@ -304,10 +304,10 @@ public static class Tools
 
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(fingerOffset? GetPositionAboveFinger() : Input.mousePosition);
+        
 
-        Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Waypoint"));
-
-        if (hit.collider != null && hit.collider.gameObject.TryGetComponent<WayPoint>(out WayPoint wayPoint))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Waypoint")) 
+            && hit.collider.gameObject.TryGetComponent<WayPoint>(out WayPoint wayPoint))
         {
             point = wayPoint;
             return true;
