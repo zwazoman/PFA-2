@@ -105,9 +105,12 @@ public class CookingPanel : AnimatedPanel
         //sauces
         for (byte i = 0; i < inv.Sauces.Count; ++i)
         {
-            Instantiate(ing, _saucesParent.transform)
-                .GetComponentInChildren<DraggableIngredientContainer>()
-                .SetUp(inv.Sauces[i]);
+            DraggableIngredientContainer d = 
+                Instantiate(ing, _saucesParent.transform)
+                .GetComponentInChildren<DraggableIngredientContainer>();
+            d.SetUp(inv.Sauces[i]);
+            d.EventBeginDrag+=_pot.Grow;
+            d.EventEndDrag+=_pot.Shrink;
         }
         //Debug.Log("----");
     }
