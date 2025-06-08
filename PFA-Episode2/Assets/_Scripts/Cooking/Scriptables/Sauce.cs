@@ -27,6 +27,7 @@ public class Sauce : IngredientBase
                 Spell.Effects.Add(new(SpellEffectType.DamageIncreaseMeleeRange, StatType.FlatIncrease, 1.4f));
                 break;
             case SauceEffectType.SummonEntity:
+                Spell.IsUtilitary = true;
                 Spell.Effects.Add(new(SpellEffectType.EntitySummon, StatType.FlatIncrease, 1));
                 break;
 

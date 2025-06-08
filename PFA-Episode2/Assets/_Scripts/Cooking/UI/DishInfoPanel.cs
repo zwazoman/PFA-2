@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,10 +11,12 @@ public class DishInfoPanel : AnimatedPanel
     [SerializeField] private TMP_Text txt_range, txt_DishName;
     [SerializeField] private Image image_dishIcon;
     [SerializeField] private Image image_AOE;
+    [SerializeField] private GameObject btn_keepCooking;
 
     [SerializeField] private List<InfoHeader> spellEffects;
 
-    
+    public SerializedDictionary<SpellEffectType, IngredientUISerialize> itemIconPerSpellEffect = new();
+    public Sprite noEffectSprite;
     public void Setup(SpellData spell)
     {
         //effects
@@ -21,11 +24,11 @@ public class DishInfoPanel : AnimatedPanel
         {
             if(i < spell.Effects.Count)
             {
-                spellEffects[i].gameObject.SetActive(true);
-                spellEffects[i].UpdateVisual(spell.Effects[i], null); //@Revoir sprite
+                //spellEffects[i].gameObject.SetActive(true);
+                spellEffects[i].UpdateVisual(spell.Effects[i], itemIconPerSpellEffect[spell.Effects[i].effectType]?.IconEffectSprite??noEffectSprite); 
             }
             else
-            spellEffects[i].gameObject.SetActive(false);
+                spellEffects[i].UpdateVisual("...",noEffectSprite); 
         }
 
         //dish icon
@@ -38,6 +41,9 @@ public class DishInfoPanel : AnimatedPanel
         //turns and range
         txt_cooldown.text = Serializer.GetCoolDownString(spell.CoolDown);
         txt_range.text = Serializer.GetRangeString(spell.Range);
+        
+        //keep cooking
+        btn_keepCooking.SetActive(GameManager.Instance.playerInventory.Ingredients.Count>=3);
     }
 
     /*[SerializeField] PremadeSpell test;

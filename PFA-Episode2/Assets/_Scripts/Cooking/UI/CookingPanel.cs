@@ -11,7 +11,8 @@ public class CookingPanel : AnimatedPanel
     [SerializeField] Transform _saucesParent;
     [SerializeField] CookingPot _pot;
     [SerializeField] DishInfoPanel _dishInfoPanel;
-
+    
+    
 #if UNITY_EDITOR
     [Header("test")]
     [SerializeField] List<Ingredient> tests = new();
@@ -49,7 +50,7 @@ public class CookingPanel : AnimatedPanel
 #endif
         
     }
-
+    
     void OnShown()
     {
         //Debug.Log(GarbageCollector.isIncremental);
@@ -93,9 +94,12 @@ public class CookingPanel : AnimatedPanel
         //ingredients
         for (byte i = 0; i < inv.Ingredients.Count; ++i)
         {
-            Instantiate(ing, _ingredientsParent.transform)
-                .GetComponentInChildren<DraggableIngredientContainer>()
-                .SetUp(inv.Ingredients[i]);
+            DraggableIngredientContainer d = 
+                Instantiate(ing, _ingredientsParent.transform)
+                .GetComponentInChildren<DraggableIngredientContainer>();
+            d.SetUp(inv.Ingredients[i]);
+            d.EventBeginDrag+=_pot.Grow;
+            d.EventEndDrag+=_pot.Shrink;
         }
 
         //sauces
