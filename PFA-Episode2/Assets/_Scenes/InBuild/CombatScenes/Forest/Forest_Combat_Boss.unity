@@ -949,7 +949,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caa376f18f101e046aef01e8fc877552, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  postProcessMaterial: {fileID: 2100000, guid: 9eb2f6d2274de424bbc01aeec5ca7ade, type: 2}
 --- !u!81 &40926887
 AudioListener:
   m_ObjectHideFlags: 0
@@ -1036,7 +1035,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 988dbe291525a3a44a7f9a882d26e9aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _repereWorldCenter: {fileID: 0}
   _cam: {fileID: 0}
+  _offsetMagnitude: 0
+  _dampingDuration: 0
 --- !u!1001 &43088713
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -6564,7 +6564,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 988dbe291525a3a44a7f9a882d26e9aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _repereWorldCenter: {fileID: 0}
   _cam: {fileID: 0}
+  _offsetMagnitude: 0
+  _dampingDuration: 0
 --- !u!114 &323066748
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19897,7 +19900,7 @@ PrefabInstance:
     - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
       propertyPath: _rewardPanel
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 6206363912039511261}
     - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
       propertyPath: _gameOverPanel
       value: 
@@ -58976,6 +58979,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ccd5e26dd75c21498cfe519f685a13d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6206363912039511261 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7513078721926239005, guid: fec318d7681f5124b90538cc80d550b1, type: 3}
+  m_PrefabInstance: {fileID: 6206363912039511256}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 543b3e2780de768428dad51ebadb55c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &6206363912039511262 stripped
