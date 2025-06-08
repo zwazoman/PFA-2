@@ -100,7 +100,8 @@ public class CombatManager : MonoBehaviour
     {
         if(_summonEntities)
             SummonEntities();
-
+        await UniTask.NextFrame();
+        
         IsPlaying = true;
         while( Entities.Count>1 )
         {

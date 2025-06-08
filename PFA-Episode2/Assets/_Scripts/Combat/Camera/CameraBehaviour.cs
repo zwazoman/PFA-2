@@ -120,7 +120,7 @@ public class CameraBehaviour : MonoBehaviour
         {
             yOffset = Vector3.zero;
             //transform.DOMove(TargetPosition, .8f).SetEase(Ease.InOutSine);
-            _baseOrthoSize = 3.6f;
+            _baseOrthoSize = 3.4f;
             //_cam.DOOrthoSize(3.6f,.8f);
         }
         else
