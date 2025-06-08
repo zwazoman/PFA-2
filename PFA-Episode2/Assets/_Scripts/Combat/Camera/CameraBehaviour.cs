@@ -79,6 +79,7 @@ public class CameraBehaviour : MonoBehaviour
     private void Update()
     {
         if (screenIsShaking) return;
+        if (! (CombatManager.Instance.IsPlaying)) return;
         
         //centrer la cam sur les entités
         Bounds bounds = new();
