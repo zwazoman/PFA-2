@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Serialization;
 
 public class LightningManager : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class LightningManager : MonoBehaviour
     [Header("Fog")]
     [SerializeField] bool _fogOn;
     [SerializeField] float _fogRadius;
-    [SerializeField] float _fogIntensity = .85f;
+    [FormerlySerializedAs("_fogIntensity")] [SerializeField] float _VignetteIntensity = .85f;
 
     
    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -43,7 +44,7 @@ public class LightningManager : MonoBehaviour
         Shader.SetGlobalFloat("_stipplingTiling", _stipplingTiling);
          
         Shader.SetGlobalFloat("_fogRadius", _fogRadius);
-        Shader.SetGlobalFloat("_fogIntensity", _fogIntensity);
+        Shader.SetGlobalFloat("_fogIntensity", _VignetteIntensity);
         Shader.SetKeyword(GlobalKeyword.Create("FOG"), _fogOn);
 
     }
