@@ -2129,6 +2129,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -310
       objectReference: {fileID: 0}
+    - target: {fileID: 535781566679882889, guid: fec318d7681f5124b90538cc80d550b1, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 544520076728223276, guid: fec318d7681f5124b90538cc80d550b1, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -30317,7 +30321,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 988dbe291525a3a44a7f9a882d26e9aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cam: {fileID: 0}
+  _repereWorldCenter: {fileID: 1846924960}
+  _cam: {fileID: 5347575816720138350}
+  _offsetMagnitude: 1.3
+  _dampingDuration: 0.1
+  _spellDragMagnitude: 2.5
+  _zoomDampingDuration: 0.15
 --- !u!224 &1647732804241717131 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6384407453758768602, guid: fec318d7681f5124b90538cc80d550b1, type: 3}
@@ -30508,10 +30517,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4044161242484165700}
     - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: _summonEntities
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
       propertyPath: 'Setups.Array.data[0]'
       value: 
       objectReference: {fileID: 708972635}
@@ -30523,10 +30528,6 @@ PrefabInstance:
       propertyPath: 'Setups.Array.data[2]'
       value: 
       objectReference: {fileID: 1212219203}
-    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-      propertyPath: _startGameOnSceneStart
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
       propertyPath: Setups.Array.data[0].playerSpawner
       value: 
