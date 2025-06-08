@@ -7,10 +7,27 @@ using UnityEngine.SceneManagement;
 
 public class MusicManager : MonoBehaviour
 {
+    #region Singleton
+    private static MusicManager instance = null;
+    public static MusicManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = Instantiate(Resources.Load<GameObject>("SoundManager").GetComponent<MusicManager>());
+            }
+            return instance;
+        }
+    }
+    #endregion
+
     [SerializeField] AudioSource _musicSource;
     [SerializeField] float _fadeDuration = .35f;
 
-    [SerializeField] SerializedDictionary<string, MusicParameters> musicClipDict;
+    [SerializeField] public SerializedDictionary<string, MusicParameters> musicClipDict;
+
+    MusicParameters _currentParameter;
 
     private void Start()
     {
@@ -25,8 +42,9 @@ public class MusicManager : MonoBehaviour
                 await SwapMusics(musicClipDict[sceneName]);
     }
 
-    async UniTask SwapMusics(MusicParameters musicParameter)
+    public async UniTask SwapMusics(MusicParameters musicParameter)
     {
+        _currentParameter = musicParameter;
         AudioClip choosenMusic = musicParameter.musics.PickRandom();
 
         if (choosenMusic == _musicSource.clip)
@@ -36,5 +54,15 @@ public class MusicManager : MonoBehaviour
         _musicSource.clip = choosenMusic;
         _musicSource.Play();
         await _musicSource.DOFade(musicParameter.targetVolume, _fadeDuration);
+    }
+
+    public async void ChangeVolume(float targetVolume, float changeDuration)
+    {
+        await _musicSource.DOFade(targetVolume, changeDuration);
+    }
+
+    public async void ResetVolume(float changeDuration)
+    {
+        await _musicSource.DOFade(_currentParameter.targetVolume, changeDuration);
     }
 }
