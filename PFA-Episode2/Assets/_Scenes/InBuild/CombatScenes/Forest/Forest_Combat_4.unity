@@ -23953,6 +23953,28 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fec318d7681f5124b90538cc80d550b1, type: 3}
+--- !u!114 &965417252 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7513078721926239005, guid: fec318d7681f5124b90538cc80d550b1, type: 3}
+  m_PrefabInstance: {fileID: 965417251}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 543b3e2780de768428dad51ebadb55c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &965417253 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3353559031675445008, guid: fec318d7681f5124b90538cc80d550b1, type: 3}
+  m_PrefabInstance: {fileID: 965417251}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59772f00b1f06ae49aab5c4a26ce51cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &965583236
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -45605,7 +45627,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 988dbe291525a3a44a7f9a882d26e9aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _repereWorldCenter: {fileID: 0}
   _cam: {fileID: 0}
+  _offsetMagnitude: 0
+  _dampingDuration: 0
 --- !u!114 &1947804615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47733,6 +47758,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Managers
       objectReference: {fileID: 0}
+    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
+      propertyPath: _rewardPanel
+      value: 
+      objectReference: {fileID: 965417252}
+    - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
+      propertyPath: _gameOverPanel
+      value: 
+      objectReference: {fileID: 965417253}
     - target: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
       propertyPath: _summonEntities
       value: 1

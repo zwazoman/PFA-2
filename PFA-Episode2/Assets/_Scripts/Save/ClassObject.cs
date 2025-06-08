@@ -17,6 +17,7 @@ public class SerializableNode
 
     //référence au créateur
     public Vector3Int creatorKey;
+    public List<Vector3Int> ChildKey; 
 }
 
 [Serializable]
