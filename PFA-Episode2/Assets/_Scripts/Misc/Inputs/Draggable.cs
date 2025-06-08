@@ -16,7 +16,9 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     CanvasGroup canvasGroup;
 
     public bool usePositionAboveFinger = true;
-    
+
+    protected DragSound dragSound = DragSound.Solid;
+
     //notifiers
     public event Action EventBeginDrag, EventEndDrag;
     
@@ -58,4 +60,22 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         transform.SetSiblingIndex(siblingIndex);
         rectTransform.anchoredPosition = originalPos;
     }
+
+    //void ComputeDragSound()
+    //{
+    //    switch (dragSound)
+    //    {
+
+    //    }
+    //}
+}
+
+public enum DragSound
+{
+    Dish,
+    Bowl,
+    Can,
+    Solid,
+    Vegetable,
+    Meat
 }
