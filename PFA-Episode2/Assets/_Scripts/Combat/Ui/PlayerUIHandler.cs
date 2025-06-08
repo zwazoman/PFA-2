@@ -37,7 +37,9 @@ public class PlayerUIHandler : MonoBehaviour
     {
         DraggableSpell draggableSpellSlot = Instantiate(_uiSpellPrefab, CombatUiManager.Instance.SpellSlots[i]);
         draggableSpellSlot.SetUp(spellData, _player);
-
+        draggableSpellSlot.EventBeginDrag += CameraBehaviour.Instance.OnSpellDrag;
+        draggableSpellSlot.EventEndDrag += CameraBehaviour.Instance.OnSpellReleased;
+        
         _player.spellsUI.Add(draggableSpellSlot);
     }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Linq;
+using Unity.VisualScripting;
 
 public class CombatManager : MonoBehaviour
 {
@@ -44,6 +45,8 @@ public class CombatManager : MonoBehaviour
 
     public event Action<Entity> OnNewTurn;
     public event Action OnWin;
+ 
+    public bool IsPlaying = false;
 
     #region entity registration
 
@@ -98,7 +101,8 @@ public class CombatManager : MonoBehaviour
         if(_summonEntities)
             SummonEntities();
 
-        for (; ; )
+        IsPlaying = true;
+        while( Entities.Count>1 )
         {
             //player entities
             for (int i = 0; i < PlayerEntities.Count; i++)
@@ -126,11 +130,26 @@ public class CombatManager : MonoBehaviour
             }
 
             //cleanup corpses
-            foreach (Entity player in PlayerEntities) if (player.isDead) Destroy(player);
-            foreach (Entity e in EnemyEntities) if (e.isDead) Destroy(e);
+            foreach (Entity player in PlayerEntities)
+            {
+                if (player.isDead)
+                {
+                    Destroy(player);
+                }
+            }
+
+            foreach (Entity e in EnemyEntities)
+            {
+                if (e.isDead)
+                {
+                    Destroy(e);
+                }
+            }
 
             await UniTask.Yield();
         }
+
+        IsPlaying = false;
     }
 
     void SummonEntities()
