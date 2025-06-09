@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -6,7 +7,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 {
     protected bool isDragging;
 
-    RectTransform _rectTransform ;
+    RectTransform _rectTransform;
     RectTransform rectTransform { get { if (_rectTransform == null) TryGetComponent(out _rectTransform); return _rectTransform; } set => _rectTransform = value; }
 
     //original set up
@@ -17,11 +18,11 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     public bool usePositionAboveFinger = true;
 
-    protected DragSound dragSound = DragSound.Solid;
+    protected Sounds dragSound = Sounds.ButtonPress;
 
     //notifiers
     public event Action EventBeginDrag, EventEndDrag;
-    
+
     protected virtual void Awake()
     {
         TryGetComponent(out canvasGroup);
@@ -37,7 +38,8 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         siblingIndex = transform.GetSiblingIndex();
         canvasGroup.blocksRaycasts = false;
         transform.parent = transform.root;
-        
+
+        SFXManager.Instance.PlaySFXClip(dragSound);
         EventBeginDrag?.Invoke();
     }
 
@@ -49,6 +51,8 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public virtual void OnEndDrag(PointerEventData eventData)
     {
         isDragging = false;
+
+        SFXManager.Instance.PlaySFXClip(dragSound);
         EventEndDrag?.Invoke();
     }
 
@@ -60,22 +64,4 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         transform.SetSiblingIndex(siblingIndex);
         rectTransform.anchoredPosition = originalPos;
     }
-
-    //void ComputeDragSound()
-    //{
-    //    switch (dragSound)
-    //    {
-
-    //    }
-    //}
-}
-
-public enum DragSound
-{
-    Dish,
-    Bowl,
-    Can,
-    Solid,
-    Vegetable,
-    Meat
 }
