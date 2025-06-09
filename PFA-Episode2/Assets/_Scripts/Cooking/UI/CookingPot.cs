@@ -223,6 +223,8 @@ public class CookingPot : MonoBehaviour
 
         if (successful)
         {
+            SFXManager.Instance.PlaySFXClip(Sounds.Sizzle);
+
             string s = "";
             foreach (Ingredient ingredient in ingredients) s+= ingredient.name+ " ";
             Debug.Log("Added ingredient. new list : " + s);

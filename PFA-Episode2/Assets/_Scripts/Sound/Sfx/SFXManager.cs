@@ -151,8 +151,6 @@ public class SFXManager : MonoBehaviour
         {
             if (name == audioClipName)
                 choosenClip = _soundsDict[name];
-
-            audioSource.clip = ChooseRandomClip(choosenClip);
         }
 
         if (choosenClip == null)
@@ -160,6 +158,8 @@ public class SFXManager : MonoBehaviour
             Debug.LogError("incorrect sound Name");
             return null;
         }
+
+        audioSource.clip = ChooseRandomClip(choosenClip);
 
         return AudioSourceHandle(audioSource, choosenClip.Volume * volumeFactor, choosenClip.Pitch * pitchFactor);
     }
