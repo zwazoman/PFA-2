@@ -1,7 +1,14 @@
+<<<<<<< Updated upstream
+=======
+using System;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
+>>>>>>> Stashed changes
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
 {
     protected bool isDragging;
 
@@ -14,6 +21,18 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     int siblingIndex;
     CanvasGroup canvasGroup;
 
+<<<<<<< Updated upstream
+=======
+    public bool usePositionAboveFinger = true;
+
+    protected Sounds dragSound = Sounds.DragDish;
+
+    //notifiers
+    public event Action EventBeginDrag, EventEndDrag,EventClicked,EventClickedSomewhereElse;
+
+    private bool inspected = false;
+    
+>>>>>>> Stashed changes
     protected virtual void Awake()
     {
         TryGetComponent(out canvasGroup);
@@ -48,5 +67,34 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         transform.parent = originalParent;
         transform.SetSiblingIndex(siblingIndex);
         rectTransform.anchoredPosition = originalPos;
+    }
+    
+    
+    //click events
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (!inspected)
+        {
+            inspected = true;
+            EventClicked?.Invoke();
+            _ = CheckForOtherClick();
+        }
+        else inspected = false;
+    }
+
+    async UniTask CheckForOtherClick()
+    {
+        //Set up the new Pointer Event
+        PointerEventData mPointerEventData = new PointerEventData(EventSystem.current);
+
+        //Create a list of Raycast Results
+        List<RaycastResult> results = new List<RaycastResult>();
+
+        while (!(Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began) )
+        {
+            await UniTask.Yield();
+        }
+        
+        EventClickedSomewhereElse?.Invoke();
     }
 }

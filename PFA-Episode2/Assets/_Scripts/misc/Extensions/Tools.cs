@@ -12,7 +12,15 @@ public static class Tools
 
     public static Vector3 GetPositionAboveFinger()
     {
+<<<<<<< Updated upstream
         return Input.mousePosition + Vector3.up * 120;
+=======
+#if UNITY_EDITOR
+        return Input.mousePosition;
+#else
+        return Input.mousePosition + Vector3.up * 140f*1080f/(float)Screen.height;
+#endif
+>>>>>>> Stashed changes
     }
     public static Vector3Int SnapOnGrid(this Vector3 initialPos)
     {

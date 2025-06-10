@@ -337,9 +337,21 @@ public class Entity : MonoBehaviour
     {
         visuals.DeathAnimation();
 
+<<<<<<< Updated upstream
         if (this is PlayerEntity player || team == Team.Enemy && CombatManager.Instance.EnemyEntities.Count == 1)
             await visuals.DeathAnimation();
 
+=======
+        //if (this is PlayerEntity || team == Team.Enemy && CombatManager.Instance.EnemyEntities.Count == 1)
+        Debug.Log("about to play death animation");
+        if(CombatManager.Instance.Entities.Count<=2) await visuals.PlayDeathAnimation();
+        else 
+        {
+            await UniTask.WaitForSeconds(.3f);
+            _ = visuals.PlayDeathAnimation();
+        }
+        
+>>>>>>> Stashed changes
         currentPoint.StepOff();
         isDead = true;
         OnDead?.Invoke();

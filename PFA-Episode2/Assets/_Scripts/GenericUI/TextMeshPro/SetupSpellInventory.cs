@@ -1,15 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class SetupSpellInventory : MonoBehaviour
 {
-    [SerializeField] private List<Transform> _targetInventory = new();
+    [FormerlySerializedAs("_targetInventory")] [SerializeField] private List<Transform> _inventorySlots = new();
     [SerializeField] private List<Transform> _equippedInventory = new();
     [SerializeField] private GameObject _prefabItem;
     private int _index = 0;
-    private GetInfoInVariant _refInfoVariant;
-    public SpellData SpellChoose;
-    [HideInInspector] public GameObject ConnardDeMes2;
 
     private void Start()
     {
@@ -18,10 +16,12 @@ public class SetupSpellInventory : MonoBehaviour
 
     public void SetupInventory()
     {
+        //create one draggable inventory slot for each item in the player's inventory
         for (int i = 0; i < GameManager.Instance.playerInventory.Spells.Count; i++)
         {
-            SpellChoose = GameManager.Instance.playerInventory.Spells[i];
+            SpellData spell = GameManager.Instance.playerInventory.Spells[i];
 
+<<<<<<< Updated upstream
             GameObject go = Instantiate(_prefabItem, _targetInventory[i]); //Création 
             _refInfoVariant = go.GetComponent<GetInfoInVariant>();
             _refInfoVariant.IndexInPlayerSpell = i;
@@ -55,8 +55,19 @@ public class SetupSpellInventory : MonoBehaviour
                     enfant.transform.localPosition = Vector3.zero;
                     ConnardDeMes2.transform.GetComponent<DraggableSpellContainer>().originalParent = enfant.transform.parent;
                     _index++;
+=======
+            
+            DraggableSpellContainer ItemSlot = Instantiate(_prefabItem, _inventorySlots[i]).GetComponentInChildren<DraggableSpellContainer>(); 
+            ItemSlot.SetUp(spell);
+            
+            /*foreach (int spellDataIndex in GameManager.Instance.playerInventory.playerEquipedSpellIndex) //pour chaque spell qu'on construit on vï¿½rifie si il est equipe
+            {
+                if(i == spellDataIndex)
+                {
+                    
+>>>>>>> Stashed changes
                 }
-            }
+            }*/
         }
     }
 

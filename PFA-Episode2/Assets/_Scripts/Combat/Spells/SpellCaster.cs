@@ -159,9 +159,8 @@ public class SpellCaster : MonoBehaviour
         SpellCastingContext context = new();
 
         context.numberOfHitEnnemies = (byte)hitEntities.Count;
-        context.distanceToHitEnemy = (byte)targetToEntity.magnitude;
+        context.DistanceToHitEnnemy = (byte)Mathf.RoundToInt(Vector3.Distance(transform.position.Flatten(), hitEntity.transform.position.Flatten()));//(byte)targetToEntity.magnitude;
         context.pushDirection = pushDirection;
-        context.casterPos = hitEntity.transform.position;
 
         return context;
     }
@@ -318,10 +317,22 @@ public class SpellCaster : MonoBehaviour
                     e.damage += 8 * (zoneData.hitEntityCTXDict[entity].numberOfHitEnnemies - 1);
                     break;
                 case SpellEffectType.DamageIncreasePercentageByDistanceToCaster:
+<<<<<<< Updated upstream
                     e.damage *= (1 + zoneData.hitEntityCTXDict[entity].distanceToHitEnemy * .2f);
                     break;
                 case SpellEffectType.DamageIncreaseMeleeRange:
                     if(zoneData.hitEntityCTXDict[entity].distanceToHitEnemy == 1)
+=======
+                    if (!teamMix && entity.team == castingEntity.team)
+                        break;
+                    e.damage *= (1 + zoneData.hitEntityCTXDict[entity].DistanceToHitEnnemy * .5f);
+
+                    break;
+                case SpellEffectType.DamageIncreaseMeleeRange:
+                    if (!teamMix && entity.team == castingEntity.team)
+                        break;
+                    if (zoneData.hitEntityCTXDict[entity].DistanceToHitEnnemy == 1)
+>>>>>>> Stashed changes
                     {
                         e.damage *= (effect.value);
                     }
@@ -422,6 +433,7 @@ public class SpellCaster : MonoBehaviour
         {
             foreach (Entity entity in zoneData.hitEntityCTXDict.Keys)
             {
+                //apply effect on entity
                 tasks.Add(HitEntityBehaviour(entity, spell, zoneData));
             }
         }
@@ -449,9 +461,11 @@ public class SpellCaster : MonoBehaviour
 
     async UniTask HitEntityBehaviour(Entity entity, Spell spell, SpellCastData zoneData)
     {
+        //look at caster
         if (entity != castingEntity)
             await entity.LookAt(castingEntity.currentPoint);
 
+<<<<<<< Updated upstream
         SpellProjectile projectile;
         Vector3 spawnPos;
         if (_spellCastingSocket != null)
@@ -460,8 +474,14 @@ public class SpellCaster : MonoBehaviour
             spawnPos = transform.position;
 
         PoolManager.Instance.ProjectilePool.PullObjectFromPool(spawnPos).TryGetComponent(out projectile);
+=======
+        //projectile
+        var spawnPos = _spellCastingSocket != null ? _spellCastingSocket.position : transform.position;
+        PoolManager.Instance.ProjectilePool.PullObjectFromPool(spawnPos).TryGetComponent(out SpellProjectile projectile);
+>>>>>>> Stashed changes
         await projectile.Launch(castingEntity, entity, spell.spellData.Mesh);
 
+        //compute spell effect
         BakedTargetedSpellEffect e = ComputeTargetedSpellEffect(spell, ref zoneData, entity);
 
         //wait for animations to play
@@ -529,9 +549,8 @@ public struct SpellCastData
 public class SpellCastingContext
 {
     public byte numberOfHitEnnemies;
-    public byte distanceToHitEnemy;
+    public byte DistanceToHitEnnemy;
     public Vector3 pushDirection;
-    public Vector3 casterPos;
     public WayPoint PushPoint;
     public int PushDamage;
 }
