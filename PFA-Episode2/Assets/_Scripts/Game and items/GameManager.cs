@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    public float progress;
     public Inventory playerInventory = new();
     public SerializablePlayer PlayerPosMap = new SerializablePlayer();
 
@@ -75,7 +76,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadOrCreateSave()
     {
-        playerInventory = SaveManager.Load<Inventory>(playerInventory.NameSave, false);
+        playerInventory = SaveManager.Load<Inventory>(playerInventory.NameSave, SaveMapGeneration.Instance.Encrypt);
     }
 
     public void DeleteSave()
@@ -83,8 +84,7 @@ public class GameManager : MonoBehaviour
         SaveManager.Delete(playerInventory.NameSave);
     }
 
-    /*
-#if UNITY_EDITOR
+/* #if UNITY_EDITOR
     private void OnValidate()
     {
 
@@ -104,4 +104,11 @@ public class GameManager : MonoBehaviour
         int index = Random.Range(0, combatScenesName.Count);
         return combatScenesName[index];
     }
+    public void CalculateProgress() //définit au start de la WorldMap soit à chaque fois qu'on y retourne
+    {
+        int currentNode = Mathf.Clamp(PlayerMap.Instance.PositionMap, 0, MapMaker2.Instance.MapRange);
+        progress = (float)currentNode / MapMaker2.Instance.MapRange; // ENTRE 0 ET 1
+    }
+
+    public int ComputeEnnemiesCount() { return Mathf.FloorToInt(progress * 4) + 1; }
 }

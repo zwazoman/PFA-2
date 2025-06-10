@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Linq;
+using Unity.VisualScripting;
 
 public class CombatManager : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class CombatManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        TotalEncounteredCombatsCountOverRun++;
     }
     #endregion
 
@@ -43,6 +45,8 @@ public class CombatManager : MonoBehaviour
 
     public event Action<Entity> OnNewTurn;
     public event Action OnWin;
+ 
+    public bool IsPlaying = false;
 
     #region entity registration
 
@@ -87,19 +91,23 @@ public class CombatManager : MonoBehaviour
 
     #endregion
 
+    public static int TotalEncounteredCombatsCountOverRun = 0;
+    
     private async void Start()
     {
         await UniTask.Yield();
         if (_startGameOnSceneStart)
-            await StartGame();
+            await Play();
     }
 
-    public async UniTask StartGame()
+    public async UniTask Play()
     {
         if(_summonEntities)
             SummonEntities();
-
-        for (; ; )
+        await UniTask.NextFrame();
+        
+        IsPlaying = true;
+        while( Entities.Count>1 )
         {
             //player entities
             for (int i = 0; i < PlayerEntities.Count; i++)
@@ -108,11 +116,10 @@ public class CombatManager : MonoBehaviour
                 if (player == null) continue;
 
                 foreach (Entity e in Entities) e.StopPreviewingSpellEffect();
-
+                
                 OnNewTurn?.Invoke(player);
                 await player.PlayTurn();
-
-
+                
             }
 
             //enemy entities
@@ -128,16 +135,31 @@ public class CombatManager : MonoBehaviour
             }
 
             //cleanup corpses
-            foreach (Entity player in PlayerEntities) if (player.isDead) Destroy(player);
-            foreach (Entity e in EnemyEntities) if (e.isDead) Destroy(e);
+            foreach (Entity player in PlayerEntities)
+            {
+                if (player.isDead)
+                {
+                    Destroy(player);
+                }
+            }
+
+            foreach (Entity e in EnemyEntities)
+            {
+                if (e.isDead)
+                {
+                    Destroy(e);
+                }
+            }
 
             await UniTask.Yield();
         }
+
+        IsPlaying = false;
     }
 
     void SummonEntities()
     {
-        int ennemiesCount = ComputeEnnemiesCount();
+        int ennemiesCount = GameManager.Instance.ComputeEnnemiesCount();
 
         SpawnSetup choosenSetup = Setups.PickRandom();
 
@@ -148,33 +170,34 @@ public class CombatManager : MonoBehaviour
         foreach (Spawner spawner in choosenSetup.Spawners)
             spawners.Add(spawner);
 
-        //mélanger les spawners ?
+        //mï¿½langer les spawners ?
 
         //check si _min ennemies > spawners
         if (ennemiesCount > spawners.Count)
-            throw new Exception("pas assez de spawners");
+            foreach (Spawner spawner in spawners)
+                spawner.SummonEntity();
 
         for (int i = 0; i < ennemiesCount; i++)
         {
-            spawners[i].SummonEntity();
-            spawners.Remove(spawners[i]);
-        }
-    }
+            print(ennemiesCount); // 3
+            print(spawners.Count); // 4 // 3 // 2
 
-    int ComputeEnnemiesCount()
-    {
-        int positionMap = PlayerMap.Instance?.PositionMap??  0;
-        if (positionMap > 9) { return 4; }
-        else if (positionMap > 6) { return 3; }
-        else if(positionMap > 3) { return 2; }
-        else { return 1; }
+            Spawner choosenSpawner = spawners.PickRandom();
+
+            choosenSpawner.SummonEntity();
+            spawners.Remove(choosenSpawner);
+        }
     }
 
     async UniTask GameOver()
     {
         await UniTask.Delay(1000);
-
+        
         SaveManager.DeleteAll();
+        
+        if(PlaytestDataRecorder.Instance !=null)
+            await PlaytestDataRecorder.Instance.OnGameOver();
+        
         _gameOverPanel?.Show();
     }
 
@@ -186,6 +209,7 @@ public class CombatManager : MonoBehaviour
         await UniTask.Delay(1000);
 
         _rewardPanel?.Show();
+        Time.timeScale = 1;
         //await SceneTransitionManager.Instance.GoToScene("WorldMap");
     }
 }

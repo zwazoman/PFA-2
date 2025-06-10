@@ -1,0 +1,585 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8373471912036536613
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7992072021570688478}
+  - component: {fileID: 4109924528869827496}
+  - component: {fileID: 6877728449346102981}
+  - component: {fileID: 5647819416018180130}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7992072021570688478
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8373471912036536613}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4109924528869827496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8373471912036536613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0a62cfd4b596e241b92ae866cf432a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _poolSize: 30
+  _SFXObject: {fileID: 3662379104358310079, guid: a49ccc0080c0b7f4c995cd988b908270, type: 3}
+  _soundsDict:
+    _serializedList:
+    - Key: ButtonPress
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: 3976d583dc8ad7a4c983f2b88dff88cb, type: 3}
+        - {fileID: 8300000, guid: efbaed0d8a9686e4e9403af7d5b86c18, type: 3}
+        Volume: 1
+        Pitch: 1
+        RandomType: 1
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: CardEnter
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: 3c9125087f906564d86b9c2207201c83, type: 3}
+        - {fileID: 8300000, guid: 0b71db5b83f6b784b823ff3c36b007ee, type: 3}
+        - {fileID: 8300000, guid: 42b975fd62e60ac42bfe443d5bbb705a, type: 3}
+        Volume: 0.5
+        Pitch: 1
+        RandomType: 1
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: CardExit
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: 93eb635272b48e0489700a9f6ff8fdeb, type: 3}
+        - {fileID: 8300000, guid: 6d7f84b96611c934b938b5a220b3c4c6, type: 3}
+        - {fileID: 8300000, guid: bfdd9efe416f6f949aad66ed1063c26f, type: 3}
+        Volume: 0.5
+        Pitch: 1
+        RandomType: 1
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: TurnChange
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: d79738fd9b183b74c9d81a0c70f4f493, type: 3}
+        - {fileID: 8300000, guid: 3a1aa630fd917294db7552520ee88f98, type: 3}
+        - {fileID: 8300000, guid: d392597c63fe8fe48944d3da3899c698, type: 3}
+        Volume: 0.5
+        Pitch: 1
+        RandomType: 1
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: EntityDeath
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: a5421c83ede64154083e10491804ca07, type: 3}
+        Volume: 0.2
+        Pitch: 1
+        RandomType: 0
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: EggplantWalk
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: 91b37353888a0e0478a172e7db90581c, type: 3}
+        - {fileID: 8300000, guid: 6a236501e0148ce4387308aa129c062b, type: 3}
+        - {fileID: 8300000, guid: 6a0252c6f5c49844995d482baeb9ee88, type: 3}
+        - {fileID: 8300000, guid: 273de0621280d0d4d8d7af2c6f5be4a3, type: 3}
+        Volume: 0.4
+        Pitch: 1
+        RandomType: 2
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: EggplantEat
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: 926864e9a12f0d649a0935a06ea19d4a, type: 3}
+        - {fileID: 8300000, guid: 5b50090d7391f69459f1804dd50dbc05, type: 3}
+        - {fileID: 8300000, guid: 570d4d7ca075b5a4799b72757b528eb4, type: 3}
+        - {fileID: 8300000, guid: a109dcc710dd2724bb1291f3b58f03f9, type: 3}
+        - {fileID: 8300000, guid: 4ff2fd799a9858549a30fc4f5946a800, type: 3}
+        - {fileID: 8300000, guid: aa00cea980da28041a88a1b29bdc0b76, type: 3}
+        - {fileID: 8300000, guid: 6332601232d63714ebc3a72cf99f32e0, type: 3}
+        - {fileID: 8300000, guid: db82443e5f8f7cb4bb26920c93597fb1, type: 3}
+        Volume: 0.4
+        Pitch: 1
+        RandomType: 2
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: EggplantHit
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: 98f76d98177b44244a839b2303bd6ea2, type: 3}
+        Volume: 0.4
+        Pitch: 1
+        RandomType: 2
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: EggplantAttack
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: 0c670eabfbdeda2469d8c4cfe484db7e, type: 3}
+        Volume: 0.4
+        Pitch: 1
+        RandomType: 2
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: OnionWalk
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: 703f858febe55d04b93735f8f0038a8f, type: 3}
+        - {fileID: 8300000, guid: 11759d711bd5f7e4ebe149ff1b8dbd4d, type: 3}
+        - {fileID: 8300000, guid: cffc20f9701022940a1da9989eb663af, type: 3}
+        - {fileID: 8300000, guid: 8e66d74c17bfaf5448b8bc4c6f99303b, type: 3}
+        Volume: 0.8
+        Pitch: 1
+        RandomType: 2
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: OnionEat
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: 703f858febe55d04b93735f8f0038a8f, type: 3}
+        - {fileID: 8300000, guid: 11759d711bd5f7e4ebe149ff1b8dbd4d, type: 3}
+        - {fileID: 8300000, guid: cffc20f9701022940a1da9989eb663af, type: 3}
+        - {fileID: 8300000, guid: 8e66d74c17bfaf5448b8bc4c6f99303b, type: 3}
+        Volume: 0.4
+        Pitch: 1
+        RandomType: 2
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: FishWalk
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: da0c04120386e1248a2d442da78bd7c4, type: 3}
+        - {fileID: 8300000, guid: 4a989bbc5cda1f24a8f5d3b61e224dc7, type: 3}
+        - {fileID: 8300000, guid: d21168d447e846144a1f9985a8743f63, type: 3}
+        - {fileID: 8300000, guid: 0c377a4a2a2dc514bb0e3d5ed0f0dd33, type: 3}
+        Volume: 0.2
+        Pitch: 1
+        RandomType: 2
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: FishEat
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: 54a105832ac61b84e9821f6292d5ee21, type: 3}
+        - {fileID: 8300000, guid: a1c3660753735884fa0015709d05b502, type: 3}
+        - {fileID: 8300000, guid: ee996b6fa977ca94daac17b42f4ee93e, type: 3}
+        - {fileID: 8300000, guid: dfc611abd6d356f45926bdb8af124cc5, type: 3}
+        - {fileID: 8300000, guid: e02fb9201af87914ca396c83a3691709, type: 3}
+        - {fileID: 8300000, guid: 1743d39536d94474db39df80c10050f0, type: 3}
+        Volume: 0.5
+        Pitch: 1
+        RandomType: 2
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: FishAttack
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: c041fe88574f82d4c9e798623e1f9f51, type: 3}
+        - {fileID: 8300000, guid: d7e7b8c185d3db540af110a6a57fd1fc, type: 3}
+        - {fileID: 8300000, guid: 269ad9ef49ac2a04d8e89bd6c57c6e7e, type: 3}
+        - {fileID: 8300000, guid: 035f611c3ef999547845105f7bf0f172, type: 3}
+        Volume: 0.3
+        Pitch: 1
+        RandomType: 2
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: FishAttackWindup
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: 703f858febe55d04b93735f8f0038a8f, type: 3}
+        - {fileID: 8300000, guid: 11759d711bd5f7e4ebe149ff1b8dbd4d, type: 3}
+        - {fileID: 8300000, guid: cffc20f9701022940a1da9989eb663af, type: 3}
+        - {fileID: 8300000, guid: 8e66d74c17bfaf5448b8bc4c6f99303b, type: 3}
+        Volume: 0.6
+        Pitch: 1
+        RandomType: 2
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: MouseWalk
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: 5950b75ee025a4f49a9a28534e5b381b, type: 3}
+        - {fileID: 8300000, guid: 20b5c687dd4c598459a6cfd1e31f911b, type: 3}
+        - {fileID: 8300000, guid: 3205463de87554e42a92a5644abbcb92, type: 3}
+        Volume: 0.05
+        Pitch: 1
+        RandomType: 2
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: MouseWalkBis
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: 34c2b1ac697c994418f6a3436ac05ece, type: 3}
+        - {fileID: 8300000, guid: ad1aa0fa34e012444a664afc0fe8de4f, type: 3}
+        - {fileID: 8300000, guid: 1ae55cba23f17fc4e937dfb6937550e4, type: 3}
+        Volume: 0.1
+        Pitch: 0.6
+        RandomType: 2
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: MouseAttack
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: b108508f15a13464fadfe3ca3ac2dae3, type: 3}
+        - {fileID: 8300000, guid: 08bfaa21047c14a40801abb42cecc476, type: 3}
+        - {fileID: 8300000, guid: 579d8f83c14aa8c45aca25af6f086492, type: 3}
+        Volume: 0.6
+        Pitch: 0.8
+        RandomType: 2
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: HighWoosh
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: bc0032e68cf7ddf4eb7cbc230aaa679f, type: 3}
+        - {fileID: 8300000, guid: 5af891a1d7b030d44ab82ae4ce25b6d1, type: 3}
+        - {fileID: 8300000, guid: 69659e69d09b02c4bb9eddf36575f37c, type: 3}
+        Volume: 0.5
+        Pitch: 1
+        RandomType: 2
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: NormalWhoosh
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: 39ab5110bd4787043b62883a3ea37978, type: 3}
+        - {fileID: 8300000, guid: add971d152875d947bf1a680bbefbbed, type: 3}
+        - {fileID: 8300000, guid: 36254ab7b1a2dc046a7ba6a1d3c3ad97, type: 3}
+        Volume: 0.5
+        Pitch: 1
+        RandomType: 2
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: LowWhoosh
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: b5546c895c2bf104d994b9de7ecfe7b8, type: 3}
+        - {fileID: 8300000, guid: 2193dd296bc9cdd4185a755ed71e2e84, type: 3}
+        - {fileID: 8300000, guid: e053a80cefea11a4ba93675d37f87e12, type: 3}
+        Volume: 0.5
+        Pitch: 1
+        RandomType: 2
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: Sizzle
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: a68deb2336d4f5a4c878fce33d376f8e, type: 3}
+        - {fileID: 8300000, guid: 4824ee240b767a044a562bd90d65e98c, type: 3}
+        - {fileID: 8300000, guid: 4e7d4062dcda98949a4ea606edfd7753, type: 3}
+        - {fileID: 8300000, guid: 8526e47b81ef41941973e61d00ccfd72, type: 3}
+        - {fileID: 8300000, guid: 5daf72508b475ab4185cb5bb1c439cb2, type: 3}
+        - {fileID: 8300000, guid: d2eb5b97441991a469f5f61c64a1e341, type: 3}
+        - {fileID: 8300000, guid: 7e5ae333f2aaa1b49a7d762eab6d28cf, type: 3}
+        Volume: 0.3
+        Pitch: 1
+        RandomType: 2
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: CombatHit
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: 7dcb64a92186bcb4cb7866e835faa897, type: 3}
+        - {fileID: 8300000, guid: 02baf9305967de849ba00bcbb0f4c781, type: 3}
+        - {fileID: 8300000, guid: b77ee05b456e04943a9cfa96c1e8ce7e, type: 3}
+        Volume: 0.3
+        Pitch: 1
+        RandomType: 2
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: DragCan
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: fbb4ff426bf10654c9d1a9c8322ae62a, type: 3}
+        - {fileID: 8300000, guid: 1f23c97a4458d5446b0aa45e3a7ceb9c, type: 3}
+        - {fileID: 8300000, guid: b8c10cfed9658c4419b3e37c4f0e05c8, type: 3}
+        - {fileID: 8300000, guid: d18cce41a5cfb9b4bb4dde1661b83e20, type: 3}
+        - {fileID: 8300000, guid: 66a83ac56c6d8144cbe7d5b99e922542, type: 3}
+        - {fileID: 8300000, guid: d44027cd95ada864d81d68a76b6988b8, type: 3}
+        Volume: 0.7
+        Pitch: 1
+        RandomType: 1
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: DragVegetable
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: 14b9a4ebcc1c200459f195e221facfc2, type: 3}
+        - {fileID: 8300000, guid: a56a666ffc80da04bb490a6e4df9c60a, type: 3}
+        - {fileID: 8300000, guid: 16966141ba9715b41a73d365e4fb0185, type: 3}
+        - {fileID: 8300000, guid: 47223665cfe74334c99831fc294fb0bc, type: 3}
+        - {fileID: 8300000, guid: de7922034905de74292f2ab22faa3bd0, type: 3}
+        - {fileID: 8300000, guid: 5c8c6bb4b6d2b6840bcb5b054f88abfe, type: 3}
+        Volume: 0.5
+        Pitch: 1
+        RandomType: 1
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: DragSolid
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: f0be4d4ab20faa44987a07925c8ef09e, type: 3}
+        - {fileID: 8300000, guid: ea2ed9d25cd25204f9dfab95029d4b4b, type: 3}
+        - {fileID: 8300000, guid: 22c21ba99674c524983d4152a8e186f6, type: 3}
+        - {fileID: 8300000, guid: 5e54846668a867842bdb66bdc349af08, type: 3}
+        - {fileID: 8300000, guid: 9e2b7308378e61048987af2f7244f753, type: 3}
+        - {fileID: 8300000, guid: e1476cb466d1d9a48a807f8b23ac5f59, type: 3}
+        Volume: 0.6
+        Pitch: 1
+        RandomType: 1
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: DragSoft
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: da0c04120386e1248a2d442da78bd7c4, type: 3}
+        - {fileID: 8300000, guid: 4a989bbc5cda1f24a8f5d3b61e224dc7, type: 3}
+        - {fileID: 8300000, guid: d21168d447e846144a1f9985a8743f63, type: 3}
+        - {fileID: 8300000, guid: 0c377a4a2a2dc514bb0e3d5ed0f0dd33, type: 3}
+        Volume: 0.5
+        Pitch: 1
+        RandomType: 1
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: DragDish
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: 5d2fb71632c525b4f8c09686b8d53bbe, type: 3}
+        - {fileID: 8300000, guid: 9180c8fd8f8d76c419c631b3e83e77d6, type: 3}
+        - {fileID: 8300000, guid: 8cc37e94c0802e748bb9b225cc015b0c, type: 3}
+        - {fileID: 8300000, guid: 0939b985efb83884bb636f54c65aa839, type: 3}
+        - {fileID: 8300000, guid: 6fed999865b55974f84197283b4c777f, type: 3}
+        - {fileID: 8300000, guid: d712d857f8b720f43ab3b7ee3412274d, type: 3}
+        Volume: 0.4
+        Pitch: 1
+        RandomType: 1
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: CauliflowerWalk
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: fff5937e6e7356a40848a2a0bd12c436, type: 3}
+        - {fileID: 8300000, guid: 28b73819fdfaaa84e8d8782a123508a4, type: 3}
+        - {fileID: 8300000, guid: c80757f5d53733d46badad3d74cc2f13, type: 3}
+        Volume: 1
+        Pitch: 1
+        RandomType: 1
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+    - Key: CauliflowerWalkBis
+      Value:
+        ClipList:
+        - {fileID: 8300000, guid: b02217745f452e94aa4a8b46d391bd54, type: 3}
+        - {fileID: 8300000, guid: 01d353cd9e165b946992c83cb0296bb4, type: 3}
+        - {fileID: 8300000, guid: 413dcff8ca915044489dde9001c66b2e, type: 3}
+        Volume: 1
+        Pitch: 1
+        RandomType: 1
+        MixerGroup: {fileID: 0}
+        tempClipList: []
+        tempClip: {fileID: 0}
+  _soundTester: 0
+--- !u!114 &6877728449346102981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8373471912036536613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a0b0cee6846dcd47b99ee5ea493ed70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _musicSource: {fileID: 5647819416018180130}
+  _fadeDuration: 1
+  musicClipDict:
+    _serializedList:
+    - Key: WorldMap
+      Value:
+        musics:
+        - {fileID: 8300000, guid: 319112ccf794a3b429fb1ab1a9a85560, type: 3}
+        targetVolume: 0.5
+    - Key: Heal
+      Value:
+        musics:
+        - {fileID: 8300000, guid: adbae6a134471ab489645b7890e5956d, type: 3}
+        targetVolume: 0.5
+    - Key: Forest_Combat_1
+      Value:
+        musics:
+        - {fileID: 8300000, guid: b5026b609da120e40b082f9f45f7d140, type: 3}
+        targetVolume: 0.5
+    - Key: Forest_Combat_2
+      Value:
+        musics:
+        - {fileID: 8300000, guid: b5026b609da120e40b082f9f45f7d140, type: 3}
+        targetVolume: 0.5
+    - Key: Forest_Combat_3
+      Value:
+        musics:
+        - {fileID: 8300000, guid: b5026b609da120e40b082f9f45f7d140, type: 3}
+        targetVolume: 0.5
+    - Key: Forest_Combat_4
+      Value:
+        musics:
+        - {fileID: 8300000, guid: b5026b609da120e40b082f9f45f7d140, type: 3}
+        targetVolume: 0.5
+    - Key: Forest_Combat_Boss
+      Value:
+        musics:
+        - {fileID: 8300000, guid: ee0893a76f5b5474197d500fe2ca1581, type: 3}
+        targetVolume: 0.5
+--- !u!82 &5647819416018180130
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8373471912036536613}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 0.509
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

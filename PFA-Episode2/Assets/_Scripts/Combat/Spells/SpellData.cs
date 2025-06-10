@@ -15,18 +15,25 @@ public class SpellData
     public Mesh Mesh;
 
     public string IngredientsCombination;
+    public bool IsUtilitary;
 
     [Header("Casting")] 
 
     public bool IsOccludedByWalls = true;
-    public byte Range = 2;
-    public byte CoolDown = 1;
+    public int Range = 2;
+    public int CoolDown = 1;
 
     [Header("Effects")]
     public List<SpellEffect> Effects = new ();
 
     [Header("Zone")]
     public AreaOfEffect AreaOfEffect;
+
+    
+    public SpellData Copy()
+    {
+        return (SpellData)MemberwiseClone();
+    }
 }
 
 [Serializable]
@@ -80,11 +87,11 @@ public struct SpellEffect
         }
         else if(Effects.Length == 0)
         {
-            Effects = new SpellEffect[] { new SpellEffect(SpellEffectType.Damage,StatType.FlatIncrease,2)};
+            Effects = new SpellEffect[] { /*new SpellEffect(SpellEffectType.Damage,StatType.FlatIncrease,2)*/};
         }
         else
         {
-            Debug.LogError("y'a un pb là connard");
+            Debug.LogError("y'a un pb lï¿½ connard");
         }
        
     }

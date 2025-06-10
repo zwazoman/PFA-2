@@ -12,7 +12,7 @@ public static class SaveManager
     {
         string json = JsonUtility.ToJson(data, true);
 
-        if (encrypt) json = EncryptDecrypt(json);
+        if (encrypt) json = SaveMapGeneration.Instance.EncryptDecrypt(json);
 
         File.WriteAllText(GetPath(saveKey), json);
         Debug.Log($"Données sauvegardées, clé : '{saveKey}'");
@@ -30,7 +30,7 @@ public static class SaveManager
 
         string json = File.ReadAllText(path);
 
-        if (encrypt) json = EncryptDecrypt(json);
+        if (encrypt) json = SaveMapGeneration.Instance.EncryptDecrypt(json);
 
         T data = JsonUtility.FromJson<T>(json);
         Debug.Log($"Données chargées depuis '{saveKey}'");
@@ -38,7 +38,7 @@ public static class SaveManager
     }
 
     // Cryptage XOR
-    private static string EncryptDecrypt(string data)
+    /*private static string EncryptDecrypt(string data)
     {
         char key = 'K';
         char[] output = new char[data.Length];
@@ -49,7 +49,7 @@ public static class SaveManager
         }
 
         return new string(output);
-    }
+    }*/
 
     public static void Delete(string saveKey)
     {

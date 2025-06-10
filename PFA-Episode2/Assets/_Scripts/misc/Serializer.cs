@@ -5,7 +5,7 @@ public static class Serializer
     //spell effect
     static readonly string[] SpellEffectTypeToString =
     {
-        "Damage","Recoil","Shield","Damage per hit ennemy","damage increase per distance","Melee multiplier","Summon Entity"
+        "Damage","Knockback","Shield","Multi-hit Damage","damage with distance","Melee damage","Summon Entity"
     };
 
     static readonly char[] statTypeToString =
@@ -15,7 +15,7 @@ public static class Serializer
 
     static readonly string[] SauceEffectTypeToString =
     {
-        "No Special effect","Cast through walls","Damage+ for every hit","Damage+ with range", "Melee multiplier", "Summon Entity"
+        "No Special effect","Cast through walls","Multi-hit Damage","Damage with range", "Melee multiplier", "Summon Entity"
     };
 
     public static string GetSpellEffectString(SpellEffect e)
@@ -30,7 +30,7 @@ public static class Serializer
     //ingredient effect
     static readonly string[] IngredientEffectTypeToString =
     {
-        "Damage","Recoil","Shield","Range"
+        "Damage","Knockback","Shield","Range"
     };
 
     public static string GetIngredientEffectString(Ingredient e)
@@ -48,7 +48,7 @@ public static class Serializer
     }
 
     const string s = "s", cd = " turn", r = " tile", t = " - ",e = "";
-    public  static string GetCoolDownString(byte cooldown) => cooldown.ToString() + cd + (cooldown> 1 ? s : e);
-    public static string GetRangeString(byte Range)
+    public  static string GetCoolDownString(int cooldown) => cooldown.ToString() + cd + (cooldown> 1 ? s : e);
+    public static string GetRangeString(int Range)
         => Mathf.Max(0, Range - SpellCaster.RangeRingThickness).ToString() + t + Range.ToString() + r + (Range > 1 ? s : e);
 }

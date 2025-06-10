@@ -121,7 +121,7 @@ public class MapBuildingTools : MonoBehaviour
 
     public Node ReturnNodeFromNodePosition(int nodePosition, int distanceVerif)
     {
-        foreach(Node node in MapMaker2.Instance.AllNodeGood)
+        foreach(Node node in MapMaker2.Instance.DicoNode.Values)
         {
             if (node.Position == nodePosition + distanceVerif)
             {

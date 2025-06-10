@@ -21,9 +21,20 @@ public class SpellCaster : MonoBehaviour
             TryGetComponent(out castingEntity);
     }
 
+    void SummonEntityAtPoint(WayPoint point)
+    {
+        GameObject kamikaze = Instantiate(GameManager.Instance.staticData.kamikaze, new Vector3(point.transform.position.x, .5f, point.transform.position.z), Quaternion.identity);
+        Entity entity = kamikaze.GetComponent<Entity>();
 
+        if (castingEntity.team == Team.Player)
+            entity.team = Team.Player;
+        else if (castingEntity.team == Team.Enemy)
+            entity.team = Team.Enemy;
+    }
+
+    
     //preview spell range
-    public List<WayPoint> PreviewSpellRange(Spell spell, WayPoint center = null, bool showZone = true, bool ignoreTerrain = false)
+    public List<WayPoint> ComputeAndPreviewSpellRange(Spell spell, WayPoint center = null, bool showZone = true, bool ignoreTerrain = false)
     {
         if (center == null)
             center = castingEntity.currentPoint;
@@ -34,10 +45,16 @@ public class SpellCaster : MonoBehaviour
 
         foreach (WayPoint point in floodDict.Keys)
         {
-            if ((!ignoreTerrain && (spell.spellData.IsOccludedByWalls && Tools.CheckWallsBetween(center, point) || point.State == WaypointState.Obstructed)) || spell.spellData.Range > RangeRingThickness && (floodDict[point] - RangeRingThickness) < 0)
+            if (point.State == WaypointState.Obstructed) continue; //walls
+            if ((floodDict[point] > spell.spellData.Range ||floodDict[point]  <= spell.spellData.Range-RangeRingThickness) && (floodDict[point]!=0)) continue; //range
+            if ((!ignoreTerrain && (spell.spellData.IsOccludedByWalls && Tools.CheckWallsBetween(center, point)))) //line of sight
+            {
+                if (showZone) point.SetPreviewState(WayPoint.PreviewState.occludedAreaOfEffect);
                 continue;
-            else if (showZone)
-                point.SetPreviewState(WayPoint.PreviewState.SpellAreaOfEffect);
+            }
+            
+           
+            if (showZone) point.SetPreviewState(WayPoint.PreviewState.SpellAreaOfEffect);
 
             rangePoints.Add(point);
         }
@@ -231,18 +248,7 @@ public class SpellCaster : MonoBehaviour
 
         return choosenPoint;
     }
-
-    void SummonEntityAtPoint(WayPoint point)
-    {
-        GameObject kamikaze = Instantiate(GameManager.Instance.staticData.kamikaze, new Vector3(point.transform.position.x, .5f, point.transform.position.z), Quaternion.identity);
-        Entity entity = kamikaze.GetComponent<Entity>();
-
-        if (castingEntity.team == Team.Player)
-            entity.team = Team.Player;
-        else if (castingEntity.team == Team.Enemy)
-            entity.team = Team.Enemy;
-    }
-
+    
     BakedUtilitarySpellEffect ComputeUtilitarySpellEffect(Spell spell, ref SpellCastData zoneData)
     {
         BakedUtilitarySpellEffect e = new();
@@ -280,6 +286,8 @@ public class SpellCaster : MonoBehaviour
     /// <returns></returns>
     BakedTargetedSpellEffect ComputeTargetedSpellEffect(Spell spell, ref SpellCastData zoneData, Entity entity)
     {
+        bool teamMix = !(castingEntity is PlayerEntity);// si player entity les sorts ne s'appliquent que sur une des deux équipes
+
         BakedTargetedSpellEffect e = new();
 
         foreach (SpellEffect effect in spell.spellData.Effects)
@@ -287,6 +295,8 @@ public class SpellCaster : MonoBehaviour
             switch (effect.effectType)
             {
                 case SpellEffectType.Damage:
+                    if (!teamMix && entity.team == castingEntity.team)
+                        break;
                     if (effect.statType == StatType.FlatIncrease) e.damage += effect.value;
                     else if (effect.statType == StatType.Multiplier) e.damage *= effect.value;
                     else throw new System.Exception("y'a un pb là");
@@ -305,30 +315,38 @@ public class SpellCaster : MonoBehaviour
 
                     e.pushDamage = pushDamages * 2;
                     e.pushPoint = zoneData.hitEntityCTXDict[entity].PushPoint;
+
                     break;
                 
                 case SpellEffectType.Shield:
+                    if (!teamMix && entity.team != castingEntity.team)
+                        break;
                     if (effect.statType == StatType.FlatIncrease) e.shield += effect.value;
                     else if (effect.statType == StatType.Multiplier) e.shield *= effect.value;
                     else throw new System.Exception("y'a un pb l�");
+
                     break;
 
                 case SpellEffectType.DamageIncreaseForEachHitEnnemy:
+                    if (!teamMix && entity.team == castingEntity.team)
+                        break;
                     e.damage += 8 * (zoneData.hitEntityCTXDict[entity].numberOfHitEnnemies - 1);
+
                     break;
                 case SpellEffectType.DamageIncreasePercentageByDistanceToCaster:
                     if (!teamMix && entity.team == castingEntity.team)
                         break;
-                    e.damage *= (1 + zoneData.hitEntityCTXDict[entity].DistanceToHitEnnemy * .5f);
+                    e.damage *= (1 + zoneData.hitEntityCTXDict[entity].distanceToHitEnemy * .5f);
 
                     break;
                 case SpellEffectType.DamageIncreaseMeleeRange:
                     if (!teamMix && entity.team == castingEntity.team)
                         break;
-                    if (zoneData.hitEntityCTXDict[entity].DistanceToHitEnnemy == 1)
+                    if (zoneData.hitEntityCTXDict[entity].distanceToHitEnemy == 1)
                     {
                         e.damage *= (effect.value);
                     }
+
                     break;
             }
 
@@ -390,22 +408,28 @@ public class SpellCaster : MonoBehaviour
     //spell casting
     public async UniTask<bool> TryCastSpell(Spell spell, WayPoint target, List<WayPoint> rangePoints, SpellCastData zoneData)
     {
-        if (zoneData.zonePoints == null || zoneData.zonePoints.Count == 0)
+        //check if spell is castable
+        if (zoneData.zonePoints == null
+            || zoneData.zonePoints.Count == 0
+            || (zoneData.hitEntityCTXDict == null && ! spell.spellData.IsUtilitary)
+            )
         {
             StopSpellRangePreview(ref rangePoints, ref zoneData);
             return false;
         }
 
+        //hide spell UI for player
         PlayerEntity playerCastingEntity = null;
-
-        if (castingEntity is PlayerEntity)
+        if (castingEntity is PlayerEntity playerEntity)
         {
-            playerCastingEntity = castingEntity as PlayerEntity;
+            playerCastingEntity = playerEntity;
             playerCastingEntity.HideSpellsUI();
         }
 
+        //look at target
         await castingEntity.LookAt(target);
 
+        //play attack animation
         attackEventCompleted = false;
         try
         {
@@ -416,13 +440,13 @@ public class SpellCaster : MonoBehaviour
             Debug.LogException(ex);
             attackEventCompleted = true;
         }
-
+        
         while (!attackEventCompleted)
             await UniTask.Yield();
 
+        //play animations on hit entities
         List<UniTask> tasks = new();
-
-        if (zoneData.hitEntityCTXDict != null && zoneData.hitEntityCTXDict.Keys != null)
+        if (zoneData.hitEntityCTXDict != null)
         {
             foreach (Entity entity in zoneData.hitEntityCTXDict.Keys)
             {
@@ -430,17 +454,19 @@ public class SpellCaster : MonoBehaviour
                 tasks.Add(HitEntityBehaviour(entity, spell, zoneData));
             }
         }
-
-        tasks.Add(UtilitaryBehaviour(spell, zoneData, target));
+        //... or utilitary spell effect
+        if(spell.spellData.IsUtilitary) tasks.Add(UtilitaryBehaviour(spell, zoneData, target));
 
         await UniTask.WhenAll(tasks);
 
-
+        //show spell UI for player 
         if (playerCastingEntity != null)
             playerCastingEntity.ShowSpellsUI();
 
+        //apply cooldown
         spell.StartCooldown();
 
+        //cancel preview
         StopSpellRangePreview(ref rangePoints, ref zoneData);
 
         return true;
@@ -467,15 +493,17 @@ public class SpellCaster : MonoBehaviour
         BakedTargetedSpellEffect e = ComputeTargetedSpellEffect(spell, ref zoneData, entity);
 
         //wait for animations to play
-        if (e.pushPoint==null) try
-        {
-            await entity.visuals.animator.PlayAnimationTrigger(Entity.hitTrigger);
-        }
-        catch (Exception ex) { Debug.LogException(ex); }
+        if (e.pushPoint == null) 
+            try
+            {
+                await entity.visuals.animator.PlayAnimationTrigger(Entity.hitTrigger);
+            }
+            catch (Exception ex) { Debug.LogException(ex); }
 
         //cancel preview
         StopSpellEffectPreview(entity);
 
+        //apply spell
         await entity.ApplySpell(e);
 
         attackEventCompleted = false;

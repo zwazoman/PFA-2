@@ -41,6 +41,9 @@ public class Entity : MonoBehaviour
     /// </summary>
     public event Action<float,float,Vector3> OnPreviewSpell;
     public event Action OnSpellPreviewCancel;
+    public event Action OnPushDamageTaken;
+    public event Action<bool> OnMovement;
+    
 
     #region AnimationTriggers
     [HideInInspector] public const string moveBool = "Move";
@@ -60,7 +63,7 @@ public class Entity : MonoBehaviour
         stats.owner = this;
     }
 
-    protected virtual void Start()
+    protected virtual async void Start()
     {
         //set up position on graph
         Vector3Int roundedPos = transform.position.SnapOnGrid();
@@ -71,11 +74,13 @@ public class Entity : MonoBehaviour
         catch(Exception e) { Debug.LogException(e); }
 
         currentPoint.StepOn(this);
+        
     }
 
     // game management
     public virtual async UniTask PlayTurn()
     {
+        SFXManager.Instance.PlaySFXClip(Sounds.TurnChange);
         Tools.Flood(currentPoint);
         stats.currentMovePoints = stats.maxMovePoints;
         await stats.ApplyShield(-1);
@@ -125,7 +130,7 @@ public class Entity : MonoBehaviour
         {
             if (effect.shield != 0) await stats.ApplyShield(effect.shield);
             if (effect.damage != 0 && effect.pushPoint == null) await stats.ApplyDamage(effect.damage);
-            if (effect.pushPoint != null) await Push(Mathf.RoundToInt(effect.pushDamage + effect.damage), effect.pushPoint);
+            if (effect.pushPoint != null) await Push(Mathf.RoundToInt(effect.damage),Mathf.RoundToInt(effect.pushDamage ), effect.pushPoint);
         }
         catch (Exception e)
         {
@@ -166,24 +171,27 @@ public class Entity : MonoBehaviour
     }
 
     //recoil
-    async UniTask Push(int pushDamages, WayPoint pushTarget)
+    async UniTask Push(int baseDamage,int pushDamages, WayPoint pushTarget)
     {
         currentPoint.StepOff();
 
         if(pushTarget != currentPoint)
         {
             visuals.animator.PlayAnimationBool(pushBool);
-            //await UniTask.Delay(200);
 
+            SFXManager.Instance.PlaySFXClip(Sounds.HighWoosh);
             await StartMoving(pushTarget.transform.position,13,-1);
 
             visuals.animator.EndAnimationBool(pushBool);
         }
 
         if (pushDamages > 0)
-            await stats.ApplyDamage(pushDamages);
-
-        pushTarget.StepOn(this);
+            OnPushDamageTaken?.Invoke();
+        
+        await stats.ApplyDamage(pushDamages + baseDamage);
+        
+        if(!isDead) 
+            pushTarget.StepOn(this);
     }
 
     public List<Entity> GetEnemyList()
@@ -237,7 +245,7 @@ public class Entity : MonoBehaviour
             return true;
         }
 
-        await UniTask.Delay(500);
+        await UniTask.Delay(400);
 
         WayPoint moveToPoint;
 
@@ -269,6 +277,7 @@ public class Entity : MonoBehaviour
             }
         }
 
+        print(furthestPoint.transform.position);
         await TryMoveTo(furthestPoint);
     }
     public virtual async UniTask TryMoveTo(WayPoint targetPoint, bool showTiles = true)
@@ -287,7 +296,9 @@ public class Entity : MonoBehaviour
         }
 
         visuals.animator.PlayAnimationBool(moveBool);
-
+        
+        OnMovement?.Invoke(true);
+        
         for (int i = 0; i < pathlength; i++)
         {
             currentPoint.StepOff();
@@ -304,11 +315,13 @@ public class Entity : MonoBehaviour
             stats.currentMovePoints--;
         }
 
+        OnMovement?.Invoke(false);
         visuals.animator.EndAnimationBool(moveBool);
         Tools.Flood(currentPoint);
         ClearWalkables();
         ApplyWalkables(showTiles);
     }
+
 
     async UniTask StartMoving(Vector3 targetPos, float moveSpeed = 5, float rotmultiplyer = 1)
     {
@@ -335,21 +348,15 @@ public class Entity : MonoBehaviour
     //death
     public async UniTask Die()
     {
-        visuals.DeathAnimation();
-        
+        //visuals.PlayDeathAnimation();
+        OnDead?.Invoke();
+
         //if (this is PlayerEntity || team == Team.Enemy && CombatManager.Instance.EnemyEntities.Count == 1)
         Debug.Log("about to play death animation");
-        if(CombatManager.Instance.Entities.Count<=2) await visuals.PlayDeathAnimation();
-        else 
-        {
-            await UniTask.WaitForSeconds(.3f);
-            _ = visuals.PlayDeathAnimation();
-        }
-        
-        
+        await visuals.PlayDeathAnimation();
+
         currentPoint.StepOff();
         isDead = true;
-        OnDead?.Invoke();
 
         await CombatManager.Instance.UnRegisterEntity(this);
 

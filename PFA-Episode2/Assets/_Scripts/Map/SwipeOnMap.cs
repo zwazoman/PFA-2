@@ -9,6 +9,7 @@ public class SwipeOnMap : MonoBehaviour
     [SerializeField] private float detectionRadius = 1.5f;
 
     private List<Node> _directions = new();
+    private bool _isSwipe = true; //UtilisÃ© dans L'UI de la map
 
     private void OnMouseDown()
     {
@@ -17,6 +18,8 @@ public class SwipeOnMap : MonoBehaviour
 
     private void OnMouseUp()
     {
+        if (!_isSwipe) { return; }
+        print("nique");
         _mouseUp = Input.mousePosition;
 
         _directions.Clear();
@@ -38,7 +41,7 @@ public class SwipeOnMap : MonoBehaviour
         int directionIndex = GetDirectionIndex(swipeDirection, _directions);
         Node chooseNode = _directions[directionIndex];
 
-        Debug.Log($"Swipe détecté, va vers le node : position : {chooseNode.Position}, hauteur : {chooseNode.Hauteur}");
+        Debug.Log($"Swipe dï¿½tectï¿½, va vers le node : position : {chooseNode.Position}, hauteur : {chooseNode.Hauteur}");
 
         bool interactable = chooseNode.GetInteractable();
 
@@ -66,24 +69,27 @@ public class SwipeOnMap : MonoBehaviour
         return Vector3.zero;
     }
 
-    public int GetDirectionIndex(Vector3 referenceDirection, List<Node> directions)
+    public int GetDirectionIndex(Vector3 referenceDirection, List<Node> nodes)
     {
         int Index = 0;
-        float minDot = float.NegativeInfinity;
+        float maxDot = float.NegativeInfinity;
         Vector3 playerPos = PlayerMap.Instance.transform.position;
 
-        for (int i = 0; i < directions.Count; i++)
+        for (int i = 0; i < nodes.Count; i++)
         {
-            Vector3 dirToNode = (directions[i].transform.position - playerPos).normalized;
-            float dot = Vector3.Dot(referenceDirection.normalized, dirToNode);
+            Vector3 playerToNode = (nodes[i].transform.position - playerPos).normalized;
+            float dot = Vector3.Dot(referenceDirection.normalized, playerToNode);
 
-            if (dot > minDot)
+            if (dot > maxDot)
             {
-                minDot = dot;
+                maxDot = dot;
                 Index = i;
             }
         }
 
         return Index;
     }
+
+    public void CanSwipe(bool swipe) { _isSwipe = swipe; }
+
 }

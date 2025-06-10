@@ -8,7 +8,7 @@ public class InfoHeader : MonoBehaviour
     [SerializeField] TMP_Text text;
     [SerializeField] Image image;
 
-    public void UpdateVisualAsIngredient(string title = "", Sprite sprite = null)
+    public void UpdateVisual(string title = "", Sprite sprite = null)
     {
         if (title == "")
         {
@@ -30,11 +30,11 @@ public class InfoHeader : MonoBehaviour
     {
         if (ingredient == null)
         {
-            UpdateVisualAsIngredient();
+            UpdateVisual();
         }
         else
         {
-            UpdateVisualAsIngredient(Serializer.GetIngredientEffectString(ingredient), ingredient.sprite);
+            UpdateVisual(Serializer.GetIngredientEffectString(ingredient), ingredient.sprite);
         }
     }
 
@@ -42,11 +42,11 @@ public class InfoHeader : MonoBehaviour
     {
         if (!spellEffect.HasValue)
         {
-            UpdateVisualAsIngredient();
+            UpdateVisual();
         }
         else
         {
-            UpdateVisualAsIngredient(Serializer.GetSpellEffectString(spellEffect.Value), sprite);
+            UpdateVisual(Serializer.GetSpellEffectString(spellEffect.Value), sprite);
         }
     }
 }

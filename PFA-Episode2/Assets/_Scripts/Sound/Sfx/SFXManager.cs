@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using AYellowpaper.SerializedCollections;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -16,8 +17,7 @@ public class SFXManager : MonoBehaviour
         {
             if (instance == null)
             {
-                GameObject go = new GameObject("Audio Manager");
-                instance = go.AddComponent<SFXManager>();
+                instance = Instantiate(Resources.Load<GameObject>("SoundManager").GetComponent<SFXManager>());
             }
             return instance;
         }
@@ -49,11 +49,9 @@ public class SFXManager : MonoBehaviour
     {
         instance = this;
         DontDestroyOnLoad(gameObject);
-    }
 
-    private void Start()
-    {
-        foreach(Clip clip in _soundsDict.Values)
+
+        foreach (Clip clip in _soundsDict.Values)
         {
             _clips.Add(clip);
         }
@@ -64,7 +62,6 @@ public class SFXManager : MonoBehaviour
         }
 
         _audioMixerManager = AudioMixerManager.Instance;
-        //_sceneListener = FindAnyObjectByType<AudioListener>();
     }
 
     #region Pool

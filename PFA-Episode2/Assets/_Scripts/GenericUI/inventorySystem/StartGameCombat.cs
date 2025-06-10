@@ -5,12 +5,14 @@ public class StartGameCombat : MonoBehaviour
 {
     [SerializeField] private GameObject _inventoryPanel;
     [SerializeField] private GameObject _equippedSpellSlot;
+    [SerializeField] private AnimatedPanel _GamePanel;
     public async void StartGame() 
     { 
         if(GameManager.Instance.playerInventory.playerEquipedSpell.Count > 0) 
         {
             gameObject.SetActive(false);
-            await CombatManager.Instance.StartGame();
+            _GamePanel.Show();
+            await CombatManager.Instance.Play();
         }
         else
         {

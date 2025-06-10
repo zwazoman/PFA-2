@@ -36,9 +36,9 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: rig_chara_onion|Anim_attack_onion
-      takeName: rig_chara_onion|Anim_attack_onion
-      internalID: -1212461737154779858
+      name: Anim_attack_onion
+      takeName: Anim_attack_onion
+      internalID: -6838791678781720455
       firstFrame: 0
       lastFrame: 40
       wrapMode: 0
@@ -60,7 +60,21 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.29997158
+      - time: 0.5205882
+        functionName: SoundEvent
+        data: OnionWalk
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.52838427
+        functionName: SoundEvent
+        data: NormalWhoosh
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.6528662
         functionName: AttackEvent
         data: 
         objectReferenceParameter: {instanceID: 0}
@@ -72,9 +86,9 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: rig_chara_onion|Anim_death_onion
-      takeName: rig_chara_onion|Anim_death_onion
-      internalID: 1156196177527366699
+      name: Anim_death_onion
+      takeName: Anim_death_onion
+      internalID: 1246814829855238235
       firstFrame: 0
       lastFrame: 110
       wrapMode: 0
@@ -95,15 +109,22 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.6178862
+        functionName: AttackEvent
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: rig_chara_onion|Anim_hit_onion
-      takeName: rig_chara_onion|Anim_hit_onion
-      internalID: -1030093663027923378
+      name: Anim_hit_onion
+      takeName: Anim_hit_onion
+      internalID: 4546393331790756111
       firstFrame: 0
       lastFrame: 46
       wrapMode: 0
@@ -124,15 +145,36 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.29674795
+        functionName: SoundEvent
+        data: OnionEat
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.4512195
+        functionName: SoundEvent
+        data: OnionEat
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.6463415
+        functionName: SoundEvent
+        data: OnionEat
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: rig_chara_onion|Anim_idle_onion
-      takeName: rig_chara_onion|Anim_idle_onion
-      internalID: -2180261527352967587
+      name: Anim_idle_onion
+      takeName: Anim_idle_onion
+      internalID: 4301624578814476350
       firstFrame: 0
       lastFrame: 50
       wrapMode: 0
@@ -159,11 +201,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: rig_chara_onion|Anim_move_onion
-      takeName: rig_chara_onion|Anim_move_onion
-      internalID: -568986289803385000
+      name: Anim_move_onion
+      takeName: Anim_move_onion
+      internalID: -6220719887357040193
       firstFrame: 0
-      lastFrame: 51
+      lastFrame: 15
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -182,15 +224,22 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: SoundEvent
+        data: OnionWalk
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: rig_chara_onion|Anim_openm_onion
-      takeName: rig_chara_onion|Anim_openm_onion
-      internalID: 5732203971009321526
+      name: Anim_openm_onion
+      takeName: Anim_openm_onion
+      internalID: 503305409473127842
       firstFrame: 0
       lastFrame: 20
       wrapMode: 0
@@ -217,9 +266,9 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: rig_chara_onion|Anim_push_onion
-      takeName: rig_chara_onion|Anim_push_onion
-      internalID: -5265567378689593771
+      name: Anim_push_onion
+      takeName: Anim_push_onion
+      internalID: 1378979013027431864
       firstFrame: 0
       lastFrame: 20
       wrapMode: 0

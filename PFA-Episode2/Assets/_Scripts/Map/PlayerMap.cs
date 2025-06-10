@@ -33,6 +33,8 @@ public class PlayerMap : MonoBehaviour
 
     private void Start()
     {
+        GameManager.Instance.playerInventory.Save(GameManager.Instance.playerInventory.NameSave);
+        GameManager.Instance.CalculateProgress();
         LoadNextScene();
         Vector3 p = transform.position + camOffset;
         p.z = 100;
@@ -83,6 +85,10 @@ public class PlayerMap : MonoBehaviour
                 if (KeyAndValues.Value.EventName.ToString() == "Combat")
                 {
                     await SceneTransitionManager.Instance.GoToScene(KeyAndValues.Value.CombatScene);
+                }
+                else if(KeyAndValues.Value.EventName.ToString() == "Boss")
+                {
+                    await SceneTransitionManager.Instance.GoToScene("Forest_Combat_Boss");
                 }
                 else { await SceneTransitionManager.Instance.GoToScene(KeyAndValues.Value.EventName.ToString()); }
             }

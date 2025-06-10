@@ -11,7 +11,8 @@ public class CookingPanel : AnimatedPanel
     [SerializeField] Transform _saucesParent;
     [SerializeField] CookingPot _pot;
     [SerializeField] DishInfoPanel _dishInfoPanel;
-
+    
+    
 #if UNITY_EDITOR
     [Header("test")]
     [SerializeField] List<Ingredient> tests = new();
@@ -47,21 +48,19 @@ public class CookingPanel : AnimatedPanel
 #else
             LoadPlayerInventory();
 #endif
-
         
     }
-
+    
     void OnShown()
     {
-        Debug.Log(GarbageCollector.isIncremental);
+        //Debug.Log(GarbageCollector.isIncremental);
         GarbageCollector.CollectIncremental(100);
         LoadPlayerInventory();//pas dingue
-        
     }
 
     public void LoadPlayerInventory()
     {
-        Debug.Log("about to load player inventory");
+        //Debug.Log("about to load player inventory");
         LoadInventory(GameManager.Instance.playerInventory);
     }
 
@@ -69,10 +68,10 @@ public class CookingPanel : AnimatedPanel
     {
         Clear();
 
-        Debug.Log("-- loading inventory --");
-        Debug.Log("Sauce count : " + inv.Sauces.Count);
-        Debug.Log("Ingredient count : " + inv.Ingredients.Count);
-        Debug.Log("Spell count : " + inv.Spells.Count);
+        // Debug.Log("-- loading inventory --");
+        // Debug.Log("Sauce count : " + inv.Sauces.Count);
+        // Debug.Log("Ingredient count : " + inv.Ingredients.Count);
+        // Debug.Log("Spell count : " + inv.Spells.Count);
 
         //content height
         float height = _ingredientsParent.cellSize.y + _ingredientsParent.spacing.y;
@@ -95,19 +94,25 @@ public class CookingPanel : AnimatedPanel
         //ingredients
         for (byte i = 0; i < inv.Ingredients.Count; ++i)
         {
-            Instantiate(ing, _ingredientsParent.transform)
-                .GetComponentInChildren<DraggableIngredientContainer>()
-                .SetUp(inv.Ingredients[i]);
+            DraggableIngredientContainer d = 
+                Instantiate(ing, _ingredientsParent.transform)
+                .GetComponentInChildren<DraggableIngredientContainer>();
+            d.SetUp(inv.Ingredients[i]);
+            d.EventBeginDrag+=_pot.Grow;
+            d.EventEndDrag+=_pot.Shrink;
         }
 
         //sauces
         for (byte i = 0; i < inv.Sauces.Count; ++i)
         {
-            Instantiate(ing, _saucesParent.transform)
-                .GetComponentInChildren<DraggableIngredientContainer>()
-                .SetUp(inv.Sauces[i]);
+            DraggableIngredientContainer d = 
+                Instantiate(ing, _saucesParent.transform)
+                .GetComponentInChildren<DraggableIngredientContainer>();
+            d.SetUp(inv.Sauces[i]);
+            d.EventBeginDrag+=_pot.Grow;
+            d.EventEndDrag+=_pot.Shrink;
         }
-        Debug.Log("----");
+        //Debug.Log("----");
     }
     private void Clear()
     {

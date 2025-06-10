@@ -1,8 +1,12 @@
+using System;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using System.Collections.Generic;
+using System.Net.Mime;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Random = UnityEngine.Random;
 
 public static class Tools
 {
@@ -33,7 +37,46 @@ public static class Tools
 
         return Physics.Raycast(aPos, offset, offset.magnitude, LayerMask.GetMask("Wall"));
     }
+    
 
+    /// <summary>
+    /// prend une moyenne et la met à jour en ajoutant un nouvel élément dedans.
+    /// </summary>
+    /// <param name="AverageOfValues"></param>
+    /// <param name="ValueCount"></param>
+    /// <param name="newValueToAccumulate"></param>
+    public static void AccumulateAverage(ref float AverageOfValues, ref int ValueCount, float newValueToAccumulate)
+    {
+        float currentSum = AverageOfValues * ValueCount;
+        float newSum = currentSum + newValueToAccumulate;
+        
+        ValueCount++;
+        float newAverage = newSum / ValueCount;
+        AverageOfValues = newAverage;
+    }
+
+    public static void AccumulateAverage(ref float? AverageOfValues, ref int? ValueCount, float newValueToAccumulate)
+    {
+        if (AverageOfValues != null && ValueCount != null)
+        {
+            float currentSum = AverageOfValues.Value * ValueCount.Value;
+            float newSum = currentSum + newValueToAccumulate;
+
+            ValueCount++;
+            float newAverage = newSum / ValueCount.Value;
+            AverageOfValues = newAverage;
+        }
+        else throw new ArgumentNullException();
+
+    }
+    public static string FormatPlaytestValueNameString(string ValueName)
+    {
+        return FormatPlaytestValueNameString(ValueName,Application.isEditor);
+    }
+    public static string FormatPlaytestValueNameString(string ValueName,bool editor)
+    {
+        return  (editor ? "dev_" : "" ) + Application.version.ToString()+ "_" + ValueName ;
+    }
 
     public static T PickRandom<T>(this T[] array)
     {
@@ -259,6 +302,7 @@ public static class Tools
     {
         point = null;
 
+        //Debug.LogWarning(fingerOffset);
         if (blockedByUi && EventSystem.current.IsPointerOverGameObject(0))
         {
             return false;
@@ -266,10 +310,10 @@ public static class Tools
 
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(fingerOffset? GetPositionAboveFinger() : Input.mousePosition);
+        
 
-        Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Waypoint"));
-
-        if (hit.collider != null && hit.collider.gameObject.TryGetComponent<WayPoint>(out WayPoint wayPoint))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Waypoint")) 
+            && hit.collider.gameObject.TryGetComponent<WayPoint>(out WayPoint wayPoint))
         {
             point = wayPoint;
             return true;
