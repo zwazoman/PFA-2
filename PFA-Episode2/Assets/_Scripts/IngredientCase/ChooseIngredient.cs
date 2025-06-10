@@ -150,7 +150,7 @@ public class ChooseIngredient : MonoBehaviour
             SetupValueIngredient();
             return sauce;
         }
-        else if (GameManager.Instance.progress >= 0.2f && SavoureuxSauce.Count != 0)  //Savoureux
+        else if (GameManager.Instance.progress >= 0.5f && SavoureuxSauce.Count != 0)  //Savoureux
         {
             Sauce sauce = SavoureuxSauce[Random.Range(0, SavoureuxSauce.Count)];
             SavoureuxSauce.Remove(sauce);
