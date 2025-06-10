@@ -197,7 +197,8 @@ public class CombatManager : MonoBehaviour
         
         if(PlaytestDataRecorder.Instance !=null)
             await PlaytestDataRecorder.Instance.OnGameOver();
-        
+
+        SFXManager.Instance.PlaySFXClip(Sounds.GameOverJingle);
         _gameOverPanel?.Show();
     }
 
@@ -208,6 +209,8 @@ public class CombatManager : MonoBehaviour
 
         await UniTask.Delay(1000);
 
+        MusicManager.Instance.ChangeMusic("WorldMap");
+        SFXManager.Instance.PlaySFXClip(Sounds.VictoryJingle);
         _rewardPanel?.Show();
         Time.timeScale = 1;
         //await SceneTransitionManager.Instance.GoToScene("WorldMap");

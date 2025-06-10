@@ -212,7 +212,15 @@ public class MapMaker2 : MonoBehaviour
                     nodeExistant.Creator = ParentNode;
                     if (!ParentNode.Children.Contains(MapBuildingTools.Instance.ReturnNodeFromNodePosition(ParentNode.Position, 1)))
                     {
-                        ParentNode.Children.Add(MapBuildingTools.Instance.ReturnNodeFromNodePosition(ParentNode.Position, 1));
+                        List<Node> listnode = MapBuildingTools.Instance.ReturnListOfNodeFromNodePosition(ParentNode.Position + 1);
+                        foreach (Node nde in listnode)
+                        {
+                            if(nde.Hauteur == ParentNode.Hauteur)
+                            {
+                                ParentNode.Children.Add(nde);
+                            }
+                        }
+                        //.Children.Add(MapBuildingTools.Instance.ReturnNodeFromNodePosition(ParentNode.Position, 1));
                     }
                     NodeList.Enqueue(CurrentNode);
                     break;
@@ -234,7 +242,7 @@ public class MapMaker2 : MonoBehaviour
                         }
                     }
                 }
-                else if (_toutdroit > maxToutDroit + 1 && _currentHeight > 3)
+                else if (_toutdroit >= maxToutDroit && _currentHeight > 3)
                 {
                     CreateBranch(tour, false); // descendre
                     if (_existingValue != null)
