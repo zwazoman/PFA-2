@@ -28,13 +28,6 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     private bool inspected = false;
     
 
-    public bool usePositionAboveFinger = true;
-
-    protected Sounds dragSound = Sounds.DragDish;
-
-    //notifiers
-    public event Action EventBeginDrag, EventEndDrag;
-
     protected virtual void Awake()
     {
         TryGetComponent(out canvasGroup);
