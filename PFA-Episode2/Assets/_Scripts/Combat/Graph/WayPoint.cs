@@ -66,7 +66,7 @@ public class WayPoint : MonoBehaviour
             {
                 State = WaypointState.HasEntity;
             }
-            else
+            else if(hit.collider.gameObject.layer == 7) //wall
             {
                 State = WaypointState.Obstructed;
             }
