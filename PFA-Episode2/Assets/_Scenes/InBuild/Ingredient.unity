@@ -2620,6 +2620,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     Mesh: {fileID: 0}
     IngredientsCombination: 
+    IsUtilitary: 0
     IsOccludedByWalls: 1
     Range: 2
     CoolDown: 1
@@ -3094,6 +3095,10 @@ PrefabInstance:
     - target: {fileID: 528207816960914655, guid: f5f8399cf3612f548822e9efbb5f39a3, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 620790275405547506, guid: f5f8399cf3612f548822e9efbb5f39a3, type: 3}
+      propertyPath: m_text
+      value: x 1
       objectReference: {fileID: 0}
     - target: {fileID: 719438179559126379, guid: f5f8399cf3612f548822e9efbb5f39a3, type: 3}
       propertyPath: m_AnchorMax.y
@@ -7021,7 +7026,7 @@ MonoBehaviour:
   _stipplingTiling: 1
   _fogOn: 0
   _fogRadius: 0
-  _fogIntensity: 0
+  _VignetteIntensity: 0
 --- !u!4 &2067983624
 Transform:
   m_ObjectHideFlags: 0

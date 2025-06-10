@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,6 +13,7 @@ public class DishInfoPanel : AnimatedPanel
     [SerializeField] private Image image_dishIcon;
     [SerializeField] private Image image_AOE;
     [SerializeField] private GameObject btn_keepCooking;
+    [SerializeField] AudioSource _boillingSource;
 
     [SerializeField] private List<InfoHeader> spellEffects;
 
@@ -19,6 +21,8 @@ public class DishInfoPanel : AnimatedPanel
     public Sprite noEffectSprite;
     public void Setup(SpellData spell)
     {
+        _boillingSource.Pause();
+
         //effects
         for(byte i = 0; i < 4; i++)
         {
