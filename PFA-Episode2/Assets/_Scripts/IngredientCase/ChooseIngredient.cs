@@ -33,7 +33,7 @@ public class ChooseIngredient : MonoBehaviour
     [SerializeField][Range(-1, 1)] private float _biaisCommon;
     [SerializeField][Range(-1, 1)] private float _biaisSavoureux;
     [SerializeField][Range(-1, 1)] private float _biaisDivin;
-    private int _moyenneGameTirage = 35;
+    private int _moyenneGameTirage = 74;
 
     [Header("Others")]
     [SerializeField] private bool _sceneCombat;
@@ -54,7 +54,7 @@ public class ChooseIngredient : MonoBehaviour
         _probaSavoureux = _probaSavoureuxRef;
         _probaDivin = _probaDivinRef;
         if (PlayerMap.Instance.PositionMap != 1) { AddShield(); }
-        if (_sceneCombat || PlayerMap.Instance.PositionMap == 1) { SetupIngredientUI.Instance.NumberRoll = 2; }
+        if (_sceneCombat || PlayerMap.Instance.PositionMap == 1) { SetupIngredientUI.Instance.NumberRoll = 2; SetupIngredientUI.Instance.SetupTxt(); }
         ChooseRandomIngredient();
     }
 
@@ -143,14 +143,14 @@ public class ChooseIngredient : MonoBehaviour
 
         GameManager.Instance.playerInventory.TotalTirageIngredient++;
 
-        if (result <= _probaDivin && DivinSauce.Count != 0) //Divin
+        if (GameManager.Instance.progress >= 0.75f && DivinSauce.Count != 0) //Divin
         {
             Sauce sauce = DivinSauce[Random.Range(0, DivinSauce.Count)];
             DivinSauce.Remove(sauce);
             SetupValueIngredient();
             return sauce;
         }
-        else if (result <= _probaDivin + _probaSavoureux && SavoureuxSauce.Count != 0)  //Savoureux
+        else if (GameManager.Instance.progress >= 0.5f && SavoureuxSauce.Count != 0)  //Savoureux
         {
             Sauce sauce = SavoureuxSauce[Random.Range(0, SavoureuxSauce.Count)];
             SavoureuxSauce.Remove(sauce);

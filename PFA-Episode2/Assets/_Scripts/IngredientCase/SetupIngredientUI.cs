@@ -19,11 +19,14 @@ public class SetupIngredientUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _numberRollTxt;
     public int NumberRoll = 1;
 
-    private bool _firstTime;
-
     public static SetupIngredientUI Instance;
 
     private void Awake() { Instance = this; }
+
+    public void SetupTxt()
+    {
+        _numberRollTxt.text = "x " + NumberRoll.ToString();
+    }
 
     public void SetupInfo(IngredientBase IngredientBase, int index) //Attribue tout l'UI au �l�ment
     {
@@ -44,7 +47,6 @@ public class SetupIngredientUI : MonoBehaviour
         }
         if (NumberRoll > 1)
         {
-            _firstTime = true;
             ListListIngredient.Clear();
             NumberRoll--;
             _numberRollTxt.text = "x " + NumberRoll.ToString();

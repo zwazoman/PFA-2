@@ -234,7 +234,7 @@ public class MapMaker2 : MonoBehaviour
                         }
                     }
                 }
-                else if (_toutdroit >= maxToutDroit && _currentHeight > 3)
+                else if (_toutdroit > maxToutDroit + 1 && _currentHeight > 3)
                 {
                     CreateBranch(tour, false); // descendre
                     if (_existingValue != null)
