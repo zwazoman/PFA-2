@@ -48,16 +48,15 @@ public class IngredientUI : MonoBehaviour
         if (ing is Sauce s)                                                 //Sauce
         {
             s = (Sauce)ing;
+            _spellZoneGO.SetActive(true);
             _txt_effect.text = Serializer.GetSauceEffectString(s);
             _img_SauceArea.sprite = s.areaOfEffect.sprite;
-            _img_SauceArea.transform.parent.gameObject.SetActive(true);
         }
         else                                                                                  //Ingr�dient
         {
             _spellZoneGO.SetActive(false);
             Ingredient Ingredient = (Ingredient)ing;
             _txt_effect.text = Serializer.GetIngredientEffectString(Ingredient);
-            _img_SauceArea.transform.parent.gameObject.SetActive(false);
         }
     }
 }
