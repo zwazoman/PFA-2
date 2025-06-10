@@ -29,9 +29,11 @@ public class MusicManager : MonoBehaviour
 
     MusicParameters _currentParameter;
 
-    private void Start()
+    private async void Start()
     {
-        SceneManager.activeSceneChanged += (Scene _, Scene _) => SceneTransitionManager.Instance.OnSceneChange += CheckMusic; ;
+        SceneManager.activeSceneChanged += (Scene _, Scene _) => SceneTransitionManager.Instance.OnSceneChange += CheckMusic;
+
+        await SwapMusics(musicClipDict["MainMenu"]);
     }
 
     async void CheckMusic(string nextSceneName)
