@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
     public void CalculateProgress() //définit au start de la WorldMap soit à chaque fois qu'on y retourne
     {
         int currentNode = Mathf.Clamp(PlayerMap.Instance.PositionMap, 0, MapMaker2.Instance.MapRange);
-        progress = (float)currentNode / MapMaker2.Instance.MapRange;
+        progress = (float)currentNode / MapMaker2.Instance.MapRange; // ENTRE 0 ET 1
     }
 
     public int ComputeEnnemiesCount() { return Mathf.FloorToInt(progress * 4) + 1; }
