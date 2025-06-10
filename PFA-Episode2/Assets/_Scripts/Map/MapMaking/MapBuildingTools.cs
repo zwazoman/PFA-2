@@ -134,7 +134,7 @@ public class MapBuildingTools : MonoBehaviour
     public List<Node> ReturnListOfNodeFromNodePosition(int nodePosition)
     {
         List<Node> nodeList = new();
-        foreach (Node node in MapMaker2.Instance.AllNodeGood)
+        foreach (Node node in MapMaker2.Instance.DicoNode.Values)
         {
             if (node.Position == nodePosition)
             {
