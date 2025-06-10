@@ -4,6 +4,7 @@ using DG.Tweening;
 using System.Collections.Generic;
 using System.Net.Mime;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
@@ -335,4 +336,14 @@ public static class Tools
         group.DOFade(1, 1);
     }
 
+
+    #if UNITY_EDITOR
+    [MenuItem("Game/Play from Start")]
+    public static void PlayFromStart()
+    {
+        EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
+        EditorSceneManager.OpenScene("Assets/_Scenes/InBuild/MainMenu.unity");
+        EditorApplication.EnterPlaymode();
+    }
+    #endif
 }

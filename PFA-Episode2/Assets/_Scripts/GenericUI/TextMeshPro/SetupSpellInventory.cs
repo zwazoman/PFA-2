@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 public class SetupSpellInventory : MonoBehaviour
 {
     [FormerlySerializedAs("_targetInventory")] [SerializeField] private List<Transform> _inventorySlots = new();
-    [SerializeField] private List<Transform> _equippedInventory = new();
+    [SerializeField] public List<Transform> _equippedInventory = new();
     [SerializeField] private GameObject _prefabItem;
     private int _index = 0;
 
@@ -16,6 +16,7 @@ public class SetupSpellInventory : MonoBehaviour
 
     public void SetupInventory()
     {
+        int mesBoules = 0;
         //create one draggable inventory slot for each item in the player's inventory
         for (int i = 0; i < GameManager.Instance.playerInventory.Spells.Count; i++)
         {
@@ -23,15 +24,16 @@ public class SetupSpellInventory : MonoBehaviour
 
             
             DraggableSpellContainer ItemSlot = Instantiate(_prefabItem, _inventorySlots[i]).GetComponentInChildren<DraggableSpellContainer>(); 
-            ItemSlot.SetUp(spell);
+            ItemSlot.SetUp(spell,i);
             
-            /*foreach (int spellDataIndex in GameManager.Instance.playerInventory.playerEquipedSpellIndex) //pour chaque spell qu'on construit on v�rifie si il est equipe
+            
+            if(GameManager.Instance.playerInventory.playerEquipedSpellIndex.Contains(i))
             {
-                if(i == spellDataIndex)
-                {
-                    
-                }
-            }*/
+                ItemSlot.originalParent = ItemSlot.transform.parent;
+                ItemSlot.DisplayAsEquipped(_equippedInventory[mesBoules]);
+                mesBoules++;
+            }
+            
         }
     }
 

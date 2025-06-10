@@ -115,13 +115,15 @@ public class SFXManager : MonoBehaviour
     /// <param name="pitchfactor"></param>
     public AudioSource PlaySFXClip(Sounds choosenSound, float volumefactor = 1f, float pitchfactor = 1f)
     {
-        AudioSource audioSource = UseFromPool();
-        Clip choosenClip = _clips[(int)choosenSound];
-
         try
         {
+            AudioSource audioSource = UseFromPool();
+            Clip choosenClip = _clips[(int)choosenSound];
+            
             AudioClip audioClip = ChooseRandomClip(choosenClip);
             audioSource.clip = audioClip; // assigne le clip random � l'audiosource
+            
+            return AudioSourceHandle(audioSource, choosenClip.Volume * volumefactor, choosenClip.Pitch * pitchfactor, true, false, choosenClip.MixerGroup);
         }
         catch(Exception e)
         {
@@ -132,8 +134,7 @@ public class SFXManager : MonoBehaviour
             
             return null;
         }
-
-        return AudioSourceHandle(audioSource, choosenClip.Volume * volumefactor, choosenClip.Pitch * pitchfactor, true, false, choosenClip.MixerGroup);
+        
     }
 
     public AudioSource PlaySFXClip(AudioClip audioClip, float volume = 1f, float pitch = 1f)

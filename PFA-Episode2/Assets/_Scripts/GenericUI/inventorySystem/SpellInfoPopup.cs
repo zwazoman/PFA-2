@@ -9,14 +9,30 @@ public class SpellInfoPopup : MonoBehaviour
     public TextMeshProUGUI SpellName;
     public List<TextMeshProUGUI> Effect;
     public Image SpellZoneEffect;
-    public Image SpellIconDisable;
     public TextMeshProUGUI Range;
     public TextMeshProUGUI Cooldown;
 
+    [SerializeField]private RectTransform _rectTransform;
+    
+    private Vector2 _basePose;
+
+    
+    public void ClearParent()
+    {
+       
+        _rectTransform.SetParent(transform.root);
+    }
+
+    public void AttachToTransform(Transform t)
+    {
+        _rectTransform.SetParent(t);
+        _rectTransform.anchoredPosition =  _basePose;
+    }
+    
     public void Setup(SpellData spellData)
     {
+
         SpellIcon.sprite = spellData.Sprite; //Sprite
-        SpellIconDisable.sprite = spellData.Sprite;
         Range.text = spellData.Range.ToString();
         Cooldown.text = spellData.CoolDown.ToString();
 
@@ -29,5 +45,6 @@ public class SpellInfoPopup : MonoBehaviour
         }
 
         SpellZoneEffect.sprite = spellData.AreaOfEffect.sprite; //Area
+        _basePose = _rectTransform.anchoredPosition;
     }
 }

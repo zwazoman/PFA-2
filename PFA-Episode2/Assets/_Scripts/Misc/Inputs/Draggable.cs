@@ -80,7 +80,6 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
             EventClicked?.Invoke();
             _ = CheckForOtherClick();
         }
-        else inspected = false;
     }
 
     async UniTask CheckForOtherClick()
@@ -91,11 +90,12 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         //Create a list of Raycast Results
         List<RaycastResult> results = new List<RaycastResult>();
 
-        while (!(Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began) )
+        do
         {
             await UniTask.Yield();
-        }
-        
+        } while (!(Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Ended));
+
+        inspected = false;
         EventClickedSomewhereElse?.Invoke();
     }
 }

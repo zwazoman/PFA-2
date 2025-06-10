@@ -17,25 +17,30 @@ public class DraggableSpellContainer : DraggableItemContainer
     
     [SerializeField] private SpellInfoPopup _descriptionPanel;
     
+    int indexInInventory;
     
-    public void SetUp(SpellData spell)
+    public void SetUp(SpellData spell,int indexInInventory )
     {
-
+        this.indexInInventory = indexInInventory;
+        
         image.sprite = spell.Sprite;
         backGroundImage.sprite = spell.Sprite;
         
         DisabledImage.SetActive(false);
         
+        //description panel
+        _descriptionPanel?.Setup(spell);
+        _descriptionPanel?.gameObject.SetActive(false);
         EventClicked += () =>
         {
             _descriptionPanel?.gameObject.SetActive(true);
-            _descriptionPanel.transform.parent = transform.root;
+            _descriptionPanel.ClearParent();
             
         };
         EventClickedSomewhereElse += () =>
         {
-            _descriptionPanel?.gameObject.SetActive(true);
-            _descriptionPanel.transform.parent = transform;
+            _descriptionPanel?.gameObject.SetActive(false);
+            _descriptionPanel.AttachToTransform(transform) ;
         };
         
 
@@ -47,6 +52,7 @@ public class DraggableSpellContainer : DraggableItemContainer
         
         //enable description popup
         _descriptionPanel?.gameObject.SetActive(true);
+        _descriptionPanel?.AttachToTransform(transform);
     }
 
     public override void OnEndDrag(PointerEventData eventData)
@@ -60,17 +66,30 @@ public class DraggableSpellContainer : DraggableItemContainer
         EventSystem.current.RaycastAll(eventData, a);
         if (a.Count > 0 && a[0].gameObject.layer == 8)
         {
-            //attach to bottom slot
-            transform.parent = a[0].gameObject.transform;
-            transform.localPosition = Vector3.zero;
+            DisplayAsEquipped(a[0].gameObject.transform);
             
-            DisabledImage.SetActive(true);
-            CancelButton.onClick.AddListener(Reset );
+            //save spell index to be equipped
+            GameManager.Instance.playerInventory.playerEquipedSpellIndex.Add(indexInInventory);
         }
         else
         {
             Reset();
         }
+    }
+
+    public void DisplayAsEquipped(Transform ParentSlot)
+    {
+        //attach to bottom slot
+        transform.parent = ParentSlot;
+        transform.localPosition = Vector3.zero;
+            
+        //set up cancel button
+        DisabledImage.SetActive(true);
+        CancelButton.onClick.AddListener(()=>
+        {
+            GameManager.Instance.playerInventory.playerEquipedSpellIndex.Remove(indexInInventory);
+            Reset();
+        });
     }
 
     public override void Reset()
