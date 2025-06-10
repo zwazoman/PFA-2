@@ -25,7 +25,7 @@ public class SetupIngredientUI : MonoBehaviour
 
     private void Awake() { Instance = this; }
 
-    public void SetupInfo(IngredientBase IngredientBase, int index) //Attribue tout l'UI au élément
+    public void SetupInfo(IngredientBase IngredientBase, int index) //Attribue tout l'UI au ï¿½lï¿½ment
     {
         try
         {
@@ -68,7 +68,7 @@ public class SetupIngredientUI : MonoBehaviour
 
     public async UniTask TweenCard()
     {
-        await _parent.transform.DOScale(new Vector3(0.6f,0.6f,0.6f), 0.2f).SetEase(Ease.OutBack);
-        await _parent.transform.DOScale(new Vector3(1, 1, 1), 0.2f).SetEase(Ease.OutBack);
+        await _parent.transform.DOScale(new Vector3(0.6f,0.6f,0.6f), 0.2f).SetEase(Ease.OutCubic);
+        await _parent.transform.DOScale(new Vector3(1, 1, 1), 0.2f).SetEase(Ease.InCubic);
     }
 }

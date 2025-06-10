@@ -18,7 +18,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     public bool usePositionAboveFinger = true;
 
-    protected Sounds dragSound = Sounds.ButtonPress;
+    protected Sounds dragSound = Sounds.DragDish;
 
     //notifiers
     public event Action EventBeginDrag, EventEndDrag;

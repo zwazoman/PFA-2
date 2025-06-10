@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.UI;
 
 /// <summary>
-/// Script qui Tween les panels liées aux ingredients
+/// Script qui Tween les panels liï¿½es aux ingredients
 /// </summary>
 public class TweenIngredientUI : MonoBehaviour
 {
@@ -24,7 +24,7 @@ public class TweenIngredientUI : MonoBehaviour
         Instance = this;
     }
 
-    private async void Start() //Pour le texte du début
+    private async void Start() //Pour le texte du dï¿½but
     {
         Sequence seq = DOTween.Sequence();
         seq.Join(_tmpRect.DOScale(0.9f, 0.35f).SetEase(Ease.OutBack));
@@ -88,7 +88,7 @@ public class TweenIngredientUI : MonoBehaviour
     {
         foreach(Button btn in _buttonList) { btn.interactable = false; }
         SFXManager.Instance.PlaySFXClip(Sounds.CardEnter);
-        await chosenUI.DOPunchScale(new Vector3(0.5f, 0.5f, 0.5f), .25f, 5, 0.6f);
+        await chosenUI.DOPunchScale(Vector3.one*.2f, .25f, 5, 0.6f);
         await chosenUI.DOAnchorPos(new Vector2(chosenUI.anchoredPosition.x, 2100), TweenDuration).SetEase(Ease.InBack);
         chosenUI.position = new Vector2(chosenUI.anchoredPosition.x, -2100);
         foreach (Button btn in _buttonList) { btn.interactable = true; }

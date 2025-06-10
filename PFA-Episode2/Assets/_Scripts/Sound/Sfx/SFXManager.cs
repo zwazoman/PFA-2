@@ -268,7 +268,7 @@ public class SFXManager : MonoBehaviour
 
 
         audioSource.Play(); // joue le son
-
+        
         float clipLength = audioSource.clip.length; // détermine la longueur du son
 
         StartCoroutine(HandleSoundEnd(audioSource, clipLength));

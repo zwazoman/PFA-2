@@ -35,7 +35,7 @@ public static class Crafting
                 break;
             }
         }
-        if(shouldAddDamageEffect) spell.Effects.Add(new(SpellEffectType.Damage,StatType.FlatIncrease,3));
+        if(shouldAddDamageEffect) spell.Effects.Add(new(SpellEffectType.Damage,StatType.FlatIncrease,2));
         
        
         //Debug.Log(" = collapsed spell effects = ");
