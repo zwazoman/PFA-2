@@ -33,12 +33,11 @@ public class MusicManager : MonoBehaviour
     {
         SceneManager.activeSceneChanged += (Scene _, Scene _) => SceneTransitionManager.Instance.OnSceneChange += CheckMusic;
 
-        await SwapMusics(musicClipDict["MainMenu"]);
+        CheckMusic("MainMenu");
     }
 
     async void CheckMusic(string nextSceneName)
     {
-        print(nextSceneName);
         foreach(string sceneName in musicClipDict.Keys)
             if(sceneName == nextSceneName)
                 await SwapMusics(musicClipDict[sceneName]);
