@@ -20,10 +20,7 @@ public class DraggableSpellContainer : DraggableItemContainer
     
     public void SetUp(SpellData spell)
     {
-<<<<<<< Updated upstream
-        if (Target == null) { Target = gameObject.transform.transform.parent; }
 
-=======
         image.sprite = spell.Sprite;
         backGroundImage.sprite = spell.Sprite;
         
@@ -41,7 +38,7 @@ public class DraggableSpellContainer : DraggableItemContainer
             _descriptionPanel.transform.parent = transform;
         };
         
->>>>>>> Stashed changes
+
     }
 
     public override void OnBeginDrag(PointerEventData eventData)

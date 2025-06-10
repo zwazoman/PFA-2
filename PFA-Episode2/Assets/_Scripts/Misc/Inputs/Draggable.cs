@@ -1,10 +1,7 @@
-<<<<<<< Updated upstream
-=======
+
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Unity.VisualScripting;
->>>>>>> Stashed changes
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -20,9 +17,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public Transform originalParent;
     int siblingIndex;
     CanvasGroup canvasGroup;
-
-<<<<<<< Updated upstream
-=======
+    
     public bool usePositionAboveFinger = true;
 
     protected Sounds dragSound = Sounds.DragDish;
@@ -32,7 +27,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     private bool inspected = false;
     
->>>>>>> Stashed changes
+
     protected virtual void Awake()
     {
         TryGetComponent(out canvasGroup);

@@ -317,12 +317,6 @@ public class SpellCaster : MonoBehaviour
                     e.damage += 8 * (zoneData.hitEntityCTXDict[entity].numberOfHitEnnemies - 1);
                     break;
                 case SpellEffectType.DamageIncreasePercentageByDistanceToCaster:
-<<<<<<< Updated upstream
-                    e.damage *= (1 + zoneData.hitEntityCTXDict[entity].distanceToHitEnemy * .2f);
-                    break;
-                case SpellEffectType.DamageIncreaseMeleeRange:
-                    if(zoneData.hitEntityCTXDict[entity].distanceToHitEnemy == 1)
-=======
                     if (!teamMix && entity.team == castingEntity.team)
                         break;
                     e.damage *= (1 + zoneData.hitEntityCTXDict[entity].DistanceToHitEnnemy * .5f);
@@ -332,7 +326,6 @@ public class SpellCaster : MonoBehaviour
                     if (!teamMix && entity.team == castingEntity.team)
                         break;
                     if (zoneData.hitEntityCTXDict[entity].DistanceToHitEnnemy == 1)
->>>>>>> Stashed changes
                     {
                         e.damage *= (effect.value);
                     }
@@ -464,21 +457,10 @@ public class SpellCaster : MonoBehaviour
         //look at caster
         if (entity != castingEntity)
             await entity.LookAt(castingEntity.currentPoint);
-
-<<<<<<< Updated upstream
-        SpellProjectile projectile;
-        Vector3 spawnPos;
-        if (_spellCastingSocket != null)
-            spawnPos = _spellCastingSocket.position;
-        else
-            spawnPos = transform.position;
-
-        PoolManager.Instance.ProjectilePool.PullObjectFromPool(spawnPos).TryGetComponent(out projectile);
-=======
+        
         //projectile
         var spawnPos = _spellCastingSocket != null ? _spellCastingSocket.position : transform.position;
         PoolManager.Instance.ProjectilePool.PullObjectFromPool(spawnPos).TryGetComponent(out SpellProjectile projectile);
->>>>>>> Stashed changes
         await projectile.Launch(castingEntity, entity, spell.spellData.Mesh);
 
         //compute spell effect

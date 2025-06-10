@@ -12,15 +12,13 @@ public static class Tools
 
     public static Vector3 GetPositionAboveFinger()
     {
-<<<<<<< Updated upstream
-        return Input.mousePosition + Vector3.up * 120;
-=======
+
 #if UNITY_EDITOR
         return Input.mousePosition;
 #else
         return Input.mousePosition + Vector3.up * 140f*1080f/(float)Screen.height;
 #endif
->>>>>>> Stashed changes
+
     }
     public static Vector3Int SnapOnGrid(this Vector3 initialPos)
     {
@@ -181,7 +179,7 @@ public static class Tools
         {
             if (pair.Value.Equals(value))
             {
-                return pair.Key; // Retourne la clé
+                return pair.Key; // Retourne la clï¿½
             }
         }
         return default;
@@ -204,7 +202,7 @@ public static class Tools
     /// <summary>
     /// Retourne les tuiles accessibles dans un certain rayon en utilisant une recherche en largeur (BFS).
     /// </summary>
-    public static Dictionary<WayPoint, int> Flood(WayPoint startNode) //On part d'un node de départ avec une range donné pour regardé les voisins
+    public static Dictionary<WayPoint, int> Flood(WayPoint startNode) //On part d'un node de dï¿½part avec une range donnï¿½ pour regardï¿½ les voisins
     {
         FloodDict.Clear();
         Dictionary<WayPoint, int> PointDistanceDict = new();
