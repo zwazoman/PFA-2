@@ -244,6 +244,7 @@ public class CookingPot : MonoBehaviour
         spell = Crafting.CraftNewSpell(ingredients.ToArray(),sauce == null ? _defaultSauce : sauce);
         GameManager.Instance.playerInventory.Spells.Add(spell);
 
+        SFXManager.Instance.PlaySFXClip(Sounds.Sizzle);
         Visuals3D.PlayCookedDishAnim(spell);
 
         return true;

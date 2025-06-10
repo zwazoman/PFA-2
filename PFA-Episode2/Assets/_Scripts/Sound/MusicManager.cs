@@ -33,17 +33,17 @@ public class MusicManager : MonoBehaviour
     {
         SceneManager.activeSceneChanged += (Scene _, Scene _) => SceneTransitionManager.Instance.OnSceneChange += ChangeMusic;
 
-        ChangeMusic("WorldMap");
+        ChangeMusic("MainMenu");
     }
 
-    async void ChangeMusic(string nextSceneName)
+    public async void ChangeMusic(string nextSceneName)
     {
         foreach(string sceneName in musicClipDict.Keys)
             if(sceneName == nextSceneName)
                 await SwapClips(musicClipDict[sceneName]);
     }
 
-    public async UniTask SwapClips(MusicParameters musicParameter)
+    async UniTask SwapClips(MusicParameters musicParameter)
     {
         _currentParameter = musicParameter;
         AudioClip choosenMusic = musicParameter.musics.PickRandom();

@@ -197,6 +197,10 @@ public class AIEntity : Entity
                 }
 
                 enemyPoints.FindClosestFloodPoint(out choosenTargetPoint, Tools.SmallFlood(targetEntityPoint, 6, false, true));
+
+                if (Tools.FloodDict[choosenTargetPoint] > Data.MaxMovePoints + choosenSpell.spellData.Range)
+                    return await CastSpellAtPoint(choosenSpell, currentPoint);
+
                 return await CastSpellAtPoint(choosenSpell, choosenTargetPoint);
             case SpellType.Utilitary:
                 //cast le sort le plus proche possible du joueur
