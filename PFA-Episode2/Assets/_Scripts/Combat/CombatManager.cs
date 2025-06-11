@@ -159,6 +159,8 @@ public class CombatManager : MonoBehaviour
     async void SummonEntities()
     {
         int ennemiesCount = GameManager.Instance.ComputeEnnemiesCount();
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        if (currentSceneName == "Forest_Combat_Boss") { ennemiesCount = 1; }
 
         SpawnSetup choosenSetup = Setups.PickRandom();
 
