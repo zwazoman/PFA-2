@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private float _characterDelay = 0.05f;
     [SerializeField] private float _punctuationDelay = 0.1f;
 
-    [SerializeField] private GameObject _panel;
+    public GameObject Panel;
     [SerializeField] private GameObject _textBox;
 
     private readonly List<Tweener> _shakeTweeners = new();
@@ -22,8 +23,12 @@ public class DialogueManager : MonoBehaviour
     private int _numberDialogue = 0;
     private int _numberSentence = 0;
     private bool _isFinish;
+    public bool StartDialogue;
+    private string _currentFullMessage = "";
+    private bool _skipRequested = false;
+    private bool _isEndingDialogue = false;
 
-    [SerializeField] private BreadGuy _bread;
+
 
     private bool IsPunctuation(char c) => c is '?' or '.' or '!' or ',';
 
@@ -43,19 +48,30 @@ public class DialogueManager : MonoBehaviour
     #endregion
 
     // Lis quel dialogue suis pour l'activer
-    public async UniTask NextDialogue() 
-    { 
-        await UniTask.Delay(100);
-        _characterDelay = 0.06f;
-        _punctuationDelay = 0.01f;
+    private bool _isAdvancingDialogue = false;
+
+    public async UniTask NextDialogue()
+    {
+        if (_isAdvancingDialogue) return;
+
+        _isAdvancingDialogue = true;
+
+        _characterDelay = 0.02f;
+        _punctuationDelay = 0.08f;
+
         SearchDialogue(_numberDialogue);
+
+        _isAdvancingDialogue = false;
     }
+
     public void GetRandomSequenceDialogue() { SearchDialogue(Random.Range(0, TextData.DialogueData.Count)); }
     public void GetDialogue(int NumberDialogue) { SearchDialogue(NumberDialogue); }
 
     // Divise les différents éléments pour les ranger par ligne puis par éléments, ensuite cherche la clé corresspondante
-    private void SearchDialogue(int NumberDialogue)
+    private async void SearchDialogue(int NumberDialogue)
     {
+        Panel.SetActive(true);
+        await Panel.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
         _numberDialogue = NumberDialogue;
         if (_isWriting) return;
 
@@ -96,32 +112,41 @@ public class DialogueManager : MonoBehaviour
     }
 
     // Affiche lettre par lettre le dialogue
-    private async UniTaskVoid LetterByLetter(string message, bool shakeText)
+    private async UniTask LetterByLetter(string message, bool shakeText)
     {
         _isWriting = true;
+        _skipRequested = false;
+        _currentFullMessage = message;
         _text.text = "";
 
         bool insideTag = false;
 
         for (int i = 0; i < message.Length; i++)
         {
+            if (_skipRequested)
+            {
+                _text.text = _currentFullMessage;
+                _isWriting = false;
+                return;
+            }
+
             float speed = _characterDelay;
             char currentChar = message[i];
 
-            // Gestion des balises <...>
             if (currentChar == '<') insideTag = true;
             if (currentChar == '>') insideTag = false;
             if (IsPunctuation(currentChar)) speed = _punctuationDelay;
 
             _text.text += currentChar;
 
-            if (shakeText && !insideTag) StartShakeEffect(); // Évite l'effet sur les balises
+            if (shakeText && !insideTag) StartShakeEffect();
 
             if (!insideTag) await UniTask.Delay(System.TimeSpan.FromSeconds(speed));
         }
 
         _isWriting = false;
     }
+
 
     // Enregistre les différents sommets de chaque lettres du texte pour leur mettre un effet de shake
     // Peut être trop coûteux pour mobile donc à voir
@@ -185,26 +210,49 @@ public class DialogueManager : MonoBehaviour
 
     private async void EndDialogue()
     {
-        if (!_isFinish)
+        if (_isEndingDialogue) return;
+        _isEndingDialogue = true;
+
+        string currentSceneName = SceneManager.GetActiveScene().name;
+
+        await Panel.transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InOutBack);
+        Panel.SetActive(false);
+
+        if (!_isFinish && currentSceneName == "Heal")
         {
             _isFinish = true;
-            await _panel.transform.DOScale(Vector3.zero, 0.4f).SetEase(Ease.InOutBack);
-            _panel.SetActive(false);
             await UniTask.Delay(500);
             await SceneTransitionManager.Instance.GoToScene("WorldMap");
         }
+        else if (currentSceneName == "Forest_Combat_Tuto" && !SetupFight.Instance.GameStart)
+        {
+            SetupFight.Instance.GameStart = true;
+            SetupFight.Instance.StartGame();
+        }
+
         _numberSentence = 0;
         _nameCharacter.text = "";
         _text.text = "";
+
+        _isEndingDialogue = false;
     }
+
 
     public void Click()
     {
-        if(_bread.StartDialogue)
+        if (!StartDialogue) return;
+
+        if (_isWriting)
+        {
+            _skipRequested = true;
+        }
+        else
         {
             _characterDelay = 0;
             _punctuationDelay = 0;
-            NextDialogue();
+            NextDialogue().Forget();
         }
     }
+
+
 }

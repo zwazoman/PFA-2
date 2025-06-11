@@ -1,0 +1,119 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82318b7d26988064d87630aaba93a0d4, type: 3}
+  m_Name: DialogueTuto
+  m_EditorClassIdentifier: 
+  DialogueData:
+  - Sentence:
+    - CharacterName: ???
+      Text: 'Halt, little nibble-rat! The sacred oven has chosen you... Are you ready
+        to become a culinary warrior? '
+      Key: 1
+      NextKey: 2
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 1
+    - CharacterName: ???
+      Text: "Here, battles aren\u2019t won with claws... but with flavor."
+      Key: 2
+      NextKey: 3
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 1
+    - CharacterName: Master Crouton
+      Text: <b>I am Master Crouton. </b> Crispy on the outside, soft in the crumb.
+        Your mentor for today.
+      Key: 3
+      NextKey: 4
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 1
+    - CharacterName: Master Crouton
+      Text: "In culinary combat, <b>every dish is a weapon! </b> It\u2019s up to
+        you to choose your ingredients and sauce wisely... wreak havoc with taste!"
+      Key: 4
+      NextKey: 5
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 1
+    - CharacterName: BreadMan
+      Text: <b> First, start by moving toward them </b> by clicking on the <color=#AFAD23>
+        <b> yellow tiles! </color></b>
+      Key: 5
+      NextKey: End
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 1
+    - CharacterName: BreadMan
+      Text: '-'
+      Key: End
+      NextKey: 
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 0
+  - Sentence:
+    - CharacterName: Master Crouton
+      Text: Hmm... <b>Not bad for a ball of fur.</b>
+      Key: 42
+      NextKey: 43
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 1
+    - CharacterName: Master Crouton
+      Text: Once you're close enough to your enemy, throw one of the dishes I've
+        prepared for you!
+      Key: 43
+      NextKey: 44
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 1
+    - CharacterName: Master Crouton
+      Text: "Among the three, there's one that will let you protect yourself. You
+        can\u2019t miss it \u2014 its <color=#6DB2D1> <b> effect zone is blue! </b>
+        </color>"
+      Key: 44
+      NextKey: End
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 1
+    - CharacterName: Master Crouton
+      Text: '-'
+      Key: End
+      NextKey: 
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 0
+  - Sentence:
+    - CharacterName: Master Crouton
+      Text: "<b>Well done, little rodent! </b> Now I\u2019ll take back my dishes,
+        it\u2019s your turn to craft your own!"
+      Key: 55
+      NextKey: 56
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 1
+    - CharacterName: Master Crouton
+      Text: "<b>Go ahead, take one of these ingredients as your reward! </b> If you
+        run into trouble along the way, don\u2019t hesitate to stop by my stall,
+        I\u2019ll bake you some fresh bread !"
+      Key: 56
+      NextKey: End
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 1
+    - CharacterName: Master Crouton
+      Text: '-'
+      Key: End
+      NextKey: 
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 0

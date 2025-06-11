@@ -2,8 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using System;
-using System.Linq;
-using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
 
 public class CombatManager : MonoBehaviour
 {
@@ -160,6 +159,8 @@ public class CombatManager : MonoBehaviour
     async void SummonEntities()
     {
         int ennemiesCount = GameManager.Instance.ComputeEnnemiesCount();
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        if (currentSceneName == "Forest_Combat_Boss") { ennemiesCount = 1; }
 
         SpawnSetup choosenSetup = Setups.PickRandom();
 
@@ -206,6 +207,8 @@ public class CombatManager : MonoBehaviour
 
     async UniTask Victory()
     {
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        if (currentSceneName == "Forest_Combat_Tuto") { await SetupFight.Instance.Victory(); }
         print("VICTORY");
         print(GameManager.Instance.playerInventory.playerHealth.health);
 
