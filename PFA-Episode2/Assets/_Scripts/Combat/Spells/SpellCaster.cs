@@ -47,7 +47,7 @@ public class SpellCaster : MonoBehaviour
         {
             if (point.State == WaypointState.Obstructed) continue; //walls
             if ((floodDict[point] > spell.spellData.Range ||floodDict[point]  <= spell.spellData.Range-RangeRingThickness) && (floodDict[point]!=0)) continue; //range
-            if ((!ignoreTerrain && (spell.spellData.IsOccludedByWalls && Tools.CheckWallsBetween(center, point)))) //line of sight
+            if (!ignoreTerrain && spell.spellData.IsOccludedByWalls && Tools.CheckLOSBetween(center, point)) //line of sight
             {
                 if (showZone) point.SetPreviewState(WayPoint.PreviewState.occludedAreaOfEffect);
                 continue;
