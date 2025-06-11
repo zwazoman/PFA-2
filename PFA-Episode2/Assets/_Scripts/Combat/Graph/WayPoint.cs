@@ -219,10 +219,10 @@ public class WayPoint : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.blue;
+        Gizmos.color = Color.red;
         foreach (WayPoint point in Neighbours) //il dessine 2 fois mais t'inquietes
         {
-            if (point != null) Gizmos.DrawLine(transform.position, point.transform.position);
+            if (point != null && point.Neighbours.Contains(this)) Gizmos.DrawLine(transform.position, point.transform.position);
         }
     }
 

@@ -48,7 +48,7 @@ public class GraphMaker : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    void GenerateGraph()
+ /*   void GenerateGraph()
     {
         int xPos = StartPos.x;
         int zPos = StartPos.z;
@@ -80,7 +80,7 @@ public class GraphMaker : MonoBehaviour
 
             }
         }
-    }
+    }*/
 
     public void ComposeGraph()
     {
@@ -88,6 +88,7 @@ public class GraphMaker : MonoBehaviour
 
         foreach(WayPoint point in _allWaypoints)
         {
+            
             //add points to dictionary
             Vector3Int pointPos = point.transform.position.SnapOnGrid();
             point.graphPos = pointPos;
@@ -101,6 +102,8 @@ public class GraphMaker : MonoBehaviour
                     if (hit.collider.TryGetComponent(out WayPoint wayPoint) && !point.Neighbours.Contains(wayPoint))
                         point.Neighbours.Add(wayPoint);
             }
+            
+            Debug.Log(point==null);
         }
     }
 
@@ -117,7 +120,6 @@ public class GraphMaker : MonoBehaviour
                     Debug.Log(i);
                 }
 
-
                 Vector3 pose = point.transform.position + Vector3.up * .6f;
                 Vector3 rayOrigin = point.transform.position + Vector3.up * 10;
                 if (Physics.SphereCast(rayOrigin, .4f, Vector3.down,out RaycastHit hit,20,~LayerMask.GetMask("Wall")))
@@ -132,7 +134,6 @@ public class GraphMaker : MonoBehaviour
                 t.rotation = Quaternion.Euler(-90, 0, 0);
                 t.gameObject.SetActive(false);
                 
-
                 point._previewVisuals = t.gameObject.GetComponent<MeshRenderer>();
                 EditorUtility.SetDirty(point);
             }
@@ -164,8 +165,9 @@ public class GraphMakerEditor : Editor
 
         GUILayout.Space(20);
 
-        if(GUILayout.Button("Générer le Graph"))
+        if(GUILayout.Button("Gï¿½nï¿½rer le Graph"))
             graphMaker.ComposeGraph();
+        
 
         GUILayout.Space(20);
 

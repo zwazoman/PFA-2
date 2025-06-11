@@ -101,6 +101,7 @@ public class SpellCaster : MonoBehaviour
 
                 if (showZone)
                 {
+                    Debug.Log(choosenWaypoint);
                     //bleu si + de shield que de degats
                     choosenWaypoint.SetPreviewState(ComputeShieldVsDamageDiff(spell) <= 0 ? WayPoint.PreviewState.SpellCastZone_Agressive : WayPoint.PreviewState.SpellCastZone_Shield);
                 }

@@ -221,6 +221,7 @@ public static class Tools
     {
         foreach (KeyValuePair<T1,T2> pair in dict)
         {
+            Debug.Log(pair);
             if (pair.Value.Equals(value))
             {
                 return pair.Key; // Retourne la cl�
