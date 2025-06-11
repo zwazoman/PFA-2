@@ -34,10 +34,8 @@ public class MusicManager : MonoBehaviour
         instance = this;
     }
 
-    private async void Start()
+    private void Start()
     {
-        print("nouveau soundmanager ???");
-
         SceneManager.activeSceneChanged += (Scene _, Scene _) => SceneTransitionManager.Instance.OnSceneChange += ChangeMusic;
 
         ChangeMusic("MainMenu");

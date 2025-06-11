@@ -7,8 +7,14 @@ public class AnimationEventReceiver : MonoBehaviour
 
     private void Awake()
     {
-        if ( _entity == null )
-            _entity = GetComponentInParent<Entity>();
+        try
+        {
+            if (_entity == null)
+                _entity = GetComponentInParent<Entity>();
+        }catch (Exception ex)
+        {
+
+        }
     }
 
     public void AttackEvent(/*string connard*/)
