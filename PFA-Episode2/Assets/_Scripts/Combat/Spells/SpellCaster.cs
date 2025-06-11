@@ -337,7 +337,7 @@ public class SpellCaster : MonoBehaviour
                 case SpellEffectType.DamageIncreasePercentageByDistanceToCaster:
                     if (!teamMix && entity.team == castingEntity.team)
                         break;
-                    e.damage *= (1 + zoneData.hitEntityCTXDict[entity].DistanceToHitEnnemy * .5f);
+                    e.damage *= (1 + zoneData.hitEntityCTXDict[entity].DistanceToHitEnnemy * .1f);
 
                     break;
                 case SpellEffectType.DamageIncreaseMeleeRange:
