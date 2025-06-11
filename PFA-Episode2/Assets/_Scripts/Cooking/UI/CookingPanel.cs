@@ -137,10 +137,12 @@ public class CookingPanel : AnimatedPanel
         switch (result)
         {
             case true:
-
-                await Awaitable.WaitForSecondsAsync(.5f);
-
+                
                 Hide();
+                
+                await Awaitable.WaitForSecondsAsync(.2f);
+
+                
                 _dishInfoPanel.Show();
                 _dishInfoPanel.Setup(spell);
 

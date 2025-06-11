@@ -34,9 +34,11 @@ public class AnimatedPanel : MonoBehaviour
 
     public async void Hide()
     {
-        await _canvasGroup.DOFade(0, TransitionTime).AsyncWaitForCompletion().AsUniTask();
         _canvasGroup.blocksRaycasts = false;
         _canvasGroup.interactable = false;
+        
+        await _canvasGroup.DOFade(0, TransitionTime).AsyncWaitForCompletion().AsUniTask();
+        
 
         SendMessage(MethodNameOnHidden, SendMessageOptions.DontRequireReceiver);
         _canvasGroup.gameObject.SetActive(false);
