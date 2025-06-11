@@ -204,7 +204,7 @@ public static class GlobalPlayerPrefs
         //generate cells
         SortedDictionary<string, SortedDictionary<string, SortedDictionary<string, string>>> tableaux = new();
         
-        foreach (var entry in entries)
+       /* foreach (var entry in entries)
         {
             string[] words = entry.Key.Split("_");
             string tableau = words[0];
@@ -212,7 +212,7 @@ public static class GlobalPlayerPrefs
             string colonne = entry.Key.Substring(tableau.Length+ligne.Length+2);
 
             tableaux[tableau][ligne][colonne] = entry.Value;
-        }
+        }*/
 
         
         
