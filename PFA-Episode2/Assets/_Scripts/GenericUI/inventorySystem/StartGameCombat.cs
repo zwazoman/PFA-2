@@ -18,6 +18,10 @@ public class StartGameCombat : MonoBehaviour
         {
             _inventoryPanel.transform.DOShakePosition(0.4f, 15);
             _equippedSpellSlot.transform.DOShakePosition(0.4f, 27);
+
+            //gameObject.SetActive(false);
+            //_GamePanel.Show();
+            //await CombatManager.Instance.Play();
         }
     }
 }
