@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82318b7d26988064d87630aaba93a0d4, type: 3}
+  m_Name: DialogueTuto
+  m_EditorClassIdentifier: 
+  DialogueData:
+  - Sentence:
+    - CharacterName: BreadMan
+      Text: "Si seulement les artiste pouvait faire des assets de moi, c'est triste
+        un tuto sans personnage \xE0 droite"
+      Key: 1
+      NextKey: 2
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 1
+    - CharacterName: Joueur
+      Text: "R\xE9el"
+      Key: 2
+      NextKey: 3
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 1
+    - CharacterName: BreadMan
+      Text: Ok chef
+      Key: 3
+      NextKey: End
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 1
+    - CharacterName: End
+      Text: '-'
+      Key: End
+      NextKey: 
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 0
+  - Sentence:
+    - CharacterName: Testeur
+      Text: "Test test, <color=#FF0000>1,</color> <color=#0000FF>2,</color> je test
+        le <i><b>syst\uFFFDme.</b></i>"
+      Key: 42
+      NextKey: Fin
+      ShakeTextBox: 1
+      ShakeText: 1
+      LetterByLetter: 1
+    - CharacterName: End
+      Text: '-'
+      Key: End
+      NextKey: 
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 0
+  - Sentence:
+    - CharacterName: Testeur
+      Text: "Test test, <color=#FF0000>1,</color> <color=#0000FF>2,</color> je test
+        le <i><b>syst\uFFFDme.</b></i>"
+      Key: 43
+      NextKey: Fin
+      ShakeTextBox: 1
+      ShakeText: 1
+      LetterByLetter: 1
+    - CharacterName: End
+      Text: '-'
+      Key: End
+      NextKey: 
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 0

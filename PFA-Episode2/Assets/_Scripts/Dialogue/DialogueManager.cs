@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -22,8 +23,7 @@ public class DialogueManager : MonoBehaviour
     private int _numberDialogue = 0;
     private int _numberSentence = 0;
     private bool _isFinish;
-
-    [SerializeField] private BreadGuy _bread;
+    public bool StartDialogue;
 
     private bool IsPunctuation(char c) => c is '?' or '.' or '!' or ',';
 
@@ -54,8 +54,10 @@ public class DialogueManager : MonoBehaviour
     public void GetDialogue(int NumberDialogue) { SearchDialogue(NumberDialogue); }
 
     // Divise les différents éléments pour les ranger par ligne puis par éléments, ensuite cherche la clé corresspondante
-    private void SearchDialogue(int NumberDialogue)
+    private async void SearchDialogue(int NumberDialogue)
     {
+        _panel.SetActive(true);
+        await _panel.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
         _numberDialogue = NumberDialogue;
         if (_isWriting) return;
 
@@ -185,13 +187,18 @@ public class DialogueManager : MonoBehaviour
 
     private async void EndDialogue()
     {
-        if (!_isFinish)
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        await _panel.transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InOutBack);
+        _panel.SetActive(false);
+        if (!_isFinish && currentSceneName == "Heal")
         {
             _isFinish = true;
-            await _panel.transform.DOScale(Vector3.zero, 0.4f).SetEase(Ease.InOutBack);
-            _panel.SetActive(false);
             await UniTask.Delay(500);
             await SceneTransitionManager.Instance.GoToScene("WorldMap");
+        }
+        else if (currentSceneName == "Forest_Combat_Tuto")
+        {
+            SetupFight.Instance.StartGame();
         }
         _numberSentence = 0;
         _nameCharacter.text = "";
@@ -200,7 +207,7 @@ public class DialogueManager : MonoBehaviour
 
     public void Click()
     {
-        if(_bread.StartDialogue)
+        if(StartDialogue)
         {
             _characterDelay = 0;
             _punctuationDelay = 0;
