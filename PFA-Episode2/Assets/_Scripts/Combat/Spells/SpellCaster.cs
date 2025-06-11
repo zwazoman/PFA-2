@@ -314,7 +314,7 @@ public class SpellCaster : MonoBehaviour
                     zoneData.hitEntityCTXDict[entity].PushDamage = pushDamages;
                     zoneData.hitEntityCTXDict[entity].PushPoint = pushPoint;
 
-                    e.pushDamage = pushDamages * 2;
+                    e.pushDamage = pushDamages;
                     e.pushPoint = zoneData.hitEntityCTXDict[entity].PushPoint;
 
                     break;
