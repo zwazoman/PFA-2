@@ -76,6 +76,8 @@ public class AIEntity : Entity
         else
             attacked = true;
 
+        await UniTask.Yield();
+
         if (attacked && stats.currentMovePoints > 0 && isDead == false)
         {
             switch (Data.aiBehaviour)
