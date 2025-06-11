@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class MusicManager : MonoBehaviour
 {
     #region Singleton
-    private static MusicManager instance = null;
+    private static MusicManager instance;
     public static MusicManager Instance
     {
         get
@@ -29,8 +29,15 @@ public class MusicManager : MonoBehaviour
 
     MusicParameters _currentParameter;
 
+    private void Awake()
+    {
+        instance = this;
+    }
+
     private async void Start()
     {
+        print("nouveau soundmanager ???");
+
         SceneManager.activeSceneChanged += (Scene _, Scene _) => SceneTransitionManager.Instance.OnSceneChange += ChangeMusic;
 
         ChangeMusic("MainMenu");

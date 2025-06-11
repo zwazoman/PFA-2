@@ -47,7 +47,7 @@ public class SpellCaster : MonoBehaviour
         {
             if (point.State == WaypointState.Obstructed) continue; //walls
             if ((floodDict[point] > spell.spellData.Range ||floodDict[point]  <= spell.spellData.Range-RangeRingThickness) && (floodDict[point]!=0)) continue; //range
-            if ((!ignoreTerrain && (spell.spellData.IsOccludedByWalls && Tools.CheckWallsBetween(center, point)))) //line of sight
+            if (!ignoreTerrain && spell.spellData.IsOccludedByWalls && Tools.CheckLOSBetween(center, point)) //line of sight
             {
                 if (showZone) point.SetPreviewState(WayPoint.PreviewState.occludedAreaOfEffect);
                 continue;
@@ -101,6 +101,7 @@ public class SpellCaster : MonoBehaviour
 
                 if (showZone)
                 {
+                    Debug.Log(choosenWaypoint);
                     //bleu si + de shield que de degats
                     choosenWaypoint.SetPreviewState(ComputeShieldVsDamageDiff(spell) <= 0 ? WayPoint.PreviewState.SpellCastZone_Agressive : WayPoint.PreviewState.SpellCastZone_Shield);
                 }
@@ -176,9 +177,8 @@ public class SpellCaster : MonoBehaviour
         SpellCastingContext context = new();
 
         context.numberOfHitEnnemies = (byte)hitEntities.Count;
-        context.distanceToHitEnemy = (byte)targetToEntity.magnitude;
+        context.DistanceToHitEnnemy = (byte)Mathf.RoundToInt(Vector3.Distance(transform.position.Flatten(), hitEntity.transform.position.Flatten()));//(byte)targetToEntity.magnitude;
         context.pushDirection = pushDirection;
-        context.casterPos = hitEntity.transform.position;
 
         return context;
     }
@@ -337,13 +337,13 @@ public class SpellCaster : MonoBehaviour
                 case SpellEffectType.DamageIncreasePercentageByDistanceToCaster:
                     if (!teamMix && entity.team == castingEntity.team)
                         break;
-                    e.damage *= (1 + zoneData.hitEntityCTXDict[entity].distanceToHitEnemy * .5f);
+                    e.damage *= (1 + zoneData.hitEntityCTXDict[entity].DistanceToHitEnnemy * .5f);
 
                     break;
                 case SpellEffectType.DamageIncreaseMeleeRange:
                     if (!teamMix && entity.team == castingEntity.team)
                         break;
-                    if (zoneData.hitEntityCTXDict[entity].distanceToHitEnemy == 1)
+                    if (zoneData.hitEntityCTXDict[entity].DistanceToHitEnnemy == 1)
                     {
                         e.damage *= (effect.value);
                     }
@@ -451,6 +451,7 @@ public class SpellCaster : MonoBehaviour
         {
             foreach (Entity entity in zoneData.hitEntityCTXDict.Keys)
             {
+                //apply effect on entity
                 tasks.Add(HitEntityBehaviour(entity, spell, zoneData));
             }
         }
@@ -480,22 +481,16 @@ public class SpellCaster : MonoBehaviour
 
     async UniTask HitEntityBehaviour(Entity entity, Spell spell, SpellCastData zoneData)
     {
+        //look at caster
         if (entity != castingEntity)
             await entity.LookAt(castingEntity.currentPoint);
-
-        SpellProjectile projectile;
-        Vector3 spawnPos;
-        if (_spellCastingSocket != null)
-            spawnPos = _spellCastingSocket.position;
-        else
-            spawnPos = transform.position;
-
-        PoolManager.Instance.ProjectilePool.PullObjectFromPool(spawnPos).TryGetComponent(out projectile);
         
-        Debug.Log(spell.spellData.Mesh);
-        Debug.Log(spell.spellData.Name);
+        //projectile
+        var spawnPos = _spellCastingSocket != null ? _spellCastingSocket.position : transform.position;
+        PoolManager.Instance.ProjectilePool.PullObjectFromPool(spawnPos).TryGetComponent(out SpellProjectile projectile);
         await projectile.Launch(castingEntity, entity, spell.spellData.Mesh);
 
+        //compute spell effect
         BakedTargetedSpellEffect e = ComputeTargetedSpellEffect(spell, ref zoneData, entity);
 
         //wait for animations to play
@@ -565,9 +560,8 @@ public struct SpellCastData
 public class SpellCastingContext
 {
     public byte numberOfHitEnnemies;
-    public byte distanceToHitEnemy;
+    public byte DistanceToHitEnnemy;
     public Vector3 pushDirection;
-    public Vector3 casterPos;
     public WayPoint PushPoint;
     public int PushDamage;
 }

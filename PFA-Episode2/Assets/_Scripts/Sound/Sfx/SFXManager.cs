@@ -94,7 +94,7 @@ public class SFXManager : MonoBehaviour
     }
 
     /// <summary>
-    /// renvoie l'audioSource dans la pool et désactive son gameObject
+    /// renvoie l'audioSource dans la pool et dï¿½sactive son gameObject
     /// </summary>
     /// <param name="source"></param>
     void BackToPool(AudioSource source)
@@ -108,35 +108,40 @@ public class SFXManager : MonoBehaviour
     #region PlaySFXClip
 
     /// <summary>
-    /// récupère une audioSource dans la pool et joue un des sons possibles
+    /// rï¿½cupï¿½re une audioSource dans la pool et joue un des sons possibles
     /// </summary>
     /// <param name="choosenSound"></param>
     /// <param name="volumefactor"></param>
     /// <param name="pitchfactor"></param>
     public AudioSource PlaySFXClip(Sounds choosenSound, float volumefactor = 1f, float pitchfactor = 1f)
     {
-        AudioSource audioSource = UseFromPool();
-        Clip choosenClip = _clips[(int)choosenSound];
-
         try
         {
+            AudioSource audioSource = UseFromPool();
+            Clip choosenClip = _clips[(int)choosenSound];
+            
             AudioClip audioClip = ChooseRandomClip(choosenClip);
-            audioSource.clip = audioClip; // assigne le clip random à l'audiosource
+            audioSource.clip = audioClip; // assigne le clip random ï¿½ l'audiosource
+            
+            return AudioSourceHandle(audioSource, choosenClip.Volume * volumefactor, choosenClip.Pitch * pitchfactor, true, false, choosenClip.MixerGroup);
         }
-        catch(NoSoundsFound e)
+        catch(Exception e)
         {
-            Debug.LogException(e);
+            if (e is NoSoundsFound)
+                Debug.LogWarning(e.Message, this);
+            else
+                Debug.LogException(e);
+            
             return null;
         }
-
-        return AudioSourceHandle(audioSource, choosenClip.Volume * volumefactor, choosenClip.Pitch * pitchfactor, true, false, choosenClip.MixerGroup);
+        
     }
 
     public AudioSource PlaySFXClip(AudioClip audioClip, float volume = 1f, float pitch = 1f)
     {
         AudioSource audioSource = UseFromPool();
 
-        audioSource.clip = audioClip; // assigne le clip random à l'audiosource
+        audioSource.clip = audioClip; // assigne le clip random ï¿½ l'audiosource
 
         return AudioSourceHandle(audioSource, volume, pitch);
     }
@@ -155,7 +160,7 @@ public class SFXManager : MonoBehaviour
 
         if (choosenClip == null)
         {
-            Debug.LogError("incorrect sound Name");
+            Debug.LogWarning("incorrect sound Name");
             return null;
         }
 
@@ -169,7 +174,7 @@ public class SFXManager : MonoBehaviour
     #region PlaySFXClipAtPosition
 
     /// <summary>
-    /// chosit une liste dans une liste via un enum et choisit ensuite un audioclip au hasard dans ce dernier pour le jouer. le son sera placé a un endroit donné et prendra en compte ou non les effets.
+    /// chosit une liste dans une liste via un enum et choisit ensuite un audioclip au hasard dans ce dernier pour le jouer. le son sera placï¿½ a un endroit donnï¿½ et prendra en compte ou non les effets.
     /// </summary>
     /// <param name="choosenSound"></param>
     /// <param name="position"></param>
@@ -187,7 +192,11 @@ public class SFXManager : MonoBehaviour
             AudioClip audioClip = ChooseRandomClip(choosenClip);
             audioSource.clip = audioClip;
         }
-        catch(NoSoundsFound e)
+        catch(Exception e) when (e is not NoSoundsFound)
+        {
+            Debug.LogWarning(e.Message,this);
+            return null;
+        }catch(Exception e)
         {
             Debug.LogException(e);
             return null;
@@ -224,7 +233,7 @@ public class SFXManager : MonoBehaviour
 
         if (choosenClip == null)
         {
-            Debug.LogError("incorrect sound Name");
+            Debug.LogWarning("incorrect sound Name");
             return null;
         }
 
@@ -238,7 +247,7 @@ public class SFXManager : MonoBehaviour
     #endregion
 
     /// <summary>
-    /// gère le retour a la pool d'une audiosource s'arrêtant apres la fin de son clip
+    /// gï¿½re le retour a la pool d'une audiosource s'arrï¿½tant apres la fin de son clip
     /// </summary>
     /// <param name="source"></param>
     /// <param name="clipLength"></param>
@@ -250,7 +259,7 @@ public class SFXManager : MonoBehaviour
     }
 
     /// <summary>
-    /// gère les régales de l'audiosource et joue le son.
+    /// gï¿½re les rï¿½gales de l'audiosource et joue le son.
     /// </summary>
     /// <param name="audioSource"></param>
     /// <param name="volume"></param>
@@ -260,16 +269,17 @@ public class SFXManager : MonoBehaviour
     /// <returns></returns>
     AudioSource AudioSourceHandle(AudioSource audioSource, float volume = 1, float pitch = 1, bool is2D = true, bool bypassesEffects = false, AudioMixerGroup choosenMixerGroup = null)
     {
-        audioSource.volume = volume; // assigne le volume à l'audiosource
-        audioSource.pitch = pitch; // assigne le pitch à l'audiosource
-        if (!is2D) audioSource.spatialBlend = 1; // gère bien le blend rapport a l'audiolistener
-        audioSource.bypassEffects = bypassesEffects; // gère le bypass ou non des effets
+        audioSource.volume = volume; // assigne le volume ï¿½ l'audiosource
+        audioSource.pitch = pitch; // assigne le pitch ï¿½ l'audiosource
+        if (!is2D) audioSource.spatialBlend = 1; // gï¿½re bien le blend rapport a l'audiolistener
+        audioSource.bypassEffects = bypassesEffects; // gï¿½re le bypass ou non des effets
         if(choosenMixerGroup != null) audioSource.outputAudioMixerGroup = choosenMixerGroup; //selects the right audioMixer
 
 
         audioSource.Play(); // joue le son
-        
-        float clipLength = audioSource.clip.length; // détermine la longueur du son
+
+        float clipLength = audioSource.clip.length; // dï¿½termine la longueur du son
+
 
         StartCoroutine(HandleSoundEnd(audioSource, clipLength));
 
@@ -277,7 +287,7 @@ public class SFXManager : MonoBehaviour
     }
 
     /// <summary>
-    /// choisit un clip random dans le clip donné. trueRandom défini si oui ou non, la liste devra-t-être parcourue entièrement avant de se répéter
+    /// choisit un clip random dans le clip donnï¿½. trueRandom dï¿½fini si oui ou non, la liste devra-t-ï¿½tre parcourue entiï¿½rement avant de se rï¿½pï¿½ter
     /// </summary>
     /// <param name="clip"></param>
     /// <param name="trueRandom"></param>

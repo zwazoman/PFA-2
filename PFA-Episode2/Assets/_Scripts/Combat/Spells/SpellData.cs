@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 [Serializable]
 public class SpellData
@@ -16,7 +17,7 @@ public class SpellData
     public string IngredientsCombination;
     public bool IsUtilitary;
 
-    [Header("Casting")]
+    [Header("Casting")] 
 
     public bool IsOccludedByWalls = true;
     public int Range = 2;

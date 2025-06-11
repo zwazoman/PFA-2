@@ -4,6 +4,7 @@ using DG.Tweening;
 using System.Collections.Generic;
 using System.Net.Mime;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
@@ -16,14 +17,20 @@ public static class Tools
 
     public static Vector3 GetPositionAboveFinger()
     {
+
+#if UNITY_EDITOR
+        return Input.mousePosition;
+#else
         return Input.mousePosition + Vector3.up * 140f*1080f/(float)Screen.height;
+#endif
+
     }
     public static Vector3Int SnapOnGrid(this Vector3 initialPos)
     {
         return new Vector3Int(Mathf.RoundToInt(initialPos.x), 0, Mathf.RoundToInt(initialPos.z));
     }
 
-    public static bool CheckWallsBetween(WayPoint a, WayPoint b, float heightOffset = 0.7f)
+    public static bool CheckLOSBetween(WayPoint a, WayPoint b, float heightOffset = 0.7f)
     {
         Vector3 aPos = a.transform.position + Vector3.up * heightOffset;
         Vector3 bPos = b.transform.position + Vector3.up * heightOffset;
@@ -214,6 +221,7 @@ public static class Tools
     {
         foreach (KeyValuePair<T1,T2> pair in dict)
         {
+            Debug.Log(pair);
             if (pair.Value.Equals(value))
             {
                 return pair.Key; // Retourne la cl�
@@ -329,4 +337,14 @@ public static class Tools
         group.DOFade(1, 1);
     }
 
+
+    #if UNITY_EDITOR
+    [MenuItem("Game/Play from Start")]
+    public static void PlayFromStart()
+    {
+        EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
+        EditorSceneManager.OpenScene("Assets/_Scenes/InBuild/MainMenu.unity");
+        EditorApplication.EnterPlaymode();
+    }
+    #endif
 }

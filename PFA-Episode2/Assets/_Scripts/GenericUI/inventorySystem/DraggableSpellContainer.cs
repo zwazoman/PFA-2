@@ -1,48 +1,75 @@
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class DraggableSpellContainer : DraggableItemContainer
 {
-    [Header("SceneReferences")]
+        [Header("SceneReferences")]
 
     [SerializeField] Button CancelButton;
+    [SerializeField] Image image;
     [SerializeField] Image backGroundImage;
-    [SerializeField] GameObject DeleteIcon;
-    [SerializeField] Image _descriptionPanel;
-    [SerializeField] GetInfoInVariant _infoVariant;
-    public Transform Target;
-    [SerializeField] Transform _enfant;
-
-    public bool _faudraRemove;
-
-    private void Start()
+    [SerializeField] private GameObject DisabledImage;
+    
+    [SerializeField] private SpellInfoPopup _descriptionPanel;
+    
+    int indexInInventory;
+    
+    public void SetUp(SpellData spell,int indexInInventory )
     {
-        if (Target == null) { Target = gameObject.transform.transform.parent; }
+        this.indexInInventory = indexInInventory;
+        
+        image.sprite = spell.Sprite;
+        backGroundImage.sprite = spell.Sprite;
+        
+        DisabledImage.SetActive(false);
+        
+        //description panel
+        _descriptionPanel?.Setup(spell);
+        _descriptionPanel?.gameObject.SetActive(false);
+        EventClicked += () =>
+        {
+            _descriptionPanel?.gameObject.SetActive(true);
+            _descriptionPanel.ClearParent();
+            
+        };
+        EventClickedSomewhereElse += () =>
+        {
+            _descriptionPanel?.gameObject.SetActive(false);
+            _descriptionPanel.AttachToTransform(transform) ;
+        };
+        
+
     }
 
     public override void OnBeginDrag(PointerEventData eventData)
     {
         base.OnBeginDrag(eventData);
-        _descriptionPanel.gameObject.SetActive(true);
+        
+        //enable description popup
+        _descriptionPanel?.gameObject.SetActive(true);
+        _descriptionPanel?.AttachToTransform(transform);
     }
 
     public override void OnEndDrag(PointerEventData eventData)
     {
         base.OnEndDrag(eventData);
-        _descriptionPanel.gameObject.SetActive(false);
+        
+        //disable description popup
+        _descriptionPanel?.gameObject.SetActive(false);
+        
         List<RaycastResult> a = new();
         EventSystem.current.RaycastAll(eventData, a);
         if (a.Count > 0 && a[0].gameObject.layer == 8)
         {
-            backGroundImage.gameObject.SetActive(true);
-            gameObject.transform.SetParent(a[0].gameObject.transform);
-            gameObject.transform.localPosition = Vector3.zero;
-            _enfant.transform.SetParent(Target);
-            _enfant.transform.localPosition = Vector3.zero;
-            GameManager.Instance.playerInventory.playerEquipedSpellIndex.Add(_infoVariant.IndexInPlayerSpell);
-            _faudraRemove = true;
+            DisplayAsEquipped(a[0].gameObject.transform);
+            
+            //save spell index to be equipped
+            GameManager.Instance.playerInventory.playerEquipedSpellIndex.Add(indexInInventory);
         }
         else
         {
@@ -50,13 +77,25 @@ public class DraggableSpellContainer : DraggableItemContainer
         }
     }
 
+    public void DisplayAsEquipped(Transform ParentSlot)
+    {
+        //attach to bottom slot
+        transform.parent = ParentSlot;
+        transform.localPosition = Vector3.zero;
+            
+        //set up cancel button
+        DisabledImage.SetActive(true);
+        CancelButton.onClick.AddListener(()=>
+        {
+            GameManager.Instance.playerInventory.playerEquipedSpellIndex.Remove(indexInInventory);
+            Reset();
+        });
+    }
+
     public override void Reset()
     {
-        _enfant.parent = gameObject.transform;
-        _enfant.localPosition = Vector3.zero;
-        if(_faudraRemove) { GameManager.Instance.playerInventory.playerEquipedSpellIndex.Remove(_infoVariant.IndexInPlayerSpell); _faudraRemove = false; }
         CancelButton.onClick.RemoveAllListeners();
-        backGroundImage.gameObject.SetActive(false);
+        DisabledImage.SetActive(false);
         base.Reset();
     }
 }

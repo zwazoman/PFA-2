@@ -1,9 +1,11 @@
+
 using System;
-using Unity.VisualScripting;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
 {
     protected bool isDragging;
 
@@ -15,13 +17,16 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public Transform originalParent;
     int siblingIndex;
     CanvasGroup canvasGroup;
-
+    
     public bool usePositionAboveFinger = true;
 
     protected Sounds dragSound = Sounds.DragDish;
 
     //notifiers
-    public event Action EventBeginDrag, EventEndDrag;
+    public event Action EventBeginDrag, EventEndDrag,EventClicked,EventClickedSomewhereElse;
+
+    private bool inspected = false;
+    
 
     protected virtual void Awake()
     {
@@ -63,5 +68,34 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         transform.parent = originalParent;
         transform.SetSiblingIndex(siblingIndex);
         rectTransform.anchoredPosition = originalPos;
+    }
+    
+    
+    //click events
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (!inspected)
+        {
+            inspected = true;
+            EventClicked?.Invoke();
+            _ = CheckForOtherClick();
+        }
+    }
+
+    async UniTask CheckForOtherClick()
+    {
+        //Set up the new Pointer Event
+        PointerEventData mPointerEventData = new PointerEventData(EventSystem.current);
+
+        //Create a list of Raycast Results
+        List<RaycastResult> results = new List<RaycastResult>();
+
+        do
+        {
+            await UniTask.Yield();
+        } while (!(Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Ended));
+
+        inspected = false;
+        EventClickedSomewhereElse?.Invoke();
     }
 }

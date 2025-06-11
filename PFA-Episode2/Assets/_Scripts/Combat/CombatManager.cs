@@ -68,10 +68,13 @@ public class CombatManager : MonoBehaviour
         Entities.Remove(entity);
         if (entity.team == Team.Player && PlayerEntities.Contains(entity))
             PlayerEntities.Remove(entity);
+        
         else if (entity.team == Team.Enemy && EnemyEntities.Contains(entity))
         {
             EnemyEntities.Remove(entity);
             print(EnemyEntities.Count);
+            
+            //victoire : tous les ennemis sont morts
             if (EnemyEntities.Count == 0)
             {
                 foreach(Entity connard in PlayerEntities)
@@ -81,6 +84,7 @@ public class CombatManager : MonoBehaviour
             }
         }
 
+        //game over
         if(entity is PlayerEntity)
             await GameOver();
     }
@@ -194,6 +198,7 @@ public class CombatManager : MonoBehaviour
         if(PlaytestDataRecorder.Instance !=null)
             await PlaytestDataRecorder.Instance.OnGameOver();
 
+        MusicManager.Instance.ChangeVolume(0, 1);
         SFXManager.Instance.PlaySFXClip(Sounds.GameOverJingle);
         _gameOverPanel?.Show();
     }
@@ -207,6 +212,7 @@ public class CombatManager : MonoBehaviour
 
         MusicManager.Instance.ChangeMusic("WorldMap");
         SFXManager.Instance.PlaySFXClip(Sounds.VictoryJingle);
+        SFXManager.Instance.PlaySFXClip(Sounds.UiTwinkle);
         _rewardPanel?.Show();
         Time.timeScale = 1;
         //await SceneTransitionManager.Instance.GoToScene("WorldMap");

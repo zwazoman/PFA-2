@@ -1,15 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class SetupSpellInventory : MonoBehaviour
 {
-    [SerializeField] private List<Transform> _targetInventory = new();
-    [SerializeField] private List<Transform> _equippedInventory = new();
+    [FormerlySerializedAs("_targetInventory")] [SerializeField] private List<Transform> _inventorySlots = new();
+    [SerializeField] public List<Transform> _equippedInventory = new();
     [SerializeField] private GameObject _prefabItem;
     private int _index = 0;
-    private GetInfoInVariant _refInfoVariant;
-    public SpellData SpellChoose;
-    [HideInInspector] public GameObject ConnardDeMes2;
 
     private void Start()
     {
@@ -18,52 +16,24 @@ public class SetupSpellInventory : MonoBehaviour
 
     public void SetupInventory()
     {
+        int mesBoules = 0;
+        //create one draggable inventory slot for each item in the player's inventory
         for (int i = 0; i < GameManager.Instance.playerInventory.Spells.Count; i++)
         {
-            SpellChoose = GameManager.Instance.playerInventory.Spells[i];
+            SpellData spell = GameManager.Instance.playerInventory.Spells[i];
 
-            GameObject go = Instantiate(_prefabItem, _targetInventory[i]); //Création 
-            _refInfoVariant = go.GetComponent<GetInfoInVariant>();
-            _refInfoVariant.IndexInPlayerSpell = i;
-            _refInfoVariant.SpellIcon.sprite = SpellChoose.Sprite; //Sprite
-            _refInfoVariant.SpellIconDisable.sprite = SpellChoose.Sprite;
-            _refInfoVariant.Range.text = SpellChoose.Range.ToString();
-            _refInfoVariant.Cooldown.text = SpellChoose.CoolDown.ToString();
-
-            _refInfoVariant.SpellName.text = SpellChoose.Name; //Nom
-            for (int index = 0; index < SpellChoose.Effects.Count; index++) //Effets
+            
+            DraggableSpellContainer ItemSlot = Instantiate(_prefabItem, _inventorySlots[i]).GetComponentInChildren<DraggableSpellContainer>(); 
+            ItemSlot.SetUp(spell,i);
+            
+            
+            if(GameManager.Instance.playerInventory.playerEquipedSpellIndex.Contains(i))
             {
-                _refInfoVariant.Effect[index].gameObject.transform.parent.gameObject.SetActive(true);
-                SpellEffect spellEffect = SpellChoose.Effects[index];
-                _refInfoVariant.Effect[index].text = Serializer.GetSpellEffectString(spellEffect);
+                ItemSlot.originalParent = ItemSlot.transform.parent;
+                ItemSlot.DisplayAsEquipped(_equippedInventory[mesBoules]);
+                mesBoules++;
             }
-
-            _refInfoVariant.SpellZoneEffect.sprite = SpellChoose.AreaOfEffect.sprite; //Area
-
-            foreach (int spellDataIndex in GameManager.Instance.playerInventory.playerEquipedSpellIndex) //pour chaque spell qu'on construit on vérifie si il est equipe
-            {
-                if(i == spellDataIndex)
-                {
-                    ConnardDeMes2 = go; //L'objet entier
-                    ConnardDeMes2.GetComponent<DraggableSpellContainer>()._faudraRemove = true;
-                    ConnardDeMes2.GetComponent<DraggableSpellContainer>().Target = _targetInventory[i];
-                    Transform parent = go.transform.parent; //SpellSlot
-                    GameObject enfant = ConnardDeMes2.transform.GetChild(1).gameObject; //L'image disable
-                    ConnardDeMes2.transform.SetParent(_equippedInventory[_index].gameObject.transform);
-                    ConnardDeMes2.transform.localPosition = Vector3.zero;
-                    enfant.SetActive(true);
-                    enfant.transform.SetParent(parent);
-                    enfant.transform.localPosition = Vector3.zero;
-                    RectTransform rectTransform = enfant.GetComponent<RectTransform>();
-                    rectTransform.anchorMin = Vector2.zero;
-                    rectTransform.anchorMax = Vector2.one;
-                    rectTransform.offsetMin = Vector2.zero;
-                    rectTransform.offsetMax = Vector2.zero;
-                    ConnardDeMes2.transform.GetComponent<DraggableSpellContainer>().originalParent = enfant.transform.parent;
-                    ConnardDeMes2.GetComponent<DraggableSpellContainer>().enabled = false;
-                    _index++;
-                }
-            }
+            
         }
     }
 
