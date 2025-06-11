@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     public float progress;
+    public bool FirstPlay = true;
     public Inventory playerInventory = new();
     public SerializablePlayer PlayerPosMap = new SerializablePlayer();
 
@@ -71,7 +72,6 @@ public class GameManager : MonoBehaviour
             Destroy(this);
             throw new System.Exception("Y'avait déjà un singleton gamemanager dans la scene");
         }
-        
     }
 
     public void LoadOrCreateSave()

@@ -10,6 +10,7 @@ public class NodeTypes
         Ingredient,
         Boss,
         Start,
-        Heal
+        Heal,
+        Tuto
     }
 }
