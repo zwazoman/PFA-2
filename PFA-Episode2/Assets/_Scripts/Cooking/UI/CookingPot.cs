@@ -245,6 +245,7 @@ public class CookingPot : MonoBehaviour
         GameManager.Instance.playerInventory.Spells.Add(spell);
 
         SFXManager.Instance.PlaySFXClip(Sounds.Sizzle);
+        SFXManager.Instance.PlaySFXClip(Sounds.UiTwinkle);
         Visuals3D.PlayCookedDishAnim(spell);
 
         return true;

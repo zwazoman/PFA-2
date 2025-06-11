@@ -30,7 +30,7 @@ public static class Tools
         return new Vector3Int(Mathf.RoundToInt(initialPos.x), 0, Mathf.RoundToInt(initialPos.z));
     }
 
-    public static bool CheckWallsBetween(WayPoint a, WayPoint b, float heightOffset = 0.7f)
+    public static bool CheckLOSBetween(WayPoint a, WayPoint b, float heightOffset = 0.7f)
     {
         Vector3 aPos = a.transform.position + Vector3.up * heightOffset;
         Vector3 bPos = b.transform.position + Vector3.up * heightOffset;
@@ -221,6 +221,7 @@ public static class Tools
     {
         foreach (KeyValuePair<T1,T2> pair in dict)
         {
+            Debug.Log(pair);
             if (pair.Value.Equals(value))
             {
                 return pair.Key; // Retourne la cl�

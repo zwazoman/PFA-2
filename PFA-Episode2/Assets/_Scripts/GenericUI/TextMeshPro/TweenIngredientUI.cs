@@ -87,7 +87,7 @@ public class TweenIngredientUI : MonoBehaviour
     public async UniTask Monte(RectTransform chosenUI) //Carte choisi 
     {
         foreach(Button btn in _buttonList) { btn.interactable = false; }
-        SFXManager.Instance.PlaySFXClip(Sounds.CardEnter);
+        SFXManager.Instance.PlaySFXClip(Sounds.UiTwinkle);
         await chosenUI.DOPunchScale(Vector3.one*.2f, .25f, 5, 0.6f);
         await chosenUI.DOAnchorPos(new Vector2(chosenUI.anchoredPosition.x, 2100), TweenDuration).SetEase(Ease.InBack);
         chosenUI.position = new Vector2(chosenUI.anchoredPosition.x, -2100);
