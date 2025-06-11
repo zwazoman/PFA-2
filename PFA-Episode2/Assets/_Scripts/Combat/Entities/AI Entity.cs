@@ -196,9 +196,11 @@ public class AIEntity : Entity
                     enemyPoints.Add(entity.currentPoint);
                 }
 
-                enemyPoints.FindClosestFloodPoint(out choosenTargetPoint, Tools.SmallFlood(targetEntityPoint, 6, false, true));
+                enemyPoints.FindClosestFloodPoint(out choosenTargetPoint, Tools.SmallFlood(targetEntityPoint, Data.MaxMovePoints + choosenSpell.spellData.Range, false, true));
 
-                if (Tools.FloodDict[choosenTargetPoint] > Data.MaxMovePoints + choosenSpell.spellData.Range)
+                print(Tools.FloodDict.Count);
+
+                if (choosenTargetPoint == null)
                     return await CastSpellAtPoint(choosenSpell, currentPoint);
 
                 return await CastSpellAtPoint(choosenSpell, choosenTargetPoint);
@@ -269,9 +271,28 @@ public class AIEntity : Entity
 
         while (castData.zonePoints == null || castData.zonePoints.Count == 0)
         {
+            if (targetPointsDict.Count == 0)
+            {
+                print("plus de cases");
+                break;
+            }
+
             choosenTargetPoint = targetPointsDict.Keys.FindClosestFloodPoint();
 
-            GetInvertShot(choosenTargetPoint, targetPointsDict[choosenTargetPoint][0], choosenSpell, out pointToSelect, targetPoint);
+            if (!Tools.SmallFlood(currentPoint,16, true ,true) .ContainsKey(choosenTargetPoint)) // if pas accessible ça dégage
+            {
+                print(choosenTargetPoint.transform.position + "case non accessible");
+
+                targetPointsDict[choosenTargetPoint].Remove(targetPointsDict[choosenTargetPoint][0]);
+
+                if (targetPointsDict[choosenTargetPoint].Count == 0)
+                    targetPointsDict.Remove(choosenTargetPoint);
+
+                await UniTask.Yield();
+                continue;
+            }
+
+            GetInvertShot(choosenTargetPoint, targetPointsDict[choosenTargetPoint][0], choosenSpell, out pointToSelect, targetPoint); // test de tirer : si pas possible ça dégage
 
             rangePoints = entitySpellCaster.ComputeAndPreviewSpellRange(choosenSpell, choosenTargetPoint, false );
             castData = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints, false);
