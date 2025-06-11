@@ -22,7 +22,7 @@ public class MapMaker2 : MonoBehaviour
 
     private int _distanceSpawnYModifiable = 0;
     private int _probaIntersectionModifiable;
-    private int _toutdroit = 3;
+    private int _toutdroit = 4;
 
     [Header("Other ne pas toucher sauf code")]
     [field: SerializeField] public Node NodePrefab { get; private set; }

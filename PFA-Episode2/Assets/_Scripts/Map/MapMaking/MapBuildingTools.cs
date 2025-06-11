@@ -78,7 +78,7 @@ public class MapBuildingTools : MonoBehaviour
 
     public bool Intersection(int mapRangeCurrentIndex, int probaIntersection)
     {
-        if (mapRangeCurrentIndex >= 4)
+        if (mapRangeCurrentIndex > 4)
         {
             int result = Random.Range(1, 11);
             if (result <= probaIntersection) //Intersection si true
@@ -93,17 +93,20 @@ public class MapBuildingTools : MonoBehaviour
 
     public void AttributeEvent(int _mapRange)
     {
-        if (MapMaker2.Instance.CurrentNode.Position + 1 == _mapRange) { MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Combat; }
+        if (MapMaker2.Instance.CurrentNode.Position + 1 == _mapRange) { MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Cuisine; }
         if (MapMaker2.Instance.CurrentNode.Position == _mapRange) { MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Boss; }
         switch (MapMaker2.Instance.CurrentNode.Position)
         {
             case 1:
-                MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Ingredient;
+                MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Tuto;
                 break;
             case 2:
-                MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Cuisine;
+                MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Ingredient;
                 break;
             case 3:
+                MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Cuisine;
+                break;
+            case 4:
                 MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Combat;
                 break;
         }
