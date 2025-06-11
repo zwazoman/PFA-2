@@ -14,29 +14,45 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DialogueData:
   - Sentence:
-    - CharacterName: BreadMan
-      Text: "Si seulement les artiste pouvait faire des assets de moi, c'est triste
-        un tuto sans personnage \xE0 droite"
+    - CharacterName: ???
+      Text: 'Halt, little nibble-rat! The sacred oven has chosen you... Are you ready
+        to become a culinary warrior? '
       Key: 1
       NextKey: 2
       ShakeTextBox: 0
       ShakeText: 0
       LetterByLetter: 1
-    - CharacterName: Joueur
-      Text: "R\xE9el"
+    - CharacterName: ???
+      Text: "Here, battles aren\u2019t won with claws... but with flavor."
       Key: 2
       NextKey: 3
       ShakeTextBox: 0
       ShakeText: 0
       LetterByLetter: 1
-    - CharacterName: BreadMan
-      Text: Ok chef
+    - CharacterName: Master Crouton
+      Text: I am Master Crouton. Crispy on the outside, soft in the crumb. Your mentor
+        for today.
       Key: 3
+      NextKey: 4
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 1
+    - CharacterName: Master Crouton
+      Text: "In culinary combat, every dish is a weapon! It\u2019s up to you to choose
+        your ingredients and sauce wisely... wreak havoc with taste!"
+      Key: 4
+      NextKey: 5
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 1
+    - CharacterName: BreadMan
+      Text: First, start by moving toward them by clicking on the yellow tiles!
+      Key: 5
       NextKey: End
       ShakeTextBox: 0
       ShakeText: 0
       LetterByLetter: 1
-    - CharacterName: End
+    - CharacterName: BreadMan
       Text: '-'
       Key: End
       NextKey: 
@@ -44,15 +60,30 @@ MonoBehaviour:
       ShakeText: 0
       LetterByLetter: 0
   - Sentence:
-    - CharacterName: Testeur
-      Text: "Test test, <color=#FF0000>1,</color> <color=#0000FF>2,</color> je test
-        le <i><b>syst\uFFFDme.</b></i>"
+    - CharacterName: Master Crouton
+      Text: Hmm... Not bad for a ball of fur.
       Key: 42
-      NextKey: Fin
-      ShakeTextBox: 1
-      ShakeText: 1
+      NextKey: 43
+      ShakeTextBox: 0
+      ShakeText: 0
       LetterByLetter: 1
-    - CharacterName: End
+    - CharacterName: Master Crouton
+      Text: Once you're close enough to your enemy, throw one of the dishes I've
+        prepared for you!
+      Key: 43
+      NextKey: 44
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 1
+    - CharacterName: Master Crouton
+      Text: "Among the three, there's one that will let you protect yourself. You
+        can\u2019t miss it \u2014 its effect zone is blue!"
+      Key: 44
+      NextKey: End
+      ShakeTextBox: 0
+      ShakeText: 0
+      LetterByLetter: 1
+    - CharacterName: Master Crouton
       Text: '-'
       Key: End
       NextKey: 
