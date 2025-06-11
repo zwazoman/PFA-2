@@ -15,7 +15,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private float _characterDelay = 0.05f;
     [SerializeField] private float _punctuationDelay = 0.1f;
 
-    [SerializeField] private GameObject _panel;
+    public GameObject Panel;
     [SerializeField] private GameObject _textBox;
 
     private readonly List<Tweener> _shakeTweeners = new();
@@ -56,8 +56,8 @@ public class DialogueManager : MonoBehaviour
 
         _isAdvancingDialogue = true;
 
-        _characterDelay = 0.08f;
-        _punctuationDelay = 0.01f;
+        _characterDelay = 0.02f;
+        _punctuationDelay = 0.08f;
 
         SearchDialogue(_numberDialogue);
 
@@ -70,8 +70,8 @@ public class DialogueManager : MonoBehaviour
     // Divise les différents éléments pour les ranger par ligne puis par éléments, ensuite cherche la clé corresspondante
     private async void SearchDialogue(int NumberDialogue)
     {
-        _panel.SetActive(true);
-        await _panel.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
+        Panel.SetActive(true);
+        await Panel.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
         _numberDialogue = NumberDialogue;
         if (_isWriting) return;
 
@@ -215,8 +215,8 @@ public class DialogueManager : MonoBehaviour
 
         string currentSceneName = SceneManager.GetActiveScene().name;
 
-        await _panel.transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InOutBack);
-        _panel.SetActive(false);
+        await Panel.transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InOutBack);
+        Panel.SetActive(false);
 
         if (!_isFinish && currentSceneName == "Heal")
         {

@@ -13,14 +13,11 @@ public class SetupFight : MonoBehaviour
 
     public static SetupFight Instance;
 
-    private void Awake()
-    {
-        Instance = this;
-    }
+    private void Awake() { Instance = this; }
 
     private void Start()
     {
-        _combatManager.OnNewTurn += FocusOnPlayer;
+        _combatManager.OnNewTurn += FocusOnBattle;
         GameManager.Instance.playerInventory.playerEquipedSpell.Clear(); //équipe les spells
         for (int i = 0; i < _spellListData.Count; i++)
         {
@@ -42,7 +39,7 @@ public class SetupFight : MonoBehaviour
         await CombatManager.Instance.Play();
     }
 
-    public void FocusOnPlayer(Entity entity)
+    public void FocusOnBattle(Entity entity)
     {
         if (entity.team == Team.Player)
         {
@@ -51,8 +48,14 @@ public class SetupFight : MonoBehaviour
             if (_gameRound == 2)
             {
                 DialogueManager.Instance.GetDialogue(1);
-                _combatManager.OnNewTurn -= FocusOnPlayer;
+                _combatManager.OnNewTurn -= FocusOnBattle;
             }
         }
+    }
+
+    public async UniTask Victory()
+    {
+        DialogueManager.Instance.GetDialogue(2);
+        await UniTask.WaitUntil(() => !DialogueManager.Instance.Panel.activeSelf);
     }
 }
