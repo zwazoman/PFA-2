@@ -4,6 +4,8 @@ using UnityEngine;
 public class PoolObject : MonoBehaviour
 {
     [SerializeField] private List<GameObject> _objectToDuplicate = new();
+    [SerializeField] private GameObject _tutoPrefab;
+    public GameObject TutoMesh { get; private set; }
     public Queue<GameObject> CusineList { get; private set; } = new();
     public Queue<GameObject> IngredientList { get; private set; } = new();
     public Queue<GameObject> HealList { get; private set; } = new();
@@ -21,24 +23,26 @@ public class PoolObject : MonoBehaviour
             GameObject obj = _objectToDuplicate[index];
             for (int i = 0; i < 15; i++)
             {
-                GameObject test = Instantiate(obj, gameObject.transform);
-                test.SetActive(false);
+                GameObject mesh = Instantiate(obj, gameObject.transform);
+                mesh.SetActive(false);
                 switch(index)
                 {
                     case 0:
-                        CombatList.Enqueue(test);
+                        CombatList.Enqueue(mesh);
                         break;
                     case 1:
-                        CusineList.Enqueue(test);
+                        CusineList.Enqueue(mesh);
                         break;
                     case 2:
-                        HealList.Enqueue(test);
+                        HealList.Enqueue(mesh);
                         break;
                     case 3:
-                        IngredientList.Enqueue(test);
+                        IngredientList.Enqueue(mesh);
                         break;
                 }
             }
         }
+        TutoMesh = Instantiate(_tutoPrefab, gameObject.transform);
+        TutoMesh.SetActive(false);
     }
 }

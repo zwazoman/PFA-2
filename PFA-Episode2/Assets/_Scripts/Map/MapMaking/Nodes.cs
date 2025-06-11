@@ -60,6 +60,9 @@ public class Node : MonoBehaviour
                 case NodesEventTypes.Boss:
                     prefab = Instantiate(_prefabBoss);
                     break;
+                case NodesEventTypes.Tuto:
+                    prefab = PoolObject.Instance.TutoMesh;
+                    break;
                 case NodesEventTypes.Start:
                     return;
             }

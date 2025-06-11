@@ -78,7 +78,9 @@ public class MapBuildingTools : MonoBehaviour
 
     public bool Intersection(int mapRangeCurrentIndex, int probaIntersection)
     {
-        if (mapRangeCurrentIndex > 4)
+        int max = 3;
+        if (GameManager.Instance.FirstPlay) { max = 4; } 
+        if (mapRangeCurrentIndex > max)
         {
             int result = Random.Range(1, 11);
             if (result <= probaIntersection) //Intersection si true
@@ -95,21 +97,40 @@ public class MapBuildingTools : MonoBehaviour
     {
         if (MapMaker2.Instance.CurrentNode.Position + 1 == _mapRange) { MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Cuisine; }
         if (MapMaker2.Instance.CurrentNode.Position == _mapRange) { MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Boss; }
-        switch (MapMaker2.Instance.CurrentNode.Position)
+        if (GameManager.Instance.FirstPlay) 
         {
-            case 1:
-                MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Tuto;
-                break;
-            case 2:
-                MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Ingredient;
-                break;
-            case 3:
-                MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Cuisine;
-                break;
-            case 4:
-                MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Combat;
-                break;
+            switch (MapMaker2.Instance.CurrentNode.Position)
+            {
+                case 1:
+                    MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Tuto;
+                    break;
+                case 2:
+                    MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Ingredient;
+                    break;
+                case 3:
+                    MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Cuisine;
+                    break;
+                case 4:
+                    MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Combat;
+                    break;
+            }
         }
+        else
+        {
+            switch (MapMaker2.Instance.CurrentNode.Position)
+            {
+                case 1:
+                    MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Ingredient;
+                    break;
+                case 2:
+                    MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Cuisine;
+                    break;
+                case 3:
+                    MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Combat;
+                    break;
+            }
+        }
+
     }
 
     public Vector3Int GetKeyFromNode(Node node)
