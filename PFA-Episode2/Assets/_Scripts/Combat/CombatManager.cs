@@ -157,7 +157,7 @@ public class CombatManager : MonoBehaviour
         IsPlaying = false;
     }
 
-    void SummonEntities()
+    async void SummonEntities()
     {
         int ennemiesCount = GameManager.Instance.ComputeEnnemiesCount();
 
@@ -186,6 +186,7 @@ public class CombatManager : MonoBehaviour
 
             choosenSpawner.SummonEntity();
             spawners.Remove(choosenSpawner);
+            //await UniTask.Delay(300);
         }
     }
 

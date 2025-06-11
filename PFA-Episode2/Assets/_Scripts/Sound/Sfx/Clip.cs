@@ -12,7 +12,7 @@ public class Clip
     [SerializeField, Range(0, 1)]
     public float Volume = 1;
 
-    [SerializeField, Range(0,1)]
+    [SerializeField, Range(-3,3)]
     public float Pitch = 1;
 
     [SerializeField]

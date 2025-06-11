@@ -1,4 +1,5 @@
 using AYellowpaper.SerializedCollections;
+using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -21,7 +22,7 @@ public class Spawner : MonoBehaviour
             print("spawner linked");
     }
 
-    public void SummonEntity()
+    public async void SummonEntity()
     {
         //if(entitiesProba.Count == 1)
         //    foreach(GameObject entity in entitiesProba.Keys)
@@ -51,7 +52,9 @@ public class Spawner : MonoBehaviour
             }
         }
 
-        Instantiate(choosenEntity, transform);
+        GameObject go = Instantiate(choosenEntity, transform);
+        //go.transform.position += Vector3.up * 5;
 
+        //go.transform.DOMoveY(.5f, 1).SetEase(Ease.InCubic);
     }
 }
