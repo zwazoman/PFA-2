@@ -32,6 +32,7 @@ public class Node : MonoBehaviour
     public void InteractPlayer()
     {
         PlayerMap.Instance.clickedNode = this;
+        SFXManager.Instance.PlaySFXClip(Sounds.ButtonPress);
         TweenMesh();
     }
 
