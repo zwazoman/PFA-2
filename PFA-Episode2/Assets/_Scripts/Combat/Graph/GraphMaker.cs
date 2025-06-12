@@ -103,7 +103,7 @@ public class GraphMaker : MonoBehaviour
                         point.Neighbours.Add(wayPoint);
             }
             
-            Debug.Log(point==null);
+            //Debug.Log(point==null);
         }
     }
 
@@ -117,7 +117,7 @@ public class GraphMaker : MonoBehaviour
                 for (int i = 0; i < point.gameObject.transform.childCount; i++)
                 {
                     DestroyImmediate(point.transform.GetChild(0).gameObject);
-                    Debug.Log(i);
+                    //Debug.Log(i);
                 }
 
                 Vector3 pose = point.transform.position + Vector3.up * .6f;

@@ -173,7 +173,6 @@ public class WayPoint : MonoBehaviour
 
         if (openPoints.Count == 0)
         {
-            print("Oh cong la target est pas dans le graph cagole");
             return;
         }
 

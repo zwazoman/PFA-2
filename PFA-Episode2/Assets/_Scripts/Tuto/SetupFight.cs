@@ -44,7 +44,6 @@ public class SetupFight : MonoBehaviour
         if (entity.team == Team.Player)
         {
             _gameRound++;
-            print("C'est le tour du joueur");
             if (_gameRound == 2)
             {
                 DialogueManager.Instance.GetDialogue(1);

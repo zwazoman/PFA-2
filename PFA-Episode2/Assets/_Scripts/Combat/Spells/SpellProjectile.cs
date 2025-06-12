@@ -24,7 +24,7 @@ public class SpellProjectile : MonoBehaviour
 
     public async UniTask Launch(Entity caster, Entity target, Mesh spellMesh = null, float launchSpeed = .15f)
     {
-        Debug.Log("Launching spell ! mesh name : " + spellMesh);
+        //Debug.Log("Launching spell ! mesh name : " + spellMesh);
         if(spellMesh != null)
             _filter.mesh = spellMesh;
 
@@ -39,7 +39,7 @@ public class SpellProjectile : MonoBehaviour
         
         if (spellMesh != null)
         {
-            Debug.Log("Launching spell ! mesh name : " + spellMesh.name);
+            //Debug.Log("Launching spell ! mesh name : " + spellMesh.name);
             _filter.mesh = spellMesh;
         }
 

@@ -20,8 +20,6 @@ public class EliteEntity : MonoBehaviour
 
     public void ApplyEliteStats(ref List<PremadeSpell> boostedSpells, PremadeSpell[] premadeSpells)
     {
-        print("GROS ELITE SA MERE" + "" + _entity.Data.name);
-
         try
         {
             _eliteEffect.Play();
@@ -36,7 +34,7 @@ public class EliteEntity : MonoBehaviour
             {
                 SpellEffect effect = boostedSpell.Effects[i];
                 effect.value *= (1 + EliteFactor);
-                print("new effect value for" + " " + boostedSpell.Name + " : " + effect.effectType.ToString() + " " + effect.value);
+                //print("new effect value for" + " " + boostedSpell.Name + " : " + effect.effectType.ToString() + " " + effect.value);
             }
 
             boostedSpell.CoolDown = Mathf.RoundToInt(boostedSpell.CoolDown * (1-EliteFactor));

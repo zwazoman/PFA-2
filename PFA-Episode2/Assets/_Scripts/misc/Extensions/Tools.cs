@@ -87,7 +87,6 @@ public static class Tools
     {
         if (points.Count == 0)
         {
-            Debug.LogError("List Is Empty");
             return Vector3.zero;
         }
         if (points.Count == 1)
@@ -113,7 +112,6 @@ public static class Tools
     {
         if (transforms.Count == 0)
         {
-            Debug.LogError("List Is Empty");
             return null;
         }
         if (transforms.Count == 1)
@@ -140,7 +138,6 @@ public static class Tools
     {
         if (elements.Count == 0)
         {
-            Debug.LogError("List Is Empty");
             return null;
         }
         if (elements.Count == 1)
@@ -220,7 +217,6 @@ public static class Tools
     {
         foreach (KeyValuePair<T1,T2> pair in dict)
         {
-            Debug.Log(pair);
             if (pair.Value.Equals(value))
             {
                 return pair.Key; // Retourne la cl�
@@ -271,6 +267,31 @@ public static class Tools
         return PointDistanceDict;
     }
 
+    public async static UniTask<Dictionary<WayPoint, int>> AwaitableSmallFlood(WayPoint startPoint, int range, bool includesEntities = false, bool includesObstructed = false)
+    {
+        Dictionary<WayPoint, int> PointDistanceDict = new();
+        Queue<(WayPoint, int)> queue = new();
+        HashSet<WayPoint> visited = new() { startPoint };
+
+        queue.Enqueue((startPoint, 0));
+
+        while (queue.Count > 0)
+        {
+            var (node, distance) = queue.Dequeue();
+            PointDistanceDict.Add(node, distance);
+
+            if (distance < range)
+                foreach (var neighbor in node.Neighbours)
+                    if (!visited.Contains(neighbor) && !(includesEntities && neighbor.State == WaypointState.HasEntity) && !(includesObstructed && neighbor.State == WaypointState.Obstructed))
+                    {
+                        queue.Enqueue((neighbor, distance + 1));
+                        visited.Add(neighbor);
+                    }
+            await UniTask.Yield();
+        }
+        return PointDistanceDict;
+    }
+
     public static Dictionary<WayPoint, int> SmallFlood(WayPoint startPoint, int range, bool includesEntities = false, bool includesObstructed = false)
     {
         Dictionary<WayPoint, int> PointDistanceDict = new();
@@ -294,6 +315,7 @@ public static class Tools
         }
         return PointDistanceDict;
     }
+
     public static void ClearFlood()
     {
         FloodDict.Clear();
@@ -303,7 +325,6 @@ public static class Tools
     {
         point = null;
 
-        //Debug.LogWarning(fingerOffset);
         if (blockedByUi && EventSystem.current.IsPointerOverGameObject(0))
         {
             return false;

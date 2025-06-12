@@ -34,7 +34,7 @@ public class AIEntity : Entity
 
         //elite handle
         List<PremadeSpell> premadeSpells = new();
-        if (Random.value < 0 && Data.CanBeElite )                //CONNARD MATEO TODO todo
+        if (Random.value < 0 && Data.CanBeElite)                //CONNARD MATEO TODO todo
         {
             _elite.ApplyEliteStats(ref premadeSpells, Data.Spells);
 
@@ -49,7 +49,7 @@ public class AIEntity : Entity
 
         CombatManager.Instance.RegisterEntity(this);
 
-        foreach(PremadeSpell premadeSpell in premadeSpells)
+        foreach (PremadeSpell premadeSpell in premadeSpells)
         {
             Spell spell = new();
             spell.spellData = premadeSpell.SpellData;
@@ -105,9 +105,9 @@ public class AIEntity : Entity
     {
         List<Spell> castableSpells = new();
 
-        foreach(Spell spell in spells)
+        foreach (Spell spell in spells)
         {
-            if(spell.canUse)
+            if (spell.canUse)
                 castableSpells.Add(spell);
         }
 
@@ -133,7 +133,7 @@ public class AIEntity : Entity
         Spell choosenSpell = null;
 
         foreach (Spell spell in castableSpells)
-            if(choosenSpell == null || spell.spellData.CoolDown > maxCooldown)
+            if (choosenSpell == null || spell.spellData.CoolDown > maxCooldown)
             {
                 choosenSpell = spell;
                 maxCooldown = choosenSpell.spellData.CoolDown;
@@ -200,8 +200,6 @@ public class AIEntity : Entity
 
                 enemyPoints.FindClosestFloodPoint(out choosenTargetPoint, Tools.SmallFlood(targetEntityPoint, Data.MaxMovePoints + choosenSpell.spellData.Range, false, true));
 
-                print(Tools.FloodDict.Count);
-
                 if (choosenTargetPoint == null)
                     return await CastSpellAtPoint(choosenSpell, currentPoint);
 
@@ -215,7 +213,7 @@ public class AIEntity : Entity
 
                 foreach (WayPoint point in rangePoints)
                 {
-                    if(point.State != WaypointState.HasEntity)
+                    if (point.State != WaypointState.HasEntity)
                         targetPoints.Add(point);
                 }
 
@@ -243,7 +241,7 @@ public class AIEntity : Entity
         if (targetPoint == null)
             return false;
 
-        if(targetPoint == currentPoint)
+        if (targetPoint == currentPoint)
         {
             return await CastSpell(choosenSpell, currentPoint, currentPoint);
         }
@@ -275,15 +273,15 @@ public class AIEntity : Entity
         {
             if (targetPointsDict.Count == 0)
             {
-                print("plus de cases");
                 break;
             }
 
             choosenTargetPoint = targetPointsDict.Keys.FindClosestFloodPoint();
 
-            if (!Tools.SmallFlood(currentPoint,16, true ,true) .ContainsKey(choosenTargetPoint)) // if pas accessible ça dégage
+            Dictionary<WayPoint, int> dict = await Tools.AwaitableSmallFlood(currentPoint, 16, true, true);
+
+            if (!dict.ContainsKey(choosenTargetPoint)) // if pas accessible ça dégage
             {
-                print(choosenTargetPoint.transform.position + "case non accessible");
 
                 targetPointsDict[choosenTargetPoint].Remove(targetPointsDict[choosenTargetPoint][0]);
 
@@ -296,7 +294,7 @@ public class AIEntity : Entity
 
             GetInvertShot(choosenTargetPoint, targetPointsDict[choosenTargetPoint][0], choosenSpell, out pointToSelect, targetPoint); // test de tirer : si pas possible ça dégage
 
-            rangePoints = entitySpellCaster.ComputeAndPreviewSpellRange(choosenSpell, choosenTargetPoint, false );
+            rangePoints = entitySpellCaster.ComputeAndPreviewSpellRange(choosenSpell, choosenTargetPoint, false);
             castData = entitySpellCaster.PreviewSpellZone(choosenSpell, pointToSelect, rangePoints, false);
 
             targetPointsDict[choosenTargetPoint].Remove(targetPointsDict[choosenTargetPoint][0]);
@@ -307,7 +305,7 @@ public class AIEntity : Entity
             await UniTask.Yield();
         }
 
-        
+
         //choosenTargetPoint.SetPreviewState(entitySpellCaster.ComputeShieldVsDamageDiff(choosenSpell) <= 0 ? WayPoint.PreviewState.SpellCastZone_Agressive : WayPoint.PreviewState.SpellCastZone_Shield); //@todo
         // possibilit� pour pas qu'elle se tire dessus ? �a serait rigolo n la stock qq part si �a se touche et on r��saie. si pas de solution on utilise celle qui touche
 
@@ -317,7 +315,7 @@ public class AIEntity : Entity
 
         if (targetReached)
         {
-            return await CastSpell(choosenSpell,pointToSelect, targetPoint);
+            return await CastSpell(choosenSpell, pointToSelect, targetPoint);
         }
         return false;
     }
