@@ -222,7 +222,7 @@ public static class GlobalPlayerPrefs
         // {
         //     nblignes = Mathf.Max(nblignes,)
         // }
-        string content = "";
+        string content = "sep=,\n";
         string lastWord = "";
         foreach (var entry in entries)
         {

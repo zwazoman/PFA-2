@@ -32,12 +32,12 @@ public class CookingPanel : AnimatedPanel
 
         //@temp --
         Inventory inv = new();
-        for(int i = 0; i < 12; i++)
+        for(int i = 0; i < 7; i++)
         {
             inv.Ingredients.Add(tests.PickRandom());
         }
 
-        for (int i = 0; i < 12; i++)
+        for (int i = 0; i < 4; i++)
         {
             inv.Sauces.Add(testSauces.PickRandom());
         }
