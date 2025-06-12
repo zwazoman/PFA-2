@@ -101,7 +101,6 @@ public class SpellCaster : MonoBehaviour
 
                 if (showZone)
                 {
-                    Debug.Log(choosenWaypoint);
                     //bleu si + de shield que de degats
                     choosenWaypoint.SetPreviewState(ComputeShieldVsDamageDiff(spell) <= 0 ? WayPoint.PreviewState.SpellCastZone_Agressive : WayPoint.PreviewState.SpellCastZone_Shield);
                 }
@@ -195,7 +194,7 @@ public class SpellCaster : MonoBehaviour
             Vector3 casterPosWithHeight = transform.position + Vector3.up * 0.5f;
             Vector3 casterToEntity = posWithHeigth - casterPosWithHeight;
 
-            Debug.DrawLine(casterPosWithHeight, casterPosWithHeight + casterToEntity, Color.blue, 20);
+            //Debug.DrawLine(casterPosWithHeight, casterPosWithHeight + casterToEntity, Color.blue, 20);
 
             if (casterToEntity == Vector3.zero)
                 return hitEntity.currentPoint;
@@ -205,7 +204,7 @@ public class SpellCaster : MonoBehaviour
 
             pushDirection = new Vector3(xPushDirection, 0, zPushDirection);
 
-            Debug.DrawLine(posWithHeigth, posWithHeigth + pushDirection * 2, Color.red, 20);
+            //Debug.DrawLine(posWithHeigth, posWithHeigth + pushDirection * 2, Color.red, 20);
 
         }
 

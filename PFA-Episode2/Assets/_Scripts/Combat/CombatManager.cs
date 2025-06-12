@@ -71,7 +71,6 @@ public class CombatManager : MonoBehaviour
         else if (entity.team == Team.Enemy && EnemyEntities.Contains(entity))
         {
             EnemyEntities.Remove(entity);
-            print(EnemyEntities.Count);
             
             //victoire : tous les ennemis sont morts
             if (EnemyEntities.Count == 0)
@@ -180,9 +179,6 @@ public class CombatManager : MonoBehaviour
 
         for (int i = 0; i < ennemiesCount; i++)
         {
-            print(ennemiesCount); // 3
-            print(spawners.Count); // 4 // 3 // 2
-
             Spawner choosenSpawner = spawners.PickRandom();
 
             choosenSpawner.SummonEntity();
@@ -209,8 +205,6 @@ public class CombatManager : MonoBehaviour
     {
         string currentSceneName = SceneManager.GetActiveScene().name;
         if (currentSceneName == "Forest_Combat_Tuto") { await SetupFight.Instance.Victory(); }
-        print("VICTORY");
-        print(GameManager.Instance.playerInventory.playerHealth.health);
 
         await UniTask.Delay(1000);
 

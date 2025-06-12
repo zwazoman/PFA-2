@@ -67,7 +67,6 @@ public class MapAttributeEvent3 : MonoBehaviour
                 SamePositionNode.EventName = NodesEventTypes.Combat;
                 _previousNodeSetup = NodesEventTypes.Combat;
                 NumberBeforeHeal++;
-                print("Combat");
             }
             else if (NumberHeal <= 2)
             {

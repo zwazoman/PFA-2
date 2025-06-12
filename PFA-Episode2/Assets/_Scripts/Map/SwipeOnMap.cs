@@ -19,7 +19,6 @@ public class SwipeOnMap : MonoBehaviour
     private void OnMouseUp()
     {
         if (!_isSwipe) { return; }
-        print("nique");
         _mouseUp = Input.mousePosition;
 
         _directions.Clear();

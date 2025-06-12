@@ -240,7 +240,6 @@ public class Entity : MonoBehaviour
 
         if (Walkables.Contains(targetPoint) && targetPoint.State == WaypointState.Free)
         {
-            print("target in range !");
             await TryMoveTo(targetPoint);
             return true;
         }
@@ -277,7 +276,6 @@ public class Entity : MonoBehaviour
             }
         }
 
-        print(furthestPoint.transform.position);
         await TryMoveTo(furthestPoint);
     }
     public virtual async UniTask TryMoveTo(WayPoint targetPoint, bool showTiles = true)
@@ -352,7 +350,6 @@ public class Entity : MonoBehaviour
         OnDead?.Invoke();
 
         //if (this is PlayerEntity || team == Team.Enemy && CombatManager.Instance.EnemyEntities.Count == 1)
-        Debug.Log("about to play death animation");
         await visuals.PlayDeathAnimation();
 
         currentPoint.StepOff();

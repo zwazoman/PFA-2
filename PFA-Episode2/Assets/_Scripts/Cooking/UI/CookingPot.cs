@@ -149,12 +149,12 @@ public class CookingPot : MonoBehaviour
 
     public void RemoveAllIngredients()
     {
-        Debug.unityLogger.Log("== Removing all ingredients ==");
-        Debug.Log("Item count : " + items.Length);
+        //Debug.unityLogger.Log("== Removing all ingredients ==");
+        //Debug.Log("Item count : " + items.Length);
         
-        string s = "";
-        foreach (DraggableIngredientContainer item in items.ToList()) s+= (item?.item.name?? "null") + " ";
-        Debug.Log("Item list : " + s);
+        //string s = "";
+        //foreach (DraggableIngredientContainer item in items.ToList()) s+= (item?.item.name?? "null") + " ";
+        //Debug.Log("Item list : " + s);
         
         foreach (DraggableIngredientContainer item in items.ToList()) 
         {

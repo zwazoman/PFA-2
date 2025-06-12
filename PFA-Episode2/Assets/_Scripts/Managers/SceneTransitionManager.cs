@@ -88,7 +88,6 @@ public class SceneTransitionManager : MonoBehaviour
             SFXManager.Instance.PlaySFXClip(Sounds.TurnChange, 0.7f);
 
             OnSceneChange?.Invoke(sceneName);
-            print("scene change");
 
             AsyncOperation o = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
             o.allowSceneActivation = false;

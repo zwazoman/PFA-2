@@ -10,7 +10,6 @@ public class ScreenShotMaker : MonoBehaviour
         
             string filename = "highResScreenShot_" + i.ToString() + ".png";
             ScreenCapture.CaptureScreenshot(filename, 2);
-            print("Saved screen shot : " + filename);
 
             PlayerPrefs.SetInt("screenshotID", i + 1);
         }
