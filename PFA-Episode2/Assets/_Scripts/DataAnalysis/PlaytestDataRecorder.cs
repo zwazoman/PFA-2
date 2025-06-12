@@ -51,7 +51,7 @@ public class PlaytestDataRecorder : MonoBehaviour
     public async UniTask OnRunStarted()
     {
         CombatManager.TotalEncounteredCombatsCountOverRun = 0;
-        Debug.Log("Run started !!!!!");
+        //Debug.Log("Run started !!!!!");
         await AddToInt("Progression_RunStarted_TotalCount",1);
     }
         
@@ -103,7 +103,7 @@ public class PlaytestDataRecorder : MonoBehaviour
     //helper local functions
     private async UniTask UpdateFullDataAtEvent(string eventName)
     {
-        Debug.Log(" ===== about to update data for event : " + eventName + " =====");
+        //Debug.Log(" ===== about to update data for event : " + eventName + " =====");
 
         List<UniTask> tasks = new();
         eventName = "Info_" + eventName;
@@ -148,12 +148,12 @@ public class PlaytestDataRecorder : MonoBehaviour
         int? currentValue = await GlobalPlayerPrefs.GetInt(name);
         if (currentValue == null)
         {
-            Debug.Log("nul response, replacing value !");
+            //Debug.Log("nul response, replacing value !");
             await GlobalPlayerPrefs.SetValue(name,offset,client);
         }
         else
         {
-            Debug.Log("adding to original value");
+            //Debug.Log("adding to original value");
             currentValue += offset;
             await GlobalPlayerPrefs.SetValue(name,currentValue,client);
         }

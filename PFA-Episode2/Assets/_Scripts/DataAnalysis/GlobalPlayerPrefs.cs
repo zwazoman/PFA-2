@@ -37,14 +37,14 @@ public static class GlobalPlayerPrefs
         {
             using (HttpResponseMessage response = await client.GetAsync(request))
             {
-                if(showDebugLogs) Debug.Log(" == sent request : " + request + " ==");
+                //if(showDebugLogs) Debug.Log(" == sent request : " + request + " ==");
                 response.EnsureSuccessStatusCode();
                 
                 string responseBody = await response.Content.ReadAsStringAsync();
                 // Debug.Log(response.ReasonPhrase);
                 // Debug.Log(response.StatusCode);
                 // Debug.Log(response.RequestMessage.Headers);
-                if(showDebugLogs) Debug.Log("answer : " + responseBody);
+                //if(showDebugLogs) Debug.Log("answer : " + responseBody);
             }
         }catch(Exception e) {Debug.LogException(e);}
             
@@ -73,7 +73,7 @@ public static class GlobalPlayerPrefs
         {
             using (HttpResponseMessage response = await client.GetAsync(request))
             {
-                if(showDebugLogs) Debug.Log(" == sent request : " + request + " ==");
+                //if(showDebugLogs) Debug.Log(" == sent request : " + request + " ==");
                 response.EnsureSuccessStatusCode();
 
                 string responseBody = await response.Content.ReadAsStringAsync();
@@ -81,7 +81,7 @@ public static class GlobalPlayerPrefs
                 //Debug.Log(response.ReasonPhrase);
                 //Debug.Log(response.StatusCode);
                 //Debug.Log(response.RequestMessage.Headers);
-                if(showDebugLogs) Debug.Log("answer : " + responseBody);
+                //if(showDebugLogs) Debug.Log("answer : " + responseBody);
 
                 output = (responseBody);
             }
@@ -97,7 +97,7 @@ public static class GlobalPlayerPrefs
     {
         string answer = await GetString(ValueName,client);
         int? output = null;
-        Debug.Log(answer);
+        //Debug.Log(answer);
         try
         {
             if (int.TryParse(answer,out int result)) return result;
@@ -174,7 +174,7 @@ public static class GlobalPlayerPrefs
         var dico = await GetGlobalPlaytestStats(false);
         foreach (var pair in dico)
         {
-            Debug.Log(pair.Key + " : " + pair.Value);
+            //Debug.Log(pair.Key + " : " + pair.Value);
         }
     }
     
@@ -184,7 +184,7 @@ public static class GlobalPlayerPrefs
         var dico = await GetGlobalPlaytestStats(true);
         foreach (var pair in dico)
         {
-            Debug.Log(pair.Key + " : " + pair.Value);
+            //Debug.Log(pair.Key + " : " + pair.Value);
         }
     }
     
@@ -241,8 +241,8 @@ public static class GlobalPlayerPrefs
         using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, docName+".csv")))
         {
             outputFile.Write(content);
-            Debug.Log(content);
-            Debug.Log(outputFile);
+            //Debug.Log(content);
+            //Debug.Log(outputFile);
         }
         
     }
@@ -301,12 +301,12 @@ public static class GlobalPlayerPrefs
         {
             using (HttpResponseMessage response = await client.GetAsync(request))
             {
-                if(showDebugLogs) Debug.Log(" == sent request : " + request + " ==");
+                //if(showDebugLogs) Debug.Log(" == sent request : " + request + " ==");
                 response.EnsureSuccessStatusCode();
                 
                 string responseBody = await response.Content.ReadAsStringAsync();
 
-                if(showDebugLogs) Debug.Log("answer : " + responseBody);
+                //if(showDebugLogs) Debug.Log("answer : " + responseBody);
                 
                 string[] requests = responseBody.Substring(2,responseBody.Length - 4).Split("\",\"");
                 return requests;
@@ -332,12 +332,12 @@ public static class GlobalPlayerPrefs
         {
             using (HttpResponseMessage response = await client.GetAsync(request))
             {
-                if(showDebugLogs) Debug.Log(" == sent request : " + request + " ==");
+                //if(showDebugLogs) Debug.Log(" == sent request : " + request + " ==");
                 response.EnsureSuccessStatusCode();
 
                 string responseBody = await response.Content.ReadAsStringAsync();
                 
-                if(showDebugLogs) Debug.Log("answer : " + responseBody);
+                //if(showDebugLogs) Debug.Log("answer : " + responseBody);
             }
         }catch(Exception e) {Debug.LogException(e);}
     

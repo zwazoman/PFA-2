@@ -20,10 +20,10 @@ public class CookingPotVisuals : MonoBehaviour
     {
         //set texture dimensions
         await Awaitable.EndOfFrameAsync();
-        Debug.Log("--");
-        Debug.Log(_imageTransform.name, _imageTransform);
-        Debug.Log(_imageTransform.rect.width);
-        Debug.Log(_imageTransform.rect.height);
+        //Debug.Log("--");
+        //Debug.Log(_imageTransform.name, _imageTransform);
+        //Debug.Log(_imageTransform.rect.width);
+        //Debug.Log(_imageTransform.rect.height);
         
         _rt = new((int)_imageTransform.rect.width, (int)_imageTransform.rect.height, 1);
         _rt.antiAliasing = 2;

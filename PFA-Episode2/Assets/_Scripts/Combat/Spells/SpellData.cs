@@ -91,7 +91,7 @@ public struct SpellEffect
         }
         else
         {
-            Debug.LogError("y'a un pb l� connard");
+            //Debug.LogError("y'a un pb l� connard");
         }
        
     }
@@ -107,7 +107,7 @@ public struct SpellEffect
                     break;
                 case StatType.Multiplier:
                     a.value *= b.value;
-                    Debug.Log("Multiplier Collapsed !!!!!!");
+                    //Debug.Log("Multiplier Collapsed !!!!!!");
                     break;
 
             }

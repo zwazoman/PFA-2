@@ -192,12 +192,12 @@ public class CookingPot : MonoBehaviour
 
         string s = "";
         foreach (Ingredient ingredient in ingredients) s+= ingredient.name+ " ";
-        Debug.Log("Removed ingredient. new list : " + s);
+        //Debug.Log("Removed ingredient. new list : " + s);
     }
 
     public bool TryAddIngredient(DraggableIngredientContainer container)
     {
-        Debug.Log("Tried adding new ingredient : " + ((IngredientBase)(container.item)).name);
+        //Debug.Log("Tried adding new ingredient : " + ((IngredientBase)(container.item)).name);
 
         bool successful = false;
 
@@ -227,7 +227,7 @@ public class CookingPot : MonoBehaviour
 
             string s = "";
             foreach (Ingredient ingredient in ingredients) s+= ingredient.name+ " ";
-            Debug.Log("Added ingredient. new list : " + s);
+            //Debug.Log("Added ingredient. new list : " + s);
             
             //transform.DOPunchScale(Vector3.one * .5f, .2f,9,1.2f);
         } else transform.root.GetChild(0).DOShakePosition(.3f,50,16);
