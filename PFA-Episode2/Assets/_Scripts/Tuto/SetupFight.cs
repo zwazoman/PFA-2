@@ -10,6 +10,7 @@ public class SetupFight : MonoBehaviour
     [SerializeField] private CombatManager _combatManager;
     public bool GameStart;
     private int _gameRound;
+    public RectTransform Pain;
 
     public static SetupFight Instance;
 
@@ -27,10 +28,12 @@ public class SetupFight : MonoBehaviour
         DialogueSpawn(0); //Dialogue
     }
 
-    private void DialogueSpawn(int dialogueIndex)
+    private async UniTask DialogueSpawn(int dialogueIndex)
     {
         DialogueManager.Instance.StartDialogue = true;
         DialogueManager.Instance.GetDialogue(dialogueIndex);
+        await UniTask.Delay(250);
+        await Pain.DOAnchorPos(new Vector2(0, 226), 0.4f).SetEase(Ease.OutBack);
     }
 
     public async void StartGame() //StartGame
@@ -46,7 +49,7 @@ public class SetupFight : MonoBehaviour
             _gameRound++;
             if (_gameRound == 2)
             {
-                DialogueManager.Instance.GetDialogue(1);
+                DialogueSpawn(1);
                 _combatManager.OnNewTurn -= FocusOnBattle;
             }
         }
@@ -54,7 +57,7 @@ public class SetupFight : MonoBehaviour
 
     public async UniTask Victory()
     {
-        DialogueManager.Instance.GetDialogue(2);
+        DialogueSpawn(2);
         await UniTask.WaitUntil(() => !DialogueManager.Instance.Panel.activeSelf);
     }
 }
