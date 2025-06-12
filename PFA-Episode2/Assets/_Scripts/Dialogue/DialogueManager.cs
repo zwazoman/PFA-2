@@ -4,6 +4,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using System;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -64,7 +65,7 @@ public class DialogueManager : MonoBehaviour
         _isAdvancingDialogue = false;
     }
 
-    public void GetRandomSequenceDialogue() { SearchDialogue(Random.Range(0, TextData.DialogueData.Count)); }
+    public void GetRandomSequenceDialogue() { SearchDialogue(UnityEngine.Random.Range(0, TextData.DialogueData.Count)); }
     public void GetDialogue(int NumberDialogue) { SearchDialogue(NumberDialogue); }
 
     // Divise les différents éléments pour les ranger par ligne puis par éléments, ensuite cherche la clé corresspondante
@@ -180,8 +181,8 @@ public class DialogueManager : MonoBehaviour
                 {
                     for (int j = 0; j < 4; j++)
                     {
-                        float randomX = Random.Range(-5f, 5f);
-                        float randomY = Random.Range(-5f, 5f);
+                        float randomX = UnityEngine.Random.Range(-5f, 5f);
+                        float randomY = UnityEngine.Random.Range(-5f, 5f);
                         vertices[vertexIndex + j] = origVerts[j] + new Vector3(randomX, randomY, 0);
                     }
 
@@ -228,6 +229,7 @@ public class DialogueManager : MonoBehaviour
         {
             SetupFight.Instance.GameStart = true;
             SetupFight.Instance.StartGame();
+            await SetupFight.Instance.Pain.DOAnchorPos(new Vector2(0, -875), 0.4f).SetEase(Ease.InOutBack);
         }
 
         _numberSentence = 0;
