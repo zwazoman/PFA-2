@@ -42,6 +42,10 @@ public class PlayerEntity : Entity
         CombatManager.Instance.OnWin += () => GameManager.Instance.playerInventory.playerHealth.health = Mathf.RoundToInt(stats.currentHealth);
     }
 
+    protected async UniTask EntityBasePlayTurn()
+    {
+        await base.PlayTurn();
+    }
     public override async UniTask PlayTurn()
     {
         await base.PlayTurn();
@@ -63,7 +67,7 @@ public class PlayerEntity : Entity
         HideSpellsUI();
     }
 
-    public async UniTask CheckPlayerInput()
+    public virtual async UniTask CheckPlayerInput()
     {
         CombatUiManager.Instance.StopButtonShake();
         

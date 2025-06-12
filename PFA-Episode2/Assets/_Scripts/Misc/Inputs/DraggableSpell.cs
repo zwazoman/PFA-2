@@ -43,18 +43,23 @@ public class DraggableSpell : Draggable
         base.Awake();
     }
 
-    public async UniTask BeginDrag()
+    public async UniTask<bool> BeginDrag()
     {
         if (isDragging && canUse)
         {
             spellCaster.castingEntity.ClearWalkables();
             _rangePoints = spellCaster.ComputeAndPreviewSpellRange(spell);
-            await DragAndDrop();
+            
+            return  await DragAndDrop();
         }
+
+        return false;
     }
 
-    public async UniTask DragAndDrop()
+    public async UniTask<bool> DragAndDrop()
     {
+        bool output = false;
+        
         SpellCastData castData = new();
         castData.zonePoints = new();
 
@@ -79,10 +84,15 @@ public class DraggableSpell : Draggable
         WayPoint wayPoint = _currentPoint;
         Reset();
 
-        if(await spellCaster.TryCastSpell(spell, wayPoint, _rangePoints, castData))
+        if (await spellCaster.TryCastSpell(spell, wayPoint, _rangePoints, castData))
+        {
             DisableSpell();
+            output = true;
+        }
+            
 
         spellCaster.castingEntity.ApplyWalkables();
+        return output;
     }
 
     void EnableSpell()

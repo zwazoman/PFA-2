@@ -18,13 +18,15 @@ public class SetupFight : MonoBehaviour
     private void Start()
     {
         _combatManager.OnNewTurn += FocusOnBattle;
-        GameManager.Instance.playerInventory.playerEquipedSpell.Clear(); //équipe les spells
+        GameManager.Instance.playerInventory.playerEquipedSpell.Clear(); //ï¿½quipe les spells
         for (int i = 0; i < _spellListData.Count; i++)
         {
             PremadeSpell spell = _spellListData[i];
             GameManager.Instance.playerInventory.playerEquipedSpell.Add(spell.SpellData);
         }
-        DialogueSpawn(0); //Dialogue
+
+        StartGame();
+
     }
 
     private void DialogueSpawn(int dialogueIndex)
