@@ -33,11 +33,19 @@ public class TutorialPlayerEntity : PlayerEntity
                 {
                     await TryMoveTo(point);
                     Moved = true;
+                    ClearWalkables();
                     await SetupFight.Instance.DialogueSpawn(1);
                 }
                 await UniTask.Yield();
             }
+
+            while (!DialogueManager.Instance.IsEndingDialogue)
+            {
+                await UniTask.Yield();
+                Debug.Log("Attente de fin du 1er dialogue");
+            }
             CombatUiManager.Instance.SpellSlots[0].gameObject.SetActive(true); //active le 1er slots
+            SetupFight.Instance.SpellSlotHUD.SetActive(true);
             ShowSpellsUI();
 
             CombatUiManager.Instance.endButton.gameObject.SetActive(false);

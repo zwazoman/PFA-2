@@ -9,6 +9,7 @@ public class SetupFight : MonoBehaviour
     public RectTransform Pain;
     public bool GameStart;
     [SerializeField] private AnimatedPanel _gamePanel;
+    public GameObject SpellSlotHUD;
 
     public static SetupFight Instance;
 
@@ -16,6 +17,7 @@ public class SetupFight : MonoBehaviour
 
     private async void Start()
     {
+        SpellSlotHUD.SetActive(false);
         for (int i = 0; i < SpellListData.Count; i++)
         {
             PremadeSpell spell = SpellListData[i];
