@@ -1046,6 +1046,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5840de3ee85f1841adcf2fcd5b23ee4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &101007393 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4177760406491864261, guid: fec318d7681f5124b90538cc80d550b1, type: 3}
+  m_PrefabInstance: {fileID: 1976658586}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &101390861
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2698,7 +2703,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: BreadMan
+  m_text: ???
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0e226c73455383848bb4eb9b4afb0470, type: 2}
   m_sharedMaterial: {fileID: 5515721917333612139, guid: 0e226c73455383848bb4eb9b4afb0470, type: 2}
@@ -10025,6 +10030,7 @@ MonoBehaviour:
   Panel: {fileID: 204368736}
   _textBox: {fileID: 476213591}
   StartDialogue: 0
+  IsEndingDialogue: 0
 --- !u!114 &913160407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13618,12 +13624,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpellListData:
-  - {fileID: 11400000, guid: 1670653129af97246ab60d53faeb0fd4, type: 2}
   - {fileID: 11400000, guid: 2dce8958498b904439328a17bf8c1484, type: 2}
+  - {fileID: 11400000, guid: 1670653129af97246ab60d53faeb0fd4, type: 2}
   - {fileID: 11400000, guid: 91dd07983d61b224995e0642fa3c930c, type: 2}
   Pain: {fileID: 500232860}
   GameStart: 0
   _gamePanel: {fileID: 1976658589}
+  SpellSlotHUD: {fileID: 101007393}
 --- !u!4 &1273310958
 Transform:
   m_ObjectHideFlags: 0

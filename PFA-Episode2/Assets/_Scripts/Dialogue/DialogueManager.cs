@@ -233,7 +233,6 @@ public class DialogueManager : MonoBehaviour
         _numberSentence = 0;
         _nameCharacter.text = "";
         _text.text = "";
-
         IsEndingDialogue = false;
     }
 
