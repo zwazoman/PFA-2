@@ -63,7 +63,7 @@ public class TutorialPlayerEntity : PlayerEntity
                 await UniTask.Yield();
                 Debug.Log("waiting for player to use a spell. " + PlayedSpell);
             }
-
+            ClearWalkables();
             await SetupFight.Instance.DialogueSpawn(2);
 
             CombatUiManager.Instance.endButton.gameObject.SetActive(true);
@@ -77,6 +77,7 @@ public class TutorialPlayerEntity : PlayerEntity
                 await UniTask.Yield();
             }
             CombatUiManager.Instance.StopButtonShake();
+            await UniTask.Delay(250);
             foreach (Transform transform in CombatUiManager.Instance.SpellSlots) { transform.gameObject.SetActive(true); }
         }
         else
