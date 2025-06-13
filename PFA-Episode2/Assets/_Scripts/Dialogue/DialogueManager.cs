@@ -27,7 +27,7 @@ public class DialogueManager : MonoBehaviour
     public bool StartDialogue;
     private string _currentFullMessage = "";
     private bool _skipRequested = false;
-    private bool _isEndingDialogue = false;
+    public bool IsEndingDialogue = false;
 
 
 
@@ -211,8 +211,8 @@ public class DialogueManager : MonoBehaviour
 
     private async void EndDialogue()
     {
-        if (_isEndingDialogue) return;
-        _isEndingDialogue = true;
+        if (IsEndingDialogue) return;
+        IsEndingDialogue = true;
 
         string currentSceneName = SceneManager.GetActiveScene().name;
 
@@ -227,8 +227,6 @@ public class DialogueManager : MonoBehaviour
         }
         else if (currentSceneName == "Forest_Combat_Tuto" && !SetupFight.Instance.GameStart)
         {
-            SetupFight.Instance.GameStart = true;
-            SetupFight.Instance.StartGame();
             await SetupFight.Instance.Pain.DOAnchorPos(new Vector2(0, -875), 0.4f).SetEase(Ease.InOutBack);
         }
 
@@ -236,7 +234,7 @@ public class DialogueManager : MonoBehaviour
         _nameCharacter.text = "";
         _text.text = "";
 
-        _isEndingDialogue = false;
+        IsEndingDialogue = false;
     }
 
 

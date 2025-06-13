@@ -5,15 +5,24 @@ using UnityEngine.EventSystems;
 public class TutorialPlayerEntity : PlayerEntity
 {
     private bool PlayedOnTurnWithTuto = false;
+
     public override async UniTask CheckPlayerInput()
     {
         if (!PlayedOnTurnWithTuto)
         {
             CombatUiManager.Instance.StopButtonShake();
+            foreach (Transform transform in CombatUiManager.Instance.SpellSlots) { transform.gameObject.SetActive(false); }
 
+            await SetupFight.Instance.DialogueSpawn(0); //dialogue
+            while (!DialogueManager.Instance.IsEndingDialogue)
+            {
+                await UniTask.Yield();
+                Debug.Log("Attente de fin du 1er dialogue");
+            }
 
+            ApplyWalkables(); // cases jaunes
             //dialogue tuto movement
-            
+
             bool Moved = false;
             while (!Moved)
             {
@@ -24,16 +33,15 @@ public class TutorialPlayerEntity : PlayerEntity
                 {
                     await TryMoveTo(point);
                     Moved = true;
-                    //dialogue tuto spells
-
+                    await SetupFight.Instance.DialogueSpawn(1);
                 }
-
                 await UniTask.Yield();
             }
-
+            CombatUiManager.Instance.SpellSlots[0].gameObject.SetActive(true); //active le 1er slots
             ShowSpellsUI();
-            bool PlayedSpell = false;
+
             CombatUiManager.Instance.endButton.gameObject.SetActive(false);
+            bool PlayedSpell = false;
             while (!PlayedSpell)
             {
                 //si il joue un spell
@@ -48,6 +56,8 @@ public class TutorialPlayerEntity : PlayerEntity
                 Debug.Log("waiting for player to use a spell. " + PlayedSpell);
             }
 
+            await SetupFight.Instance.DialogueSpawn(2);
+
             CombatUiManager.Instance.endButton.gameObject.SetActive(true);
             //HideSpellsUI();
             //dialogue tuto end turn
@@ -59,6 +69,7 @@ public class TutorialPlayerEntity : PlayerEntity
                 await UniTask.Yield();
             }
             CombatUiManager.Instance.StopButtonShake();
+            foreach (Transform transform in CombatUiManager.Instance.SpellSlots) { transform.gameObject.SetActive(true); }
         }
         else
             await base.CheckPlayerInput();
@@ -71,13 +82,14 @@ public class TutorialPlayerEntity : PlayerEntity
         {
             await EntityBasePlayTurn();
             endTurnButton.Pressed = false;
-            ApplyWalkables();
-            
             
             await CheckPlayerInput();
         
             await EndTurn();
             PlayedOnTurnWithTuto = true;
-        }else await base.PlayTurn();
+        }
+        else await base.PlayTurn();
     }
+
+
 }

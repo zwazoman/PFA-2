@@ -13617,14 +13617,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21aed7df46d59a242b53536dc3bf1ca6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gamePanel: {fileID: 1976658589}
-  _spellListData:
-  - {fileID: 11400000, guid: 2dce8958498b904439328a17bf8c1484, type: 2}
+  SpellListData:
   - {fileID: 11400000, guid: 1670653129af97246ab60d53faeb0fd4, type: 2}
+  - {fileID: 11400000, guid: 2dce8958498b904439328a17bf8c1484, type: 2}
   - {fileID: 11400000, guid: 91dd07983d61b224995e0642fa3c930c, type: 2}
-  _combatManager: {fileID: 3873860791376428936}
-  GameStart: 0
   Pain: {fileID: 500232860}
+  GameStart: 0
+  _gamePanel: {fileID: 1976658589}
 --- !u!4 &1273310958
 Transform:
   m_ObjectHideFlags: 0
@@ -27396,17 +27395,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4144835364260791156, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
   m_PrefabInstance: {fileID: 3873860791376428934}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3873860791376428936 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2108201571843723365, guid: ed62daddd25e32742b6049497ec8acfd, type: 3}
-  m_PrefabInstance: {fileID: 3873860791376428934}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41bf807dc9f4e964ab4556718a11261a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &7013154104528584513
 PrefabInstance:
   m_ObjectHideFlags: 0
