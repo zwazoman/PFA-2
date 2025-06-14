@@ -275,6 +275,7 @@ public static class Tools
 
         queue.Enqueue((startPoint, 0));
 
+        int iterations = 0;
         while (queue.Count > 0)
         {
             var (node, distance) = queue.Dequeue();
@@ -287,8 +288,10 @@ public static class Tools
                         queue.Enqueue((neighbor, distance + 1));
                         visited.Add(neighbor);
                     }
-            await UniTask.Yield();
+            if(iterations%8==0) await UniTask.Yield();
+            iterations++;
         }
+        Debug.Log("floodfill iterations : " + iterations);
         return PointDistanceDict;
     }
 

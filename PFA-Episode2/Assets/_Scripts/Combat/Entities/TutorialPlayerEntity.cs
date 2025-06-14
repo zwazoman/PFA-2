@@ -10,10 +10,12 @@ public class TutorialPlayerEntity : PlayerEntity
     {
         if (!PlayedOnTurnWithTuto)
         {
+            CombatUiManager.Instance.endButton.gameObject.SetActive(false);
             CombatUiManager.Instance.StopButtonShake();
             foreach (Transform transform in CombatUiManager.Instance.SpellSlots) { transform.gameObject.SetActive(false); }
 
             await SetupFight.Instance.DialogueSpawn(0); //dialogue
+            
             while (!DialogueManager.Instance.IsEndingDialogue)
             {
                 await UniTask.Yield();
@@ -48,7 +50,7 @@ public class TutorialPlayerEntity : PlayerEntity
             SetupFight.Instance.SpellSlotHUD.SetActive(true);
             ShowSpellsUI();
 
-            CombatUiManager.Instance.endButton.gameObject.SetActive(false);
+            
             bool PlayedSpell = false;
             while (!PlayedSpell)
             {
