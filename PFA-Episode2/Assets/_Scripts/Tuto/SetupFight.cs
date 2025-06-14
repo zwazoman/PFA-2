@@ -31,8 +31,8 @@ public class SetupFight : MonoBehaviour
     {
         DialogueManager.Instance.StartDialogue = true;
         DialogueManager.Instance.GetDialogue(dialogueIndex);
-        await UniTask.Delay(250);
-        await Pain.DOAnchorPos(new Vector2(0, 226), 0.4f).SetEase(Ease.OutBack);
+        //await UniTask.WaitForSeconds(.1f);
+        await Pain.DOAnchorPos(new Vector2(0, 226), 0.1f).SetEase(Ease.OutBack);
     }
 
     public async UniTask Victory()

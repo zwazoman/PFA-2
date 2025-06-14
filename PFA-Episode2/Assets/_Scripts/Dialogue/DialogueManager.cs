@@ -13,8 +13,8 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] TMP_Text _nameCharacter;
     [SerializeField] TMP_Text _text;
 
-    [SerializeField] private float _characterDelay = 0.05f;
-    [SerializeField] private float _punctuationDelay = 0.1f;
+    [SerializeField] private float _characterDelay = 0.01f;
+    [SerializeField] private float _punctuationDelay = 0.4f;
 
     public GameObject Panel;
     [SerializeField] private GameObject _textBox;
@@ -68,11 +68,11 @@ public class DialogueManager : MonoBehaviour
     public void GetRandomSequenceDialogue() { SearchDialogue(UnityEngine.Random.Range(0, TextData.DialogueData.Count)); }
     public void GetDialogue(int NumberDialogue) { SearchDialogue(NumberDialogue); }
 
-    // Divise les différents éléments pour les ranger par ligne puis par éléments, ensuite cherche la clé corresspondante
+    // Divise les diffï¿½rents ï¿½lï¿½ments pour les ranger par ligne puis par ï¿½lï¿½ments, ensuite cherche la clï¿½ corresspondante
     private async void SearchDialogue(int NumberDialogue)
     {
         Panel.SetActive(true);
-        await Panel.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
+        if(Panel.transform.localScale==Vector3.zero) await Panel.transform.DOScale(Vector3.one, 0.35f).SetEase(Ease.OutBack);
         _numberDialogue = NumberDialogue;
         if (_isWriting) return;
 
@@ -89,7 +89,7 @@ public class DialogueManager : MonoBehaviour
         }
     }
     
-    // Interprete les différents élément pour savoir quel effet appliqué
+    // Interprete les diffï¿½rents ï¿½lï¿½ment pour savoir quel effet appliquï¿½
     private void WriteText(string dialogue, bool shakeTextBox, bool shakeText, bool letterByletter)
     {
         if (shakeTextBox) _textBox.transform.DOShakePosition(0.5f, 50);
@@ -131,26 +131,27 @@ public class DialogueManager : MonoBehaviour
                 return;
             }
 
-            float speed = _characterDelay;
+            float delay = _characterDelay;
             char currentChar = message[i];
 
             if (currentChar == '<') insideTag = true;
             if (currentChar == '>') insideTag = false;
-            if (IsPunctuation(currentChar)) speed = _punctuationDelay;
+            bool isPunctuation = IsPunctuation(currentChar) && (i<message.Length-1 && message[i+1] == ' '); 
+            if (isPunctuation) delay = _punctuationDelay;
 
             _text.text += currentChar;
 
             if (shakeText && !insideTag) StartShakeEffect();
 
-            if (!insideTag) await UniTask.Delay(System.TimeSpan.FromSeconds(speed));
+            if (!insideTag && (i%3==0 ||isPunctuation)) await UniTask.WaitForSeconds(delay);
         }
 
         _isWriting = false;
     }
 
 
-    // Enregistre les différents sommets de chaque lettres du texte pour leur mettre un effet de shake
-    // Peut être trop coûteux pour mobile donc à voir
+    // Enregistre les diffï¿½rents sommets de chaque lettres du texte pour leur mettre un effet de shake
+    // Peut ï¿½tre trop coï¿½teux pour mobile donc ï¿½ voir
     private void StartShakeEffect()
     {
         _text.ForceMeshUpdate();
@@ -173,7 +174,7 @@ public class DialogueManager : MonoBehaviour
                 origVerts[j] = vertices[vertexIndex + j];
             }
 
-            // Permet de faire en sorte que le tween dure même sans update (trouvé sur internet)
+            // Permet de faire en sorte que le tween dure mï¿½me sans update (trouvï¿½ sur internet)
             #region Tween Infini
             Tweener shake = DOTween.To(
                 () => 0f,
@@ -227,7 +228,7 @@ public class DialogueManager : MonoBehaviour
         }
         else if (currentSceneName == "Forest_Combat_Tuto" && !SetupFight.Instance.GameStart)
         {
-            await SetupFight.Instance.Pain.DOAnchorPos(new Vector2(0, -875), 0.4f).SetEase(Ease.InOutBack);
+            await SetupFight.Instance.Pain.DOAnchorPos(new Vector2(0, -875), 0.2f).SetEase(Ease.InOutBack);
         }
 
         _numberSentence = 0;

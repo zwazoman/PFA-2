@@ -24,6 +24,8 @@ public class DraggableSpell : Draggable
 
     public bool canUse = true;
 
+    [SerializeField] private SpellInfoPopup _descriptionPanel;
+    
     public void SetUp(Spell spell,Entity player)
     {
         if(spell.spellData.Sprite != null)
@@ -35,6 +37,21 @@ public class DraggableSpell : Draggable
         spell.OnCooled += EnableSpell;
 
         spellCaster = player.entitySpellCaster;
+        
+        //description panel
+        _descriptionPanel?.Setup(spell.spellData);
+        _descriptionPanel?.gameObject.SetActive(false);
+        EventClicked += () =>
+        {
+            _descriptionPanel?.gameObject.SetActive(true);
+            _descriptionPanel.ClearParent();
+            
+        };
+        EventClickedSomewhereElse += () =>
+        {
+            _descriptionPanel?.gameObject.SetActive(false);
+            _descriptionPanel.AttachToTransform(transform) ;
+        };
     }
 
 
@@ -45,6 +62,9 @@ public class DraggableSpell : Draggable
 
     public async UniTask<bool> BeginDrag()
     {
+        //disable description popup
+        _descriptionPanel?.gameObject.SetActive(false);
+        
         if (isDragging && canUse)
         {
             spellCaster.castingEntity.ClearWalkables();
