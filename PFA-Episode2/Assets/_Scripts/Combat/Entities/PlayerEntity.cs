@@ -81,7 +81,7 @@ public class PlayerEntity : Entity
                 foreach (DraggableSpell draggable in spellsUI)
                 {
                     hasMoreActions |= draggable.canUse;
-                    await draggable.BeginDrag();
+                    await draggable.CheckForBeginDrag();
                 }
 
             //si il clique sur une case de mouvement

@@ -61,6 +61,7 @@ public class DraggableSpellContainer : DraggableItemContainer
         
         //disable description popup
         _descriptionPanel?.gameObject.SetActive(false);
+        inspected = false;
         
         List<RaycastResult> a = new();
         EventSystem.current.RaycastAll(eventData, a);

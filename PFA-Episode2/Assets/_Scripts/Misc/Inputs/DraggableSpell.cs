@@ -45,12 +45,15 @@ public class DraggableSpell : Draggable
         {
             _descriptionPanel?.gameObject.SetActive(true);
             _descriptionPanel.ClearParent();
+            Debug.Log("clicked");
             
         };
         EventClickedSomewhereElse += () =>
         {
             _descriptionPanel?.gameObject.SetActive(false);
             _descriptionPanel.AttachToTransform(transform) ;
+            Debug.Log("clicked somewhere else");
+            
         };
     }
 
@@ -60,16 +63,20 @@ public class DraggableSpell : Draggable
         base.Awake();
     }
 
-    public async UniTask<bool> BeginDrag()
+    public async UniTask<bool> CheckForBeginDrag()
     {
-        //disable description popup
-        _descriptionPanel?.gameObject.SetActive(false);
+        //Debug.Log("begin drag");
+        
         
         if (isDragging && canUse)
         {
             spellCaster.castingEntity.ClearWalkables();
             _rangePoints = spellCaster.ComputeAndPreviewSpellRange(spell);
             
+            //disable description popup
+            Debug.Log("ahh");
+            _descriptionPanel?.gameObject.SetActive(false);
+            inspected = false;
             return  await DragAndDrop();
         }
 

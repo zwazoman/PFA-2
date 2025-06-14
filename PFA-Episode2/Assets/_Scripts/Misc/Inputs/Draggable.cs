@@ -25,7 +25,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     //notifiers
     public event Action EventBeginDrag, EventEndDrag,EventClicked,EventClickedSomewhereElse;
 
-    private bool inspected = false;
+    protected bool inspected = false;
     
 
     protected virtual void Awake()
@@ -93,7 +93,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         do
         {
             await UniTask.Yield();
-        } while (!(Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Ended));
+        } while (!((Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Ended)||Input.GetMouseButtonUp(0)));
 
         inspected = false;
         EventClickedSomewhereElse?.Invoke();

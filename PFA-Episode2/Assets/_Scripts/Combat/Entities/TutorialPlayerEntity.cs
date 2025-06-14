@@ -56,7 +56,7 @@ public class TutorialPlayerEntity : PlayerEntity
                 
                 foreach (DraggableSpell draggable in spellsUI)
                 {
-                    PlayedSpell |= await draggable.BeginDrag();
+                    PlayedSpell |= await draggable.CheckForBeginDrag();
                     //PlayedSpell = true;
                 }
 
