@@ -33,12 +33,14 @@ public class DraggableSpellContainer : DraggableItemContainer
         _descriptionPanel?.gameObject.SetActive(false);
         EventClicked += () =>
         {
+            Debug.Log("clicked");
             _descriptionPanel?.gameObject.SetActive(true);
             _descriptionPanel.ClearParent();
             
         };
         EventClickedSomewhereElse += () =>
         {
+            Debug.Log("clicked somewhere else");
             _descriptionPanel?.gameObject.SetActive(false);
             _descriptionPanel.AttachToTransform(transform) ;
         };
