@@ -15,21 +15,17 @@ public class TutorialPlayerEntity : PlayerEntity
             foreach (Transform transform in CombatUiManager.Instance.SpellSlots) { transform.gameObject.SetActive(false); }
 
             await SetupFight.Instance.DialogueSpawn(0); //dialogue
-            
             while (!DialogueManager.Instance.IsEndingDialogue)
             {
                 await UniTask.Yield();
-                Debug.Log("Attente de fin du 1er dialogue");
             }
 
+            SetupFight.Instance.DesactiveTrigger();
             ApplyWalkables(); // cases jaunes
-            //dialogue tuto movement
 
             bool Moved = false;
             while (!Moved)
             {
-                Debug.Log("ahhh");
-                //si il clique sur une case de mouvement
                 if (Input.GetMouseButtonUp(0) && Tools.CheckMouseRay(out WayPoint point) &&
                     !EventSystem.current.IsPointerOverGameObject(0))
                 {
@@ -44,8 +40,9 @@ public class TutorialPlayerEntity : PlayerEntity
             while (!DialogueManager.Instance.IsEndingDialogue)
             {
                 await UniTask.Yield();
-                Debug.Log("Attente de fin du 1er dialogue");
             }
+            SetupFight.Instance.DesactiveTrigger();
+
             CombatUiManager.Instance.SpellSlots[0].gameObject.SetActive(true); //active le 1er slots
             SetupFight.Instance.SpellSlotHUD.SetActive(true);
             ShowSpellsUI();
@@ -53,32 +50,35 @@ public class TutorialPlayerEntity : PlayerEntity
             
             bool PlayedSpell = false;
             while (!PlayedSpell)
-            {
-                //si il joue un spell
-                
+            {   
                 foreach (DraggableSpell draggable in spellsUI)
                 {
                     PlayedSpell |= await draggable.CheckForBeginDrag();
-                    //PlayedSpell = true;
                 }
 
                 await UniTask.Yield();
                 Debug.Log("waiting for player to use a spell. " + PlayedSpell);
             }
+
             ClearWalkables();
-            await SetupFight.Instance.DialogueSpawn(2);
+            SetupFight.Instance.DesactiveTrigger();
 
             CombatUiManager.Instance.endButton.gameObject.SetActive(true);
-            //HideSpellsUI();
-            //dialogue tuto end turn
 
-            //jiggle end button when no more action is possible
             CombatUiManager.Instance.ShakeButton();
+
             while (!endTurnButton.Pressed)
             {
                 await UniTask.Yield();
             }
             CombatUiManager.Instance.StopButtonShake();
+
+            await SetupFight.Instance.DialogueSpawn(2);
+            while (!DialogueManager.Instance.IsEndingDialogue)
+            {
+                await UniTask.Yield();
+            }
+
             await UniTask.Delay(250);
             foreach (Transform transform in CombatUiManager.Instance.SpellSlots) { transform.gameObject.SetActive(true); }
         }
@@ -101,6 +101,4 @@ public class TutorialPlayerEntity : PlayerEntity
         }
         else await base.PlayTurn();
     }
-
-
 }

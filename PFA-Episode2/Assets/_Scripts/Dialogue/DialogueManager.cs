@@ -4,7 +4,6 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-using System;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -72,7 +71,7 @@ public class DialogueManager : MonoBehaviour
     private async void SearchDialogue(int NumberDialogue)
     {
         Panel.SetActive(true);
-        if(Panel.transform.localScale==Vector3.zero) await Panel.transform.DOScale(Vector3.one, 0.35f).SetEase(Ease.OutBack);
+        if(Panel.transform.localScale==Vector3.zero) await Panel.transform.DOScale(Vector3.one, 0.25f).SetEase(Ease.OutQuart);
         _numberDialogue = NumberDialogue;
         if (_isWriting) return;
 
@@ -217,7 +216,7 @@ public class DialogueManager : MonoBehaviour
 
         string currentSceneName = SceneManager.GetActiveScene().name;
 
-        await Panel.transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InOutBack);
+        await Panel.transform.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InQuart);
         Panel.SetActive(false);
 
         if (!_isFinish && currentSceneName == "Heal")
@@ -228,7 +227,7 @@ public class DialogueManager : MonoBehaviour
         }
         else if (currentSceneName == "Forest_Combat_Tuto" && !SetupFight.Instance.GameStart)
         {
-            await SetupFight.Instance.Pain.DOAnchorPos(new Vector2(0, -875), 0.2f).SetEase(Ease.InOutBack);
+            //await SetupFight.Instance.Pain.DOAnchorPos(new Vector2(0, -875), 0.2f).SetEase(Ease.InOutBack);
         }
 
         _numberSentence = 0;

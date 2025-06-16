@@ -2,14 +2,15 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SetupFight : MonoBehaviour
 {
     public List<PremadeSpell> SpellListData = new();
-    public RectTransform Pain;
     public bool GameStart;
     [SerializeField] private AnimatedPanel _gamePanel;
     public GameObject SpellSlotHUD;
+    [SerializeField] private EventTrigger _trigger;
 
     public static SetupFight Instance;
 
@@ -29,10 +30,9 @@ public class SetupFight : MonoBehaviour
 
     public async UniTask DialogueSpawn(int dialogueIndex)
     {
+        _trigger.enabled = true;
         DialogueManager.Instance.StartDialogue = true;
         DialogueManager.Instance.GetDialogue(dialogueIndex);
-        //await UniTask.WaitForSeconds(.1f);
-        await Pain.DOAnchorPos(new Vector2(0, 226), 0.1f).SetEase(Ease.OutBack);
     }
 
     public async UniTask Victory()
@@ -40,4 +40,6 @@ public class SetupFight : MonoBehaviour
         await DialogueSpawn(3);
         await UniTask.WaitUntil(() => !DialogueManager.Instance.Panel.activeSelf);
     }
+
+    public void DesactiveTrigger() { _trigger.enabled = false;  }
 }
