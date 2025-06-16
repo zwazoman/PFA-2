@@ -79,7 +79,7 @@ public class MapBuildingTools : MonoBehaviour
     public bool Intersection(int mapRangeCurrentIndex, int probaIntersection)
     {
         int max = 3;
-        if (GameManager.Instance.FirstPlay) { max = 4; } 
+        if (PlayerPrefs.GetInt("FirstLaunch") == 1) { max = 4; } 
         if (mapRangeCurrentIndex > max)
         {
             int result = Random.Range(1, 11);
@@ -97,7 +97,7 @@ public class MapBuildingTools : MonoBehaviour
     {
         if (MapMaker2.Instance.CurrentNode.Position + 1 == _mapRange) { MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Cuisine; }
         if (MapMaker2.Instance.CurrentNode.Position == _mapRange) { MapMaker2.Instance.CurrentNode.EventName = NodesEventTypes.Boss; }
-        if (GameManager.Instance.FirstPlay) 
+        if (PlayerPrefs.GetInt("FirstLaunch") == 1) 
         {
             switch (MapMaker2.Instance.CurrentNode.Position)
             {

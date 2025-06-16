@@ -39,6 +39,8 @@ public class SetupFight : MonoBehaviour
     {
         await DialogueSpawn(3);
         await UniTask.WaitUntil(() => !DialogueManager.Instance.Panel.activeSelf);
+        PlayerPrefs.SetInt("FirstLaunch", 0);
+        PlayerPrefs.Save();
     }
 
     public void DesactiveTrigger() { _trigger.enabled = false;  }
