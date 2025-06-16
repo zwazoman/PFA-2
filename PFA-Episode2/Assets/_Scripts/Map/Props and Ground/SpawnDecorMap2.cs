@@ -29,7 +29,7 @@ public class SpawnDecorMap2 : MonoBehaviour
         if (pos >= 8) RemoveLast();
         if (pos >= 9) { RemoveLast(2); _activeIndices.Add(7); }
         if (pos >= 10) ReplaceLast(8);
-        if (pos >= 14) RemoveLast();
+        //if (pos >= 14) RemoveLast();
 
         LoadDecor();
     }
