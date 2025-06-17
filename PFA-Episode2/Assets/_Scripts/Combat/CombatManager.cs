@@ -198,7 +198,7 @@ public class CombatManager : MonoBehaviour
         if(PlaytestDataRecorder.Instance !=null)
             await PlaytestDataRecorder.Instance.OnGameOver();
 
-        MusicManager.Instance.ChangeVolume(0, 1);
+        MusicManager.Instance.ChangeMusicVolume(-0, .25f);
         SFXManager.Instance.PlaySFXClip(Sounds.GameOverJingle);
         _gameOverPanel?.Show();
     }

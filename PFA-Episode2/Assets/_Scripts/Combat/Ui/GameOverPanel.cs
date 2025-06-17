@@ -7,9 +7,9 @@ public class GameOverPanel : AnimatedPanel
     {
         Time.timeScale = 0;
     }
-    public void GoBack()
+    public async void GoBack()
     {
         Time.timeScale = 1.0f;
-        SceneTransitionManager.Instance.LoadScence("MainMenu");
+        await SceneTransitionManager.Instance.GoToScene("MainMenu");
     }
 }
