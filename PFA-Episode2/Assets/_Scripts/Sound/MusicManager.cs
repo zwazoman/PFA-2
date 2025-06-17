@@ -31,7 +31,14 @@ public class MusicManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        if (instance == this || instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
     }
 
     private void Start()
