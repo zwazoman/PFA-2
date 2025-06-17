@@ -9,6 +9,7 @@ public class EntityUI : MonoBehaviour
     [SerializeField] CoolSlider lifebar;
     [SerializeField] CoolSlider _shieldBar;
     [SerializeField] private FeedbackNumber _number;
+    [SerializeField] private DamagePreviewPopup _damagePreviewPopup;
 
     Entity owner;
 
@@ -46,12 +47,17 @@ public class EntityUI : MonoBehaviour
         {
             lifebar.PreviewValue(newHP);
             _shieldBar.PreviewValue(newShield);
+            
+            _damagePreviewPopup?.UpdateVisuals((int)(owner.stats.currentHealth),(int)owner.stats.shieldAmount,(int)(newHP-owner.stats.currentHealth),(int)(newShield- owner.stats.shieldAmount));
+            _damagePreviewPopup.Show();
         };
 
         owner.OnSpellPreviewCancel += () =>
         {
             lifebar.CancelPreview();
             _shieldBar.CancelPreview();
+
+            _damagePreviewPopup.Hide();
         };
         
     }
