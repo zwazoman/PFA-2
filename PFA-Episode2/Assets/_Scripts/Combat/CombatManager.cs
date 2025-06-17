@@ -103,7 +103,10 @@ public class CombatManager : MonoBehaviour
         if(_summonEntities)
             SummonEntities();
         await UniTask.NextFrame();
-        
+
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        if (currentSceneName == "Forest_Combat_Boss") { await VsBoss.Instance.Test(); }
+
         IsPlaying = true;
         while( Entities.Count>1 )
         {
@@ -195,7 +198,7 @@ public class CombatManager : MonoBehaviour
         if(PlaytestDataRecorder.Instance !=null)
             await PlaytestDataRecorder.Instance.OnGameOver();
 
-        MusicManager.Instance.ChangeVolume(0, 1);
+        MusicManager.Instance.ChangeMusicVolume(-0, .25f);
         SFXManager.Instance.PlaySFXClip(Sounds.GameOverJingle);
         _gameOverPanel?.Show();
     }
@@ -204,6 +207,7 @@ public class CombatManager : MonoBehaviour
     {
         string currentSceneName = SceneManager.GetActiveScene().name;
         if (currentSceneName == "Forest_Combat_Tuto") { await SetupFight.Instance.Victory(); }
+        if (currentSceneName == "Forest_Combat_Boss") { await VsBoss.Instance.Victory(); }
 
         await UniTask.Delay(1000);
 

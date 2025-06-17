@@ -1,5 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class StartGameCombat : MonoBehaviour
 {
@@ -12,7 +13,8 @@ public class StartGameCombat : MonoBehaviour
         {
             gameObject.SetActive(false);
             _GamePanel.Show();
-            await CombatManager.Instance.Play();
+            string currentSceneName = SceneManager.GetActiveScene().name;
+            if (currentSceneName != "Forest_Combat_Boss") { await CombatManager.Instance.Play(); }
         }
         else
         {

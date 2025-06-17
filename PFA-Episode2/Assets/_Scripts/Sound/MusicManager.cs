@@ -2,7 +2,9 @@ using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.LightTransport;
 using UnityEngine.SceneManagement;
 
 public class MusicManager : MonoBehaviour
@@ -38,6 +40,7 @@ public class MusicManager : MonoBehaviour
         else
         {
             Destroy(this);
+            print("gros chien");
         }
     }
 
@@ -69,9 +72,10 @@ public class MusicManager : MonoBehaviour
         await _musicSource.DOFade(musicParameter.targetVolume, _fadeDuration);
     }
 
-    public async void ChangeVolume(float targetVolume, float changeDuration)
+    public void ChangeMusicVolume(float targetVolume, float changeDuration)
     {
-        await _musicSource.DOFade(targetVolume, changeDuration);
+        print("change volume");
+        _musicSource.DOFade(targetVolume, changeDuration);
     }
 
     public async void ResetVolume(float changeDuration)
