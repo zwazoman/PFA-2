@@ -45,6 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9d25737d63f5fa49a5d682381d507bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  progress: 0
+  FirstPlay: 1
   playerInventory:
     playerHealth:
       maxHealth: 50
@@ -54,11 +56,18 @@ MonoBehaviour:
     Sauces: []
     playerEquipedSpellIndex: 
     playerEquipedSpell: []
+    TotalTirageIngredient: 0
     NameSave: InventorySave
+  PlayerPosMap:
+    playerPosition: {x: 0, y: 0, z: 0}
+    PositionMap: 0
+    Y: 0
   staticData: {fileID: 11400000, guid: 66a493f66f77dc74e9960868ba638afc, type: 2}
   combatScenesName:
   - Forest_Combat_1
   - Forest_Combat_2
+  - Forest_Combat_3
+  - Forest_Combat_4
   premadeSpells:
   - {fileID: 11400000, guid: ebc3ce0f2326f0340822f46c609b391c, type: 2}
   tests: 0
