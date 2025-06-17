@@ -31,14 +31,14 @@ public class MusicManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == this || instance == null)
-        {
+        //if (instance == this || instance == null)
+        //{
             instance = this;
-        }
-        else
-        {
-            Destroy(this);
-        }
+        //}
+        //else
+        //{
+        //    Destroy(this);
+        //}
     }
 
     private void Start()
