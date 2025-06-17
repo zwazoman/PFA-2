@@ -103,7 +103,10 @@ public class CombatManager : MonoBehaviour
         if(_summonEntities)
             SummonEntities();
         await UniTask.NextFrame();
-        
+
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        if (currentSceneName == "Forest_Combat_Boss") { await VsBoss.Instance.Test(); }
+
         IsPlaying = true;
         while( Entities.Count>1 )
         {
@@ -204,6 +207,7 @@ public class CombatManager : MonoBehaviour
     {
         string currentSceneName = SceneManager.GetActiveScene().name;
         if (currentSceneName == "Forest_Combat_Tuto") { await SetupFight.Instance.Victory(); }
+        if (currentSceneName == "Forest_Combat_Boss") { await VsBoss.Instance.Victory(); }
 
         await UniTask.Delay(1000);
 
