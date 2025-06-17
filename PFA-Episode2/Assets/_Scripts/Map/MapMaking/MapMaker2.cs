@@ -209,6 +209,7 @@ public class MapMaker2 : MonoBehaviour
                     Node nodeExistant = DicoNode[nextPosition];
 
                     MapBuildingTools.Instance.TraceTonTrait(ParentNode, nodeExistant);// Trace une ligne entre le parent actuel et le node déjà existant
+                    if (ParentNode.Hauteur == 4) { ParentNode.NodeExisting = true; print("The Urn"); }
                     nodeExistant.Creator = ParentNode;
                     if (!ParentNode.Children.Contains(MapBuildingTools.Instance.ReturnNodeFromNodePosition(ParentNode.Position, 1)))
                     {
@@ -220,7 +221,6 @@ public class MapMaker2 : MonoBehaviour
                                 ParentNode.Children.Add(nde);
                             }
                         }
-                        //.Children.Add(MapBuildingTools.Instance.ReturnNodeFromNodePosition(ParentNode.Position, 1));
                     }
                     NodeList.Enqueue(CurrentNode);
                     break;
@@ -267,6 +267,21 @@ public class MapMaker2 : MonoBehaviour
         foreach (Node node in DicoNode.Values)
         {
             AllNodeGood.Add(node);
+            if (node.Hauteur == 4)
+            {
+                if (node.Creator.Hauteur == 4 && node.Children[0].NodeExisting)
+                {
+                    List<Node> listnode = MapBuildingTools.Instance.ReturnListOfNodeFromNodePosition(node.Position);
+                    foreach (Node nde in listnode)
+                    {
+                        if (nde.Hauteur == 3)
+                        {
+                            node.Creator.Children.Add(nde);
+                            MapBuildingTools.Instance.TraceTonTrait(node.Creator, nde);
+                        }
+                    }
+                }
+            }
         }
         MapBuildingTools.Instance.AttributeEvent(MapRange);
         MapAttributeEvent3.Instance.SetupEventNode();

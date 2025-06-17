@@ -89,10 +89,6 @@ public struct SpellEffect
         {
             Effects = new SpellEffect[] { /*new SpellEffect(SpellEffectType.Damage,StatType.FlatIncrease,2)*/};
         }
-        else
-        {
-            //Debug.LogError("y'a un pb l� connard");
-        }
        
     }
 
@@ -107,7 +103,6 @@ public struct SpellEffect
                     break;
                 case StatType.Multiplier:
                     a.value *= b.value;
-                    //Debug.Log("Multiplier Collapsed !!!!!!");
                     break;
 
             }

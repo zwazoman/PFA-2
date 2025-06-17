@@ -57,7 +57,6 @@ public class TutorialPlayerEntity : PlayerEntity
                 }
 
                 await UniTask.Yield();
-                Debug.Log("waiting for player to use a spell. " + PlayedSpell);
             }
 
             ClearWalkables();

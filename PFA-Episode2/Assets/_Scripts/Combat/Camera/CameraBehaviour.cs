@@ -39,7 +39,6 @@ public class CameraBehaviour : MonoBehaviour
         if (_instance == null) _instance = this;
         else
         {
-            Debug.LogError("A singleton Instance Already Exists.");
             Destroy(this);
         }
     }

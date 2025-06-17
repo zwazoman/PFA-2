@@ -13,7 +13,6 @@ public class GameManager : MonoBehaviour
         {
             if (instance == null)
             {
-                Debug.LogWarning("no gamemanager instance found. Creating new game manager.");
                 GameObject go = new GameObject("Game Manager");
                 instance = go.AddComponent<GameManager>();
             }

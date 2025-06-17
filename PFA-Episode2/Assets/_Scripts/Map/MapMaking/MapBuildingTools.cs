@@ -5,7 +5,7 @@ using static NodeTypes;
 [RequireComponent(typeof(MapMaker2))]
 public class MapBuildingTools : MonoBehaviour
 {
-    [SerializeField][Tooltip("Image qui sera dupliqué pour faire les chemins entre les nodes")] private List<GameObject> _listRoadPath;
+    [SerializeField][Tooltip("Mesh qui sera dupliqué pour faire les chemins entre les nodes")] private List<GameObject> _listRoadPath;
     public List<GameObject> TrueListPath;
     [SerializeField][Tooltip("GameObject parent des chemins, si null alors c'est le porteur du script le parent")] private GameObject _parent;
     public bool FirstTimeDraw = true;

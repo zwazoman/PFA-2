@@ -36,10 +36,6 @@ public static class Crafting
             }
         }
         if(shouldAddDamageEffect) spell.Effects.Add(new(SpellEffectType.Damage,StatType.FlatIncrease,2));
-        
-       
-        //Debug.Log(" = collapsed spell effects = ");
-        //foreach (SpellEffect e in spell.Effects) Debug.Log(e.effectType);
 
         sauce.ModifySpellEffect(spell);
 
@@ -68,9 +64,6 @@ public static class Crafting
         {
             Debug.LogException(new Exception("Couldnt remove ingredients from player inventory.",e));
         }
-
-        //Debug.Log(" = Final spell effects =");
-        //foreach (SpellEffect e in spell.Effects) Debug.Log(e.effectType);
 
         return spell;
     }

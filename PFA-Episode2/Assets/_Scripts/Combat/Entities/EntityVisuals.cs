@@ -111,7 +111,7 @@ public class EntityVisuals : MonoBehaviour
             SFXManager.Instance.PlaySFXClip(Sounds.EntityDeath);
             
             //vfx
-            try { vfx = PoolManager.Instance.vfx_GodrayPool.PullObjectFromPool(transform.position,Quaternion.Euler(-90,0,0)); Debug.Log("qwrsdtxcfytgyihuiçàûoytqrhgdetWHUÏYPGTYRSHQWSYXCKIJÖUHYDTSJWDHGFXCGKIÖUHYGTFKYDGTWHGHXFCKGIJMKO%PL"); }
+            try { vfx = PoolManager.Instance.vfx_GodrayPool.PullObjectFromPool(transform.position,Quaternion.Euler(-90,0,0)); }
             catch (Exception e) { Debug.LogException(e); }
             
             //animation

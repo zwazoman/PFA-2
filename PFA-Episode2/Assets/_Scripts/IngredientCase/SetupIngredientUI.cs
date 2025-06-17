@@ -35,7 +35,7 @@ public class SetupIngredientUI : MonoBehaviour
             if (IngredientBase is Sauce sauce) { _listIngredientUI[index].Setup(IngredientBase, itemIconPerSauceEffect[sauce.effect].IconEffectSprite, IngredientBase.rarity, itemIconPerSauceEffect[sauce.effect].EffectTypeColor); }
             else if (IngredientBase is Ingredient ing) { _listIngredientUI[index].Setup(IngredientBase, itemIconPerIngredientEffect[ing.EffectType].IconEffectSprite, IngredientBase.rarity, itemIconPerIngredientEffect[ing.EffectType].EffectTypeColor); }
         }
-        catch (Exception e){ Debug.LogException(e); }
+        catch (Exception ){  }
     }
 
     public async void Next(int index)

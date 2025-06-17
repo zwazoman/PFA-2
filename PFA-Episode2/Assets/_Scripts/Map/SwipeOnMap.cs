@@ -40,8 +40,6 @@ public class SwipeOnMap : MonoBehaviour
         int directionIndex = GetDirectionIndex(swipeDirection, _directions);
         Node chooseNode = _directions[directionIndex];
 
-        //Debug.Log($"Swipe d�tect�, va vers le node : position : {chooseNode.Position}, hauteur : {chooseNode.Hauteur}");
-
         bool interactable = chooseNode.GetInteractable();
 
         if (interactable)

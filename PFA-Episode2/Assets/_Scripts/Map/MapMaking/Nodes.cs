@@ -16,6 +16,7 @@ public class Node : MonoBehaviour
     public List<Node> Children = new();
     public NodesEventTypes EventName;
     public List<GameObject> PathBetweenNode = new();
+    public bool NodeExisting;
 
     [HideInInspector] public bool OnYReviendra;
     [HideInInspector] public string CombatScene;
@@ -107,7 +108,7 @@ public class Node : MonoBehaviour
         Vector3 rot = transform.eulerAngles;
         rot.z = -90f;
         transform.eulerAngles = rot;
-        if (PathBetweenNode.Count > 1) { if (Hauteur != 3) { Destroy(PathBetweenNode[1]); } }
+        if (PathBetweenNode.Count > 1) { if (Hauteur != 3 && !Children[0].Children[0].NodeExisting) { Destroy(PathBetweenNode[1]); } }
     }
 
     private void TweenMesh()

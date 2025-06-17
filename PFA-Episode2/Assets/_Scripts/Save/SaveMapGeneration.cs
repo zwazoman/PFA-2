@@ -35,7 +35,6 @@ public class SaveMapGeneration : MonoBehaviour
 
         if (PlayerMap.Instance == null)
         {
-            Debug.LogWarning("PlayerMap.Instance est null, impossible de sauvegarder la position du joueur.");
             return;
         }
 

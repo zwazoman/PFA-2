@@ -53,9 +53,5 @@ public class Spawner : MonoBehaviour
         }
 
         GameObject go = Instantiate(choosenEntity, transform);
-        Debug.Log("instantiated enemy entity : "+go.name);
-        //go.transform.position += Vector3.up * 5;
-
-        //go.transform.DOMoveY(.5f, 1).SetEase(Ease.InCubic);
     }
 }

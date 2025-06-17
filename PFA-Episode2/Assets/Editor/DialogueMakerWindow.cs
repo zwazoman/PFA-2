@@ -51,7 +51,6 @@ public class DialogueMakerWindow : EditorWindow
     {
         if (TextData == null)
         {
-            Debug.LogWarning("Aucun fichier texte sélectionné !");
             return;
         }
 
@@ -249,8 +248,6 @@ public class DialogueMakerWindow : EditorWindow
 
                 EditorUtility.FocusProjectWindow();
                 Selection.activeObject = asset;
-
-                Debug.Log($"Dialogue ScriptableObject créé à : {assetPathAndName}");
             }
         }
 
