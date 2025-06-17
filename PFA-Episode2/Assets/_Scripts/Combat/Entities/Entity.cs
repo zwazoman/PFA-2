@@ -80,6 +80,9 @@ public class Entity : MonoBehaviour
     // game management
     public virtual async UniTask PlayTurn()
     {
+        if (isDead) return;
+
+
         SFXManager.Instance.PlaySFXClip(Sounds.TurnChange);
         Tools.Flood(currentPoint);
         stats.currentMovePoints = stats.maxMovePoints;
@@ -346,6 +349,8 @@ public class Entity : MonoBehaviour
     //death
     public async UniTask Die()
     {
+        isDead = true;
+
         //visuals.PlayDeathAnimation();
         OnDead?.Invoke();
 
@@ -353,7 +358,6 @@ public class Entity : MonoBehaviour
         await visuals.PlayDeathAnimation();
 
         currentPoint.StepOff();
-        isDead = true;
 
         await CombatManager.Instance.UnRegisterEntity(this);
 
