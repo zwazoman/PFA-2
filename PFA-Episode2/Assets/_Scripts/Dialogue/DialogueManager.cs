@@ -16,6 +16,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private float _punctuationDelay = 0.4f;
 
     public GameObject Panel;
+    [SerializeField] private GameObject _panelDeco;
     [SerializeField] private GameObject _textBox;
 
     private readonly List<Tweener> _shakeTweeners = new();
@@ -71,7 +72,8 @@ public class DialogueManager : MonoBehaviour
     private async void SearchDialogue(int NumberDialogue)
     {
         Panel.SetActive(true);
-        if(Panel.transform.localScale==Vector3.zero) await Panel.transform.DOScale(Vector3.one, 0.25f).SetEase(Ease.OutQuart);
+        _panelDeco.SetActive(true);
+        if (Panel.transform.localScale==Vector3.zero) await Panel.transform.DOScale(Vector3.one, 0.25f).SetEase(Ease.OutQuart);
         _numberDialogue = NumberDialogue;
         if (_isWriting) return;
 
@@ -229,6 +231,8 @@ public class DialogueManager : MonoBehaviour
         {
             //await SetupFight.Instance.Pain.DOAnchorPos(new Vector2(0, -875), 0.2f).SetEase(Ease.InOutBack);
         }
+
+        _panelDeco.SetActive(false);
 
         _numberSentence = 0;
         _nameCharacter.text = "";
