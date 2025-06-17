@@ -33,7 +33,7 @@ public class CombatUiManager : MonoBehaviour
     [SerializeField] public AnimatedPanel playerHUD;
     [SerializeField] public EndButton endButton;
 
-    [SerializeField] public List<Transform> SpellSlots = new();
+    [SerializeField] public List<Transform> SpellSlots = new(); //Il contient les items
     [SerializeField] HorizontalOrVerticalLayoutGroup _entityFramesGroup;
     [SerializeField] EntityInfoFrame _playerFrame;
 

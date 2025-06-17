@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if(instance == this || instance == null)
+        if (instance == this || instance == null)
         {
             //singleton
             instance = this;
@@ -71,6 +71,15 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this);
             throw new System.Exception("Y'avait déjà un singleton gamemanager dans la scene");
+        }
+    }
+
+    private void Start()
+    {
+        if (!PlayerPrefs.HasKey("FirstLaunch"))
+        {
+            PlayerPrefs.SetInt("FirstLaunch", 1);
+            PlayerPrefs.Save();
         }
     }
 
@@ -111,4 +120,10 @@ public class GameManager : MonoBehaviour
     }
 
     public int ComputeEnnemiesCount() { return Mathf.FloorToInt(progress * 4) + 1; }
+
+    public void StartWithTuto()
+    {
+        PlayerPrefs.SetInt("FirstLaunch", 1);
+        PlayerPrefs.Save();
+    }
 }

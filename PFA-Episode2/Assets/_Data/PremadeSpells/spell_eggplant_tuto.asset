@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c346ecbdd44d67468abc4e569bf79f9, type: 3}
-  m_Name: spell_eggplant_ult
+  m_Name: spell_eggplant_tuto
   m_EditorClassIdentifier: Assembly-CSharp::PremadeSpell
-  spellType: 1
+  spellType: 0
   SpellData:
-    Name: gratin
-    Sprite: {fileID: 21300000, guid: 40f5be10fe958074cb7f027a20cbb681, type: 3}
-    Mesh: {fileID: 0}
-    IngredientsCombination: aubergine
+    Name: Brochettes
+    Sprite: {fileID: 21300000, guid: 807b7c03d549e074bb5768b826418b56, type: 3}
+    Mesh: {fileID: -3042732525978140458, guid: a03fce1723df4c245a5a9c8926b8b9dd, type: 3}
+    IngredientsCombination: patate
     IsUtilitary: 0
     IsOccludedByWalls: 1
-    Range: 0
-    CoolDown: 3
+    Range: 1
+    CoolDown: 0
     Effects:
-    - effectType: 2
+    - effectType: 0
       statType: 0
-      value: 6
+      value: 1
     AreaOfEffect: {fileID: 11400000, guid: ad0650b0451dc6a4383ad6cbe7115e2f, type: 2}

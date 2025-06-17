@@ -105,6 +105,7 @@ public class CombatManager : MonoBehaviour
         await UniTask.NextFrame();
         
         IsPlaying = true;
+        Debug.Log("started playing");
         while( Entities.Count>1 )
         {
             //player entities
@@ -151,16 +152,18 @@ public class CombatManager : MonoBehaviour
 
             await UniTask.Yield();
         }
-
+        Debug.Log("finished playing");
         IsPlaying = false;
     }
 
     async void SummonEntities()
     {
+        Debug.Log("spawn ennemies");
         int ennemiesCount = GameManager.Instance.ComputeEnnemiesCount();
+        
         string currentSceneName = SceneManager.GetActiveScene().name;
         if (currentSceneName == "Forest_Combat_Boss") { ennemiesCount = 1; }
-
+        Debug.Log("enemy count : " + ennemiesCount);
         SpawnSetup choosenSetup = Setups.PickRandom();
 
         choosenSetup.playerSpawner.SummonEntity();

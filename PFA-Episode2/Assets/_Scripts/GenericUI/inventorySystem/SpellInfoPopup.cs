@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class SpellInfoPopup : MonoBehaviour
 {
-    public Image SpellIcon;
     public TextMeshProUGUI SpellName;
     public List<TextMeshProUGUI> Effect;
     public Image SpellZoneEffect;
@@ -31,8 +30,6 @@ public class SpellInfoPopup : MonoBehaviour
     
     public void Setup(SpellData spellData)
     {
-
-        SpellIcon.sprite = spellData.Sprite; //Sprite
         Range.text = spellData.Range.ToString();
         Cooldown.text = spellData.CoolDown.ToString();
 

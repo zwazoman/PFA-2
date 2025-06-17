@@ -92,8 +92,8 @@ public class SceneTransitionManager : MonoBehaviour
             AsyncOperation o = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
             o.allowSceneActivation = false;
             await FadeOut();
-            if(PlaytestDataRecorder.Instance !=null)
-                await PlaytestDataRecorder.Instance.OnSceneExited();
+            /*if(PlaytestDataRecorder.Instance !=null)
+                await PlaytestDataRecorder.Instance.OnSceneExited();*/
             o.allowSceneActivation = true;
         }
     }
