@@ -1,11 +1,9 @@
-using System;
 using DG.Tweening;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class CookingPot : MonoBehaviour

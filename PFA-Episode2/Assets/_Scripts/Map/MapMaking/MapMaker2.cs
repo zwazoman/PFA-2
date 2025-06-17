@@ -11,14 +11,14 @@ public class MapMaker2 : MonoBehaviour
     public static MapMaker2 Instance;
 
     [Header("Map Adjusting")]
-    [SerializeField][Range(4, 30)][Tooltip("Le nombre de node minimum entre le Node de départ et le boss")] public int MapRange;
-    [SerializeField][Tooltip("Distance à laquelle le node va spawn sur l'axe X")] private int _distanceSpawnX;
-    [SerializeField][Tooltip("Distance à laquelle le node va spawn sur l'axe Y")] private int _distanceSpawnY = 0;
-    [SerializeField][Tooltip("Position en X à laquelle le 1er Node spawn (Le mieux : -1045)")] private int _firstNodePosition = -1045;
+    [SerializeField][Range(4, 30)][Tooltip("Le nombre de node minimum entre le Node de dï¿½part et le boss")] public int MapRange;
+    [SerializeField][Tooltip("Distance ï¿½ laquelle le node va spawn sur l'axe X")] private int _distanceSpawnX;
+    [SerializeField][Tooltip("Distance ï¿½ laquelle le node va spawn sur l'axe Y")] private int _distanceSpawnY = 0;
+    [SerializeField][Tooltip("Position en X ï¿½ laquelle le 1er Node spawn (Le mieux : -1045)")] private int _firstNodePosition = -1045;
 
     [Header("Probality")]
-    [SerializeField][Tooltip("Probabiltité à chaque node d'avoir une intersection (0 = impossible)")][Range(0, 100)] private int _probaIntersection = 3;
-    [SerializeField][Tooltip("Probabiltité d'avoir un tout droit lors d'un croisement")][Range(0, 100)] private int _probaToutDroitCroisement = 5;
+    [SerializeField][Tooltip("Probabiltitï¿½ ï¿½ chaque node d'avoir une intersection (0 = impossible)")][Range(0, 100)] private int _probaIntersection = 3;
+    [SerializeField][Tooltip("Probabiltitï¿½ d'avoir un tout droit lors d'un croisement")][Range(0, 100)] private int _probaToutDroitCroisement = 5;
 
     private int _distanceSpawnYModifiable = 0;
     private int _probaIntersectionModifiable;
@@ -30,11 +30,11 @@ public class MapMaker2 : MonoBehaviour
     public Node CurrentNode { get; private set; }
 
     /// <summary>
-    /// Queue de node crée au début du jeu (environ 40)
+    /// Queue de node crï¿½e au dï¿½but du jeu (environ 40)
     /// </summary>
     public Queue<Node> NodeList = new();
-    public List<Node> Intersection { get; private set; } = new();  //Liste des nodes qui vont devoir continuer à crée un chemin à partir d'eux
-    public Dictionary<Vector3Int, Node> DicoNode { get; set; } = new(); //ToDo :Faire en sorte qu'il soit privé sauf pour la save.
+    public List<Node> Intersection { get; private set; } = new();  //Liste des nodes qui vont devoir continuer ï¿½ crï¿½e un chemin ï¿½ partir d'eux
+    public Dictionary<Vector3Int, Node> DicoNode { get; set; } = new(); //ToDo :Faire en sorte qu'il soit privï¿½ sauf pour la save.
     private int _currentHeight = 3;
     private Node _existingValue;
     public List<Node> AllNodeGood = new();
@@ -43,7 +43,7 @@ public class MapMaker2 : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        for (int i = 0; i <= 40; i++) //Création de plein de node que on placera plus tard
+        for (int i = 0; i <= 40; i++) //Crï¿½ation de plein de node que on placera plus tard
         {
             Node NewNode = Instantiate(NodePrefab, gameObject.transform);
             NewNode.transform.localPosition = ParentNode.transform.localPosition;
@@ -62,12 +62,12 @@ public class MapMaker2 : MonoBehaviour
         _probaIntersectionModifiable = _probaIntersection;
         MapMaking(1);
         ConstructionSecondaireGraph();
-        Node.TriggerMapCompleted(); //Attribution des rôles
+        Node.TriggerMapCompleted(); //Attribution des rï¿½les
     }
 
     public void MapMaking(int StartPosition)
     {
-        Vector3Int startPos = new Vector3Int(_firstNodePosition, 0, 0); // Enregistre le node de départ
+        Vector3Int startPos = new Vector3Int(_firstNodePosition, 0, 0); // Enregistre le node de dï¿½part
         ParentNode.transform.localPosition = startPos;
         DicoNode.Add(startPos, ParentNode);
 
@@ -154,7 +154,7 @@ public class MapMaker2 : MonoBehaviour
         if (DicoNode.ContainsKey(newPosition))
         {
             _existingValue = DicoNode[newPosition];
-            //print("Un node est déja présent ici" + _existingValue);
+            //print("Un node est dï¿½ja prï¿½sent ici" + _existingValue);
             NodeList.Enqueue(CurrentNode);
         }
         else
@@ -208,8 +208,8 @@ public class MapMaker2 : MonoBehaviour
                 {
                     Node nodeExistant = DicoNode[nextPosition];
 
-                    MapBuildingTools.Instance.TraceTonTrait(ParentNode, nodeExistant);// Trace une ligne entre le parent actuel et le node déjà existant
-                    if (ParentNode.Hauteur == 4) { ParentNode.NodeExisting = true; print("The Urn"); }
+                    MapBuildingTools.Instance.TraceTonTrait(ParentNode, nodeExistant);// Trace une ligne entre le parent actuel et le node dï¿½jï¿½ existant
+                    if (ParentNode.Hauteur == 4) { ParentNode.NodeExisting = true; }
                     nodeExistant.Creator = ParentNode;
                     if (!ParentNode.Children.Contains(MapBuildingTools.Instance.ReturnNodeFromNodePosition(ParentNode.Position, 1)))
                     {

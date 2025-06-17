@@ -72,9 +72,10 @@ public class SceneTransitionManager : MonoBehaviour
             o.allowSceneActivation = false;
             await FadeOut();
 
-            Debug.Log("Incremental Garbage collector enabled : " + GarbageCollector.isIncremental);
-            Debug.Log("Collected garbage for 100ms. some garbage still remains : " +GarbageCollector.CollectIncremental(100).ToString());
-
+           // Debug.Log("Incremental Garbage collector enabled : " + GarbageCollector.isIncremental);
+           // Debug.Log("Collected garbage for 100ms. some garbage still remains : " +GarbageCollector.CollectIncremental(100).ToString());
+           GarbageCollector.CollectIncremental(120);
+           
             o.allowSceneActivation = true;
         }
     }

@@ -1,10 +1,7 @@
-using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class EntityInfoFrame : MonoBehaviour
 {

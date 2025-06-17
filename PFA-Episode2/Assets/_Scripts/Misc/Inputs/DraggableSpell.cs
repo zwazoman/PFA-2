@@ -3,7 +3,6 @@ using DG.Tweening;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class DraggableSpell : Draggable
@@ -45,14 +44,14 @@ public class DraggableSpell : Draggable
         {
             _descriptionPanel?.gameObject.SetActive(true);
             _descriptionPanel.ClearParent();
-            Debug.Log("clicked");
+            //Debug.Log("clicked");
             
         };
         EventClickedSomewhereElse += () =>
         {
             _descriptionPanel?.gameObject.SetActive(false);
             _descriptionPanel.AttachToTransform(transform) ;
-            Debug.Log("clicked somewhere else");
+            //Debug.Log("clicked somewhere else");
             
         };
     }
@@ -74,7 +73,6 @@ public class DraggableSpell : Draggable
             _rangePoints = spellCaster.ComputeAndPreviewSpellRange(spell);
             
             //disable description popup
-            Debug.Log("ahh");
             _descriptionPanel?.gameObject.SetActive(false);
             inspected = false;
             return  await DragAndDrop();

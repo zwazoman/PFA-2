@@ -1,7 +1,6 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(SpellCaster))]

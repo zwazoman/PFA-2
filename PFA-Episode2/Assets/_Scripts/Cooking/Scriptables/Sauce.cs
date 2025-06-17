@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "newSauce", menuName = "Cooking/Sauce")]

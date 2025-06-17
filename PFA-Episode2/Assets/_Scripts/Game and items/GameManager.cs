@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -69,7 +68,7 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(this);
-            throw new System.Exception("Y'avait déjà un singleton gamemanager dans la scene");
+            throw new System.Exception("Y'avait dï¿½jï¿½ un singleton gamemanager dans la scene");
         }
     }
 
@@ -112,7 +111,7 @@ public class GameManager : MonoBehaviour
         int index = Random.Range(0, combatScenesName.Count);
         return combatScenesName[index];
     }
-    public void CalculateProgress() //définit au start de la WorldMap soit à chaque fois qu'on y retourne
+    public void CalculateProgress() //dï¿½finit au start de la WorldMap soit ï¿½ chaque fois qu'on y retourne
     {
         int currentNode = Mathf.Clamp(PlayerMap.Instance.PositionMap, 0, MapMaker2.Instance.MapRange);
         progress = (float)currentNode / MapMaker2.Instance.MapRange; // ENTRE 0 ET 1

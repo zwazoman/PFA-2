@@ -20,13 +20,11 @@ public static class IgnoreFolderSelection
             if (_active)
             {
                 Selection.selectionChanged += OnSelectionChanged;
-                Debug.Log("IgnoreFolderSelection activé !");
             }
             else
             {
                 Selection.selectionChanged -= OnSelectionChanged;
                 ActiveEditorTracker.sharedTracker.isLocked = false;
-                Debug.Log("IgnoreFolderSelection désactivé !");
             }
         }
     }

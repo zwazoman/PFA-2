@@ -6,7 +6,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-using Cysharp.Threading.Tasks.Triggers;
 
 public class SetupIngredientUI : MonoBehaviour
 {

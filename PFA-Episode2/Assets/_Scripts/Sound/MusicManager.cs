@@ -1,10 +1,7 @@
 using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using System.Collections.Generic;
-using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.LightTransport;
 using UnityEngine.SceneManagement;
 
 public class MusicManager : MonoBehaviour
@@ -40,7 +37,6 @@ public class MusicManager : MonoBehaviour
         else
         {
             Destroy(this);
-            print("gros chien");
         }
     }
 
@@ -74,7 +70,6 @@ public class MusicManager : MonoBehaviour
 
     public void ChangeMusicVolume(float targetVolume, float changeDuration)
     {
-        print("change volume");
         _musicSource.DOFade(targetVolume, changeDuration);
     }
 

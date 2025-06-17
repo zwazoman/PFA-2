@@ -15,7 +15,7 @@ public static class SaveManager
         if (encrypt) json = SaveMapGeneration.Instance.EncryptDecrypt(json);
 
         File.WriteAllText(GetPath(saveKey), json);
-        Debug.Log($"Données sauvegardées, clé : '{saveKey}'");
+        //Debug.Log($"Donnï¿½es sauvegardï¿½es, clï¿½ : '{saveKey}'");
     }
 
     public static T Load<T>(string saveKey, bool encrypt = false) where T : new()
@@ -24,7 +24,7 @@ public static class SaveManager
 
         if (!File.Exists(path))
         {
-            Debug.LogWarning($"Aucun fichier de sauvegarde trouvé à '{path}'");
+            Debug.LogWarning($"Aucun fichier de sauvegarde trouvï¿½ ï¿½ '{path}'");
             return new T();
         }
 
@@ -33,7 +33,7 @@ public static class SaveManager
         if (encrypt) json = SaveMapGeneration.Instance.EncryptDecrypt(json);
 
         T data = JsonUtility.FromJson<T>(json);
-        Debug.Log($"Données chargées depuis '{saveKey}'");
+        //Debug.Log($"Donnï¿½es chargï¿½es depuis '{saveKey}'");
         return data;
     }
 
@@ -57,7 +57,7 @@ public static class SaveManager
         if (File.Exists(path))
         {
             File.Delete(path);
-            Debug.Log($"Fichier '{saveKey}' supprimé");
+            //Debug.Log($"Fichier '{saveKey}' supprimï¿½");
         }
     }
 
@@ -72,7 +72,7 @@ public static class SaveManager
             foreach (string filePath in files)
             {
                 File.Delete(filePath);
-                Debug.Log($"Deleted: {filePath}");
+                //Debug.Log($"Deleted: {filePath}");
             }
         }
     }

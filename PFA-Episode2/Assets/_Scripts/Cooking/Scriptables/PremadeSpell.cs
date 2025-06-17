@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "new spell", menuName = "Combat/PremadeSpell")]

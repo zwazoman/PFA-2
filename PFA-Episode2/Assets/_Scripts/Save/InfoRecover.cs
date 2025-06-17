@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 
 /// <summary>
-/// Script qui récupère quelques infos de la partie pour voir dans les menus
+/// Script qui rï¿½cupï¿½re quelques infos de la partie pour voir dans les menus
 /// </summary>
 public class InfoRecover : MonoBehaviour
 {
@@ -39,7 +39,7 @@ public class InfoRecover : MonoBehaviour
                 if (Vector3Int.Distance(item.key, wrapper.player.playerPosition) <= 1f)
                 {
                     info = $"Save {id}\nNode : {item.position}";
-                    Debug.Log(info);
+                    //Debug.Log(info);
                     break;
                 }
             }
@@ -47,7 +47,7 @@ public class InfoRecover : MonoBehaviour
         else
         {
             info = $"Save {id}\n(Empty)";
-            Debug.Log(info);
+            //Debug.Log(info);
         }
 
         m_Text.text = info;

@@ -1,8 +1,5 @@
-using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 //controle la camera pendant les combats.
 public class CameraBehaviour : MonoBehaviour

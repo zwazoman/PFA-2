@@ -2,7 +2,6 @@ using System;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using System.Collections.Generic;
-using System.Net.Mime;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -291,7 +290,7 @@ public static class Tools
             if(iterations%8==0) await UniTask.Yield();
             iterations++;
         }
-        Debug.Log("floodfill iterations : " + iterations);
+        //Debug.Log("floodfill iterations : " + iterations);
         return PointDistanceDict;
     }
 

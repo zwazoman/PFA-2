@@ -4,10 +4,6 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
 using DG.Tweening;
-using Unity.VisualScripting;
-using static UnityEngine.EventSystems.EventTrigger;
-using UnityEngine.UI;
-using Cysharp.Threading.Tasks.Triggers;
 
 [RequireComponent(typeof(SpellCaster))]
 public class Entity : MonoBehaviour

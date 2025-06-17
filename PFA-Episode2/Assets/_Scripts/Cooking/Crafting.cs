@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Assertions.Comparers;
 
 public static class Crafting
 {
@@ -16,12 +14,12 @@ public static class Crafting
             i.ModifySpellEffect(spell);
         }
         
-        Debug.Log(" = Raw spell effects = ");
-        foreach(SpellEffect e in  spell.Effects)Debug.Log(e.effectType);
+        //Debug.Log(" = Raw spell effects = ");
+        //foreach(SpellEffect e in  spell.Effects)Debug.Log(e.effectType);
 
         //collapse similar effects
         SpellEffect[] effects = spell.Effects.ToArray();
-        Debug.Log(effects.Length);
+        //Debug.Log(effects.Length);
         SpellEffect.CollapseSimilarSpellEffects(ref effects);
         spell.Effects = effects.ToList();
 
@@ -72,10 +70,10 @@ public static class Crafting
     {
 
         effects.Sort(new SpellComparer());
-        foreach(SpellEffect effect in effects)
+        /*foreach(SpellEffect effect in effects)
         {
-            Debug.Log(effect.statType);
-        }
+            //Debug.Log(effect.statType);
+        }*/
     }
 
     #region combinations

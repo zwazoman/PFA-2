@@ -10,7 +10,6 @@ public class FeedbackNumber : MonoBehaviour
     public void PopupNumber(float number)
     {
         gameObject.SetActive(true);
-        Debug.Log(isActiveAndEnabled);
         txt.text = number.ToString();
 
         Vector3 basePose = transform.position;

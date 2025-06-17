@@ -1,6 +1,4 @@
 using Cysharp.Threading.Tasks;
-using Unity.VisualScripting;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public static class AnimationExtension

@@ -16,10 +16,9 @@ public static class DeleteSaveUtility
             foreach (string filePath in files)
             {
                 File.Delete(filePath);
-                Debug.Log($"Deleted: {filePath}");
             }
 
-            EditorUtility.DisplayDialog("Succès", "Tous les fichiers de sauvegarde ont été supprimés", "OK");
+            EditorUtility.DisplayDialog("Succï¿½s", "Tous les fichiers de sauvegarde ont ï¿½tï¿½ supprimï¿½s", "OK");
         }
     }
 }
